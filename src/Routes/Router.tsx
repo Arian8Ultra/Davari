@@ -15,7 +15,8 @@ const router = createBrowserRouter(
           <Route path="home" element={<Home />} />
           <Route path="complaints" element={<Complaints />} />
           <Route path="portal" element={<Protal />} />
-
+          <Route path="portal/messages" element={<Protal />} />
+          <Route path="portal/employee_management" element={<Protal />} />
 
           <Route path="admin/usermanagement" element={<UserManagement />} />
 

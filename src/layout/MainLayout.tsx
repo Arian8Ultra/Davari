@@ -30,7 +30,7 @@ import {
 import useLayoutStore from "../Context/LayoutStore";
 import pboLogo from "../assets/PboLogo.png";
 import sazmanImage from "../assets/Sazman.jpeg";
-import { SideBarMenu } from "../assets/static/SideBar";
+import { SideBarLinkType, SideBarMenu } from "../assets/static/SideBar";
 import { Titles } from "../assets/static/Titles";
 import ListItemLink from "../components/ListItemLink";
 import Title from "../components/Title";
@@ -264,13 +264,7 @@ export default function MainLayout() {
             >
               {item.children?.map(
                 (
-                  child: {
-                    to: string;
-                    primary: string;
-                    icon: React.ReactElement;
-                    hasLink: boolean;
-                    hasCollapse: boolean;
-                  },
+                  child: SideBarLinkType,
                   index,
                 ) => (
                   <ListItemLink
@@ -281,7 +275,24 @@ export default function MainLayout() {
                     hasLink={child.hasLink}
                     hasCollapse={child.hasCollapse}
                     open={open}
-                  />
+                  >
+                    {child.children?.map(
+                      (
+                        child: SideBarLinkType,
+                        index,
+                      ) => (
+                        <ListItemLink
+                          key={index}
+                          to={child.to && child.to}
+                          primary={child.primary}
+                          icon={child.icon}
+                          hasLink={child.hasLink}
+                          hasCollapse={child.hasCollapse}
+                          open={open}
+                        />
+                      ),
+                    )}
+                  </ListItemLink>
                 ),
               )}
             </ListItemLink>
