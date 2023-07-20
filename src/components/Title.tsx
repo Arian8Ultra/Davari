@@ -1,7 +1,7 @@
 import { Box } from '@mui/material'
 import { BsFillGridFill } from 'react-icons/bs'
 import useLayoutStore from '../Context/LayoutStore'
-import { primary } from '../theme/color'
+import { primary, primaryDark } from '../theme/color'
 import { Titles } from '../assets/static/Titles'
 import { SideBarMenu } from '../assets/static/SideBar'
 
@@ -23,7 +23,7 @@ const Title = (props: Props) => {
         justifyContent: 'flex-start',
         gap: 1,
         fontSize: '1.4rem',
-        color: primary,
+        // color: primaryGrey,
     }}>
         {icon ? icon : <BsFillGridFill />}
         {props.title ? props.title : pageTitle && pageTitle}

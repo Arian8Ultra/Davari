@@ -23,6 +23,26 @@ text{
 }
 
 
+/* change scroll bar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(255, 160, 0);
+  border-radius: 50px;
+
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;

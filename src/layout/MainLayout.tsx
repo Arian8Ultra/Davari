@@ -141,7 +141,7 @@ export default function MainLayout() {
       <CssBaseline />
       <ScrollRestoration />
       <AppBar
-        position="fixed"
+        position='fixed'
         open={open}
         sx={{
           backgroundColor: primaryLight,
@@ -152,10 +152,10 @@ export default function MainLayout() {
       >
         <Toolbar>
           <IconButton
-            color="inherit"
-            aria-label="open drawer"
+            color='inherit'
+            aria-label='open drawer'
             onClick={handleDrawerOpen}
-            edge="start"
+            edge='start'
             sx={{
               marginRight: 5,
               ...(open && { display: "none" }),
@@ -164,9 +164,9 @@ export default function MainLayout() {
             <MenuIcon />
           </IconButton>
           <Typography
-            variant="h6"
+            variant='h6'
             noWrap
-            component="div"
+            component='div'
             sx={{
               flexGrow: 1,
             }}
@@ -179,7 +179,7 @@ export default function MainLayout() {
         </Toolbar>
       </AppBar>
       <Drawer
-        variant="permanent"
+        variant='permanent'
         open={open}
         sx={{
           backgroundColor: primary,
@@ -193,9 +193,9 @@ export default function MainLayout() {
       >
         <Box
           width={"100%"}
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
+          display='flex'
+          justifyContent='center'
+          alignItems='center'
           position={"absolute"}
           sx={{
             top: 0,
@@ -209,7 +209,7 @@ export default function MainLayout() {
             style={{
               objectPosition: "center",
               filter: "blur(6px) brightness(0.5) contrast(1.2)",
-              opacity: 0.5,
+              opacity: 0.7,
             }}
           />
         </Box>
@@ -262,15 +262,40 @@ export default function MainLayout() {
               hasCollapse={item.hasCollapse}
               open={open}
             >
-              {item.children}
+              {item.children?.map(
+                (
+                  child: {
+                    to: string;
+                    primary: string;
+                    icon: React.ReactElement;
+                    hasLink: boolean;
+                    hasCollapse: boolean;
+                  },
+                  index,
+                ) => (
+                  <ListItemLink
+                    key={index}
+                    to={child.to && child.to}
+                    primary={child.primary}
+                    icon={child.icon}
+                    hasLink={child.hasLink}
+                    hasCollapse={child.hasCollapse}
+                    open={open}
+                  />
+                ),
+              )}
             </ListItemLink>
           ))}
         </List>
       </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, px: 3 }}>
-          <DrawerHeader />
-          <Title />
-          <Outlet />
+      <Box component='main' sx={{ flexGrow: 1, px: {
+        xs: 0,
+        sm: 0,
+        md: 3,
+      } }}>
+        <DrawerHeader />
+        <Title />
+        <Outlet />
       </Box>
     </Box>
   );
