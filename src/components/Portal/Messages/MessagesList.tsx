@@ -48,6 +48,20 @@ const MessagesList = (props: Props) => {
         // padding: trigger ? 0 : 2,
         borderRadius: 2,
         boxShadow: "2px 2px 5px 1px rgba(0,0,0,0.2)",
+        "&::-webkit-scrollbar": {
+          width: '10px',
+          height: '10px'
+        },
+        "&::-webkit-scrollbar-track": {
+          background: 'transparent'
+        },
+        "&::-webkit-scrollbar-thumb": {
+          background: 'var(--color-primaryLight)',
+          borderRadius: '0px 50px 50px 0px'
+        },
+        "&::-webkit-scrollbar-thumb:hover": {
+          background: '#555'
+        }
       }}
     >
             <Box

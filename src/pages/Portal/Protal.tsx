@@ -1,6 +1,5 @@
 import { Box } from "@mui/material";
 import MessagesList from "../../components/Portal/Messages/MessagesList";
-
 const Protal = () => {
   return (
     <Box

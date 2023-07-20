@@ -1,3 +1,4 @@
+@import url(./theme/color.css);
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -5,7 +6,6 @@
 
   color-scheme: light;
   color: rgb(33, 33, 33);
-  /* background-color: #242424; */
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -23,19 +23,18 @@ text{
 }
 
 
-/* change scroll bar */
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
 }
+
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgb(255, 160, 0);
+  background: var(--color-primaryLight);
   border-radius: 50px;
-
 }
 
 ::-webkit-scrollbar-thumb:hover {
