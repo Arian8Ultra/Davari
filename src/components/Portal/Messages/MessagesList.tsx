@@ -57,7 +57,7 @@ const MessagesList = (props: Props) => {
         },
         "&::-webkit-scrollbar-thumb": {
           background: 'var(--color-primaryLight)',
-          borderRadius: '0px 50px 50px 0px'
+          borderRadius: ' 0px 50px 50px 0px'
         },
         "&::-webkit-scrollbar-thumb:hover": {
           background: '#555'
