@@ -1,27 +1,75 @@
-import { Box, Stack, Typography, useScrollTrigger } from "@mui/material"
-import { primaryGrey, primaryTransparent } from "../../../theme/color"
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+import {
+  Box,
+  BoxProps,
+  Typography,
+  useScrollTrigger
+} from "@mui/material";
+import { useRef, useState } from "react";
+import {
+  primaryGrey,
+  primaryTransparent,
+} from "../../../theme/color";
 import theme from "../../../theme/theme";
 import MessagesCard from "./MessagesCard";
-import { useRef } from "react";
 
-const MessagesList = () => {
-    const trigger = useScrollTrigger({
-        disableHysteresis: true,
-        threshold: 100,
-        target: window ? window : undefined,
-      });
+
+interface Props extends BoxProps{
+  isMobile?: boolean
+}
+const MessagesList = (props: Props) => {
+  const { isMobile, ...rest } = props
+  const [scrollTarget, setScrollTarget] = useState(undefined) 
+  const trigger = useScrollTrigger({
+    disableHysteresis: true,
+    threshold: 10,
+    // set the target as stack ref
+    target: scrollTarget,
+  });
+  
   return (
-    <Stack
+    <Box
+    {...rest}
       width={"100%"}
-      spacing={0}
+      display={"flex"}
+      flexDirection={"column"}
+      id='scrollableDiv'
+      ref={(node)=>{
+        if(node){
+          // @ts-ignore
+          setScrollTarget(node)
+        }
+      }}
+      maxHeight={`calc(100vh - ${theme.spacing(20)})`}
       sx={{
-        // outline: '1px solid red',
+        overflow: "auto",
+        gap: 0,
         backgroundColor: primaryTransparent,
-        padding: 2,
+        // padding: trigger ? 0 : 2,
         borderRadius: 2,
         boxShadow: "2px 2px 5px 1px rgba(0,0,0,0.2)",
       }}
     >
+            <Box
+        sx={{
+          backgroundColor: primaryGrey,
+          backdropFilter: "blur(10px) ",
+          width: "100%",
+          height: "100%",
+          padding: 2,
+          // borderRadius: trigger ? "0px" : "10px 10px 0px 0px",
+          // borderBottom: !trigger ? "1px solid grey" : "none",
+          position: "sticky",
+          top: theme.spacing(0),
+          // boxShadow: '2px 2px 5px 1px rgba(0,0,0,0.2)',
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          color: "white",
+        }}
+      >
+        <Typography textAlign={"center"}>نامه ها</Typography>
+      </Box>
       <Box
         sx={{
           backgroundColor: !trigger
@@ -31,16 +79,16 @@ const MessagesList = () => {
           width: "100%",
           height: "100%",
           padding: 2,
-          borderRadius: trigger ? "0px" : "10px 10px 0px 0px",
+          // borderRadius: trigger ? "0px" : "10px 10px 0px 0px",
           borderBottom: !trigger ? "1px solid grey" : "none",
           position: "sticky",
-          top: theme.spacing(8),
+          top: theme.spacing(0),
           // boxShadow: '2px 2px 5px 1px rgba(0,0,0,0.2)',
           display: "grid",
           alignItems: "center",
           justifyContent: "center",
           gridTemplateColumns: {
-            xs: "repeat(2, 1fr)",
+            xs: "repeat(3, 1fr)",
             sm: "repeat(3, 1fr)",
             md: "repeat(6, 1fr)",
             lg: "repeat(6, 1fr)",
@@ -48,33 +96,65 @@ const MessagesList = () => {
           color: !trigger ? "black" : "white",
         }}
       >
-        <Typography textAlign={"center"}>شماره نامه</Typography>
+        <Typography textAlign={"center"} fontSize={{
+          xs: 10,
+          sm: 12,
+          md: 14,
+          lg: 16,
+        }}>شماره نامه</Typography>
 
-        <Typography textAlign={"center"}>عنوان</Typography>
+        <Typography textAlign={"center"} fontSize={{
+          xs: 10,
+          sm: 12,
+          md: 14,
+          lg: 16,
+        }}>عنوان</Typography>
 
-        <Typography textAlign={"center"}>مبدا</Typography>
 
-        <Typography textAlign={"center"}>مقصد</Typography>
+        <Typography textAlign={"center"} fontSize={{
+          xs: 10,
+          sm: 12,
+          md: 14,
+          lg: 16,
+        }}>تاریخ</Typography>
+        <Typography textAlign={"center"} fontSize={{
+          xs: 10,
+          sm: 12,
+          md: 14,
+          lg: 16,
+        }}>مبدا</Typography>
 
-        <Typography textAlign={"center"}>تاریخ</Typography>
-        <Typography textAlign={"center"}>وضعیت</Typography>
+        <Typography textAlign={"center"} fontSize={{
+          xs: 10,
+          sm: 12,
+          md: 14,
+          lg: 16,
+        }}>مقصد</Typography>
+        <Typography textAlign={"center"} fontSize={{
+          xs: 10,
+          sm: 12,
+          md: 14,
+          lg: 16,
+        }}>وضعیت</Typography>
       </Box>
 
-      {[1, 2, 3, 4, 5, 6, 7, 8, 9,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25].map((item) => (
+      {[
+        1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+        20, 21, 22, 23, 24, 25,
+      ].map((item) => (
         <MessagesCard
-            key={item}
-            id={item}
-            date={new Date()}
-            from="مدیریت مالی"
-            to="مدیریت مالی"
-            title="تاییدیه پرداخت"
-            number={item.toString()}
-            status="در انتظار تایید"
+          key={item}
+          id={item}
+          date={new Date()}
+          from='مدیریت مالی'
+          to='مدیریت مالی'
+          title='تاییدیه پرداخت'
+          number={item.toString()}
+          status='در انتظار تایید'
         />
       ))}
+    </Box>
+  );
+};
 
-    </Stack>
-  )
-}
-
-export default MessagesList
+export default MessagesList;
