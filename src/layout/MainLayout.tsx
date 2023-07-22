@@ -34,7 +34,8 @@ import { SideBarLinkType, SideBarMenu } from "../assets/static/SideBar";
 import { Titles } from "../assets/static/Titles";
 import ListItemLink from "../components/ListItemLink";
 import Title from "../components/Title";
-import { primary, primaryLight } from "../theme/color";
+import { Green, Red, primary, primaryLight } from "../theme/color";
+import Pattern from "../assets/Pattern.svg";
 
 const drawerWidth = 240;
 
@@ -144,13 +145,30 @@ export default function MainLayout() {
         position='fixed'
         open={open}
         sx={{
-          backgroundColor: primaryLight,
+          // backgroundColor: primaryLight,
+          background : `linear-gradient(90deg, ${Green}, ${primary})`,
           justifyContent: "center",
           alignItems: "space-between",
           boxShadow: "none",
+          // backgroundImage: `url(${Pattern})`,
+          // backgroundPosition: "right center",
+          // backgroundRepeat: "repeat-y",
         }}
       >
-        <Toolbar>
+        <Toolbar sx={{
+          position: "relative",
+        }}>
+          {/* <img src={Pattern} style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            // width: "100%",
+            height: "100%",
+
+            outline: "2px solid red",
+            objectPosition: "center",
+            // rotate: "90deg",
+          }}/> */}
           <IconButton
             color='inherit'
             aria-label='open drawer'

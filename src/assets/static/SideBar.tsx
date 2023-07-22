@@ -6,7 +6,7 @@ import {
 } from "react-icons/bs";
 import { VscHome, VscWarning } from "react-icons/vsc";
 import { Titles } from "./Titles";
-import { AiFillMessage, AiTwotoneMinusSquare } from "react-icons/ai";
+import { AiFillMessage, AiOutlineMessage, AiTwotoneMinusSquare } from "react-icons/ai";
 
 export const SideBarMenu = [
   {
@@ -49,7 +49,7 @@ export const SideBarMenu = [
       {
         primary: Titles.answerToComplaints,
         to: "/portal/complain_answers",
-        icon: <AiTwotoneMinusSquare />,
+        icon: <AiOutlineMessage />,
         hasLink: true,
         hasCollapse: false,
       },
