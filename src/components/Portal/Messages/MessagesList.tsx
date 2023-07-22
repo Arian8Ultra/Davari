@@ -5,7 +5,7 @@ import {
   Typography,
   useScrollTrigger
 } from "@mui/material";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import {
   primaryGrey,
   primaryTransparent,
@@ -71,8 +71,6 @@ const MessagesList = (props: Props) => {
           width: "100%",
           height: "100%",
           padding: 2,
-          // borderRadius: trigger ? "0px" : "10px 10px 0px 0px",
-          // borderBottom: !trigger ? "1px solid grey" : "none",
           position: "sticky",
           top: theme.spacing(0),
           // boxShadow: '2px 2px 5px 1px rgba(0,0,0,0.2)',
