@@ -146,7 +146,7 @@ export default function MainLayout() {
         open={open}
         sx={{
           // backgroundColor: primaryLight,
-          background : `linear-gradient(90deg, ${Green}, ${primary})`,
+          background : `linear-gradient(90deg, ${Green}, ${primary}, ${primary}, ${primary})`,
           justifyContent: "center",
           alignItems: "space-between",
           boxShadow: "none",
