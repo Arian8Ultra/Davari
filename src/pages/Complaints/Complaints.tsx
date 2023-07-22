@@ -1,7 +1,10 @@
+import ComplaintsList from "../../components/Complaints/ComplaintsList"
 
 const Complaints = () => {
   return (
-    <div>Complaints</div>
+    <>
+    <ComplaintsList />
+    </>
   )
 }
 

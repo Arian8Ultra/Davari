@@ -1,8 +1,18 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import { Box, IconButton, Typography } from "@mui/material";
 import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
 import { BsKey } from "react-icons/bs";
 import { VscPreview } from "react-icons/vsc";
-import { Blue, BlueLight, Green, GreenLight, Red, RedLight, primary, primaryTransparent } from "../../../theme/color";
+import {
+  Blue,
+  BlueLight,
+  Green,
+  GreenLight,
+  Red,
+  RedLight,
+  primary,
+  primaryTransparent,
+} from "../../../theme/color";
 interface Props {
   firstName?: string;
   lastName?: string;
@@ -68,46 +78,60 @@ const UserCard = (props: Props) => (
         // outline: "1px solid red",
       }}
     >
-      <IconButton sx={{ 
-        // backgroundColor: Blue, 
-        outline: `2px solid ${Blue}`,
-        color: Blue,
-        "&:hover": {
-          backgroundColor: BlueLight,
-        }
-        }}>
+      <IconButton
+        sx={{
+          // backgroundColor: Blue,
+          "outline": `2px solid ${Blue}`,
+          "color": Blue,
+          "&:hover": {
+            backgroundColor: BlueLight,
+          },
+        }}
+      >
         <AiOutlineEdit />
       </IconButton>
-      <IconButton sx={{ 
-        // backgroundColor: Red, 
-        outline: `2px solid ${Red}`,
-        color: Red,
-        "&:hover": {
-          backgroundColor: RedLight,
-        }
-        }}>
-        <AiOutlineDelete/>
+      <IconButton
+        onClick={() => {
+          const agree = confirm(
+            `آیا از حذف کاربر '${props.firstName} ${props.lastName}' مطمئن هستید؟`,
+          );
+          if (agree) {
+            console.log("deleted");
+          }
+        }}
+        sx={{
+          // backgroundColor: Red,
+          "outline": `2px solid ${Red}`,
+          "color": Red,
+          "&:hover": {
+            backgroundColor: RedLight,
+          },
+        }}
+      >
+        <AiOutlineDelete />
       </IconButton>
       <IconButton
         sx={{
           // backgroundColor: Green,
-          outline: `2px solid ${Green}`,
-          color: Green,
+          "outline": `2px solid ${Green}`,
+          "color": Green,
           "&:hover": {
             backgroundColor: GreenLight,
-          }
+          },
         }}
       >
         <VscPreview />
       </IconButton>
-      <IconButton sx={{ 
-        // backgroundColor: primary, 
-        outline: `2px solid ${primary}`,
-        color: primary,
-        "&:hover": {
-          backgroundColor: primaryTransparent,
-        }
-        }}>
+      <IconButton
+        sx={{
+          // backgroundColor: primary,
+          "outline": `2px solid ${primary}`,
+          "color": primary,
+          "&:hover": {
+            backgroundColor: primaryTransparent,
+          },
+        }}
+      >
         <BsKey />
       </IconButton>
     </Box>
