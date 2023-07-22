@@ -6,6 +6,8 @@ import UserManagement from "../pages/Admin/UserManager/UserManagement";
 import Complaints from "../pages/Complaints/Complaints";
 import Home from "../pages/Home/Home";
 import Protal from "../pages/Portal/Protal";
+import Messages from "../pages/Portal/Messages/Messages";
+import ComplainAnswers from "../pages/Portal/ComplainAnswers/ComplainAnswers";
 
 const router = createBrowserRouter(
     createRoutesFromElements(
@@ -15,9 +17,9 @@ const router = createBrowserRouter(
           <Route path="home" element={<Home />} />
           <Route path="complaints" element={<Complaints />} />
           <Route path="portal" element={<Protal />} />
-          <Route path="portal/messages" element={<Protal />} />
+          <Route path="portal/messages" element={<Messages />} />
           <Route path="portal/employee_management" element={<Protal />} />
-
+          <Route path="portal/complain_answers" element={<ComplainAnswers />} />
           <Route path="admin/usermanagement" element={<UserManagement />} />
 
 
