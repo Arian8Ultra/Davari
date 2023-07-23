@@ -63,24 +63,25 @@ const UserManagement = () => {
         isCloseable={true}
         backgroundColor={background}
       >
-          <Box
+        <Box
           display={"grid"}
           gridTemplateColumns={{
             xs: "1fr",
-            lg: "1fr 1fr",
+            lg: "repeat(2, 1fr)",
           }}
           gap={2}
           width={"100%"}
-          >
+        >
           <TextField
             fullWidth
             label={"نام"}
             variant={"outlined"}
             value={addModal.firstName}
             sx={{
-              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-                borderRadius: "15px",
-              }
+              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
+                {
+                  borderRadius: "15px",
+                },
             }}
             onChange={(e) =>
               setAddModal({ ...addModal, firstName: e.target.value })
@@ -93,9 +94,10 @@ const UserManagement = () => {
             variant={"outlined"}
             value={addModal.lastName}
             sx={{
-              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-                borderRadius: "15px",
-              }
+              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
+                {
+                  borderRadius: "15px",
+                },
             }}
             onChange={(e) =>
               setAddModal({ ...addModal, lastName: e.target.value })
@@ -108,9 +110,10 @@ const UserManagement = () => {
             variant={"outlined"}
             value={addModal.email}
             sx={{
-              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-                borderRadius: "15px",
-              }
+              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
+                {
+                  borderRadius: "15px",
+                },
             }}
             onChange={(e) =>
               setAddModal({ ...addModal, email: e.target.value })
@@ -123,9 +126,10 @@ const UserManagement = () => {
             variant={"outlined"}
             value={addModal.password}
             sx={{
-              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-                borderRadius: "15px",
-              }
+              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
+                {
+                  borderRadius: "15px",
+                },
             }}
             onChange={(e) =>
               setAddModal({ ...addModal, password: e.target.value })
@@ -138,12 +142,16 @@ const UserManagement = () => {
             variant={"outlined"}
             value={addModal.confirmPassword}
             sx={{
-              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-                borderRadius: "15px",
-              }
+              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
+                {
+                  borderRadius: "15px",
+                },
             }}
             onChange={(e) =>
-              setAddModal({ ...addModal, confirmPassword: e.target.value })
+              setAddModal({
+                ...addModal,
+                confirmPassword: e.target.value,
+              })
             }
           />
 
@@ -153,18 +161,21 @@ const UserManagement = () => {
             variant={"outlined"}
             value={addModal.phoneNumber}
             sx={{
-              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-                borderRadius: "15px",
-              }
+              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
+                {
+                  borderRadius: "15px",
+                },
             }}
             onChange={(e) =>
-              setAddModal({ ...addModal, phoneNumber: e.target.value })
+              setAddModal({
+                ...addModal,
+                phoneNumber: e.target.value,
+              })
             }
           />
 
           <Button
             variant='contained'
-
             sx={{
               "borderRadius": 2,
               "backgroundColor": Green,
@@ -172,7 +183,10 @@ const UserManagement = () => {
               "fontStyle": "normal",
               "fontSize": "1rem",
               "boxShadow": "none",
-              gridColumn: "1/3",
+              "gridColumn": {
+                xs: "1/2",
+                lg: "1/3",
+              },
               "&:hover": {
                 backgroundColor: GreenLight,
               },
