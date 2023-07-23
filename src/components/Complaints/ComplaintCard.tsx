@@ -9,7 +9,7 @@ import { useState } from "react";
 import { BsArrowDownShort, BsArrowUpShort } from "react-icons/bs";
 
 interface Props {
-  title?: string;
+  title?: string | number | object;
   number?: string;
   status?: string;
   description?: string;
@@ -51,7 +51,7 @@ const ComplaintCard = (props: Props) => {
           عنوان:
           {
             // if title is not provided, use id + title
-            props.title ? props.title : props.id + " title "
+            props.title ? String(props.title) : String(props.id) + " title "
           }
         </Typography>
         <Typography textAlign={"center"} gridArea={"number"}>
