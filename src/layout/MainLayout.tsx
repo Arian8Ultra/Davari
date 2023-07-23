@@ -37,7 +37,7 @@ import {
 import { Titles } from "../assets/static/Titles";
 import ListItemLink from "../components/ListItemLink";
 import Title from "../components/Title";
-import { Green, Red, primary, primaryLight } from "../theme/color";
+import { Green, primary } from "../theme/color";
 
 const drawerWidth = 240;
 
@@ -334,7 +334,7 @@ export default function MainLayout() {
               height={"100%"}
               style={{
                 objectPosition: "center",
-                filter: "blur(6px) brightness(0.5) contrast(1.2)",
+                filter: "brightness(0.5) contrast(1.2)",
                 opacity: 0.7,
               }}
             />
@@ -451,6 +451,7 @@ export default function MainLayout() {
                 objectFit: "cover",
               }}
             />
+            <DrawerHeader/>
           <List>
             {SideBarMenu.map((item, index) => (
               <ListItemLink

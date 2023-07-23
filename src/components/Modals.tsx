@@ -13,6 +13,7 @@ import { onPrimary, primaryLightTransparent } from "../theme/color";
 interface NewModalProps {
   width?: string | number | object;
   color?: string;
+  height?: string | number | object;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   children?: any;
   name?: string;
@@ -26,6 +27,7 @@ interface NewModalProps {
 export default function NewModal(props: NewModalProps) {
   let {
     width,
+    height,
     color,
     name,
     backgroundColor,
@@ -42,6 +44,7 @@ export default function NewModal(props: NewModalProps) {
   isCloseable = props.isCloseable != null ? props.isCloseable : true;
   dividerColor =
     props.dividerColor != null ? props.dividerColor : "transparent";
+  height = props.height != null ? props.height : "95vh";
   const handleClose = () => {
     if (props.isCloseable) props.onClose && props.onClose();
   };
@@ -54,6 +57,8 @@ export default function NewModal(props: NewModalProps) {
           left: "50%",
           transform: "translate(-50%, -50%)",
           width: width,
+          maxHeight: height,
+          overflow: "auto",
           bgcolor: backgroundColor,
           boxShadow: 24,
           borderRadius: '15px',
