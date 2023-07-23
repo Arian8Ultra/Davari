@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
-import { Box, IconButton, Typography } from "@mui/material";
+import { Box, IconButton, Tooltip, Typography } from "@mui/material";
 import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
 import { BsKey } from "react-icons/bs";
 import { VscPreview } from "react-icons/vsc";
@@ -32,13 +32,18 @@ const UserCard = (props: Props) => (
       // boxShadow: '2px 2px 5px 1px rgba(0,0,0,0.2)',
       "display": "grid",
       "gap": 1,
-      "justifyContent": "center",
       "alignItems": "center",
-      "gridTemplateColumns": {
-        xs: "repeat(2, 1fr)",
-        sm: "repeat(3, 1fr)",
-        md: "repeat(4, 1fr)",
-        lg: "repeat(6, 1fr)",
+      // "gridTemplateColumns": {
+      //   xs: "repeat(2, 1fr)",
+      //   sm: "repeat(3, 1fr)",
+      //   md: "repeat(4, 1fr)",
+      //   lg: "repeat(6, 1fr)",
+      // },
+      gridTemplateAreas:{
+        xs: `"firstName lastName personalCode" "operation operation operation"`,
+        md: `"firstName lastName personalCode" "operation operation operation"`,
+        lg: `"firstName lastName personalCode department status operation"`,
+        xl: `"firstName lastName personalCode department status operation"`,
       },
       "&:hover": {
         backgroundColor: "rgba(255,255,255,0.6)",
@@ -49,26 +54,75 @@ const UserCard = (props: Props) => (
       console.log(props.id);
     }}
   >
-    <Typography textAlign={"center"}>
+    <Typography
+      gridArea={"firstName"}
+      textAlign={"center"}
+      fontSize={{
+        xs: 11,
+        sm: 12,
+        md: 14,
+        lg: 16,
+      }}
+    >
       {props.firstName && props.firstName}
     </Typography>
 
-    <Typography textAlign={"center"}>
+    <Typography
+      gridArea={"lastName"}
+      textAlign={"center"}
+      fontSize={{
+        xs: 11,
+        sm: 12,
+        md: 14,
+        lg: 16,
+      }}
+    >
       {props.lastName && props.lastName}
     </Typography>
 
-    <Typography textAlign={"center"}>
+    <Typography
+      gridArea={"personalCode"}
+      // display={{ xs: "none", md: "block" }}
+      textAlign={"center"}
+      fontSize={{
+        xs: 11,
+        sm: 12,
+        md: 14,
+        lg: 16,
+      }}
+    >
       {props.personalCode && props.personalCode}
     </Typography>
 
-    <Typography textAlign={"center"}>
+    <Typography
+      gridArea={"department"}
+      display={{ xs: "none", md: "block" }}
+      textAlign={"center"}
+      fontSize={{
+        xs: 11,
+        sm: 12,
+        md: 14,
+        lg: 16,
+      }}
+    >
       {props.department && props.department}
     </Typography>
 
-    <Typography textAlign={"center"}>
+    <Typography
+      gridArea={"status"}
+      display={{ xs: "none", md: "block" }}
+      textAlign={"center"}
+      fontSize={{
+        xs: 11,
+        sm: 12,
+        md: 14,
+        lg: 16,
+      }}
+    >
       {props.status && props.status}
     </Typography>
     <Box
+      gridArea={"operation"}
       sx={{
         display: "flex",
         justifyContent: "center",
@@ -78,62 +132,96 @@ const UserCard = (props: Props) => (
         // outline: "1px solid red",
       }}
     >
-      <IconButton
-        sx={{
-          // backgroundColor: Blue,
-          "outline": `2px solid ${Blue}`,
-          "color": Blue,
-          "&:hover": {
-            backgroundColor: BlueLight,
-          },
-        }}
-      >
-        <AiOutlineEdit />
-      </IconButton>
-      <IconButton
-        onClick={() => {
-          const agree = confirm(
-            `آیا از حذف کاربر '${props.firstName} ${props.lastName}' مطمئن هستید؟`,
-          );
-          if (agree) {
-            console.log("deleted");
-          }
-        }}
-        sx={{
-          // backgroundColor: Red,
-          "outline": `2px solid ${Red}`,
-          "color": Red,
-          "&:hover": {
-            backgroundColor: RedLight,
-          },
-        }}
-      >
-        <AiOutlineDelete />
-      </IconButton>
-      <IconButton
-        sx={{
-          // backgroundColor: Green,
-          "outline": `2px solid ${Green}`,
-          "color": Green,
-          "&:hover": {
-            backgroundColor: GreenLight,
-          },
-        }}
-      >
-        <VscPreview />
-      </IconButton>
-      <IconButton
-        sx={{
-          // backgroundColor: primary,
-          "outline": `2px solid ${primary}`,
-          "color": primary,
-          "&:hover": {
-            backgroundColor: primaryTransparent,
-          },
-        }}
-      >
-        <BsKey />
-      </IconButton>
+      <Tooltip title={"ویرایش کاربر"}>
+        <IconButton
+          sx={{
+            // backgroundColor: Blue,
+            "outline": `2px solid ${Blue}`,
+            "color": Blue,
+            "&:hover": {
+              backgroundColor: BlueLight,
+            },
+            "fontSize": {
+              xs: "0.8rem",
+              sm: "1rem",
+              md: "1.2rem",
+              lg: "1.4rem",
+            },
+          }}
+        >
+          <AiOutlineEdit />
+        </IconButton>
+      </Tooltip>
+      <Tooltip title={"حذف کاربر"}>
+        <IconButton
+          onClick={() => {
+            const agree = confirm(
+              `آیا از حذف کاربر '${props.firstName} ${props.lastName}' مطمئن هستید؟`,
+            );
+            if (agree) {
+              console.log("deleted");
+            }
+          }}
+          sx={{
+            // backgroundColor: Red,
+            "outline": `2px solid ${Red}`,
+            "color": Red,
+            "&:hover": {
+              backgroundColor: RedLight,
+            },
+            "fontSize": {
+              xs: "0.8rem",
+              sm: "1rem",
+              md: "1.2rem",
+              lg: "1.4rem",
+            },
+          }}
+        >
+          <AiOutlineDelete />
+        </IconButton>
+      </Tooltip>
+
+      <Tooltip title={"تغییر دسترسی ها"}>
+        <IconButton
+          sx={{
+            // backgroundColor: Green,
+            "outline": `2px solid ${Green}`,
+            "color": Green,
+            "&:hover": {
+              backgroundColor: GreenLight,
+            },
+            "fontSize": {
+              xs: "0.8rem",
+              sm: "1rem",
+              md: "1.2rem",
+              lg: "1.4rem",
+            },
+          }}
+        >
+          <VscPreview />
+        </IconButton>
+      </Tooltip>
+
+      <Tooltip title={"تغییر رمز عبور"}>
+        <IconButton
+          sx={{
+            // backgroundColor: primary,
+            "outline": `2px solid ${primary}`,
+            "color": primary,
+            "&:hover": {
+              backgroundColor: primaryTransparent,
+            },
+            "fontSize": {
+              xs: "0.8rem",
+              sm: "1rem",
+              md: "1.2rem",
+              lg: "1.4rem",
+            },
+          }}
+        >
+          <BsKey />
+        </IconButton>
+      </Tooltip>
     </Box>
   </Box>
 );

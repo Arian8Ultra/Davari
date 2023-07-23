@@ -30,12 +30,14 @@ import {
 import useLayoutStore from "../Context/LayoutStore";
 import pboLogo from "../assets/PboLogo.png";
 import sazmanImage from "../assets/Sazman.jpeg";
-import { SideBarLinkType, SideBarMenu } from "../assets/static/SideBar";
+import {
+  SideBarLinkType,
+  SideBarMenu,
+} from "../assets/static/SideBar";
 import { Titles } from "../assets/static/Titles";
 import ListItemLink from "../components/ListItemLink";
 import Title from "../components/Title";
 import { Green, Red, primary, primaryLight } from "../theme/color";
-import Pattern from "../assets/Pattern.svg";
 
 const drawerWidth = 240;
 
@@ -115,6 +117,44 @@ export default function MainLayout() {
   const setLocation = useLayoutStore((state) => state.setLocation);
   const oldLocation = useLayoutStore((state) => state.location);
   const navigate = useNavigate();
+  const [isSmallScreen, setIsSmallScreen] = React.useState(
+    matchMedia("(max-width: 600px)").matches,
+  );
+
+  const [isMediumScreen, setIsMediumScreen] = React.useState(
+    matchMedia("(max-width: 960px)").matches,
+  );
+
+  React.useEffect(() => {
+    const handler = (e: MediaQueryListEvent) => {
+      setIsSmallScreen(e.matches);
+    };
+    matchMedia("(max-width: 600px)").addEventListener(
+      "change",
+      handler,
+    );
+    return () =>
+      matchMedia("(max-width: 600px)").removeEventListener(
+        "change",
+        handler,
+      );
+  }, []);
+
+  React.useEffect(() => {
+    const handler = (e: MediaQueryListEvent) => {
+      setIsMediumScreen(e.matches);
+    };
+    matchMedia("(max-width: 960px)").addEventListener(
+      "change",
+      handler,
+    );
+    return () =>
+      matchMedia("(max-width: 960px)").removeEventListener(
+        "change",
+        handler,
+      );
+  }, []);
+
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -141,24 +181,27 @@ export default function MainLayout() {
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
       <ScrollRestoration />
-      <AppBar
-        position='fixed'
-        open={open}
-        sx={{
-          // backgroundColor: primaryLight,
-          background : `linear-gradient(90deg, ${Green}, ${primary}, ${primary}, ${primary})`,
-          justifyContent: "center",
-          alignItems: "space-between",
-          boxShadow: "none",
-          // backgroundImage: `url(${Pattern})`,
-          // backgroundPosition: "right center",
-          // backgroundRepeat: "repeat-y",
-        }}
-      >
-        <Toolbar sx={{
-          position: "relative",
-        }}>
-          {/* <img src={Pattern} style={{
+      {!isSmallScreen ? (
+        <AppBar
+          position='fixed'
+          open={open}
+          sx={{
+            // backgroundColor: primaryLight,
+            background: `linear-gradient(90deg, ${Green}, ${primary}, ${primary}, ${primary})`,
+            justifyContent: "center",
+            alignItems: "space-between",
+            boxShadow: "none",
+            // backgroundImage: `url(${Pattern})`,
+            // backgroundPosition: "right center",
+            // backgroundRepeat: "repeat-y",
+          }}
+        >
+          <Toolbar
+            sx={{
+              position: "relative",
+            }}
+          >
+            {/* <img src={Pattern} style={{
             position: "absolute",
             top: 0,
             left: 0,
@@ -169,159 +212,300 @@ export default function MainLayout() {
             objectPosition: "center",
             // rotate: "90deg",
           }}/> */}
-          <IconButton
-            color='inherit'
-            aria-label='open drawer'
-            onClick={handleDrawerOpen}
-            edge='start'
-            sx={{
-              marginRight: 5,
-              ...(open && { display: "none" }),
-            }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography
-            variant='h6'
-            noWrap
-            component='div'
-            sx={{
-              flexGrow: 1,
-            }}
-          >
-            {Titles.mainTitle}
-          </Typography>
-          <IconButton>
-            <VscAccount />
-          </IconButton>
-        </Toolbar>
-      </AppBar>
-      <Drawer
-        variant='permanent'
-        open={open}
+            <IconButton
+              color='inherit'
+              aria-label='open drawer'
+              onClick={handleDrawerOpen}
+              edge='start'
+              sx={{
+                marginRight: 5,
+                ...(open && { display: "none" }),
+              }}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography
+              variant='h6'
+              noWrap
+              component='div'
+              sx={{
+                flexGrow: 1,
+              }}
+            >
+              {Titles.mainTitle}
+            </Typography>
+            <IconButton>
+              <VscAccount />
+            </IconButton>
+          </Toolbar>
+        </AppBar>
+      ) : (
+        <MuiAppBar 
+        position='fixed'
         sx={{
-          backgroundColor: primary,
-          position: "relative",
+          // backgroundColor: primaryLight,
+          background: `linear-gradient(90deg, ${Green}, ${primary}, ${primary}, ${primary})`,
+          justifyContent: "center",
+          alignItems: "space-between",
+          boxShadow: "none",
+          zIndex: theme.zIndex.drawer + 1,
+          // backgroundImage: `url(${Pattern})`,
+          // backgroundPosition: "right center",
+          // backgroundRepeat: "repeat-y",
         }}
-        PaperProps={{
-          sx: {
-            backgroundColor: primary,
-          },
-        }}
-      >
-        <Box
-          width={"100%"}
-          display='flex'
-          justifyContent='center'
-          alignItems='center'
-          position={"absolute"}
-          sx={{
-            top: 0,
-            left: 0,
-            bottom: 0,
-          }}
         >
-          <img
-            src={sazmanImage}
-            height={"100%"}
-            style={{
-              objectPosition: "center",
-              filter: "blur(6px) brightness(0.5) contrast(1.2)",
-              opacity: 0.7,
-            }}
-          />
-        </Box>
-
-        <DrawerHeader>
-          <Box
+                    <Toolbar
             sx={{
-              width: "100%",
-              display: "flex",
-              justifyContent: "flex-end",
-              alignItems: "space-between",
               position: "relative",
             }}
           >
+            {/* <img src={Pattern} style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            // width: "100%",
+            height: "100%",
+
+            outline: "2px solid red",
+            objectPosition: "center",
+            // rotate: "90deg",
+          }}/> */}
+            <IconButton
+              color='inherit'
+              aria-label='open drawer'
+              onClick={()=>{
+                setOpen(!open)
+              }}
+              edge='start'
+              sx={{
+                marginRight: 5,
+                // ...(open && { display: "none" }),
+              }}
+            >
+              {
+                open ? <ChevronRightIcon /> : <MenuIcon />
+              }
+            </IconButton>
+            <Typography
+              variant='h6'
+              noWrap
+              component='div'
+              sx={{
+                flexGrow: 1,
+              }}
+            >
+              {Titles.mainTitle}
+            </Typography>
+            <IconButton>
+              <VscAccount />
+            </IconButton>
+          </Toolbar>
+        </MuiAppBar>
+      )}
+
+      {!isSmallScreen ? (
+        <Drawer
+          variant='permanent'
+          open={open}
+          sx={{
+            backgroundColor: primary,
+            position: "relative",
+          }}
+          PaperProps={{
+            sx: {
+              backgroundColor: primary,
+            },
+          }}
+        >
+          <Box
+            width={"100%"}
+            display='flex'
+            justifyContent='center'
+            alignItems='center'
+            position={"absolute"}
+            sx={{
+              top: 0,
+              left: 0,
+              bottom: 0,
+            }}
+          >
             <img
-              src={pboLogo}
-              height={theme.spacing(5)}
+              src={sazmanImage}
+              height={"100%"}
               style={{
-                filter: "brightness(0) invert(1)",
-                justifySelf: "center",
-                alignSelf: "center",
-                position: "absolute",
-                left: "50%",
-                transform: "translateX(-50%)",
+                objectPosition: "center",
+                filter: "blur(6px) brightness(0.5) contrast(1.2)",
+                opacity: 0.7,
               }}
             />
-            <IconButton
-              onClick={handleDrawerClose}
+          </Box>
+
+          <DrawerHeader>
+            <Box
               sx={{
-                color: "white",
+                width: "100%",
+                display: "flex",
+                justifyContent: "flex-end",
+                alignItems: "space-between",
+                position: "relative",
               }}
             >
-              {theme.direction === "rtl" ? (
-                <ChevronRightIcon />
-              ) : (
-                <ChevronLeftIcon />
-              )}
-            </IconButton>
-          </Box>
-        </DrawerHeader>
-        <Divider />
-        <List>
-          {SideBarMenu.map((item, index) => (
-            <ListItemLink
-              key={index}
-              to={item.to}
-              primary={item.primary}
-              icon={item.icon}
-              hasLink={item.hasLink}
-              hasCollapse={item.hasCollapse}
-              open={open}
-            >
-              {item.children?.map(
-                (
-                  child: SideBarLinkType,
-                  index,
-                ) => (
-                  <ListItemLink
-                    key={index}
-                    to={child.to && child.to}
-                    primary={child.primary}
-                    icon={child.icon}
-                    hasLink={child.hasLink}
-                    hasCollapse={child.hasCollapse}
-                    open={open}
-                  >
-                    {child.children?.map(
-                      (
-                        child: SideBarLinkType,
-                        index,
-                      ) => (
-                        <ListItemLink
-                          key={index}
-                          to={child.to && child.to}
-                          primary={child.primary}
-                          icon={child.icon}
-                          hasLink={child.hasLink}
-                          hasCollapse={child.hasCollapse}
-                          open={open}
-                        />
-                      ),
-                    )}
-                  </ListItemLink>
-                ),
-              )}
-            </ListItemLink>
-          ))}
-        </List>
-      </Drawer>
-      <Box component='main' sx={{ flexGrow: 1, px: {
-        xs: 0,
-        sm: 0,
-        md: 3,
-      } }}>
+              <img
+                src={pboLogo}
+                height={theme.spacing(5)}
+                style={{
+                  filter: "brightness(0) invert(1)",
+                  justifySelf: "center",
+                  alignSelf: "center",
+                  position: "absolute",
+                  left: "50%",
+                  transform: "translateX(-50%)",
+                }}
+              />
+              <IconButton
+                onClick={handleDrawerClose}
+                sx={{
+                  color: "white",
+                }}
+              >
+                {theme.direction === "rtl" ? (
+                  <ChevronRightIcon />
+                ) : (
+                  <ChevronLeftIcon />
+                )}
+              </IconButton>
+            </Box>
+          </DrawerHeader>
+          <Divider />
+          <List>
+            {SideBarMenu.map((item, index) => (
+              <ListItemLink
+                key={index}
+                to={item.to}
+                primary={item.primary}
+                icon={item.icon}
+                hasLink={item.hasLink}
+                hasCollapse={item.hasCollapse}
+                open={open}
+              >
+                {item.children?.map(
+                  (child: SideBarLinkType, index) => (
+                    <ListItemLink
+                      key={index}
+                      to={child.to && child.to}
+                      primary={child.primary}
+                      icon={child.icon}
+                      hasLink={child.hasLink}
+                      hasCollapse={child.hasCollapse}
+                      open={open}
+                    >
+                      {child.children?.map(
+                        (child: SideBarLinkType, index) => (
+                          <ListItemLink
+                            key={index}
+                            to={child.to && child.to}
+                            primary={child.primary}
+                            icon={child.icon}
+                            hasLink={child.hasLink}
+                            hasCollapse={child.hasCollapse}
+                            open={open}
+                          />
+                        ),
+                      )}
+                    </ListItemLink>
+                  ),
+                )}
+              </ListItemLink>
+            ))}
+          </List>
+        </Drawer>
+      ):(
+        <MuiDrawer
+          variant='temporary'
+          open={open}
+          onClose={handleDrawerClose}
+          ModalProps={{
+            keepMounted: true, // Better open performance on mobile.
+          }}
+          sx={{
+            backgroundColor: primary,
+            position: "relative",
+          }}
+          PaperProps={{
+            sx: {
+              backgroundColor: primary,
+            },
+          }}
+        >
+
+            <img
+              src={sazmanImage}
+              height={"100%"}
+              style={{
+                objectPosition: "right center",
+                filter: "brightness(0.5) contrast(1.2)",
+                opacity: 0.7,
+                position: "absolute",
+                top: 0,
+                left: 0,
+                objectFit: "cover",
+              }}
+            />
+          <List>
+            {SideBarMenu.map((item, index) => (
+              <ListItemLink
+                key={index}
+                to={item.to}
+                primary={item.primary}
+                icon={item.icon}
+                hasLink={item.hasLink}
+                hasCollapse={item.hasCollapse}
+                open={open}
+              >
+                {item.children?.map(
+                  (child: SideBarLinkType, index) => (
+                    <ListItemLink
+                      key={index}
+                      to={child.to && child.to}
+                      primary={child.primary}
+                      icon={child.icon}
+                      hasLink={child.hasLink}
+                      hasCollapse={child.hasCollapse}
+                      open={open}
+                    >
+                      {child.children?.map(
+                        (child: SideBarLinkType, index) => (
+                          <ListItemLink
+                            key={index}
+                            to={child.to && child.to}
+                            primary={child.primary}
+                            icon={child.icon}
+                            hasLink={child.hasLink}
+                            hasCollapse={child.hasCollapse}
+                            open={open}
+                          />
+                        ),
+                      )}
+                    </ListItemLink>
+                  ),
+                )}
+              </ListItemLink>
+            ))}
+          </List>
+        </MuiDrawer>
+      )}
+
+      <Box
+        component='main'
+        sx={{
+          flexGrow: 1,
+          px: {
+            xs: 0,
+            sm: 0,
+            md: 3,
+          },
+        }}
+      >
         <DrawerHeader />
         <Title />
         <Outlet />

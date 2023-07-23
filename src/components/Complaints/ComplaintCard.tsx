@@ -6,7 +6,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
-import { BsArrowDown, BsArrowDownCircle, BsArrowDownShort, BsArrowUp, BsArrowUpLeft, BsArrowUpShort } from "react-icons/bs";
+import { BsArrowDownShort, BsArrowUpShort } from "react-icons/bs";
 
 interface Props {
   title?: string;
