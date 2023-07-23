@@ -54,7 +54,12 @@ const UserManagement = () => {
         open={addModal.open}
         onClose={() => setAddModal({ ...addModal, open: false })}
         name={Titles.usersCreate}
-        width={"50vmax"}
+        width={{
+          xs: "90%",
+          sm: "60%",
+          md: "40%",
+          lg: "30%",
+        }}
         isCloseable={true}
         backgroundColor={background}
       >
@@ -159,9 +164,10 @@ const UserManagement = () => {
 
           <Button
             variant='contained'
+
             sx={{
               "borderRadius": 2,
-              "backgroundColor": primaryLighter,
+              "backgroundColor": Green,
               "fontWeight": 700,
               "fontStyle": "normal",
               "fontSize": "1rem",

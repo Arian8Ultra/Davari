@@ -46,6 +46,7 @@ const UserList = () => {
           //   md: "repeat(4, 1fr)",
           //   lg: "repeat(6, 1fr)",
           // },
+          gap:1,
           gridTemplateAreas:{
             xs: `"firstName lastName personalCode" "operation operation operation"`,
             md: `"firstName lastName personalCode" "operation operation operation"`,
@@ -63,6 +64,7 @@ const UserList = () => {
             md: 14,
             lg: 16,
           }}
+          
         >
           نام
         </Typography>
@@ -138,8 +140,8 @@ const UserList = () => {
       {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item) => (
         <UserCard
           key={item}
-          firstName={"علی"}
-          lastName={"محمدی"}
+          firstName={`کاربر شماره ${item}`}
+          lastName={`کاربر شماره ${item}`}
           id={item}
         />
       ))}

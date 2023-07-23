@@ -1,5 +1,10 @@
 export const Titles = {
     mainTitle:'سامانه داوری',
+    send:'ارسال',
+    cancel:'انصراف',
+    save:'ذخیره',
+    edit:'ویرایش',
+    delete:'حذف',
     home: 'خانه',
     about: 'درباره ما',
     contact: 'تماس با ما',

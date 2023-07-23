@@ -127,6 +127,7 @@ const UserCard = (props: Props) => (
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        // outline: "1px solid red",
         gap: 2,
         // width: "100%",
         // outline: "1px solid red",

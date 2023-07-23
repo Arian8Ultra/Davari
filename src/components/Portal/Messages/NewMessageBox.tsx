@@ -15,6 +15,7 @@ import {
   useScrollTrigger,
 } from "@mui/material";
 import { useState } from "react";
+import { Titles } from "../../../assets/static/Titles";
 
 const NewMessageBox = () => {
   const [scrollTarget, setScrollTarget] = useState(undefined);
@@ -183,7 +184,7 @@ const NewMessageBox = () => {
               },
             }}
           >
-            افزودن
+          {Titles.send}
           </Button>
         </Box>
       </Box>

@@ -39,13 +39,13 @@ export const SideBarMenu = [
         hasLink: true,
         hasCollapse: false,
       },
-      {
-        primary: Titles.employeeManagement,
-        to: "/portal/employee_management",
-        icon: <BsPeopleFill />,
-        hasLink: true,
-        hasCollapse: false,
-      },
+      // {
+      //   primary: Titles.employeeManagement,
+      //   to: "/portal/employee_management",
+      //   icon: <BsPeopleFill />,
+      //   hasLink: true,
+      //   hasCollapse: false,
+      // },
       {
         primary: Titles.answerToComplaints,
         to: "/portal/complain_answers",
