@@ -1,19 +1,19 @@
-export const primary = "rgb(255, 160, 0)";
-export const primaryGrey = "rgb(255, 152, 0)";
-export const primaryLight = 'rgb(255, 193, 7)';
-export const primaryLighter = 'rgb(255, 236, 179)';
-export const primaryLightTransparent = 'rgba(129, 199, 132,0.2)';
-export const primaryTransparent = 'rgba(35, 48, 94,0.2)';
-export const primaryGreyTransparent = 'rgba(60, 65, 87,0.6)';
-export const primaryDark = "rgb(255, 111, 0)";
-// export const primary = "rgb(35, 48, 94)";
-// export const primaryGrey = "rgb(60, 65, 87)";
-// export const primaryLight = 'rgb(63, 81, 181)';
-// export const primaryLighter = 'rgb(227, 242, 253)';
-// export const primaryLightTransparent = 'rgba(63, 81, 181,0.2)';
+// export const primary = "rgb(255, 160, 0)";
+// export const primaryGrey = "rgb(255, 152, 0)";
+// export const primaryLight = 'rgb(255, 193, 7)';
+// export const primaryLighter = 'rgb(255, 236, 179)';
+// export const primaryLightTransparent = 'rgba(129, 199, 132,0.2)';
 // export const primaryTransparent = 'rgba(35, 48, 94,0.2)';
 // export const primaryGreyTransparent = 'rgba(60, 65, 87,0.6)';
-// export const primaryDark = "rgb(49, 27, 146)";
+// export const primaryDark = "rgb(255, 111, 0)";
+export const primary = "rgb(35, 48, 94)";
+export const primaryGrey = "rgb(60, 65, 87)";
+export const primaryLight = 'rgb(63, 81, 181)';
+export const primaryLighter = 'rgb(227, 242, 253)';
+export const primaryLightTransparent = 'rgba(63, 81, 181,0.2)';
+export const primaryTransparent = 'rgba(35, 48, 94,0.2)';
+export const primaryGreyTransparent = 'rgba(60, 65, 87,0.6)';
+export const primaryDark = "rgb(49, 27, 146)";
 
 
 export const secondary = "rgb(255, 152, 0)";
