@@ -19,7 +19,7 @@ import {
   styled,
   useTheme,
 } from "@mui/material/styles";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { VscAccount } from "react-icons/vsc";
 import {
   Outlet,
@@ -37,7 +37,9 @@ import {
 import { Titles } from "../assets/static/Titles";
 import ListItemLink from "../components/ListItemLink";
 import Title from "../components/Title";
-import { Green, primary } from "../theme/color";
+import { Green, background, primary } from "../theme/color";
+import { useUserStore } from "../Context/UserStore";
+import NewModal from "../components/Modals";
 
 const drawerWidth = 240;
 
@@ -117,6 +119,13 @@ export default function MainLayout() {
   const setLocation = useLayoutStore((state) => state.setLocation);
   const oldLocation = useLayoutStore((state) => state.location);
   const navigate = useNavigate();
+  const token = useUserStore((state) => state.token)
+  const [signedIn, setSignedIn] = React.useState(false);
+  const [signInModal,setSignInModal]= useState({
+    open :false,
+    userName: "",
+    password: ""
+  })
   const [isSmallScreen, setIsSmallScreen] = React.useState(
     matchMedia("(max-width: 600px)").matches,
   );
@@ -124,6 +133,19 @@ export default function MainLayout() {
   const [isMediumScreen, setIsMediumScreen] = React.useState(
     matchMedia("(max-width: 960px)").matches,
   );
+
+  useEffect(() =>{
+    console.log(
+      "token" + token
+    );
+    
+    if(token){
+      setSignedIn(true)
+    }
+    else{
+      setSignedIn(false)
+    }
+  },[token] )
 
   React.useEffect(() => {
     const handler = (e: MediaQueryListEvent) => {
@@ -179,6 +201,19 @@ export default function MainLayout() {
 
   return (
     <Box sx={{ display: "flex" }}>
+      {signedIn ? (
+        <NewModal
+        name="ورود به سامانه"
+        backgroundColor={background}
+        open={signInModal.open}
+        onClose={()=>
+          setSignInModal({ ...signInModal, open: false })
+        }
+        color={primary}
+        >
+          Hello
+        </NewModal>
+      ) : ('')}
       <CssBaseline />
       <ScrollRestoration />
       {!isSmallScreen ? (
@@ -296,9 +331,9 @@ export default function MainLayout() {
             >
               {Titles.mainTitle}
             </Typography>
-            <IconButton>
+            {/* <IconButton>
               <VscAccount />
-            </IconButton>
+            </IconButton> */}
           </Toolbar>
         </MuiAppBar>
       )}

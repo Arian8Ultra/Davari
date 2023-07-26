@@ -25,10 +25,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
       <CacheProvider value={cacheRtl}>
-      <ApolloProvider client={client}>
-
-      </ApolloProvider>
+        <ApolloProvider client={client}>
           <RouterProvider router={router} />
+        </ApolloProvider>
       </CacheProvider>
     </ThemeProvider>
   </React.StrictMode>

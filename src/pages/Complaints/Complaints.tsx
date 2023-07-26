@@ -3,7 +3,6 @@ import ComplaintsList from "../../components/Complaints/ComplaintsList";
 import NewModal from "../../components/Modals";
 import { Box, Button, TextField } from "@mui/material";
 import { Green, GreenLight, background } from "../../theme/color";
-import { BsPersonAdd } from "react-icons/bs";
 import { AiFillFileAdd } from "react-icons/ai";
 
 const Complaints = () => {
