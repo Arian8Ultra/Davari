@@ -47,7 +47,7 @@ const Error = () => {
         </Typography>
         <Typography variant='body1'>{error?.statusText}</Typography>
         <Typography variant='caption'>
-          {error?.error.message}
+          {error?.error?.message}
         </Typography>
         <Typography
           variant='caption'

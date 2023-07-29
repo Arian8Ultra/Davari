@@ -14,46 +14,47 @@ interface UserStore {
     phoneNumber: string;
   };
   token: string;
-  setUser: (user: User,token:string) => void;
+  expireDate: Date;
+  setUser: (user: User, token: string, expireDate: Date) => void;
   logout: () => void;
 }
 
 export const useUserStore = create<UserStore>()(
-    persist(
-        (set, get) => ({
-            user: {
-                userName: "",
-                firstName: "",
-                lastName: "",
-                nationalCode: "",
-                personnelCode: "",
-                departmentId: 0,
-                phoneNumber: "",
-                id: '',
-            },
-            token: "",
-            setUser: (user: User,token : string) => {
-                set({ user: user, token: token });
-            }
-            ,
-            logout: () => {
-                set({
-                    user: {
-                        userName: "",
-                        id: '',
-                        firstName: "",
-                        lastName: "",
-                        nationalCode: "",
-                        personnelCode: "",
-                        departmentId: 0,
-                        phoneNumber: "",
-                    },
-                    token: "",
-                });
-            }
-        }),
-      {
-        name: "user-store",
+  persist(
+    (set, get) => ({
+      user: {
+        userName: "",
+        firstName: "",
+        lastName: "",
+        nationalCode: "",
+        personnelCode: "",
+        departmentId: 0,
+        phoneNumber: "",
+        id: "",
       },
-    ),
-  );
+      token: "",
+      expireDate: new Date(),
+      setUser: (user: User, token: string, expireDate: Date) => {
+        set({ user: user, token: token, expireDate: expireDate });
+      },
+      logout: () => {
+        set({
+          user: {
+            userName: "",
+            id: "",
+            firstName: "",
+            lastName: "",
+            nationalCode: "",
+            personnelCode: "",
+            departmentId: 0,
+            phoneNumber: "",
+          },
+          token: "",
+        });
+      },
+    }),
+    {
+      name: "user-store",
+    }
+  )
+);

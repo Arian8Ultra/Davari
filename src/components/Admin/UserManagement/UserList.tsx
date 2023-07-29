@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
@@ -13,7 +14,7 @@ import { GET_ALL_USERS } from "../../../GraphQL/Users/Queries";
 import { User } from "../../../assets/static/Types";
 
 const UserList = () => {
-  const {data,loading,error} = useQuery(GET_ALL_USERS,{
+  const {data,loading,error,refetch} = useQuery(GET_ALL_USERS,{
     onCompleted(data) {
       console.log(data);
     },
@@ -165,6 +166,7 @@ const UserList = () => {
           department={String(user.departmentId)}
           id={user.id}
           userName={user.userName}
+          refetch={refetch}
         />
       ))}
     </Stack>

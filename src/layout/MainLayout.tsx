@@ -143,6 +143,7 @@ export default function MainLayout() {
   const token = useUserStore((state) => state.token);
   const firstName = useUserStore((state) => state.user.firstName);
   const lastName = useUserStore((state) => state.user.lastName);
+  const expireDate = useUserStore((state) => state.expireDate);
   const logout = useUserStore((state) => state.logout);
   const [signedIn, setSignedIn] = React.useState(false);
   const [menuOpen, setMenuOpen] = React.useState(false);
@@ -171,6 +172,15 @@ export default function MainLayout() {
       setSignInModal({ ...signInModal, open: false });
     }
   }, [token]);
+
+
+  useEffect(() => {
+    const now = new Date();
+    if (expireDate && expireDate < now) {
+      logout();
+    }
+  }, [expireDate, logout]);
+  
 
   React.useEffect(() => {
     const handler = (e: MediaQueryListEvent) => {
@@ -217,13 +227,21 @@ export default function MainLayout() {
     },
     onCompleted(data, clientOptions) {
       console.log(data);
+      const expireDate = new Date(
+        data.user_signIn.result.expireDate
+      );
+      const now = new Date();
+      const diff = expireDate.getTime() - now.getTime();
+      const expiresIn = diff / 1000;
+      console.log(expiresIn);
       if (
         (data.user_signIn.result.user as User) &&
         data.user_signIn.result.token
       ) {
         setUser(
           data.user_signIn.result.user,
-          data.user_signIn.result.token
+          data.user_signIn.result.token,
+          expireDate
         );
       }
     },
@@ -254,7 +272,7 @@ export default function MainLayout() {
           backgroundColor={background}
           open={!signedIn}
           isCloseable={false}
-          background={`linear-gradient(45deg, ${primary} -10%, ${primaryLighter}, ${primaryLighter})`}
+          // background={`linear-gradient(45deg, ${primary} -10%, ${primaryLighter}, ${primaryLighter})`}
           color={primary}
         >
           <Box
@@ -319,7 +337,11 @@ export default function MainLayout() {
                 error={error?.message ? true : false}
                 value={signInModal.userName}
                 sx={{
-                  width: "60%",
+                  width: "80%",
+                  "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
+                  {
+                    borderRadius: "15px",
+                  },
                 }}
               />
               <TextField
@@ -337,8 +359,12 @@ export default function MainLayout() {
                 error={error?.message ? true : false}
                 value={signInModal.password}
                 sx={{
-                  width: "60%",
+                  width: "80%",
                   marginTop: "1rem",
+                  "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
+                  {
+                    borderRadius: "15px",
+                  },
                 }}
               />
 
@@ -350,7 +376,9 @@ export default function MainLayout() {
                     ? red[500]
                     : primary,
                   color: "white",
-                  width: "60%",
+                  width: "80%",
+                  borderRadius: "15px",
+                  padding: "0.5rem",
                   "&:hover": {
                     backgroundColor: Green,
                   },
