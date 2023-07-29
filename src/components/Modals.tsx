@@ -20,6 +20,7 @@ interface NewModalProps {
   open: boolean;
   onClose?: Function;
   backgroundColor?: string;
+  background?:string;
   isCloseable?: boolean;
   dividerColor?: string;
 }
@@ -31,6 +32,7 @@ export default function NewModal(props: NewModalProps) {
     color,
     name,
     backgroundColor,
+    background,
     isCloseable,
     dividerColor,
     ...rest
@@ -60,6 +62,7 @@ export default function NewModal(props: NewModalProps) {
           maxHeight: height,
           overflow: "auto",
           bgcolor: backgroundColor,
+          background:background,
           boxShadow: 24,
           borderRadius: '15px',
           backdropFilter: "blur(5px)",

@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Box, Stack, Typography } from "@mui/material";
 import {
   primaryGrey,
@@ -5,8 +8,19 @@ import {
 } from "../../../theme/color";
 import theme from "../../../theme/theme";
 import UserCard from "./UserCard";
+import { useQuery } from "@apollo/client";
+import { GET_ALL_USERS } from "../../../GraphQL/Users/Queries";
+import { User } from "../../../assets/static/Types";
 
 const UserList = () => {
+  const {data,loading,error} = useQuery(GET_ALL_USERS,{
+    onCompleted(data) {
+      console.log(data);
+    },
+    onError(error) {
+      console.log(error);
+    }
+  })
   return (
     <Stack
       width={"100%"}
@@ -53,6 +67,8 @@ const UserList = () => {
             lg: `"firstName lastName personalCode department status operation"`,
             xl: `"firstName lastName personalCode department status operation"`,
           },
+          gridAutoColumns: "1fr",
+
         }}
       >
         <Typography
@@ -121,7 +137,7 @@ const UserList = () => {
             lg: 16,
           }}
         >
-          وضعیت
+          نام کاربری
         </Typography>
         <Typography
           gridArea={"operation"}
@@ -137,12 +153,18 @@ const UserList = () => {
         </Typography>
       </Box>
 
-      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item) => (
+      {loading && <p>در حال بارگذاری</p>}
+      {error && <p>خطا در بارگذاری</p>}
+
+      {data?.user_getUsers?.result?.items?.map((user:User) => (
         <UserCard
-          key={item}
-          firstName={`کاربر شماره ${item}`}
-          lastName={`کاربر شماره ${item}`}
-          id={item}
+          key={user.id}
+          firstName={user.firstName}
+          lastName={user.lastName}
+          personalCode={user.personnelCode}
+          department={String(user.departmentId)}
+          id={user.id}
+          userName={user.userName}
         />
       ))}
     </Stack>

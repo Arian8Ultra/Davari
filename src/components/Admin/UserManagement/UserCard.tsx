@@ -13,15 +13,33 @@ import {
   primary,
   primaryTransparent,
 } from "../../../theme/color";
+import { useMutation } from "@apollo/client";
+import { UserDelete } from "../../../GraphQL/Users/Mutations";
 interface Props {
   firstName?: string;
   lastName?: string;
   personalCode?: string;
   department?: string;
-  status?: string;
+  userName?: string;
   id: string | number;
 }
-const UserCard = (props: Props) => (
+const UserCard = (props: Props) => {
+
+  const [deleteUser]= useMutation(UserDelete,{
+    variables: {
+      id: props.id,
+    },
+    onCompleted(data, clientOptions) {
+      console.log(data);
+      alert("کاربر با موفقیت حذف شد");
+    },
+    onError(error) {
+      console.log(error);
+      alert("مشکلی در حذف کاربر به وجود آمده است");
+    },
+  })
+
+  return(
   <Box
     sx={{
       "backgroundColor": "rgba(255,255,255,1)",
@@ -31,7 +49,6 @@ const UserCard = (props: Props) => (
       "borderBottom": "1px solid rgba(100,100,100,0.2)",
       // boxShadow: '2px 2px 5px 1px rgba(0,0,0,0.2)',
       "display": "grid",
-      "gap": 1,
       "alignItems": "center",
       // "gridTemplateColumns": {
       //   xs: "repeat(2, 1fr)",
@@ -39,12 +56,14 @@ const UserCard = (props: Props) => (
       //   md: "repeat(4, 1fr)",
       //   lg: "repeat(6, 1fr)",
       // },
+      gap:1,
       gridTemplateAreas:{
         xs: `"firstName lastName personalCode" "operation operation operation"`,
         md: `"firstName lastName personalCode" "operation operation operation"`,
         lg: `"firstName lastName personalCode department status operation"`,
         xl: `"firstName lastName personalCode department status operation"`,
       },
+      gridAutoColumns: "1fr",
       "&:hover": {
         backgroundColor: "rgba(255,255,255,0.6)",
         cursor: "pointer",
@@ -76,6 +95,9 @@ const UserCard = (props: Props) => (
         md: 14,
         lg: 16,
       }}
+      // sx={{
+      //   outline:'2px solid red'
+      // }}
     >
       {props.lastName && props.lastName}
     </Typography>
@@ -90,8 +112,11 @@ const UserCard = (props: Props) => (
         md: 14,
         lg: 16,
       }}
+      // sx={{
+      //   outline:'2px solid red'
+      // }}
     >
-      {props.personalCode && props.personalCode}
+      {props.personalCode ? props.personalCode : "ندارد"}
     </Typography>
 
     <Typography
@@ -104,6 +129,9 @@ const UserCard = (props: Props) => (
         md: 14,
         lg: 16,
       }}
+      // sx={{
+      //   outline:'2px solid red'
+      // }}
     >
       {props.department && props.department}
     </Typography>
@@ -118,8 +146,11 @@ const UserCard = (props: Props) => (
         md: 14,
         lg: 16,
       }}
+      // sx={{
+      //   outline:'2px solid red'
+      // }}
     >
-      {props.status && props.status}
+      {props.userName && props.userName}
     </Typography>
     <Box
       gridArea={"operation"}
@@ -160,7 +191,7 @@ const UserCard = (props: Props) => (
               `آیا از حذف کاربر '${props.firstName} ${props.lastName}' مطمئن هستید؟`,
             );
             if (agree) {
-              console.log("deleted");
+              void deleteUser();
             }
           }}
           sx={{
@@ -225,6 +256,7 @@ const UserCard = (props: Props) => (
       </Tooltip>
     </Box>
   </Box>
-);
+  )
+};
 
 export default UserCard;

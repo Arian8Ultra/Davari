@@ -1,8 +1,17 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import MenuIcon from "@mui/icons-material/Menu";
-import { CssBaseline } from "@mui/material";
+import {
+  Button,
+  CssBaseline,
+  LinearProgress,
+  Skeleton,
+  TextField,
+} from "@mui/material";
 import MuiAppBar, {
   AppBarProps as MuiAppBarProps,
 } from "@mui/material/AppBar";
@@ -20,7 +29,7 @@ import {
   useTheme,
 } from "@mui/material/styles";
 import React, { useEffect, useState } from "react";
-import { VscAccount } from "react-icons/vsc";
+import { VscAccount, VscLock } from "react-icons/vsc";
 import {
   Outlet,
   ScrollRestoration,
@@ -37,9 +46,23 @@ import {
 import { Titles } from "../assets/static/Titles";
 import ListItemLink from "../components/ListItemLink";
 import Title from "../components/Title";
-import { Green, background, primary } from "../theme/color";
+import {
+  Green,
+  background,
+  primary,
+  primaryLighter,
+  primaryTransparent,
+} from "../theme/color";
 import { useUserStore } from "../Context/UserStore";
 import NewModal from "../components/Modals";
+import { red } from "@mui/material/colors";
+import { useMutation } from "@apollo/client";
+import {
+  UserLogin,
+  UserLoginInput,
+} from "../GraphQL/Users/Mutations";
+import { User } from "../assets/static/Types";
+import { ErrorsByCodeFA } from "../GraphQL/Errors";
 
 const drawerWidth = 240;
 
@@ -119,33 +142,33 @@ export default function MainLayout() {
   const setLocation = useLayoutStore((state) => state.setLocation);
   const oldLocation = useLayoutStore((state) => state.location);
   const navigate = useNavigate();
-  const token = useUserStore((state) => state.token)
+  const setUser = useUserStore((state) => state.setUser);
+  const token = useUserStore((state) => state.token);
   const [signedIn, setSignedIn] = React.useState(false);
-  const [signInModal,setSignInModal]= useState({
-    open :false,
+  const [signInModal, setSignInModal] = useState({
+    open: false,
     userName: "",
-    password: ""
-  })
+    password: "",
+  });
   const [isSmallScreen, setIsSmallScreen] = React.useState(
-    matchMedia("(max-width: 600px)").matches,
+    matchMedia("(max-width: 600px)").matches
   );
 
   const [isMediumScreen, setIsMediumScreen] = React.useState(
-    matchMedia("(max-width: 960px)").matches,
+    matchMedia("(max-width: 960px)").matches
   );
 
-  useEffect(() =>{
-    console.log(
-      "token" + token
-    );
-    
-    if(token){
-      setSignedIn(true)
+  useEffect(() => {
+    console.log("token" + token);
+
+    if (token && token !== "") {
+      setSignedIn(true);
+      setSignInModal({ ...signInModal, open: true });
+    } else {
+      setSignedIn(false);
+      setSignInModal({ ...signInModal, open: false });
     }
-    else{
-      setSignedIn(false)
-    }
-  },[token] )
+  }, [token]);
 
   React.useEffect(() => {
     const handler = (e: MediaQueryListEvent) => {
@@ -153,12 +176,12 @@ export default function MainLayout() {
     };
     matchMedia("(max-width: 600px)").addEventListener(
       "change",
-      handler,
+      handler
     );
     return () =>
       matchMedia("(max-width: 600px)").removeEventListener(
         "change",
-        handler,
+        handler
       );
   }, []);
 
@@ -168,12 +191,12 @@ export default function MainLayout() {
     };
     matchMedia("(max-width: 960px)").addEventListener(
       "change",
-      handler,
+      handler
     );
     return () =>
       matchMedia("(max-width: 960px)").removeEventListener(
         "change",
-        handler,
+        handler
       );
   }, []);
 
@@ -184,6 +207,25 @@ export default function MainLayout() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+
+  const [userLogin, { error, loading }] = useMutation(UserLogin, {
+    variables: {
+      userName: signInModal.userName,
+      password: signInModal.password,
+    },
+    onCompleted(data, clientOptions) {
+      console.log(data);
+      if (
+        (data.user_signIn.result.user as User) &&
+        data.user_signIn.result.token
+      ) {
+        setUser(data.user_signIn.result.user, data.user_signIn.result.token);
+      }
+    },
+    onError(error, clientOptions) {
+      console.log(error);
+    },
+  });
 
   useEffect(() => {
     if (oldLocation) {
@@ -201,24 +243,148 @@ export default function MainLayout() {
 
   return (
     <Box sx={{ display: "flex" }}>
-      {signedIn ? (
+      {!signedIn ? (
         <NewModal
-        name="ورود به سامانه"
-        backgroundColor={background}
-        open={signInModal.open}
-        onClose={()=>
-          setSignInModal({ ...signInModal, open: false })
-        }
-        color={primary}
+          name="ورود به سامانه"
+          backgroundColor={background}
+          open={!signedIn}
+          isCloseable={false}
+          background={`linear-gradient(45deg, ${primary} -10%, ${primaryLighter}, ${primaryLighter})`}
+          color={primary}
         >
-          Hello
+          <Box
+            display={"flex"}
+            flexDirection={"column"}
+            justifyContent={"center"}
+            alignItems={"center"}
+            width={"100%"}
+            height={"100%"}
+          >
+            <Box display={"flex"} justifyContent={"center"}>
+              <Box
+                display={"flex"}
+                justifyContent={"center"}
+                alignItems={"center"}
+                padding={1}
+                borderRadius={"100%"}
+                marginBottom={"2rem"}
+                sx={{
+                  backgroundColor: primary,
+                  color: "white",
+                  fontSize: "2rem",
+                }}
+              >
+                <VscLock />
+              </Box>
+            </Box>
+            <Typography
+              variant="body1"
+              sx={{
+                marginTop: "1rem",
+                paddingBottom: "1rem",
+              }}
+            >
+              نام کاربری و رمز عبور خود را وارد کنید
+            </Typography>
+
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                void userLogin();
+              }}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                width: "100%",
+              }}
+            >
+              <TextField
+                label="نام کاربری"
+                variant="outlined"
+                onChange={(e) =>
+                  setSignInModal({
+                    ...signInModal,
+                    userName: e.target.value,
+                  })
+                }
+                helperText={error?.message}
+                error={error?.message ? true : false}
+                value={signInModal.userName}
+                sx={{
+                  width: "60%",
+                }}
+              />
+              <TextField
+                label="رمز عبور"
+                variant="outlined"
+                onChange={(e) =>
+                  setSignInModal({
+                    ...signInModal,
+                    password: e.target.value,
+                  })
+                }
+                helperText={error?.message}
+                error={error?.message ? true : false}
+                value={signInModal.password}
+                sx={{
+                  width: "60%",
+                  marginTop: "1rem",
+                }}
+              />
+
+              <Button
+                variant="contained"
+                sx={{
+                  marginTop: "1rem",
+                  backgroundColor: error?.message
+                    ? red[500]
+                    : primary,
+                  color: "white",
+                  width: "60%",
+                  "&:hover": {
+                    backgroundColor: Green,
+                  },
+                }}
+                type="submit"
+                onClick={() => {
+                  void userLogin();
+                }}
+              >
+                {loading ? (
+                  <LinearProgress
+                    variant="indeterminate"
+                    color="secondary"
+                  />
+                ) : (
+                  ""
+                )}
+                ورود
+              </Button>
+            </form>
+            {error?.message && (
+              <Typography
+                variant="body1"
+                sx={{
+                  marginTop: "1rem",
+                  paddingBottom: "1rem",
+                  color: red[500],
+                }}
+              >
+                {error?.message}
+              </Typography>
+            )}
+          </Box>
         </NewModal>
-      ) : ('')}
+      ) : (
+        ""
+      )}
       <CssBaseline />
       <ScrollRestoration />
       {!isSmallScreen ? (
         <AppBar
-          position='fixed'
+          position="fixed"
           open={open}
           sx={{
             // backgroundColor: primaryLight,
@@ -248,10 +414,10 @@ export default function MainLayout() {
             // rotate: "90deg",
           }}/> */}
             <IconButton
-              color='inherit'
-              aria-label='open drawer'
+              color="inherit"
+              aria-label="open drawer"
               onClick={handleDrawerOpen}
-              edge='start'
+              edge="start"
               sx={{
                 marginRight: 5,
                 ...(open && { display: "none" }),
@@ -260,9 +426,9 @@ export default function MainLayout() {
               <MenuIcon />
             </IconButton>
             <Typography
-              variant='h6'
+              variant="h6"
               noWrap
-              component='div'
+              component="div"
               sx={{
                 flexGrow: 1,
               }}
@@ -275,21 +441,21 @@ export default function MainLayout() {
           </Toolbar>
         </AppBar>
       ) : (
-        <MuiAppBar 
-        position='fixed'
-        sx={{
-          // backgroundColor: primaryLight,
-          background: primary,
-          justifyContent: "center",
-          alignItems: "space-between",
-          boxShadow: "none",
-          zIndex: theme.zIndex.drawer + 1,
-          // backgroundImage: `url(${Pattern})`,
-          // backgroundPosition: "right center",
-          // backgroundRepeat: "repeat-y",
-        }}
+        <MuiAppBar
+          position="fixed"
+          sx={{
+            // backgroundColor: primaryLight,
+            background: primary,
+            justifyContent: "center",
+            alignItems: "space-between",
+            boxShadow: "none",
+            zIndex: theme.zIndex.drawer + 1,
+            // backgroundImage: `url(${Pattern})`,
+            // backgroundPosition: "right center",
+            // backgroundRepeat: "repeat-y",
+          }}
         >
-                    <Toolbar
+          <Toolbar
             sx={{
               position: "relative",
             }}
@@ -306,25 +472,23 @@ export default function MainLayout() {
             // rotate: "90deg",
           }}/> */}
             <IconButton
-              color='inherit'
-              aria-label='open drawer'
-              onClick={()=>{
-                setOpen(!open)
+              color="inherit"
+              aria-label="open drawer"
+              onClick={() => {
+                setOpen(!open);
               }}
-              edge='start'
+              edge="start"
               sx={{
                 marginRight: 5,
                 // ...(open && { display: "none" }),
               }}
             >
-              {
-                open ? <ChevronRightIcon /> : <MenuIcon />
-              }
+              {open ? <ChevronRightIcon /> : <MenuIcon />}
             </IconButton>
             <Typography
-              variant='h6'
+              variant="h6"
               noWrap
-              component='div'
+              component="div"
               sx={{
                 flexGrow: 1,
               }}
@@ -340,7 +504,7 @@ export default function MainLayout() {
 
       {!isSmallScreen ? (
         <Drawer
-          variant='permanent'
+          variant="permanent"
           open={open}
           sx={{
             backgroundColor: primary,
@@ -354,9 +518,9 @@ export default function MainLayout() {
         >
           <Box
             width={"100%"}
-            display='flex'
-            justifyContent='center'
-            alignItems='center'
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
             position={"absolute"}
             sx={{
               top: 0,
@@ -445,18 +609,18 @@ export default function MainLayout() {
                             hasCollapse={child.hasCollapse}
                             open={open}
                           />
-                        ),
+                        )
                       )}
                     </ListItemLink>
-                  ),
+                  )
                 )}
               </ListItemLink>
             ))}
           </List>
         </Drawer>
-      ):(
+      ) : (
         <MuiDrawer
-          variant='temporary'
+          variant="temporary"
           open={open}
           onClose={handleDrawerClose}
           ModalProps={{
@@ -472,21 +636,20 @@ export default function MainLayout() {
             },
           }}
         >
-
-            <img
-              src={sazmanImage}
-              height={"100%"}
-              style={{
-                objectPosition: "right center",
-                filter: "brightness(0.5) contrast(1.2)",
-                opacity: 0.7,
-                position: "absolute",
-                top: 0,
-                left: 0,
-                objectFit: "cover",
-              }}
-            />
-            <DrawerHeader/>
+          <img
+            src={sazmanImage}
+            height={"100%"}
+            style={{
+              objectPosition: "right center",
+              filter: "brightness(0.5) contrast(1.2)",
+              opacity: 0.7,
+              position: "absolute",
+              top: 0,
+              left: 0,
+              objectFit: "cover",
+            }}
+          />
+          <DrawerHeader />
           <List>
             {SideBarMenu.map((item, index) => (
               <ListItemLink
@@ -520,10 +683,10 @@ export default function MainLayout() {
                             hasCollapse={child.hasCollapse}
                             open={open}
                           />
-                        ),
+                        )
                       )}
                     </ListItemLink>
-                  ),
+                  )
                 )}
               </ListItemLink>
             ))}
@@ -532,7 +695,7 @@ export default function MainLayout() {
       )}
 
       <Box
-        component='main'
+        component="main"
         sx={{
           flexGrow: 1,
           px: {

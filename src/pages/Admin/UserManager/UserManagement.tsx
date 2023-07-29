@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import { Box, Button, Stack, TextField } from "@mui/material";
 import { BsPersonAdd } from "react-icons/bs";
 import UserList from "../../../components/Admin/UserManagement/UserList";
@@ -10,16 +11,46 @@ import {
 import NewModal from "../../../components/Modals";
 import { useState } from "react";
 import { Titles } from "../../../assets/static/Titles";
+import { useMutation } from "@apollo/client";
+import { UserSignUp } from "../../../GraphQL/Users/Mutations";
+import { red } from "@mui/material/colors";
 
 const UserManagement = () => {
   const [addModal, setAddModal] = useState({
     open: false,
+    confirmPassword: "",
+    departmentId: 0,
+    email: "",
     firstName: "",
     lastName: "",
-    email: "",
+    nationalCode: "",
+    personnelCode: "",
     password: "",
-    confirmPassword: "",
     phoneNumber: "",
+    userName: "",
+  });
+
+  const [userSignUp, { loading, error }] = useMutation(UserSignUp, {
+    variables: {
+      firstName: addModal.firstName,
+      lastName: addModal.lastName,
+      userName: addModal.userName,
+      nationalCode: addModal.nationalCode,
+      personnelCode: addModal.personnelCode,
+      password: addModal.password,
+      confirmPassword: addModal.confirmPassword,
+      email: addModal.email,
+      departmentId: addModal.departmentId,
+      phoneNumber: addModal.phoneNumber,
+    },
+    onCompleted(data, clientOptions) {
+      console.log(data);
+      alert("کاربر با موفقیت افزوده شد");
+    },
+    onError(error) {
+      console.error(error);
+      alert("مشکلی در افزودن کاربر به وجود آمده است");
+    },
   });
   return (
     <>
@@ -30,16 +61,16 @@ const UserManagement = () => {
         paddingY={1}
       >
         <Button
-          variant='contained'
+          variant="contained"
           endIcon={<BsPersonAdd />}
           onClick={() => [setAddModal({ ...addModal, open: true })]}
           sx={{
-            "borderRadius": 2,
-            "backgroundColor": Green,
-            "fontWeight": 700,
-            "fontStyle": "normal",
-            "fontSize": "1rem",
-            "boxShadow": "none",
+            borderRadius: 2,
+            backgroundColor: Green,
+            fontWeight: 700,
+            fontStyle: "normal",
+            fontSize: "1rem",
+            boxShadow: "none",
             "&:hover": {
               backgroundColor: GreenLight,
             },
@@ -106,6 +137,69 @@ const UserManagement = () => {
 
           <TextField
             fullWidth
+            label={"نام کاربری"}
+            type="number"
+            variant={"outlined"}
+            value={addModal.userName}
+            sx={{
+              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
+                {
+                  borderRadius: "15px",
+                },
+              gridColumn: {
+                xs: "1/2",
+                lg: "1/3",
+              },
+            }}
+            onChange={(e) =>
+              setAddModal({
+                ...addModal,
+                userName: e.target.value,
+              })
+            }
+          />
+          <TextField
+            fullWidth
+            label={"کد ملی"}
+            type="number"
+            variant={"outlined"}
+            value={addModal.nationalCode}
+            sx={{
+              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
+                {
+                  borderRadius: "15px",
+                },
+            }}
+            onChange={(e) =>
+              setAddModal({
+                ...addModal,
+                nationalCode: e.target.value,
+              })
+            }
+          />
+
+          <TextField
+            fullWidth
+            label={"کد پرسنلی"}
+            type="number"
+            variant={"outlined"}
+            value={addModal.personnelCode}
+            sx={{
+              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
+                {
+                  borderRadius: "15px",
+                },
+            }}
+            onChange={(e) =>
+              setAddModal({
+                ...addModal,
+                personnelCode: e.target.value,
+              })
+            }
+          />
+
+          <TextField
+            fullWidth
             label={"ایمیل"}
             variant={"outlined"}
             value={addModal.email}
@@ -114,6 +208,10 @@ const UserManagement = () => {
                 {
                   borderRadius: "15px",
                 },
+              gridColumn: {
+                xs: "1/2",
+                lg: "1/3",
+              },
             }}
             onChange={(e) =>
               setAddModal({ ...addModal, email: e.target.value })
@@ -125,6 +223,7 @@ const UserManagement = () => {
             label={"رمز عبور"}
             variant={"outlined"}
             value={addModal.password}
+            type="password"
             sx={{
               "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
                 {
@@ -140,6 +239,7 @@ const UserManagement = () => {
             fullWidth
             label={"تکرار رمز عبور"}
             variant={"outlined"}
+            type="password"
             value={addModal.confirmPassword}
             sx={{
               "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
@@ -174,16 +274,35 @@ const UserManagement = () => {
             }
           />
 
-          <Button
-            variant='contained'
+          <TextField
+            fullWidth
+            label={"دپارتمان"}
+            variant={"outlined"}
+            value={addModal.departmentId}
             sx={{
-              "borderRadius": 2,
-              "backgroundColor": Green,
-              "fontWeight": 700,
-              "fontStyle": "normal",
-              "fontSize": "1rem",
-              "boxShadow": "none",
-              "gridColumn": {
+              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
+                {
+                  borderRadius: "15px",
+                },
+            }}
+            onChange={(e) =>
+              setAddModal({
+                ...addModal,
+                departmentId: parseInt(e.target.value),
+              })
+            }
+          />
+
+          <Button
+            variant="contained"
+            sx={{
+              borderRadius: 2,
+              backgroundColor: error ? red[500] : Green,
+              fontWeight: 700,
+              fontStyle: "normal",
+              fontSize: "1rem",
+              boxShadow: "none",
+              gridColumn: {
                 xs: "1/2",
                 lg: "1/3",
               },
@@ -191,7 +310,10 @@ const UserManagement = () => {
                 backgroundColor: GreenLight,
               },
             }}
+            type="submit"
+            onClick={() => userSignUp()}
           >
+            {loading && "در حال افزودن..."}
             افزودن
           </Button>
         </Box>

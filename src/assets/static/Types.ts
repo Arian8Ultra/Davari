@@ -1,11 +1,12 @@
 export type User = {
     firstName: string;
     lastName: string;
-    nationCode: string;
-    personalCode: string;
+    nationalCode: string;
+    personnelCode: string;
     departmentId: number;
     phoneNumber: string;
     userName: string;
+    email: string;
     id: string;
 }
 

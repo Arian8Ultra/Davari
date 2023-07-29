@@ -8,8 +8,8 @@ interface UserStore {
     id: string;
     firstName: string;
     lastName: string;
-    nationCode: string;
-    personalCode: string;
+    nationalCode: string;
+    personnelCode: string;
     departmentId: number;
     phoneNumber: string;
   };
@@ -25,8 +25,8 @@ export const useUserStore = create<UserStore>()(
                 userName: "",
                 firstName: "",
                 lastName: "",
-                nationCode: "",
-                personalCode: "",
+                nationalCode: "",
+                personnelCode: "",
                 departmentId: 0,
                 phoneNumber: "",
                 id: '',
@@ -43,8 +43,8 @@ export const useUserStore = create<UserStore>()(
                         id: '',
                         firstName: "",
                         lastName: "",
-                        nationCode: "",
-                        personalCode: "",
+                        nationalCode: "",
+                        personnelCode: "",
                         departmentId: 0,
                         phoneNumber: "",
                     },
