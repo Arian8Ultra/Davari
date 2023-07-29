@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import { useMutation } from "@apollo/client";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -9,7 +10,9 @@ import {
   Button,
   CssBaseline,
   LinearProgress,
-  Skeleton,
+  Menu,
+  MenuItem,
+  MenuList,
   TextField,
 } from "@mui/material";
 import MuiAppBar, {
@@ -22,13 +25,14 @@ import IconButton from "@mui/material/IconButton";
 import List from "@mui/material/List";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
+import { red } from "@mui/material/colors";
 import {
   CSSObject,
   Theme,
   styled,
   useTheme,
 } from "@mui/material/styles";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { VscAccount, VscLock } from "react-icons/vsc";
 import {
   Outlet,
@@ -37,6 +41,8 @@ import {
   useNavigate,
 } from "react-router-dom";
 import useLayoutStore from "../Context/LayoutStore";
+import { useUserStore } from "../Context/UserStore";
+import { UserLogin } from "../GraphQL/Users/Mutations";
 import pboLogo from "../assets/PboLogo.png";
 import sazmanImage from "../assets/Sazman.jpeg";
 import {
@@ -44,25 +50,16 @@ import {
   SideBarMenu,
 } from "../assets/static/SideBar";
 import { Titles } from "../assets/static/Titles";
+import { User } from "../assets/static/Types";
 import ListItemLink from "../components/ListItemLink";
+import NewModal from "../components/Modals";
 import Title from "../components/Title";
 import {
   Green,
   background,
   primary,
   primaryLighter,
-  primaryTransparent,
 } from "../theme/color";
-import { useUserStore } from "../Context/UserStore";
-import NewModal from "../components/Modals";
-import { red } from "@mui/material/colors";
-import { useMutation } from "@apollo/client";
-import {
-  UserLogin,
-  UserLoginInput,
-} from "../GraphQL/Users/Mutations";
-import { User } from "../assets/static/Types";
-import { ErrorsByCodeFA } from "../GraphQL/Errors";
 
 const drawerWidth = 240;
 
@@ -144,12 +141,17 @@ export default function MainLayout() {
   const navigate = useNavigate();
   const setUser = useUserStore((state) => state.setUser);
   const token = useUserStore((state) => state.token);
+  const firstName = useUserStore((state) => state.user.firstName);
+  const lastName = useUserStore((state) => state.user.lastName);
+  const logout = useUserStore((state) => state.logout);
   const [signedIn, setSignedIn] = React.useState(false);
+  const [menuOpen, setMenuOpen] = React.useState(false);
   const [signInModal, setSignInModal] = useState({
     open: false,
     userName: "",
     password: "",
   });
+  const ref = useRef(null);
   const [isSmallScreen, setIsSmallScreen] = React.useState(
     matchMedia("(max-width: 600px)").matches
   );
@@ -219,7 +221,10 @@ export default function MainLayout() {
         (data.user_signIn.result.user as User) &&
         data.user_signIn.result.token
       ) {
-        setUser(data.user_signIn.result.user, data.user_signIn.result.token);
+        setUser(
+          data.user_signIn.result.user,
+          data.user_signIn.result.token
+        );
       }
     },
     onError(error, clientOptions) {
@@ -303,6 +308,7 @@ export default function MainLayout() {
               <TextField
                 label="نام کاربری"
                 variant="outlined"
+                autoComplete="username"
                 onChange={(e) =>
                   setSignInModal({
                     ...signInModal,
@@ -319,6 +325,8 @@ export default function MainLayout() {
               <TextField
                 label="رمز عبور"
                 variant="outlined"
+                autoComplete="password"
+                type="password"
                 onChange={(e) =>
                   setSignInModal({
                     ...signInModal,
@@ -402,17 +410,6 @@ export default function MainLayout() {
               position: "relative",
             }}
           >
-            {/* <img src={Pattern} style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            // width: "100%",
-            height: "100%",
-
-            outline: "2px solid red",
-            objectPosition: "center",
-            // rotate: "90deg",
-          }}/> */}
             <IconButton
               color="inherit"
               aria-label="open drawer"
@@ -435,10 +432,75 @@ export default function MainLayout() {
             >
               {Titles.mainTitle}
             </Typography>
-            <IconButton>
-              <VscAccount />
-            </IconButton>
+            <Box
+              display={"flex"}
+              alignItems={"center"}
+              justifyContent={"center"}
+              ref={ref}
+              sx={{
+                borderRadius: "10px",
+                padding: "0.5rem",
+                "&:hover": {
+                  cursor: "pointer",
+                  backgroundColor: "rgba(255,255,255,0.2)",
+                },
+              }}
+              onClick={() => setMenuOpen(!menuOpen)}
+            >
+              <Typography
+                variant="body1"
+                noWrap
+                component="div"
+                sx={{
+                  flexGrow: 1,
+                  color: "white",
+                  marginRight: 2,
+                }}
+              >
+                {firstName + " " + lastName}
+              </Typography>
+
+              <IconButton
+                sx={{
+                  color: "white",
+                }}
+              >
+                <VscAccount />
+              </IconButton>
+            </Box>
           </Toolbar>
+          <Menu
+            anchorEl={ref.current}
+            open={menuOpen}
+            onClose={() => setMenuOpen(false)}
+          >
+            <MenuItem>
+              <Button
+                onClick={() => {
+                  setMenuOpen(false);
+                  navigate("/profile");
+                }}
+                sx={{
+                  color: "black",
+                }}
+              >
+                تغییر رمز عبور
+              </Button>
+            </MenuItem>
+            <MenuItem>
+              <Button
+                onClick={() => {
+                  setMenuOpen(false);
+                  logout();
+                }}
+                sx={{
+                  color: "red",
+                }}
+              >
+                خروج
+              </Button>
+            </MenuItem>
+          </Menu>
         </AppBar>
       ) : (
         <MuiAppBar
@@ -480,6 +542,7 @@ export default function MainLayout() {
               edge="start"
               sx={{
                 marginRight: 5,
+                color: "white",
                 // ...(open && { display: "none" }),
               }}
             >
