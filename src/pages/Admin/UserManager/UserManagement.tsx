@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import { Box, Button, Stack, TextField } from "@mui/material";
-import { BsPersonAdd } from "react-icons/bs";
+import { Box, Button, IconButton, Stack, TextField } from "@mui/material";
+import { BsEye, BsEyeSlash, BsPersonAdd } from "react-icons/bs";
 import UserList from "../../../components/Admin/UserManagement/UserList";
 import {
   Green,
@@ -28,6 +28,7 @@ const UserManagement = () => {
     password: "",
     phoneNumber: "",
     userName: "",
+    showPassword: false,
   });
 
   const [userSignUp, { loading, error }] = useMutation(UserSignUp, {
@@ -73,6 +74,7 @@ const UserManagement = () => {
             boxShadow: "none",
             "&:hover": {
               backgroundColor: GreenLight,
+              color:Green
             },
           }}
         >
@@ -107,6 +109,7 @@ const UserManagement = () => {
             fullWidth
             label={"نام"}
             variant={"outlined"}
+            autoComplete="firstName"
             value={addModal.firstName}
             sx={{
               "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
@@ -123,6 +126,7 @@ const UserManagement = () => {
             fullWidth
             label={"نام خانوادگی"}
             variant={"outlined"}
+            autoComplete="lastName"
             value={addModal.lastName}
             sx={{
               "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
@@ -138,8 +142,8 @@ const UserManagement = () => {
           <TextField
             fullWidth
             label={"نام کاربری"}
-            type="number"
             variant={"outlined"}
+            autoComplete="userName"
             value={addModal.userName}
             sx={{
               "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
@@ -163,7 +167,9 @@ const UserManagement = () => {
             label={"کد ملی"}
             type="number"
             variant={"outlined"}
+            autoComplete="nationalCode"
             value={addModal.nationalCode}
+
             sx={{
               "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
                 {
@@ -183,6 +189,7 @@ const UserManagement = () => {
             label={"کد پرسنلی"}
             type="number"
             variant={"outlined"}
+            autoComplete="personnelCode"
             value={addModal.personnelCode}
             sx={{
               "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
@@ -202,6 +209,7 @@ const UserManagement = () => {
             fullWidth
             label={"ایمیل"}
             variant={"outlined"}
+            autoComplete="email"
             value={addModal.email}
             sx={{
               "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
@@ -222,8 +230,23 @@ const UserManagement = () => {
             fullWidth
             label={"رمز عبور"}
             variant={"outlined"}
+            autoComplete="password"
             value={addModal.password}
-            type="password"
+            type={addModal.showPassword ? "text" : "password"}
+            InputProps={{
+              endAdornment: (
+                <IconButton
+                  onClick={() =>
+                    setAddModal({
+                      ...addModal,
+                      showPassword: !addModal.showPassword,
+                    })
+                  }
+                >
+                  {addModal.showPassword ? <BsEye /> : <BsEyeSlash />}
+                </IconButton>
+              ),
+            }}
             sx={{
               "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
                 {
@@ -259,6 +282,8 @@ const UserManagement = () => {
             fullWidth
             label={"شماره تماس"}
             variant={"outlined"}
+            type="phoneNumber"
+            autoComplete="phoneNumber"
             value={addModal.phoneNumber}
             sx={{
               "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":

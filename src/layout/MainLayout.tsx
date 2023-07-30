@@ -9,6 +9,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import {
   Button,
   CssBaseline,
+  InputAdornment,
   LinearProgress,
   Menu,
   MenuItem,
@@ -60,6 +61,7 @@ import {
   primary,
   primaryLighter,
 } from "../theme/color";
+import { BsEye, BsEyeSlash } from "react-icons/bs";
 
 const drawerWidth = 240;
 
@@ -145,12 +147,13 @@ export default function MainLayout() {
   const lastName = useUserStore((state) => state.user.lastName);
   const expireDate = useUserStore((state) => state.expireDate);
   const logout = useUserStore((state) => state.logout);
-  const [signedIn, setSignedIn] = React.useState(false);
+  const [signedIn, setSignedIn] = React.useState(true);
   const [menuOpen, setMenuOpen] = React.useState(false);
   const [signInModal, setSignInModal] = useState({
     open: false,
     userName: "",
     password: "",
+    showPassword: false,
   });
   const ref = useRef(null);
   const [isSmallScreen, setIsSmallScreen] = React.useState(
@@ -348,7 +351,23 @@ export default function MainLayout() {
                 label="رمز عبور"
                 variant="outlined"
                 autoComplete="password"
-                type="password"
+                type={signInModal.showPassword ? "text" : "password"}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                                      <IconButton
+                  onClick={() =>
+                    setSignInModal({
+                      ...signInModal,
+                      showPassword: !signInModal.showPassword,
+                    })
+                  }
+                >
+                  {signInModal.showPassword ? <BsEye /> : <BsEyeSlash />}
+                </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
                 onChange={(e) =>
                   setSignInModal({
                     ...signInModal,
