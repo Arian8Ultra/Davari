@@ -236,6 +236,7 @@ export default function MainLayout() {
           data.user_signIn.result.token,
           expireDate
         );
+        localStorage.setItem("token", data.user_signIn.result.token);
       }
     },
     onError(error) {
