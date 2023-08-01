@@ -15,7 +15,6 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { onPrimary, primary, secondary } from "../theme/color";
-import { on } from "events";
 
 interface TextInputProps {
   id?: string;
@@ -114,7 +113,6 @@ function TextInput(props: TextInputProps) {
   const iconSize = props.iconSize != null ? props.iconSize : 16;
   const iconBackground = props.iconBackground != null ? props.iconBackground : "transparent";
   const fullWidth = props.fullWidth != null ? props.fullWidth : false;
-  const defaultValue = props.defaultValue != null ? props.defaultValue : "";
   const placeholder = props.placeholder != null ? props.placeholder : "";
   const borderRadius = props.borderRadius != null ? props.borderRadius : "15px";
   const icon = props.icon != null ? props.icon : null;

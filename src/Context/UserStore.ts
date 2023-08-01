@@ -21,7 +21,7 @@ interface UserStore {
 
 export const useUserStore = create<UserStore>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       user: {
         userName: "",
         firstName: "",

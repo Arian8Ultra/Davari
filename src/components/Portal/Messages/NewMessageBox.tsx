@@ -1,35 +1,26 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import theme from "../../../theme/theme";
-import {
-  GreenLight,
-  primary,
-  primaryGrey,
-  primaryLighter,
-  primaryTransparent,
-} from "../../../theme/color";
 import {
   Box,
   Button,
   TextField,
   Typography,
-  useScrollTrigger,
 } from "@mui/material";
 import { useState } from "react";
 import { Titles } from "../../../assets/static/Titles";
+import {
+  primary,
+  primaryGrey,
+  primaryLighter,
+  primaryTransparent
+} from "../../../theme/color";
+import theme from "../../../theme/theme";
 
 const NewMessageBox = () => {
-  const [scrollTarget, setScrollTarget] = useState(undefined);
   const [newMessage, setNewMessage] = useState({
     title: "" as string,
     content: "" as string,
     to: "" as string,
     from: "" as string,
-  });
-  const trigger = useScrollTrigger({
-    disableHysteresis: true,
-    threshold: 10,
-    // set the target as stack ref
-    target: scrollTarget,
   });
   return (
     <Box
@@ -37,12 +28,12 @@ const NewMessageBox = () => {
       display={"flex"}
       flexDirection={"column"}
       id="scrollableDiv"
-      ref={(node) => {
-        if (node) {
-          // @ts-ignore
-          setScrollTarget(node);
-        }
-      }}
+      // ref={(node) => {
+      //   if (node) {
+      //     // @ts-ignore
+      //     setScrollTarget(node);
+      //   }
+      // }}
       maxHeight={`calc(100vh - ${theme.spacing(20)})`}
       minHeight={`calc(100vh - ${theme.spacing(20)})`}
       sx={{

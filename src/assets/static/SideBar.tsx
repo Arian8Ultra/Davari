@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import { AiFillMessage, AiOutlineMessage } from "react-icons/ai";
 import {
   BsPeopleFill,
   BsPersonCircle,
@@ -6,7 +7,6 @@ import {
 } from "react-icons/bs";
 import { VscHome, VscWarning } from "react-icons/vsc";
 import { Titles } from "./Titles";
-import { AiFillMessage, AiOutlineMessage, AiTwotoneMinusSquare } from "react-icons/ai";
 
 export const SideBarMenu = [
   {

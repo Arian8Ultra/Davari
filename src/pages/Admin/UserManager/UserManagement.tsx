@@ -1,19 +1,18 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import { Box, Button, IconButton, Stack, TextField } from "@mui/material";
+import { useMutation } from "@apollo/client";
+import { Box, Button, IconButton, TextField } from "@mui/material";
+import { red } from "@mui/material/colors";
+import { useState } from "react";
 import { BsEye, BsEyeSlash, BsPersonAdd } from "react-icons/bs";
+import { UserSignUp } from "../../../GraphQL/Users/Mutations";
+import { Titles } from "../../../assets/static/Titles";
 import UserList from "../../../components/Admin/UserManagement/UserList";
+import NewModal from "../../../components/Modals";
 import {
   Green,
   GreenLight,
-  background,
-  primaryLighter,
+  background
 } from "../../../theme/color";
-import NewModal from "../../../components/Modals";
-import { useState } from "react";
-import { Titles } from "../../../assets/static/Titles";
-import { useMutation } from "@apollo/client";
-import { UserSignUp } from "../../../GraphQL/Users/Mutations";
-import { red } from "@mui/material/colors";
 
 const UserManagement = () => {
   const [addModal, setAddModal] = useState({
@@ -44,7 +43,7 @@ const UserManagement = () => {
       departmentId: addModal.departmentId,
       phoneNumber: addModal.phoneNumber,
     },
-    onCompleted(data, clientOptions) {
+    onCompleted(data) {
       console.log(data);
       alert("کاربر با موفقیت افزوده شد");
     },

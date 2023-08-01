@@ -1,8 +1,6 @@
 import { Box } from '@mui/material'
 import { BsFillGridFill } from 'react-icons/bs'
 import useLayoutStore from '../Context/LayoutStore'
-import { primary, primaryDark } from '../theme/color'
-import { Titles } from '../assets/static/Titles'
 import { SideBarMenu } from '../assets/static/SideBar'
 
 

@@ -13,7 +13,6 @@ import {
   LinearProgress,
   Menu,
   MenuItem,
-  MenuList,
   TextField,
 } from "@mui/material";
 import MuiAppBar, {
@@ -34,6 +33,7 @@ import {
   useTheme,
 } from "@mui/material/styles";
 import React, { useEffect, useRef, useState } from "react";
+import { BsEye, BsEyeSlash } from "react-icons/bs";
 import { VscAccount, VscLock } from "react-icons/vsc";
 import {
   Outlet,
@@ -55,13 +55,7 @@ import { User } from "../assets/static/Types";
 import ListItemLink from "../components/ListItemLink";
 import NewModal from "../components/Modals";
 import Title from "../components/Title";
-import {
-  Green,
-  background,
-  primary,
-  primaryLighter,
-} from "../theme/color";
-import { BsEye, BsEyeSlash } from "react-icons/bs";
+import { Green, background, primary } from "../theme/color";
 
 const drawerWidth = 240;
 
@@ -160,7 +154,7 @@ export default function MainLayout() {
     matchMedia("(max-width: 600px)").matches
   );
 
-  const [isMediumScreen, setIsMediumScreen] = React.useState(
+  const [, setIsMediumScreen] = React.useState(
     matchMedia("(max-width: 960px)").matches
   );
 
@@ -176,14 +170,12 @@ export default function MainLayout() {
     }
   }, [token]);
 
-
   useEffect(() => {
     const now = new Date();
     if (expireDate && expireDate < now) {
       logout();
     }
   }, [expireDate, logout]);
-  
 
   React.useEffect(() => {
     const handler = (e: MediaQueryListEvent) => {
@@ -228,11 +220,9 @@ export default function MainLayout() {
       userName: signInModal.userName,
       password: signInModal.password,
     },
-    onCompleted(data, clientOptions) {
+    onCompleted(data) {
       console.log(data);
-      const expireDate = new Date(
-        data.user_signIn.result.expireDate
-      );
+      const expireDate = new Date(data.user_signIn.result.expireDate);
       const now = new Date();
       const diff = expireDate.getTime() - now.getTime();
       const expiresIn = diff / 1000;
@@ -248,7 +238,7 @@ export default function MainLayout() {
         );
       }
     },
-    onError(error, clientOptions) {
+    onError(error) {
       console.log(error);
     },
   });
@@ -342,9 +332,9 @@ export default function MainLayout() {
                 sx={{
                   width: "80%",
                   "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
-                  {
-                    borderRadius: "15px",
-                  },
+                    {
+                      borderRadius: "15px",
+                    },
                 }}
               />
               <TextField
@@ -355,16 +345,20 @@ export default function MainLayout() {
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
-                                      <IconButton
-                  onClick={() =>
-                    setSignInModal({
-                      ...signInModal,
-                      showPassword: !signInModal.showPassword,
-                    })
-                  }
-                >
-                  {signInModal.showPassword ? <BsEye /> : <BsEyeSlash />}
-                </IconButton>
+                      <IconButton
+                        onClick={() =>
+                          setSignInModal({
+                            ...signInModal,
+                            showPassword: !signInModal.showPassword,
+                          })
+                        }
+                      >
+                        {signInModal.showPassword ? (
+                          <BsEye />
+                        ) : (
+                          <BsEyeSlash />
+                        )}
+                      </IconButton>
                     </InputAdornment>
                   ),
                 }}
@@ -381,9 +375,9 @@ export default function MainLayout() {
                   width: "80%",
                   marginTop: "1rem",
                   "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
-                  {
-                    borderRadius: "15px",
-                  },
+                    {
+                      borderRadius: "15px",
+                    },
                 }}
               />
 

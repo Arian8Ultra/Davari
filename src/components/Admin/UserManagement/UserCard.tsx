@@ -1,8 +1,12 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
+import { useMutation } from "@apollo/client";
 import { Box, Button, IconButton, TextField, Tooltip, Typography } from "@mui/material";
+import { useState } from "react";
 import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
 import { BsKey } from "react-icons/bs";
 import { VscPreview } from "react-icons/vsc";
+import { UserDelete, UserUpdate } from "../../../GraphQL/Users/Mutations";
 import {
   Blue,
   BlueLight,
@@ -14,9 +18,6 @@ import {
   primary,
   primaryTransparent,
 } from "../../../theme/color";
-import { useMutation } from "@apollo/client";
-import { UserDelete, UserUpdate } from "../../../GraphQL/Users/Mutations";
-import { useState } from "react";
 import NewModal from "../../Modals";
 interface Props {
   firstName?: string;
@@ -43,7 +44,7 @@ const UserCard = (props: Props) => {
       userName: editModal.username,
       nationalCode: editModal.nationalCode,
     },
-    onCompleted(data, clientOptions) {
+    onCompleted(data) {
       console.log(data);      
       alert("کاربر با موفقیت ویرایش شد");
       props.refetch();
@@ -57,7 +58,7 @@ const UserCard = (props: Props) => {
     variables: {
       id: props.id,
     },
-    onCompleted(data, clientOptions) {
+    onCompleted(data) {
       console.log(data);
       alert("کاربر با موفقیت حذف شد");
       props.refetch();
