@@ -6,7 +6,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
-import { Titles } from "../../../assets/static/Titles";
+import { Titles } from "../../../static/Titles";
 import {
   primary,
   primaryGrey,

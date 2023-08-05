@@ -1,4 +1,5 @@
 export type User = {
+    userRoles: UserRole[] | undefined;
     firstName: string;
     lastName: string;
     nationalCode: string;

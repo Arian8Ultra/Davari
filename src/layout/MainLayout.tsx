@@ -49,9 +49,9 @@ import sazmanImage from "../assets/Sazman.jpeg";
 import {
   SideBarLinkType,
   SideBarMenu,
-} from "../assets/static/SideBar";
-import { Titles } from "../assets/static/Titles";
-import { User } from "../assets/static/Types";
+} from "../static/SideBar";
+import { Titles } from "../static/Titles";
+import { User } from "../static/Types";
 import ListItemLink from "../components/ListItemLink";
 import NewModal from "../components/Modals";
 import Title from "../components/Title";

@@ -11,7 +11,7 @@ import theme from "../../../theme/theme";
 import UserCard from "./UserCard";
 import { useQuery } from "@apollo/client";
 import { GET_ALL_USERS } from "../../../GraphQL/Users/Queries";
-import { User } from "../../../assets/static/Types";
+import { User } from "../../../static/Types";
 
 const UserList = () => {
   const {data,loading,error,refetch} = useQuery(GET_ALL_USERS,{
@@ -167,6 +167,7 @@ const UserList = () => {
           id={user.id}
           userName={user.userName}
           refetch={refetch}
+          userRoles={user.userRoles}
         />
       ))}
     </Stack>

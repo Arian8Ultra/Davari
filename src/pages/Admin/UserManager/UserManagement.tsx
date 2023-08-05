@@ -5,7 +5,7 @@ import { red } from "@mui/material/colors";
 import { useState } from "react";
 import { BsEye, BsEyeSlash, BsPersonAdd } from "react-icons/bs";
 import { UserSignUp } from "../../../GraphQL/Users/Mutations";
-import { Titles } from "../../../assets/static/Titles";
+import { Titles } from "../../../static/Titles";
 import UserList from "../../../components/Admin/UserManagement/UserList";
 import NewModal from "../../../components/Modals";
 import {

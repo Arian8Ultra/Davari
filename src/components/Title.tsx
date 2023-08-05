@@ -1,7 +1,7 @@
 import { Box } from '@mui/material'
 import { BsFillGridFill } from 'react-icons/bs'
 import useLayoutStore from '../Context/LayoutStore'
-import { SideBarMenu } from '../assets/static/SideBar'
+import { SideBarMenu } from '../static/SideBar'
 
 
 interface Props {

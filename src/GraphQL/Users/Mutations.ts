@@ -1,4 +1,6 @@
 import { gql } from "@apollo/client";
+import { GraphQLEnumType } from "graphql";
+import { type } from "os";
 
 // UserLogin
 export const UserLogin = gql`
@@ -30,8 +32,6 @@ export type UserLoginInput = {
   userName: string;
   password: string;
 };
-
-
 
 // UserSignUp
 export const UserSignUp = gql`
@@ -80,9 +80,6 @@ export type UserSignUpInput = {
   userName: string;
 };
 
-
-
-
 // UserDelete
 export const UserDelete = gql`
   mutation UserDelete($id: String!) {
@@ -95,8 +92,6 @@ export const UserDelete = gql`
 export type UserDeleteInput = {
   id: string;
 };
-
-
 
 // UserUpdate
 export const UserUpdate = gql`
@@ -139,8 +134,6 @@ export type UserUpdateInput = {
   userName: string;
 };
 
-
-
 // UserUpdatePassword
 export const UserUpdatePassword = gql`
   mutation UserUpdatePassword(
@@ -168,3 +161,23 @@ export type UserUpdatePasswordInput = {
   confirmPassword: string;
   id: string;
 };
+
+export const ADD_USER_TO_ROLE = gql`
+  mutation AddRoleToUser($userId: String!, $roleType: RoleType!) {
+    userRole_addUserToRole(roleType: $roleType, userId: $userId) {
+      code
+      value
+      __typename
+    }
+  }
+`;
+
+export const RoleType = new GraphQLEnumType({
+  name: "RoleType",
+  values: {
+    ADMIN: { value: "ADMIN" },
+    NORMAL: { value: "NORMAL" },
+    EDITOR: { value: "EDITOR" },
+    SUPERADMIN: { value: "SUPERADMIN" },
+  },
+});

@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { User } from "../assets/static/Types";
+import { User } from "../static/Types";
 
 interface UserStore {
   user: {

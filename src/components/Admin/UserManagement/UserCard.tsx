@@ -1,12 +1,28 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 import { useMutation } from "@apollo/client";
-import { Box, Button, IconButton, TextField, Tooltip, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Collapse,
+  IconButton,
+  Select,
+  TextField,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import { useState } from "react";
 import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
 import { BsKey } from "react-icons/bs";
 import { VscPreview } from "react-icons/vsc";
-import { UserDelete, UserUpdate } from "../../../GraphQL/Users/Mutations";
+import {
+  ADD_USER_TO_ROLE,
+  RoleType,
+  UserDelete,
+  UserUpdate,
+} from "../../../GraphQL/Users/Mutations";
 import {
   Blue,
   BlueLight,
@@ -16,9 +32,12 @@ import {
   RedLight,
   background,
   primary,
+  primaryGrey,
   primaryTransparent,
 } from "../../../theme/color";
 import NewModal from "../../Modals";
+import { UserRole } from "../../../GraphQL/Users/Queries";
+import { convertRoleToPersian } from "../../../functions/Functions";
 interface Props {
   firstName?: string;
   lastName?: string;
@@ -27,6 +46,7 @@ interface Props {
   userName?: string;
   id: string | number;
   refetch: () => void;
+  userRoles?: UserRole[];
 }
 const UserCard = (props: Props) => {
   const [editModal, setEditModal] = useState({
@@ -37,7 +57,13 @@ const UserCard = (props: Props) => {
     nationalCode: "",
   });
 
-  const [editUser] = useMutation(UserUpdate,{
+  const [roleModal, setRoleModal] = useState({
+    open: false,
+    roleType: '',
+  });
+  const [collapse, setCollapse] = useState(false);
+
+  const [editUser] = useMutation(UserUpdate, {
     variables: {
       firstName: editModal.firstName,
       lastName: editModal.lastName,
@@ -45,15 +71,15 @@ const UserCard = (props: Props) => {
       nationalCode: editModal.nationalCode,
     },
     onCompleted(data) {
-      console.log(data);      
+      console.log(data);
       alert("کاربر با موفقیت ویرایش شد");
       props.refetch();
     },
     onError(error) {
       console.error(error);
       alert("مشکلی در ویرایش کاربر به وجود آمده است");
-    }
-  })
+    },
+  });
   const [deleteUser] = useMutation(UserDelete, {
     variables: {
       id: props.id,
@@ -66,6 +92,22 @@ const UserCard = (props: Props) => {
     onError(error) {
       console.log(error);
       alert("مشکلی در حذف کاربر به وجود آمده است");
+    },
+  });
+
+  const [AddUserToRole] = useMutation(ADD_USER_TO_ROLE, {
+    variables: {
+      userId: props.id,
+      roleType: roleModal.roleType,
+    },
+    onCompleted(data) {
+      console.log(data);
+      alert("کاربر با موفقیت به نقش اضافه شد");
+      props.refetch();
+    },
+    onError(error) {
+      console.log(error);
+      alert("مشکلی در اضافه کردن کاربر به نقش به وجود آمده است");
     },
   });
 
@@ -94,6 +136,7 @@ const UserCard = (props: Props) => {
       }}
       onClick={() => {
         console.log(props.id);
+        setCollapse(!collapse);
       }}
     >
       <Typography
@@ -256,6 +299,12 @@ const UserCard = (props: Props) => {
                 lg: "1.4rem",
               },
             }}
+            onClick={() => {
+              setRoleModal({
+                open: true,
+                roleType: "",
+              });
+            }}
           >
             <VscPreview />
           </IconButton>
@@ -319,7 +368,10 @@ const UserCard = (props: Props) => {
                 },
             }}
             onChange={(e) =>
-              setEditModal({ ...editModal, firstName: e.target.value })
+              setEditModal({
+                ...editModal,
+                firstName: e.target.value,
+              })
             }
           />
 
@@ -351,7 +403,10 @@ const UserCard = (props: Props) => {
                 },
             }}
             onChange={(e) =>
-              setEditModal({ ...editModal, nationalCode: e.target.value })
+              setEditModal({
+                ...editModal,
+                nationalCode: e.target.value,
+              })
             }
           />
 
@@ -368,13 +423,122 @@ const UserCard = (props: Props) => {
             }}
             onClick={() => {
               void editUser();
-            }
-            }
+            }}
           >
             ویرایش
           </Button>
         </Box>
       </NewModal>
+      <NewModal
+        name="تغییر دسترسی ها"
+        open={roleModal.open}
+        onClose={() => {
+          setRoleModal({
+            open: false,
+            roleType: "",
+          });
+        }}
+        background={background}
+        isCloseable={true}
+      >
+        <Box
+          sx={{
+            display: "grid",
+            gap: 2,
+            gridTemplateColumns: "repeat(2,1fr)",
+            width: "100%",
+          }}
+        >
+          <Select
+            onChange={(e) =>
+              setRoleModal({ ...roleModal, roleType: e.target.value })
+            }
+            value={roleModal.roleType}
+            native
+          >
+            <option value={""}>انتخاب کنید</option>
+            {RoleType.getValues().map((role) => (
+              <option value={role.value}>
+                {convertRoleToPersian(role.name)}
+              </option>
+            ))}
+          </Select>
+
+          <Button
+            fullWidth
+            variant={"contained"}
+            sx={{
+              backgroundColor: primary,
+              color: "#fff",
+              borderRadius: "15px",
+              "&:hover": {
+                backgroundColor: primaryTransparent,
+              },
+            }}
+            onClick={() => {
+              setRoleModal({ ...roleModal, open: false });
+              void AddUserToRole();
+            }}
+          >
+            افزودن دسترسی
+          </Button>
+        </Box>
+      </NewModal>
+      <Collapse
+        in={collapse}
+        sx={{
+          gridColumn: {
+            sm: "1/3",
+            lg: "1/7",
+          },
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+            height: "100%",
+            flexDirection: "column",
+            gap: 2,
+          }}
+        >
+          <Box
+            sx={{
+              width: "100%",
+              height: "100%",
+              display: "grid",
+              gap: 2,
+              gridTemplateColumns: "repeat(1,1fr)",
+              outline: `1px solid ${primary}`,
+            }}
+          >
+            <Typography
+              variant={"body1"}
+              sx={{
+                fontWeight: "bold",
+                width: "100%",
+                textAlign: "center",
+                backgroundColor: primary,
+                color: "#fff",
+              }}
+            >
+              دسترسی ها
+            </Typography>
+            {props.userRoles &&
+              props.userRoles.map((role, index) => (
+                <Typography
+                  key={index}
+                  variant={"body2"}
+                  textAlign={"center"}
+                >
+                  {convertRoleToPersian(role.roleType)}
+                </Typography>
+              ))}
+          </Box>
+        </Box>
+      </Collapse>
     </Box>
   );
 };
