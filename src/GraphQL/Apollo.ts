@@ -28,6 +28,8 @@ const authLink = setContext((_, { headers }) => {
 const client = new ApolloClient({
     link: authLink.concat(httpLink),
     cache: new InMemoryCache(),
+    name: "react-web-client",
+    version: "1.0",
 });
 
 export default client;

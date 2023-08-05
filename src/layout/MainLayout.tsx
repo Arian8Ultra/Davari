@@ -268,6 +268,13 @@ export default function MainLayout() {
           isCloseable={false}
           // background={`linear-gradient(45deg, ${primary} -10%, ${primaryLighter}, ${primaryLighter})`}
           color={primary}
+          width={{
+            xs: "100%",
+            sm: "100%",
+            md: "50%",
+            lg: "40%",
+            xl: "30%",
+          }}
         >
           <Box
             display={"flex"}
