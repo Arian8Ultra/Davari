@@ -20,7 +20,7 @@ const FormObjPreview = (props: Props) => {
           sx={{
             display: "grid",
             gridTemplateColumns: "repeat(4, 1fr)",
-            outline: `1px solid ${primary}`,
+            outline: `1px solid ${props.color ? props.color : primary}`,
             borderRadius: "10px",
             padding: "5px",
             width: "100%",
@@ -84,7 +84,7 @@ const FormObjPreview = (props: Props) => {
           sx={{
             display: "grid",
             gridTemplateColumns: "repeat(4, 1fr)",
-            outline: `1px solid ${primary}`,
+            outline: `1px solid ${props.color ? props.color : primary}`,
             borderRadius: "10px",
             padding: "5px",
             width: "100%",
@@ -94,7 +94,7 @@ const FormObjPreview = (props: Props) => {
         >
           <Box
             sx={{
-              gridColumn: "span 1",
+              gridColumn: "span 0.5",
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
@@ -110,7 +110,7 @@ const FormObjPreview = (props: Props) => {
           </Box>
           <Box
             sx={{
-              gridColumn: "span 1",
+              gridColumn: "span 2",
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
@@ -141,12 +141,14 @@ const FormObjPreview = (props: Props) => {
 
           <IconButton
             sx={{
-              gridColumn: "span 1",
+              gridColumn: "span 4",
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
               padding: "5px",
               color: props.color ? props.color : primary,
+              borderRadius:"10px",
+              outline: `1px solid ${props.color ? props.color : primary}`,
             }}
           >
             <UploadFile />
@@ -159,7 +161,7 @@ const FormObjPreview = (props: Props) => {
           sx={{
             display: "grid",
             gridTemplateColumns: "repeat(1, 1fr)",
-            outline: `1px solid ${primary}`,
+            outline: `1px solid ${props.color ? props.color : primary}`,
             borderRadius: "10px",
             padding: "5px",
             textDecoration: "underLine",
@@ -187,10 +189,11 @@ const FormObjPreview = (props: Props) => {
           sx={{
             display: "grid",
             gridTemplateColumns: "repeat(1, 1fr)",
-            outline: `1px solid ${primary}`,
+            outline: `1px solid ${props.color ? props.color : primary}`,
             borderRadius: "10px",
             width: "100%",
             textAlign: "center",
+            color: props.color ? props.color : primary,
           }}
         >
           <h2>{props.label}</h2>

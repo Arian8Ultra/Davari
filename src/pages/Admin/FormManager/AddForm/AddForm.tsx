@@ -94,18 +94,26 @@ const AddForm = () => {
                     padding: "1rem",
                     backgroundColor: "white",
                     borderRadius: "1rem",
-                    boxShadow: "0 0 1rem rgba(0,0,0,0.2)",
+                    boxShadow: `0 0 1rem ${
+                      addModal.selected == item.id ? GreenLight : 'rgba(0,0,0,0.2)'
+                    }`,
                     marginBottom: "1rem",
                     display: "flex",
                     flexDirection: "column",
                     justifyContent: "center",
                     alignItems: "center",
                     transition: "all ease 100ms",
-                    outline:`${addModal.selected == item.id ? '2px' : 0} solid ${Green}`
+                    outline:`${addModal.selected == item.id ? '2px' : 0} solid ${Green}`,
+                    userSelect:'none',
+                    "&: hover":{
+                      cursor:'pointer'
+                    }
                   }}
                 >
                   <FormObjPreview
-                    color={item.color}
+                    color={
+                      addModal.selected == item.id ? Green : item.color
+                    }
                     formObjectType={item.formObjectType}
                     stickyText={item.stickyText}
                     label={item.label}
