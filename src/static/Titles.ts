@@ -71,5 +71,6 @@ export const Titles = {
     employeesStatus: 'وضعیت کارمند',
     employeeManagement: 'مدیریت کارمندان',
     employee: 'کارمند',
+    formManager: 'مدیریت فرم ها',
 
 }

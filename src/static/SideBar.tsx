@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { AiFillMessage, AiOutlineMessage } from "react-icons/ai";
 import {
+  BsInputCursorText,
   BsPeopleFill,
   BsPersonCircle,
   BsViewStacked,
@@ -69,6 +70,13 @@ export const SideBarMenu = [
         hasLink: true,
         hasCollapse: false,
       },
+      {
+        primary: Titles.formManager,
+        to: "/admin/formanager",
+        icon: <BsInputCursorText />,
+        hasLink: true,
+        hasCollapse: false,
+      }
     ],
   },
 ];

@@ -1,6 +1,5 @@
 import { gql } from "@apollo/client";
 import { GraphQLEnumType } from "graphql";
-import { type } from "os";
 
 // UserLogin
 export const UserLogin = gql`

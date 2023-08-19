@@ -1,3 +1,5 @@
+import { UserRole } from "../GraphQL/Users/Queries";
+
 export type User = {
     userRoles: UserRole[] | undefined;
     firstName: string;

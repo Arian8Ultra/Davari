@@ -23,6 +23,8 @@ import {
   UserDelete,
   UserUpdate,
 } from "../../../GraphQL/Users/Mutations";
+import { UserRole } from "../../../GraphQL/Users/Queries";
+import { convertRoleToPersian } from "../../../functions/Functions";
 import {
   Blue,
   BlueLight,
@@ -33,11 +35,9 @@ import {
   background,
   primary,
   primaryGrey,
-  primaryTransparent,
+  primaryTransparent
 } from "../../../theme/color";
 import NewModal from "../../Modals";
-import { UserRole } from "../../../GraphQL/Users/Queries";
-import { convertRoleToPersian } from "../../../functions/Functions";
 interface Props {
   firstName?: string;
   lastName?: string;
@@ -520,7 +520,7 @@ const UserCard = (props: Props) => {
                 fontWeight: "bold",
                 width: "100%",
                 textAlign: "center",
-                backgroundColor: primary,
+                backgroundColor: primaryGrey,
                 color: "#fff",
               }}
             >
