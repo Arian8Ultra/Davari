@@ -57,6 +57,11 @@ function ListItemLink(props: ListItemLinkProps) {
             if (props.hasLink) {
               setPageTitle(primary);
               navigate(to);
+            }else{
+              if (props.setCollapseOpen) {
+                props.setCollapseOpen(!props.collapseOpen);
+              }
+              setCollapseOpen(!collapseOpen);
             }
           }}
           {...other}

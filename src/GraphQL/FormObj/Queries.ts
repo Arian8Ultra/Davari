@@ -13,9 +13,28 @@ export const GET_FORM_OBJS = gql`
           formObjectType
         }
       }
+      status
     }
   }
 `;
+
+export const GET_FORM_OBJ = gql`
+  query formObject_getFormObject($id: Int!) {
+    formObject_getFormObject(entityId: $id) {
+      result{
+        label
+          unit
+          stickyText
+          color
+          id
+          formObjectType
+      }
+      status{
+        code
+        value
+      }
+    }
+  }`
 
 export type FormObj = {
   label: string;
@@ -24,6 +43,18 @@ export type FormObj = {
   color: string;
   id: number;
   formObjectType: string;
+};
+export type FormObjComplete = {
+  label: string;
+  unit: string;
+  stickyText: string;
+  color: string;
+  id: number;
+  formObjectType: string;
+  gridColumn: number;
+  gridRow: number;
+  gridColumnStart: number;
+  required: boolean;
 };
 
 export const FormObjType = {

@@ -10,6 +10,24 @@ export const GET_COMPLAINT_FORMS = gql`
           description
         }
       }
+      status
+      __typename
+    }
+  }
+`;
+
+export const GET_COMPLAINT_ANSWER_FORMS = gql`
+  query ComplaintResponseForm_getComplaintResponseForms {
+    ComplaintResponseForm_getComplaintResponseForms {
+      result {
+        items {
+          title
+          description
+          id
+        }
+      }
+      status
+      __typename
     }
   }
 `;

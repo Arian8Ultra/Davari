@@ -1,16 +1,30 @@
 import React from "react";
 import "./FormObjPreview.css";
 import { FormObj } from "../../GraphQL/FormObj/Queries";
-import { Box, IconButton } from "@mui/material";
+import { Box, Divider, IconButton } from "@mui/material";
 import {
+  Red,
+  RedLight,
   primary,
   primaryLight,
   primaryLightTransparent,
 } from "../../theme/color";
 import { VscFile } from "react-icons/vsc";
-import { UploadFile } from "@mui/icons-material";
+import {
+  DeleteForeverOutlined,
+  UploadFile,
+} from "@mui/icons-material";
 interface Props extends FormObj {
   name: string;
+  gridColumn?: number;
+  girdColumnStart?: number;
+  gridRow?: number;
+  isDeletable?: boolean;
+  handleDelete?: (
+    gridRow: number | undefined,
+    gridColumn: number | undefined,
+    girdColumnStart: number | undefined
+  ) => void;
 }
 const FormObjPreview = (props: Props) => {
   switch (props.formObjectType) {
@@ -20,14 +34,62 @@ const FormObjPreview = (props: Props) => {
           sx={{
             display: "grid",
             gridTemplateColumns: "repeat(4, 1fr)",
-            outline: `1px solid ${props.color ? props.color : primary}`,
+            outline: `1px solid ${
+              props.color ? props.color : primary
+            }`,
             borderRadius: "10px",
             padding: "5px",
             width: "100%",
             textOverflow: "ellipsis",
-            overflow: "hidden",
+            // overflow: "hidden",
+            gridRow: props.gridRow ? props.gridRow : "span 1",
+            gridColumnStart: props.girdColumnStart
+              ? props.girdColumnStart
+              : 0,
+            position: "relative",
+            gridColumnEnd:
+              props.gridColumn && props.girdColumnStart
+                ? props.gridColumn + props.girdColumnStart
+                : props.gridColumn
+                ? props.gridColumn
+                : 4,
           }}
         >
+          {props.isDeletable && (
+            <IconButton
+              onClick={() => {
+                props.handleDelete &&
+                  props.handleDelete(
+                    props.gridRow,
+                    props.gridColumn,
+                    props.girdColumnStart
+                  );
+              }}
+              sx={{
+                position: "absolute",
+                // width:'100%',
+                height: "50%",
+                top: "-10px",
+                right: "-10px",
+                color: props.color ? props.color : Red,
+                borderRadius: "10px",
+                borderBottomLeftRadius: 0,
+                aspectRatio: "1/1",
+                zIndex: 200,
+                outline: `2px solid ${
+                  props.color ? props.color : Red
+                }`,
+                backgroundColor: "white",
+                "&:hover": {
+                  backgroundColor: props.color
+                    ? props.color
+                    : RedLight,
+                },
+              }}
+            >
+              <DeleteForeverOutlined />
+            </IconButton>
+          )}
           <Box
             sx={{
               gridColumn: "span 1",
@@ -40,6 +102,7 @@ const FormObjPreview = (props: Props) => {
               }, 50%)`,
               textOverflow: "ellipsis",
               overflow: "hidden",
+              fontSize: "0.8rem",
             }}
           >
             <span>{props.stickyText}</span>
@@ -55,6 +118,7 @@ const FormObjPreview = (props: Props) => {
               color: props.color ? props.color : primary,
               textOverflow: "ellipsis",
               overflow: "hidden",
+              fontSize: "0.9rem",
             }}
           >
             <span>{props.label}</span>
@@ -72,6 +136,7 @@ const FormObjPreview = (props: Props) => {
               }, 50%)`,
               textOverflow: "ellipsis",
               overflow: "hidden",
+              fontSize: "0.8rem",
             }}
           >
             <span>{props.unit}</span>
@@ -84,17 +149,65 @@ const FormObjPreview = (props: Props) => {
           sx={{
             display: "grid",
             gridTemplateColumns: "repeat(4, 1fr)",
-            outline: `1px solid ${props.color ? props.color : primary}`,
+            outline: `1px solid ${
+              props.color ? props.color : primary
+            }`,
+            position: "relative",
             borderRadius: "10px",
             padding: "5px",
             width: "100%",
             textOverflow: "ellipsis",
-            overflow: "hidden",
+            // overflow: "hidden",
+            gridRow: props.gridRow ? props.gridRow : "span 1",
+            gridColumnStart: props.girdColumnStart
+              ? props.girdColumnStart
+              : 0,
+            gridColumnEnd:
+              props.gridColumn && props.girdColumnStart
+                ? props.gridColumn + props.girdColumnStart
+                : props.gridColumn
+                ? props.gridColumn
+                : 4,
           }}
         >
+          {props.isDeletable && (
+            <IconButton
+              onClick={() => {
+                props.handleDelete &&
+                  props.handleDelete(
+                    props.gridRow,
+                    props.gridColumn,
+                    props.girdColumnStart
+                  );
+              }}
+              sx={{
+                position: "absolute",
+                // width:'100%',
+                height: "50%",
+                top: "-10px",
+                right: "-10px",
+                color: props.color ? props.color : Red,
+                borderRadius: "10px",
+                borderBottomLeftRadius: 0,
+                aspectRatio: "1/1",
+                zIndex: 200,
+                outline: `2px solid ${
+                  props.color ? props.color : Red
+                }`,
+                backgroundColor: "white",
+                "&:hover": {
+                  backgroundColor: props.color
+                    ? props.color
+                    : RedLight,
+                },
+              }}
+            >
+              <DeleteForeverOutlined />
+            </IconButton>
+          )}
           <Box
             sx={{
-              gridColumn: "span 0.5",
+              gridColumn: "span 1",
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
@@ -104,13 +217,14 @@ const FormObjPreview = (props: Props) => {
               }, 50%)`,
               textOverflow: "ellipsis",
               overflow: "hidden",
+              fontSize: "0.8rem",
             }}
           >
             <span>{props.stickyText}</span>
           </Box>
           <Box
             sx={{
-              gridColumn: "span 2",
+              gridColumn: "span 1",
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
@@ -118,6 +232,7 @@ const FormObjPreview = (props: Props) => {
               color: props.color ? props.color : primary,
               textOverflow: "ellipsis",
               overflow: "hidden",
+              fontSize: "0.8rem",
             }}
           >
             <span>{props.label}</span>
@@ -134,6 +249,7 @@ const FormObjPreview = (props: Props) => {
               }, 50%)`,
               textOverflow: "ellipsis",
               overflow: "hidden",
+              fontSize: "0.8rem",
             }}
           >
             <span>{props.unit}</span>
@@ -141,14 +257,16 @@ const FormObjPreview = (props: Props) => {
 
           <IconButton
             sx={{
-              gridColumn: "span 4",
+              gridColumn: "span 0.5",
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
               padding: "5px",
               color: props.color ? props.color : primary,
-              borderRadius:"10px",
-              outline: `1px solid ${props.color ? props.color : primary}`,
+              borderRadius: "10px",
+              outline: `1px solid ${
+                props.color ? props.color : primary
+              }`,
             }}
           >
             <UploadFile />
@@ -161,25 +279,85 @@ const FormObjPreview = (props: Props) => {
           sx={{
             display: "grid",
             gridTemplateColumns: "repeat(1, 1fr)",
-            outline: `1px solid ${props.color ? props.color : primary}`,
+            // outline: `1px solid ${
+            //   props.color ? props.color : primary
+            // }`,
             borderRadius: "10px",
             padding: "5px",
-            textDecoration: "underLine",
+            paddingInlineStart: "0rem",
+
+            // textDecoration: "underLine",
             width: "100%",
+            gridRow: props.gridRow ? props.gridRow : "span 1",
+            gridColumnStart: props.girdColumnStart
+              ? props.girdColumnStart
+              : 0,
+            gridColumnEnd:
+              props.gridColumn && props.girdColumnStart
+                ? props.gridColumn + props.girdColumnStart
+                : props.gridColumn
+                ? props.gridColumn
+                : 4,
+            position: "relative",
           }}
         >
+          {props.isDeletable && (
+            <IconButton
+              onClick={() => {
+                props.handleDelete &&
+                  props.handleDelete(
+                    props.gridRow,
+                    props.gridColumn,
+                    props.girdColumnStart
+                  );
+              }}
+              sx={{
+                position: "absolute",
+                // width:'100%',
+                height: "50%",
+                top: "-10px",
+                right: "-10px",
+                color: props.color ? props.color : Red,
+                borderRadius: "10px",
+                borderBottomLeftRadius: 0,
+                aspectRatio: "1/1",
+                zIndex: 200,
+                outline: `2px solid ${
+                  props.color ? props.color : Red
+                }`,
+                backgroundColor: "white",
+                "&:hover": {
+                  backgroundColor: props.color
+                    ? props.color
+                    : RedLight,
+                },
+              }}
+            >
+              <DeleteForeverOutlined />
+            </IconButton>
+          )}
           <Box
             sx={{
               gridColumn: "span 1",
               display: "flex",
-              justifyContent: "center",
+              justifyContent: "stretch",
               alignItems: "center",
               color: props.color ? props.color : primary,
-              textDecoration: "underLine",
-              textAlign: "center",
+              // textDecoration: "underLine",
+              textAlign: "start",
+              fontSize: "1.2rem",
+              width: "100%",
+              // outline: `1px solid red`,
             }}
           >
-            <h1>{props.label}</h1>
+            <span>{props.label}</span>
+            <Divider
+              sx={{
+                width: "50%",
+                color: props.color ? props.color : primary,
+                borderColor: props.color ? props.color : primary,
+              }}
+            />
           </Box>
         </Box>
       );
@@ -189,14 +367,63 @@ const FormObjPreview = (props: Props) => {
           sx={{
             display: "grid",
             gridTemplateColumns: "repeat(1, 1fr)",
-            outline: `1px solid ${props.color ? props.color : primary}`,
+            // outline: `1px solid ${
+            //   props.color ? props.color : primary
+            // }`,
             borderRadius: "10px",
             width: "100%",
-            textAlign: "center",
+            textAlign: "start",
             color: props.color ? props.color : primary,
+            fontSize: "1rem",
+            padding: "5px",
+            paddingInlineStart: "1.5rem",
+            gridRow: props.gridRow ? props.gridRow : "span 1",
+            gridColumnStart: props.girdColumnStart
+              ? props.girdColumnStart
+              : 0,
+            gridColumnEnd:
+              props.gridColumn && props.girdColumnStart
+                ? props.gridColumn + props.girdColumnStart
+                : props.gridColumn
+                ? props.gridColumn
+                : 4,
+            position: "relative",
           }}
         >
-          <h2>{props.label}</h2>
+                    {props.isDeletable && (
+            <IconButton
+              onClick={() => {
+                props.handleDelete &&
+                  props.handleDelete(
+                    props.gridRow,
+                    props.gridColumn,
+                    props.girdColumnStart
+                  );
+              }}
+              sx={{
+                position: "absolute",
+                // width:'100%',
+                height:'50%',
+                top: "-10px",
+                right: "-10px",
+                color: props.color ? props.color : Red,
+                borderRadius: "10px",
+                borderBottomLeftRadius:0,
+                aspectRatio: "1/1",
+                zIndex:200,
+                outline: `2px solid ${
+                  props.color ? props.color : Red
+                }`,
+                backgroundColor: 'white',
+                "&:hover": {
+                  backgroundColor: props.color ? props.color : RedLight,
+                }
+              }}
+            >
+              <DeleteForeverOutlined />
+            </IconButton>
+          )}
+          <span spellCheck>{props.label}</span>
         </Box>
       );
 
@@ -209,6 +436,18 @@ const FormObjPreview = (props: Props) => {
             outline: `1px solid ${primary}`,
             borderRadius: "10px",
             padding: "5px",
+            gridRow: props.gridRow
+              ? `span ${props.gridRow}`
+              : "span 1",
+            gridColumnStart: props.girdColumnStart
+              ? props.girdColumnStart
+              : 0,
+            gridColumnEnd:
+              props.gridColumn && props.girdColumnStart
+                ? props.gridColumn + props.girdColumnStart
+                : props.gridColumn
+                ? props.gridColumn
+                : 4,
           }}
         >
           <span>{props.label}</span>
