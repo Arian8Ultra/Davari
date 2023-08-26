@@ -1,18 +1,23 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import { useLazyQuery, useQuery } from "@apollo/client";
+import {
+  ApolloQueryResult,
+  useLazyQuery,
+  useQuery,
+} from "@apollo/client";
 import React from "react";
 import {
   GET_COMPLAINT_ANSWER_FORMS,
   GET_COMPLAINT_FORMS,
 } from "../../GraphQL/Form/Queries";
-import { Box, Stack } from "@mui/material";
+import { Box, Skeleton, Stack } from "@mui/material";
 import { primaryGrey } from "../../theme/color";
 import FormCard from "./FormCard";
 
 interface FormListProps {
   type: "complaint" | "response";
+  refetch?: () => void;
 }
 const FormList = (props: FormListProps) => {
   //   const [forms, setForms] = React.useState([
@@ -22,16 +27,20 @@ const FormList = (props: FormListProps) => {
   //       description: "This is a complaint form",
   //     },
   //   ]);
-  const { data: complaintForms, loading: complaintFormsLoading } =
-    useQuery(GET_COMPLAINT_FORMS, {
-      onCompleted(data) {
-        console.log(data);
-      },
-    });
+  const {
+    data: complaintForms,
+    loading: complaintFormsLoading,
+    refetch,
+  } = useQuery(GET_COMPLAINT_FORMS, {
+    onCompleted(data) {
+      console.log(data);
+    },
+  });
 
   const {
     data: complaintAnswersForms,
     loading: complaintAnswersFormsLoading,
+    refetch: complaintAnswersFormsRefetch,
   } = useQuery(GET_COMPLAINT_ANSWER_FORMS, {
     onCompleted(data) {
       console.log(data);
@@ -40,39 +49,13 @@ const FormList = (props: FormListProps) => {
 
   switch (props.type) {
     case "complaint":
+      props.refetch
+        ? (props.refetch = () => {
+            void refetch();
+          })
+        : "";
       return (
-        <Stack spacing={0} mt={'1rem'}>
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                backgroundColor: primaryGrey,
-                color: "white",
-                padding: "1rem",
-                borderRadius: '5px 5px 0 0',
-              }}
-            >
-                فرم های شکایات
-            </Box>
-          {complaintFormsLoading ? (
-            <div>Loading...</div>
-          ) : (
-            complaintForms?.complaintForm_getComplaintForms?.result?.items?.map(
-              (form: {
-                id: number;
-                title: string;
-                description: string;
-              }) => {
-                return <FormCard key={form.id} id={form.id} title={form.title} description={form.description} />;
-              }
-            )
-          )}
-        </Stack>
-      );
-    case "response":
-      return (
-        <Stack spacing={0} mt={'1rem'}>
+        <Stack spacing={0} mt={"1rem"}>
           <Box
             sx={{
               display: "flex",
@@ -81,21 +64,77 @@ const FormList = (props: FormListProps) => {
               backgroundColor: primaryGrey,
               color: "white",
               padding: "1rem",
-              borderRadius: '5px 5px 0 0',
+              borderRadius: "5px 5px 0 0",
             }}
           >
-            فرم های پاسخ به شکایات
+            فرم های شکایات
           </Box>
-          {complaintAnswersFormsLoading ? (
-            <div>Loading...</div>
+          {complaintFormsLoading ? (
+            <div>
+              <Skeleton />
+            </div>
           ) : (
-            complaintAnswersForms?.complaintForm_getComplaintForms?.result?.items?.map(
+            complaintForms?.complaintForm_getComplaintForms?.result?.items?.map(
               (form: {
                 id: number;
                 title: string;
                 description: string;
               }) => {
-                return <FormCard key={form.id} id={form.id} title={form.title} description={form.description} />;
+                return (
+                  <FormCard
+                    key={form.id}
+                    id={form.id}
+                    title={form.title}
+                    description={form.description}
+                    type={props.type}
+                  />
+                );
+              }
+            )
+          )}
+        </Stack>
+      );
+    case "response":
+      props.refetch
+        ? (props.refetch = () => {
+            void complaintAnswersFormsRefetch();
+          })
+        : "";
+      return (
+        <Stack spacing={0} mt={"1rem"}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundColor: primaryGrey,
+              color: "white",
+              padding: "1rem",
+              borderRadius: "5px 5px 0 0",
+            }}
+          >
+            فرم های پاسخ به شکایات
+          </Box>
+          {complaintAnswersFormsLoading ? (
+            <div>
+              <Skeleton />
+            </div>
+          ) : (
+            complaintAnswersForms?.complaintResponseForm_getComplaintResponseForms?.result?.items?.map(
+              (form: {
+                id: number;
+                title: string;
+                description: string;
+              }) => {
+                return (
+                  <FormCard
+                    key={form.id}
+                    id={form.id}
+                    title={form.title}
+                    description={form.description}
+                    type={props.type}
+                  />
+                );
               }
             )
           )}

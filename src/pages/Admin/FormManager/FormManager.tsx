@@ -1,4 +1,14 @@
-import { Box, Button, MenuItem, Stack, TextField } from "@mui/material";
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import {
+  Box,
+  Button,
+  CircularProgress,
+  MenuItem,
+  Stack,
+  TextField,
+} from "@mui/material";
 import React from "react";
 import { BsDatabaseAdd } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
@@ -6,6 +16,11 @@ import { Green, GreenLight, background } from "../../../theme/color";
 import useLayoutStore from "../../../Context/LayoutStore";
 import FormList from "../../../components/Forms/FormList";
 import NewModal from "../../../components/Modals";
+import { useMutation } from "@apollo/client";
+import {
+  CREATE_COMPLAINT_FORM,
+  CREATE_COMPLAINT_RESPONSE_FORM,
+} from "../../../GraphQL/Form/Mutations";
 
 const FormManager = () => {
   const setPageTitle = useLayoutStore((state) => state.setPageTitle);
@@ -14,6 +29,56 @@ const FormManager = () => {
     title: "",
     description: "",
     type: "",
+  });
+
+  const [
+    addComplaintForm,
+    { data: complaintData, loading: complaintLoading },
+  ] = useMutation(CREATE_COMPLAINT_FORM, {
+    variables: {
+      title: addModal.title,
+      description: addModal.description,
+    },
+    onCompleted(data, clientOptions) {
+      console.log(data);
+      navigate("addform", {
+        state: {
+          formId:
+            data?.complaintForm_createComplaintForm?.result?.id,
+        },
+      });
+      setAddModal({
+        ...addModal,
+        open: false,
+      });
+    },
+  });
+
+  const [
+    addComplaintResponseForm,
+    {
+      data: complaintResponseData,
+      loading: complaintResponseLoading,
+    },
+  ] = useMutation(CREATE_COMPLAINT_RESPONSE_FORM, {
+    variables: {
+      title: addModal.title,
+      description: addModal.description,
+    },
+    onCompleted(data, clientOptions) {
+      console.log(data);
+      navigate("addform", {
+        state: {
+          formId:
+            data?.complaintResponseForm_addComplaintResponseForm
+              ?.result?.id,
+        },
+      });
+      setAddModal({
+        ...addModal,
+        open: false,
+      });
+    },
   });
 
   const navigate = useNavigate();
@@ -56,12 +121,15 @@ const FormManager = () => {
       <Box
         display={"grid"}
         sx={{
-          gridTemplateColumns: "repeat(2, 1fr)",
+          gridTemplateColumns: {
+            xs:"repeat(1, 1fr)",
+            md:"repeat(2, 1fr)"
+          },
           gap: "1rem",
         }}
       >
         <FormList type="complaint" />
-        <FormList type="response" />
+        <FormList type="response"/>
       </Box>
       <NewModal
         name="فرم جدید"
@@ -75,10 +143,10 @@ const FormManager = () => {
         }}
         open={addModal.open}
         isCloseable
-        height={'80dvh'}
+        height={"80dvh"}
       >
         <Stack spacing={2} mt={"1rem"} width={"100%"}>
-        <TextField
+          <TextField
             fullWidth
             label={"نوع"}
             variant={"outlined"}
@@ -98,7 +166,7 @@ const FormManager = () => {
             <MenuItem value={"complaint"}>شکایت</MenuItem>
             <MenuItem value={"response"}>پاسخ به شکایت</MenuItem>
           </TextField>
-        <TextField
+          <TextField
             fullWidth
             label={"عنوان"}
             variant={"outlined"}
@@ -138,11 +206,11 @@ const FormManager = () => {
           <Button
             variant="contained"
             onClick={() => {
-              navigate("addform");
-              setAddModal({
-                ...addModal,
-                open: false,
-              });
+              if (addModal.type == "complaint") {
+                void addComplaintForm();
+              } else {
+                void addComplaintResponseForm();
+              }
             }}
             sx={{
               borderRadius: 2,
@@ -155,11 +223,17 @@ const FormManager = () => {
                 xs: "1/2",
                 lg: "1/3",
               },
+              display: "flex",
               "&:hover": {
                 backgroundColor: GreenLight,
               },
             }}
           >
+            {complaintLoading || complaintResponseLoading ? (
+              <CircularProgress />
+            ) : (
+              ""
+            )}
             ادامه
           </Button>
         </Stack>

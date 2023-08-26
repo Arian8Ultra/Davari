@@ -3,7 +3,7 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
 } from "react-router-dom";
-import Error from "../layout/Error";
+// import Error from "../layout/Error";
 import MainLayout from "../layout/MainLayout";
 import Root from "../layout/Root";
 import UserManagement from "../pages/Admin/UserManager/UserManagement";
@@ -39,6 +39,10 @@ const router = createBrowserRouter(
         <Route path="admin/formanager" element={<FormManager />} />
         <Route
           path="admin/formanager/addForm"
+          element={<AddForm />}
+        />
+        <Route
+          path="admin/formanager/addForm/:formId"
           element={<AddForm />}
         />
       </Route>

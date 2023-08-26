@@ -8,6 +8,20 @@ export const GET_COMPLAINT_FORMS = gql`
           id
           title
           description
+          formObjectForms{
+            gridColumn
+            gridRow
+            gridColumnStart
+            formObjectId
+            formObject{
+              label
+              formObjectType
+              color
+              unit
+              isRequired
+              id
+            }
+          }
         }
       }
       status
@@ -17,13 +31,27 @@ export const GET_COMPLAINT_FORMS = gql`
 `;
 
 export const GET_COMPLAINT_ANSWER_FORMS = gql`
-  query ComplaintResponseForm_getComplaintResponseForms {
-    ComplaintResponseForm_getComplaintResponseForms {
+  query complaintResponseForm_getComplaintResponseForms {
+    complaintResponseForm_getComplaintResponseForms {
       result {
         items {
           title
           description
           id
+          formObjectForms{
+            gridColumn
+            gridRow
+            gridColumnStart
+            formObjectId
+            formObject{
+              label
+              formObjectType
+              color
+              unit
+              isRequired
+              id
+            }
+          }
         }
       }
       status

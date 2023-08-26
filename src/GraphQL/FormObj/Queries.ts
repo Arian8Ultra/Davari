@@ -34,7 +34,8 @@ export const GET_FORM_OBJ = gql`
         value
       }
     }
-  }`
+  }
+  `
 
 export type FormObj = {
   label: string;
