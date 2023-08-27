@@ -9,6 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import { onPrimary, primaryLightTransparent } from "../theme/color";
+import { CancelOutlined } from "@mui/icons-material";
 
 interface NewModalProps {
   width?: string | number | object;
@@ -20,7 +21,7 @@ interface NewModalProps {
   open: boolean;
   onClose?: Function;
   backgroundColor?: string;
-  background?:string;
+  background?: string;
   isCloseable?: boolean;
   dividerColor?: string;
 }
@@ -62,9 +63,9 @@ export default function NewModal(props: NewModalProps) {
           maxHeight: height,
           overflow: "auto",
           bgcolor: backgroundColor,
-          background:background,
+          background: background,
           boxShadow: 24,
-          borderRadius: '15px',
+          borderRadius: "15px",
           backdropFilter: "blur(5px)",
           p: 4,
         }}
@@ -76,31 +77,36 @@ export default function NewModal(props: NewModalProps) {
           alignItems={"center"}
         >
           <Stack
-            direction='row'
-            justifyContent='space-between'
-            alignItems='center'
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
             width={isCloseable ? "100%" : "max-content"}
           >
             <Typography
-              fontSize='25px'
-              fontWeight='bold'
+              fontSize="25px"
+              fontWeight="bold"
               color={color}
               textAlign={"center"}
             >
               {name}
             </Typography>
             {isCloseable && (
-              <IconButton onClick={handleClose}>
-                <CancelRoundedIcon
-                  sx={{ color: color != null ? color : onPrimary }}
-                />
+              <IconButton onClick={handleClose} sx={{
+                color: color != null ? color : onPrimary,
+                transition: "all 0.3s ease",
+                "&:hover": {
+                  background: color != null ? color : onPrimary,
+                  color: 'white',
+                },
+              }}>
+                <CancelOutlined />
               </IconButton>
             )}
           </Stack>
         </Box>
         <Box
-          width='100%'
-          height='2px'
+          width="100%"
+          height="2px"
           bgcolor={dividerColor}
           my={"10px"}
           borderRadius={"20px"}

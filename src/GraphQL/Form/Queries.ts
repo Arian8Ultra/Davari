@@ -8,7 +8,7 @@ export const GET_COMPLAINT_FORMS = gql`
           id
           title
           description
-          formObjectForms{
+          formObjectComplaintForms{
             gridColumn
             gridRow
             gridColumnStart
@@ -38,7 +38,7 @@ export const GET_COMPLAINT_ANSWER_FORMS = gql`
           title
           description
           id
-          formObjectForms{
+          formObjectComplaintResponseForms{
             gridColumn
             gridRow
             gridColumnStart

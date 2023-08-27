@@ -24,6 +24,7 @@ import { useLazyQuery, useQuery } from "@apollo/client";
 import {
   FormObj,
   FormObjComplete,
+  FormObjTypeEnum,
   GET_FORM_OBJ,
   GET_FORM_OBJS,
 } from "../../../../GraphQL/FormObj/Queries";
@@ -43,6 +44,17 @@ const AddForm = () => {
     girdColumnStart: 0,
     id: 511315,
     selected: 0,
+  });
+
+  const [createFormObjModal, setCreateFormObjModal] = React.useState({
+    open: false,
+    color: "",
+    formObjectType: "" as unknown as FormObjTypeEnum,
+    isRequired: false,
+    label: "",
+    name: "",
+    stickyText: "",
+    unit: "",
   });
   const [ColumnAddButton, setColumnAddButton] = React.useState([
     {
@@ -130,19 +142,41 @@ const AddForm = () => {
             alignItems: "stretch",
           }}
         >
-          <TextField
-            label="اندازه فیلد"
-            value={addModal.gridColumn}
-            type="number"
-            size="small"
-            onChange={(e) => {
-              setAddModal({
-                ...addModal,
-                gridColumn: parseInt(e.target.value),
-              });
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: "repeat(2, 1fr)",
+              gap: "1rem",
+              position: "sticky",
+              top: "0px",
             }}
-          />
-          <Stack width={"100%"} height={"80%"}>
+          >
+            <Button
+              sx={{
+                backgroundColor: Green,
+                color: "white",
+                "&:hover": {
+                  backgroundColor: GreenLight,
+                  color: Green,
+                },
+              }}
+            >
+              ساخت فیلد جدید
+            </Button>
+            <TextField
+              label="اندازه فیلد"
+              value={addModal.gridColumn}
+              type="number"
+              size="small"
+              onChange={(e) => {
+                setAddModal({
+                  ...addModal,
+                  gridColumn: parseInt(e.target.value),
+                });
+              }}
+            />
+          </Box>
+          <Stack width={"100%"} height={"50%"}>
             {formObjData?.formObject_getFormObjects?.result.items.map(
               (item: FormObj, index: number) => {
                 return (
@@ -203,6 +237,12 @@ const AddForm = () => {
             sx={{
               backgroundColor: Green,
               color: "white",
+              position: "sticky",
+              bottom: 0,
+              "&:hover": {
+                backgroundColor: GreenLight,
+                color: Green,
+              },
             }}
             onClick={() => {
               void getFormObj({
@@ -281,15 +321,6 @@ const AddForm = () => {
                   console.error(error);
                 },
               });
-
-              // if (table[addModal.gridRow-1] < addModal.gridColumn) {
-              //   table[addModal.gridRow-1] = addModal.gridColumn;
-              //   setTable([...table]);
-              // }
-              // if(!table[addModal.gridRow-1]){
-              //   table[addModal.gridRow-1] = addModal.gridColumn;
-              //   setTable([...table]);
-              // }
             }}
           >
             افزودن
@@ -328,10 +359,6 @@ const AddForm = () => {
             table[item.gridRow - 1] = item.gridColumn;
             setTable([...table]);
           }
-          // else if(table[item.gridRow] < item.gridColumn){
-          //   table[item.gridRow] = item.gridColumn +2
-          //   setTable([...table])
-          // }
 
           return (
             // <TextField
@@ -389,33 +416,6 @@ const AddForm = () => {
                 },
               }}
               onClick={() => {
-                // if (lastColumn + 4 > 12) {
-                //   setLastRow(lastRow + 1);
-                //   setLastColumn(0);
-                // } else {
-                //   setLastColumn(lastColumn + 4);
-                // }
-                // if (table[index] == 0) {
-                //   table[index] = table[index] + 4;
-                //   setTable([...table]);
-                // } else {
-                //   table[index] = table[index] + 4;
-                //   setTable([...table]);
-                // }
-
-                // setFormList([
-                //   {
-                //     gridRow: index + 1,
-                //     gridColumn: 4,
-                //     girdColumnStart: table[index] - 3,
-                //     label: "test",
-                //     type: 0,
-                //     stickyText: "sticky",
-                //     required: false,
-                //   },
-                //   ...formList,
-                // ]);
-
                 setAddModal({
                   ...addModal,
                   open: true,

@@ -11,8 +11,8 @@ export const CREATE_COMPLAINT_FORM = gql`
       result {
         title
         description
-        formObjectForms {
-          formId
+        formObjectComplaintForms {
+          complaintFormId
           id
         }
       }
@@ -51,8 +51,8 @@ export const CREATE_COMPLAINT_RESPONSE_FORM = gql`
         title
         description
         id
-        formObjectForms {
-          formId
+        formObjectComplaintResponseForms {
+          complaintResponseFormId
           id
         }
       }
