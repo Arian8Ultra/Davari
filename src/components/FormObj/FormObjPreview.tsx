@@ -11,6 +11,7 @@ import {
 } from "../../theme/color";
 import { VscFile } from "react-icons/vsc";
 import {
+  Close,
   DeleteForeverOutlined,
   UploadFile,
 } from "@mui/icons-material";
@@ -71,23 +72,28 @@ const FormObjPreview = (props: Props) => {
                 height: "50%",
                 top: "-10px",
                 right: "-10px",
-                color: props.color ? props.color : Red,
+                color: props.color ? props.color : "white",
                 borderRadius: "10px",
                 borderBottomLeftRadius: 0,
+                background: Red,
                 aspectRatio: "1/1",
                 zIndex: 200,
                 outline: `2px solid ${
                   props.color ? props.color : Red
                 }`,
-                backgroundColor: "white",
+                // backgroundColor: "white",
                 "&:hover": {
                   backgroundColor: props.color
                     ? props.color
                     : RedLight,
+                  outline: `2px solid ${
+                    props.color ? props.color : Red
+                  }`,
+                  color: Red,
                 },
               }}
             >
-              <DeleteForeverOutlined />
+              <Close />
             </IconButton>
           )}
           <Box
@@ -186,23 +192,28 @@ const FormObjPreview = (props: Props) => {
                 height: "50%",
                 top: "-10px",
                 right: "-10px",
-                color: props.color ? props.color : Red,
+                color: props.color ? props.color : "white",
                 borderRadius: "10px",
                 borderBottomLeftRadius: 0,
+                background: Red,
                 aspectRatio: "1/1",
                 zIndex: 200,
                 outline: `2px solid ${
                   props.color ? props.color : Red
                 }`,
-                backgroundColor: "white",
+                // backgroundColor: "white",
                 "&:hover": {
                   backgroundColor: props.color
                     ? props.color
                     : RedLight,
+                  outline: `2px solid ${
+                    props.color ? props.color : Red
+                  }`,
+                  color: Red,
                 },
               }}
             >
-              <DeleteForeverOutlined />
+              <Close />
             </IconButton>
           )}
           <Box
@@ -314,26 +325,31 @@ const FormObjPreview = (props: Props) => {
               sx={{
                 position: "absolute",
                 // width:'100%',
-                height: "50%",
+                height: "60%",
                 top: "-10px",
                 right: "-10px",
-                color: props.color ? props.color : Red,
+                color: props.color ? props.color : "white",
                 borderRadius: "10px",
                 borderBottomLeftRadius: 0,
+                background: Red,
                 aspectRatio: "1/1",
                 zIndex: 200,
                 outline: `2px solid ${
                   props.color ? props.color : Red
                 }`,
-                backgroundColor: "white",
+                // backgroundColor: "white",
                 "&:hover": {
                   backgroundColor: props.color
                     ? props.color
                     : RedLight,
+                  outline: `2px solid ${
+                    props.color ? props.color : Red
+                  }`,
+                  color: Red,
                 },
               }}
             >
-              <DeleteForeverOutlined />
+              <Close />
             </IconButton>
           )}
           <Box
@@ -390,7 +406,7 @@ const FormObjPreview = (props: Props) => {
             position: "relative",
           }}
         >
-                    {props.isDeletable && (
+          {props.isDeletable && (
             <IconButton
               onClick={() => {
                 props.handleDelete &&
@@ -403,24 +419,31 @@ const FormObjPreview = (props: Props) => {
               sx={{
                 position: "absolute",
                 // width:'100%',
-                height:'50%',
+                height: "65%",
                 top: "-10px",
                 right: "-10px",
-                color: props.color ? props.color : Red,
+                color: props.color ? props.color : "white",
                 borderRadius: "10px",
-                borderBottomLeftRadius:0,
+                borderBottomLeftRadius: 0,
+                background: Red,
                 aspectRatio: "1/1",
-                zIndex:200,
+                zIndex: 200,
                 outline: `2px solid ${
                   props.color ? props.color : Red
                 }`,
-                backgroundColor: 'white',
+                // backgroundColor: "white",
                 "&:hover": {
-                  backgroundColor: props.color ? props.color : RedLight,
-                }
+                  backgroundColor: props.color
+                    ? props.color
+                    : RedLight,
+                  outline: `2px solid ${
+                    props.color ? props.color : Red
+                  }`,
+                  color: Red,
+                },
               }}
             >
-              <DeleteForeverOutlined />
+              <Close />
             </IconButton>
           )}
           <span spellCheck>{props.label}</span>

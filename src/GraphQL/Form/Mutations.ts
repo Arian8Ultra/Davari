@@ -11,10 +11,7 @@ export const CREATE_COMPLAINT_FORM = gql`
       result {
         title
         description
-        formObjectComplaintForms {
-          complaintFormId
-          id
-        }
+        id
       }
       status {
         code

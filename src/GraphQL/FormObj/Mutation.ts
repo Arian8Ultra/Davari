@@ -2,13 +2,13 @@ import { gql } from "@apollo/client";
 
 export const CREATE_FORM_OBJ = gql`
   mutation formObject_createFormObject(
-    $color: String!
-    $formObjectType: FormObjectType
+    $color: String
+    $formObjectType: FormObjectType!
     $isRequired: Boolean!
     $label: String!
     $name: String!
-    $stickyText: String!
-    $unit: String!
+    $stickyText: String
+    $unit: String
   ) {
     formObject_addFormObject(
       input: {
@@ -53,6 +53,89 @@ export const ADD_FORM_OBJ_TO_COMPLAINT_FORM = gql`
         gridRow
         gridColumnStart
         formObjectId
+      }
+      status {
+        code
+        value
+      }
+    }
+  }
+`;
+
+export const DELETE_FORM_OBJ_FROM_COMPLAINT_FORM = gql`
+  mutation formObjectForm_deleteFormObjectForm($id: Int!) {
+    formObjectComplaintForm_deleteFormObjectComplaintForm(
+      entityId: $id
+    ) {
+      result {
+        id
+      }
+      status {
+        code
+        value
+      }
+    }
+  }
+`;
+
+export const ADD_FORM_OBJ_TO_COMPLAINT_RESPONSE_FORM = gql`
+  mutation formObjectForm_addFormObjectForm(
+    $complaintResponseFormId: Int!
+    $formObjectId: Int
+    $gridColumn: Int
+    $gridColumnStart: Int
+    $gridRow: Int
+  ) {
+    formObjectComplaintResponseForm_addFormObjectComplaintResponseForm(
+      input: {
+        complaintResponseFormId: $complaintResponseFormId
+        formObjectId: $formObjectId
+        gridColumn: $gridColumn
+        gridColumnStart: $gridColumnStart
+        gridRow: $gridRow
+      }
+    ) {
+      result {
+        complaintResponseFormId
+        gridColumn
+        gridRow
+        gridColumnStart
+        formObjectId
+      }
+      status {
+        code
+        value
+      }
+    }
+  }
+`;
+
+export const DELETE_FORM_OBJ_FROM_COMPLAINT_RESPONSE_FORM = gql`
+  mutation formObjectForm_deleteFormObjectForm($id: Int!) {
+    formObjectComplaintResponseForm_deleteFormObjectComplaintResponseForm(
+      entityId: $id
+    ) {
+      result {
+        id
+      }
+      status {
+        code
+        value
+      }
+    }
+  }
+`;
+
+export const DELETE_FORM_OBJ = gql`
+  mutation formObject_deleteFormObject($id: Int!) {
+    formObject_deleteFormObject(entityId: $id) {
+      result {
+        id
+        label
+      }
+      status {
+        code
+        value
       }
     }
   }

@@ -14,6 +14,7 @@ import Messages from "../pages/Portal/Messages/Messages";
 import ComplainAnswers from "../pages/Portal/ComplainAnswers/ComplainAnswers";
 import FormManager from "../pages/Admin/FormManager/FormManager";
 import AddForm from "../pages/Admin/FormManager/AddForm/AddForm";
+import ViewForm from "../pages/Admin/FormManager/ViewForm/ViewForm";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -42,8 +43,12 @@ const router = createBrowserRouter(
           element={<AddForm />}
         />
         <Route
-          path="admin/formanager/addForm/:formId"
+          path="admin/formanager/addForm/:formId/:fromType"
           element={<AddForm />}
+        />
+        <Route
+          path="admin/formanager/viewForm/:formId/:fromType"
+          element={<ViewForm />}
         />
       </Route>
     </Route>

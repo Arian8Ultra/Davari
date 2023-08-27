@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
@@ -41,12 +42,14 @@ const FormManager = () => {
     },
     onCompleted(data, clientOptions) {
       console.log(data);
-      navigate("addform", {
-        state: {
-          formId:
-            data?.complaintForm_createComplaintForm?.result?.id,
-        },
-      });
+      navigate(
+        `addform/${data.complaintForm_addComplaintForm.result.id}/complaint`,
+        {
+          state: {
+            formId: data?.complaintForm_addComplaintForm?.result?.id,
+          },
+        }
+      );
       setAddModal({
         ...addModal,
         open: false,
@@ -67,13 +70,16 @@ const FormManager = () => {
     },
     onCompleted(data, clientOptions) {
       console.log(data);
-      navigate("addform", {
-        state: {
-          formId:
-            data?.complaintResponseForm_addComplaintResponseForm
-              ?.result?.id,
-        },
-      });
+      navigate(
+        `addform/${data.complaintResponseForm_addComplaintResponseForm.result.id}/response`,
+        {
+          state: {
+            formId:
+              data?.complaintResponseForm_addComplaintResponseForm
+                ?.result?.id,
+          },
+        }
+      );
       setAddModal({
         ...addModal,
         open: false,
@@ -122,14 +128,14 @@ const FormManager = () => {
         display={"grid"}
         sx={{
           gridTemplateColumns: {
-            xs:"repeat(1, 1fr)",
-            md:"repeat(2, 1fr)"
+            xs: "repeat(1, 1fr)",
+            md: "repeat(2, 1fr)",
           },
           gap: "1rem",
         }}
       >
         <FormList type="complaint" />
-        <FormList type="response"/>
+        <FormList type="response" />
       </Box>
       <NewModal
         name="فرم جدید"

@@ -1,7 +1,9 @@
-import { DeleteOutline, DeleteOutlineRounded, EditOutlined } from "@mui/icons-material";
+import { DeleteOutline, DeleteOutlineRounded, EditOutlined, ViewAgenda } from "@mui/icons-material";
 import { Box, Button, Collapse, IconButton } from "@mui/material";
 import React from "react";
 import {
+  Green,
+  GreenLight,
   Red,
   RedLight,
   primary,
@@ -12,6 +14,7 @@ import {
   DELETE_COMPLAINT_FORM,
   DELETE_COMPLAINT_RESPONSE_FORM,
 } from "../../GraphQL/Form/Mutations";
+import { useNavigate } from "react-router-dom";
 
 interface FormCardProps {
   id: number;
@@ -20,6 +23,7 @@ interface FormCardProps {
   type: "complaint" | "response";
 }
 const FormCard = (props: FormCardProps) => {
+  const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
   const [deleteComplaint] = useMutation(DELETE_COMPLAINT_FORM, {
     variables: {
@@ -101,6 +105,31 @@ const FormCard = (props: FormCardProps) => {
             color: "white",
             padding: "0.25rem 0.5rem",
             borderRadius: "5px",
+            background: Green,
+            display:'flex',
+            justifyContent:'center',
+            alignItems:'center',
+            fontSize:'12px',
+            "&:hover": {
+              background: GreenLight,
+              color: Green,
+              // outline:`2px ${Red} solid`
+            },
+          }}
+          onClick={() => {
+            navigate(`viewForm/${props.id}/${props.type}`);
+          }}
+        >
+            مشاهده
+          <ViewAgenda sx={{
+            height:'17px'
+          }} />
+        </Button>
+        <Button
+          sx={{
+            color: "white",
+            padding: "0.25rem 0.5rem",
+            borderRadius: "5px",
             background: Red,
             display:'flex',
             justifyContent:'center',
@@ -132,7 +161,7 @@ const FormCard = (props: FormCardProps) => {
             height:'17px'
           }} />
         </Button>
-        <Button
+        {/* <Button
           sx={{
             color: "white",
             padding: "0.25rem 0.5rem",
@@ -150,24 +179,13 @@ const FormCard = (props: FormCardProps) => {
           }}
           onClick={() => {
             const agree = confirm("آیا ا حذف این فرم مطمئن هستید؟");
-
-            if (agree) {
-              switch (props.type) {
-                case "complaint":
-                  void deleteComplaint();
-                  break;
-                case "response":
-                  void deleteResponse();
-                  break;
-              }
-            }
           }}
         >
             ویرایش
           <EditOutlined sx={{
             height:'17px'
           }} />
-        </Button>
+        </Button> */}
       </Box>
       <Collapse
         in={open}

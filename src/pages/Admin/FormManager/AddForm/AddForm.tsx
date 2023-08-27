@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
@@ -9,6 +10,7 @@ import {
   Box,
   Button,
   IconButton,
+  MenuItem,
   Stack,
   TextField,
 } from "@mui/material";
@@ -20,7 +22,7 @@ import {
 } from "../../../../theme/color";
 import { VscAdd, VscDiffAdded } from "react-icons/vsc";
 import NewModal from "../../../../components/Modals";
-import { useLazyQuery, useQuery } from "@apollo/client";
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import {
   FormObj,
   FormObjComplete,
@@ -30,7 +32,18 @@ import {
 } from "../../../../GraphQL/FormObj/Queries";
 import FormObjPreview from "../../../../components/FormObj/FormObjPreview";
 import { TextFields } from "@mui/icons-material";
+import {
+  ADD_FORM_OBJ_TO_COMPLAINT_FORM,
+  ADD_FORM_OBJ_TO_COMPLAINT_RESPONSE_FORM,
+  CREATE_FORM_OBJ,
+  DELETE_FORM_OBJ,
+} from "../../../../GraphQL/FormObj/Mutation";
+import { useParams } from "react-router-dom";
 const AddForm = () => {
+  const { formId, fromType } = useParams<{
+    formId: string;
+    fromType: string;
+  }>();
   const [lastRow, setLastRow] = React.useState(1);
   const [lastColumn, setLastColumn] = React.useState(0);
   const [addModal, setAddModal] = React.useState({
@@ -48,13 +61,13 @@ const AddForm = () => {
 
   const [createFormObjModal, setCreateFormObjModal] = React.useState({
     open: false,
-    color: "",
+    color: null as string | null,
     formObjectType: "" as unknown as FormObjTypeEnum,
     isRequired: false,
-    label: "",
-    name: "",
-    stickyText: "",
-    unit: "",
+    label: null as string | null,
+    name: null as string | null,
+    stickyText: null as string | null,
+    unit: null as string | null,
   });
   const [ColumnAddButton, setColumnAddButton] = React.useState([
     {
@@ -67,7 +80,7 @@ const AddForm = () => {
     [] as FormObjComplete[]
   );
 
-  const { data: formObjData } = useQuery(GET_FORM_OBJS, {
+  const { data: formObjData, refetch } = useQuery(GET_FORM_OBJS, {
     onCompleted(data) {
       console.log("data", data);
     },
@@ -88,6 +101,55 @@ const AddForm = () => {
     }
   );
 
+  const [createFormObj] = useMutation(CREATE_FORM_OBJ, {
+    variables: {
+      formObjectType: createFormObjModal.formObjectType,
+      label: createFormObjModal.label,
+      name: createFormObjModal.name,
+      stickyText: createFormObjModal.stickyText,
+      unit: createFormObjModal.unit,
+      isRequired: false,
+      // color: createFormObjModal.color,
+    },
+    onCompleted(data, clientOptions) {
+      console.log(data);
+      void refetch();
+    },
+  });
+
+  const [deleteFormObj] = useMutation(DELETE_FORM_OBJ, {
+    onCompleted(data, clientOptions) {
+      console.log(data);
+      void refetch();
+    },
+    onError(error) {
+      console.error(error);
+      void refetch();
+    },
+  });
+
+  const [addFormObjToComplaintForm] = useMutation(
+    ADD_FORM_OBJ_TO_COMPLAINT_FORM,
+    {
+      onCompleted(data, clientOptions) {
+        console.log(data);
+        void refetch();
+      },
+      onError(error) {
+        console.error(error);
+        void refetch();
+      },
+    }
+  );
+  const [addFormObjToComplaintResponseForm] = useMutation(
+    ADD_FORM_OBJ_TO_COMPLAINT_RESPONSE_FORM,
+    {
+      onCompleted(data, clientOptions) {
+        console.log(data);
+        void refetch();
+      },
+    }
+  );
   const handleDeleteFormObj = (
     gridRow: number | undefined,
     gridColumn: number | undefined,
@@ -120,6 +182,8 @@ const AddForm = () => {
 
   return (
     <React.Fragment>
+      {/* formId : {formId}
+      fromType : {fromType} */}
       {/* {`table: ${table}`} */}
       <NewModal
         name="افزودن فیلد"
@@ -131,6 +195,10 @@ const AddForm = () => {
         isCloseable={true}
         color={Green}
         height={"80vh"}
+        width={{
+          xs: "100%",
+          md: "50%",
+        }}
       >
         <Box
           width={"100%"}
@@ -149,6 +217,9 @@ const AddForm = () => {
               gap: "1rem",
               position: "sticky",
               top: "0px",
+              zIndex: 400,
+              background: "rgba(255,255,255,0.5)",
+              backdropFilter: "blur(10px)",
             }}
           >
             <Button
@@ -159,6 +230,12 @@ const AddForm = () => {
                   backgroundColor: GreenLight,
                   color: Green,
                 },
+              }}
+              onClick={() => {
+                setCreateFormObjModal({
+                  ...createFormObjModal,
+                  open: true,
+                });
               }}
             >
               ساخت فیلد جدید
@@ -205,6 +282,7 @@ const AddForm = () => {
                       justifyContent: "center",
                       alignItems: "center",
                       transition: "all ease 100ms",
+                      position: "relative",
                       outline: `${
                         addModal.selected == item.id ? "2px" : 0
                       } solid ${Green}`,
@@ -227,6 +305,14 @@ const AddForm = () => {
                       id={item.id}
                       name={item.label}
                       key={item.id}
+                      isDeletable={true}
+                      handleDelete={() => {
+                        void deleteFormObj({
+                          variables: {
+                            id: item.id,
+                          },
+                        });
+                      }}
                     />
                   </Box>
                 );
@@ -238,6 +324,7 @@ const AddForm = () => {
               backgroundColor: Green,
               color: "white",
               position: "sticky",
+              zIndex: 400,
               bottom: 0,
               "&:hover": {
                 backgroundColor: GreenLight,
@@ -251,6 +338,30 @@ const AddForm = () => {
                 },
                 onCompleted(data) {
                   console.log("data", data);
+                  if (fromType == "complaint") {
+                    void addFormObjToComplaintForm({
+                      variables: {
+                        complaintFormId: formId && parseInt(formId),
+                        formObjectId:
+                          data?.formObject_getFormObject?.result?.id,
+                        gridColumn: addModal.gridColumn,
+                        gridRow: addModal.gridRow,
+                        gridColumnStart: addModal.girdColumnStart,
+                      },
+                    });
+                  } else if (fromType == "response") {
+                    void addFormObjToComplaintResponseForm({
+                      variables: {
+                        complaintResponseFormId:
+                          formId && parseInt(formId),
+                        formObjectId:
+                          data?.formObject_getFormObject?.result?.id,
+                        gridColumn: addModal.gridColumn,
+                        gridRow: addModal.gridRow,
+                        gridColumnStart: addModal.girdColumnStart,
+                      },
+                    });
+                  }
                   setAddModal({
                     ...addModal,
                     open: false,
@@ -324,7 +435,7 @@ const AddForm = () => {
             }}
           >
             افزودن
-            {formObjByIdData?.formObject_getFormObject?.result?.label}
+            {/* {formObjByIdData?.formObject_getFormObject?.result?.label} */}
           </Button>
         </Box>
       </NewModal>
@@ -461,6 +572,155 @@ const AddForm = () => {
           </IconButton>
         )}
       </div>
+      <NewModal
+        open={createFormObjModal.open}
+        onClose={() => {
+          setCreateFormObjModal({
+            ...createFormObjModal,
+            open: false,
+          });
+        }}
+        name="ساخت فیلد جدید"
+        backgroundColor={background}
+        color={Green}
+        isCloseable={true}
+        height={"80vh"}
+        width={{
+          xs: "100%",
+          md: "50%",
+        }}
+      >
+        <Box
+          width={"100%"}
+          height={"100%"}
+          sx={{
+            display: "grid",
+            gridTemplateColumns: "repeat(2, 1fr)",
+            gap: "1rem",
+          }}
+        >
+          <TextField
+            label="نوع فیلد"
+            value={createFormObjModal.formObjectType}
+            onChange={(e) => {
+              console.log("e.target.value", e.target.value);
+
+              setCreateFormObjModal({
+                ...createFormObjModal,
+                formObjectType: e.target
+                  .value as unknown as FormObjTypeEnum,
+              });
+            }}
+            sx={{
+              gridColumn: "span 2",
+            }}
+            select
+          >
+            <MenuItem value={FormObjTypeEnum[2].toUpperCase()}>
+              عنوان اصلی
+            </MenuItem>
+            <MenuItem value={FormObjTypeEnum[3].toUpperCase()}>
+              عنوان فرعی
+            </MenuItem>
+            <MenuItem value={FormObjTypeEnum[0].toUpperCase()}>
+              متن
+            </MenuItem>
+            <MenuItem value={FormObjTypeEnum[1].toUpperCase()}>
+              متن با فایل
+            </MenuItem>
+          </TextField>
+          <TextField
+            label="نام فیلد"
+            value={createFormObjModal.name}
+            disabled={
+              createFormObjModal.formObjectType.toString() == ""
+            }
+            onChange={(e) => {
+              setCreateFormObjModal({
+                ...createFormObjModal,
+                name: e.target.value,
+              });
+            }}
+          />
+          <TextField
+            label="عنوان فیلد"
+            value={createFormObjModal.label}
+            disabled={
+              createFormObjModal.formObjectType.toString() == ""
+            }
+            onChange={(e) => {
+              setCreateFormObjModal({
+                ...createFormObjModal,
+                label: e.target.value,
+              });
+            }}
+          />
+          <TextField
+            label="متن چسبیده"
+            value={createFormObjModal.stickyText}
+            disabled={
+              createFormObjModal.formObjectType.toString() == "" ||
+              createFormObjModal.formObjectType.toString() ==
+                "TITLE_H2" ||
+              createFormObjModal.formObjectType.toString() ==
+                "TITLE_H1"
+            }
+            onChange={(e) => {
+              setCreateFormObjModal({
+                ...createFormObjModal,
+                stickyText: e.target.value,
+              });
+            }}
+          />
+          <TextField
+            label="واحد"
+            value={createFormObjModal.unit}
+            disabled={
+              createFormObjModal.formObjectType.toString() == "" ||
+              createFormObjModal.formObjectType.toString() ==
+                "TITLE_H2" ||
+              createFormObjModal.formObjectType.toString() ==
+                "TITLE_H1"
+            }
+            onChange={(e) => {
+              setCreateFormObjModal({
+                ...createFormObjModal,
+                unit: e.target.value,
+              });
+            }}
+          />
+
+          <Button
+            sx={{
+              gridColumn: "span 2",
+              backgroundColor: Green,
+              color: "white",
+              "&:hover": {
+                backgroundColor: GreenLight,
+                color: Green,
+              },
+            }}
+            onClick={() => {
+              // setAddModal({
+              //   ...addModal,
+              //   open: true,
+              //   label: createFormObjModal.label,
+              //   type: createFormObjModal.formObjectType,
+              //   stickyText: createFormObjModal.stickyText,
+              //   required: createFormObjModal.isRequired,
+              //   id: 511315,
+              // });
+              void createFormObj();
+              setCreateFormObjModal({
+                ...createFormObjModal,
+                open: false,
+              });
+            }}
+          >
+            افزودن
+          </Button>
+        </Box>
+      </NewModal>
     </React.Fragment>
   );
 };
