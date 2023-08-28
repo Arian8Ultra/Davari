@@ -17,34 +17,48 @@ import {
 } from "../../../../GraphQL/FormObj/Queries";
 import FormObjPreview from "../../../../components/FormObj/FormObjPreview";
 import { primary } from "../../../../theme/color";
+import FormObjPreviewWithQuery from "../../../../components/FormObj/FormObjPreviewWithQuery";
+import BackButton from "../../../../components/BackButton";
 const ViewForm = () => {
   const { formId, fromType } = useParams<{
     formId: string;
     fromType: string;
   }>();
-  const [data, setData] = React.useState<any>();
-  const [getCompalintForm] = useLazyQuery(GET_COMPLAINT_FORM, {
-    variables: {
-      id: formId && parseInt(formId),
-    },
-    onCompleted(data) {
-      console.log(data);
-      setData(data);
-    },
-  });
-
-  const [getCompalintResponseForm] = useLazyQuery(
-    GET_COMPLAINT_ANSWER_FORM,
+  // const [data, setData] = React.useState<any>();
+  const [formObjs, setFormObjs] = React.useState<FormObjComplete[]>(
+    []
+  );
+  const [getCompalintForm, { data: complaintData }] = useLazyQuery(
+    GET_COMPLAINT_FORM,
     {
       variables: {
         id: formId && parseInt(formId),
       },
       onCompleted(data) {
-        console.log(data);
-        setData(data);
+        // console.log(data);
+        data.complaintForm_getComplaintForm.result.formObjectComplaintForms.map(
+          (item: {
+            formObjectId: number;
+            gridColumn: number;
+            gridRow: number;
+            gridColumnStart: number;
+          }) => {
+            console.log(item);
+          }
+        );
       },
     }
   );
+
+  const [getCompalintResponseForm, { data: responseData }] =
+    useLazyQuery(GET_COMPLAINT_ANSWER_FORM, {
+      variables: {
+        id: formId && parseInt(formId),
+      },
+      onCompleted(data) {
+        console.log(data);
+      },
+    });
 
   const [getFormObj, { data: formObjByIdData }] = useLazyQuery(
     GET_FORM_OBJ,
@@ -64,13 +78,63 @@ const ViewForm = () => {
     } else if (fromType === "response") {
       void getCompalintResponseForm();
     }
-  }, [fromType, formId, getCompalintForm, getCompalintResponseForm]);
+  }, [fromType, getCompalintForm, getCompalintResponseForm]);
 
   return (
     <React.Fragment>
+      <BackButton steps={-2} />
       <div className="main_grid">
         {fromType === "complaint" &&
-          data?.complaintForm_getComplaintForm?.result?.formObjectComplaintResponseForms?.map(
+          complaintData?.complaintForm_getComplaintForm?.result?.formObjectComplaintForms?.map(
+            (item: FormObjComplete, index: number) => {
+              return (
+                <FormObjPreviewWithQuery
+                  key={index}
+                  formObjectId={item.formObjectId}
+                  gridColumn={item.gridColumn}
+                  gridRow={item.gridRow}
+                  girdColumnStart={item.gridColumnStart}
+                />
+              );
+              // void getFormObj({
+              //   variables: {
+              //     id: item.formObjectId,
+              //   },
+              //   onCompleted(data) {
+              //     return (
+              //       <FormObjPreview
+              //         key={index}
+              //         id={item.formObjectId}
+              //         formObjectType={item.formObjectType}
+              //         gridColumn={item.gridColumn}
+              //         gridRow={item.gridRow}
+              //         girdColumnStart={item.gridColumnStart}
+              //         label={
+              //           data?.formObject_getFormObject
+              //             ?.result?.label
+              //         }
+              //         name={
+              //           data?.formObject_getFormObject
+              //             ?.result?.name
+              //         }
+              //         unit={
+              //           data?.formObject_getFormObject
+              //             ?.result?.unit
+              //         }
+              //         stickyText={
+              //           data?.formObject_getFormObject
+              //             ?.result?.stickyText
+              //         }
+              //         color={primary}
+              //       />
+              //     );
+              //   },
+              // });
+            }
+          )}
+
+        {fromType === "response" &&
+          responseData?.complaintForm_getComplaintAnswerForm?.result?.formObjectComplaintResponseForms?.map(
             (item: FormObjComplete, index: number) => {
               void getFormObj({
                 variables: {
@@ -108,46 +172,6 @@ const ViewForm = () => {
               });
             }
           )}
-
-        {fromType === "response" &&
-            data?.complaintForm_getComplaintAnswerForm?.result?.formObjectComplaintResponseForms?.map(
-                (item: FormObjComplete, index: number) => {
-                void getFormObj({
-                    variables: {
-                    id: item.id,
-                    },
-                    onCompleted(data) {
-                    return (
-                        <FormObjPreview
-                        key={index}
-                        id={item.id}
-                        formObjectType={item.formObjectType}
-                        gridColumn={item.gridColumn}
-                        gridRow={item.gridRow}
-                        girdColumnStart={item.gridColumnStart}
-                        label={
-                            formObjByIdData?.formObject_getFormObject
-                            ?.result?.label
-                        }
-                        name={
-                            formObjByIdData?.formObject_getFormObject
-                            ?.result?.name
-                        }
-                        unit={
-                            formObjByIdData?.formObject_getFormObject
-                            ?.result?.unit
-                        }
-                        stickyText={
-                            formObjByIdData?.formObject_getFormObject
-                            ?.result?.stickyText
-                        }
-                        color={primary}
-                        />
-                    );
-                    },
-                });
-                }
-            )}
       </div>
     </React.Fragment>
   );

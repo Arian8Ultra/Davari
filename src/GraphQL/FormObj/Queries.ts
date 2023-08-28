@@ -1,4 +1,5 @@
 import { gql } from "@apollo/client";
+import { Key } from "react";
 
 export const GET_FORM_OBJS = gql`
   query formObject_getFormObjects {
@@ -46,6 +47,7 @@ export type FormObj = {
   formObjectType: string;
 };
 export type FormObjComplete = {
+  formObjectId: number;
   label: string;
   unit: string;
   stickyText: string;

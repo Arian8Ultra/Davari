@@ -39,6 +39,7 @@ import {
   DELETE_FORM_OBJ,
 } from "../../../../GraphQL/FormObj/Mutation";
 import { useParams } from "react-router-dom";
+import BackButton from "../../../../components/BackButton";
 const AddForm = () => {
   const { formId, fromType } = useParams<{
     formId: string;
@@ -182,6 +183,8 @@ const AddForm = () => {
 
   return (
     <React.Fragment>
+      <BackButton steps={-2} />
+
       {/* formId : {formId}
       fromType : {fromType} */}
       {/* {`table: ${table}`} */}
@@ -399,6 +402,8 @@ const AddForm = () => {
                       unit: data?.formObject_getFormObject?.result
                         ?.unit,
                       id: data?.formObject_getFormObject?.result?.id,
+                      formObjectId:
+                        data?.formObject_getFormObject?.result?.id,
                       color:
                         data?.formObject_getFormObject?.result?.color,
                     },
