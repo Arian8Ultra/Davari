@@ -3,7 +3,7 @@ import { gql } from "@apollo/client";
 export const GET_COMPLAINT_FORMS = gql`
   query complaintForm_getComplaintForms {
     complaintForm_getComplaintForms {
-      result {
+      result (take: 2000){
         items {
           id
           title
@@ -64,7 +64,7 @@ export const GET_COMPLAINT_FORM = gql`
 export const GET_COMPLAINT_ANSWER_FORMS = gql`
   query complaintResponseForm_getComplaintResponseForms {
     complaintResponseForm_getComplaintResponseForms {
-      result {
+      result (take: 2000){
         items {
           title
           description

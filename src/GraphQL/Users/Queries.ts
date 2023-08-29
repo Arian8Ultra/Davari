@@ -3,7 +3,7 @@ import { gql } from "@apollo/client";
 export const GET_ALL_USERS = gql`
   query GetUsers {
     user_getUsers {
-      result {
+      result (take: 2000){
         items {
           id
           departmentId

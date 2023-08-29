@@ -24,7 +24,8 @@ interface Props extends FormObj {
   handleDelete?: (
     gridRow: number | undefined,
     gridColumn: number | undefined,
-    girdColumnStart: number | undefined
+    girdColumnStart: number | undefined,
+    id:number | undefined,
   ) => void;
 }
 const FormObjPreview = (props: Props) => {
@@ -63,7 +64,8 @@ const FormObjPreview = (props: Props) => {
                   props.handleDelete(
                     props.gridRow,
                     props.gridColumn,
-                    props.girdColumnStart
+                    props.girdColumnStart,
+                    props.id
                   );
               }}
               sx={{
@@ -183,7 +185,8 @@ const FormObjPreview = (props: Props) => {
                   props.handleDelete(
                     props.gridRow,
                     props.gridColumn,
-                    props.girdColumnStart
+                    props.girdColumnStart,
+                    props.id
                   );
               }}
               sx={{
@@ -319,7 +322,8 @@ const FormObjPreview = (props: Props) => {
                   props.handleDelete(
                     props.gridRow,
                     props.gridColumn,
-                    props.girdColumnStart
+                    props.girdColumnStart,
+                    props.id
                   );
               }}
               sx={{
@@ -413,7 +417,8 @@ const FormObjPreview = (props: Props) => {
                   props.handleDelete(
                     props.gridRow,
                     props.gridColumn,
-                    props.girdColumnStart
+                    props.girdColumnStart,
+                    props.id
                   );
               }}
               sx={{

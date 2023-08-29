@@ -53,6 +53,7 @@ export const ADD_FORM_OBJ_TO_COMPLAINT_FORM = gql`
         gridRow
         gridColumnStart
         formObjectId
+        id
       }
       status {
         code
@@ -79,7 +80,7 @@ export const DELETE_FORM_OBJ_FROM_COMPLAINT_FORM = gql`
 `;
 
 export const ADD_FORM_OBJ_TO_COMPLAINT_RESPONSE_FORM = gql`
-  mutation formObjectForm_addFormObjectForm(
+  mutation formObjectComplaintResponseForm_addFormObjectComplaintResponseForm(
     $complaintResponseFormId: Int!
     $formObjectId: Int
     $gridColumn: Int

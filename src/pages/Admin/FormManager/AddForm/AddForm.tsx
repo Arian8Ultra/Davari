@@ -9,10 +9,12 @@ import "./AddForm.css";
 import {
   Box,
   Button,
+  Divider,
   IconButton,
   MenuItem,
   Stack,
   TextField,
+  Typography,
 } from "@mui/material";
 import {
   Green,
@@ -29,14 +31,16 @@ import {
   FormObjTypeEnum,
   GET_FORM_OBJ,
   GET_FORM_OBJS,
+  GET_FORM_OBJS_BY_SEARCH,
 } from "../../../../GraphQL/FormObj/Queries";
 import FormObjPreview from "../../../../components/FormObj/FormObjPreview";
-import { TextFields } from "@mui/icons-material";
 import {
   ADD_FORM_OBJ_TO_COMPLAINT_FORM,
   ADD_FORM_OBJ_TO_COMPLAINT_RESPONSE_FORM,
   CREATE_FORM_OBJ,
   DELETE_FORM_OBJ,
+  DELETE_FORM_OBJ_FROM_COMPLAINT_FORM,
+  DELETE_FORM_OBJ_FROM_COMPLAINT_RESPONSE_FORM,
 } from "../../../../GraphQL/FormObj/Mutation";
 import { useParams } from "react-router-dom";
 import BackButton from "../../../../components/BackButton";
@@ -58,6 +62,7 @@ const AddForm = () => {
     girdColumnStart: 0,
     id: 511315,
     selected: 0,
+    search: "",
   });
 
   const [createFormObjModal, setCreateFormObjModal] = React.useState({
@@ -89,6 +94,18 @@ const AddForm = () => {
       console.error(error);
     },
   });
+  
+  const [getFormObjBySearch, { data: formObjBySearchData }] =useLazyQuery(GET_FORM_OBJS_BY_SEARCH,{
+    variables:{
+      search:addModal.search
+    },
+    onCompleted(data) {
+      console.log("data", data);
+    },
+    onError(error) {
+      console.error(error);
+    }
+  })
 
   const [getFormObj, { data: formObjByIdData }] = useLazyQuery(
     GET_FORM_OBJ,
@@ -151,10 +168,27 @@ const AddForm = () => {
       },
     }
   );
+
+  const [deleteFormObjToComplaintForm]=useMutation(DELETE_FORM_OBJ_FROM_COMPLAINT_FORM,{
+    onCompleted(data, clientOptions) {
+      alert("فیلد مورد نظر حذف شد");
+      console.log(data);
+      void refetch();
+    }
+  })
+
+  const[deleteFormObjToComplaintResponseForm]=useMutation(DELETE_FORM_OBJ_FROM_COMPLAINT_RESPONSE_FORM,{
+    onCompleted(data, clientOptions) {
+      alert("فیلد مورد نظر حذف شد");
+      console.log(data);
+      void refetch();
+    }
+  })
   const handleDeleteFormObj = (
     gridRow: number | undefined,
     gridColumn: number | undefined,
-    gridColumnStart: number | undefined
+    gridColumnStart: number | undefined,
+    id:number|undefined,
   ) => {
     setFormList(
       formList.filter(
@@ -164,6 +198,20 @@ const AddForm = () => {
           item.gridColumnStart != gridColumnStart
       )
     );
+
+    if (fromType == "response") {
+      void deleteFormObjToComplaintResponseForm({
+        variables:{
+          id:id
+        }
+      })
+    }else{
+      void deleteFormObjToComplaintForm({
+        variables:{
+          id:id
+        }
+      })
+    }
 
     if (gridRow && table[gridRow - 1] == 0) {
       // @ts-ignore
@@ -181,13 +229,14 @@ const AddForm = () => {
     console.log("formList", formList);
   }, [formList]);
 
+
+  useEffect(() => {
+    void getFormObjBySearch();
+  },[addModal.search, getFormObjBySearch])
+
   return (
     <React.Fragment>
       <BackButton steps={-2} />
-
-      {/* formId : {formId}
-      fromType : {fromType} */}
-      {/* {`table: ${table}`} */}
       <NewModal
         name="افزودن فیلد"
         open={addModal.open}
@@ -221,8 +270,11 @@ const AddForm = () => {
               position: "sticky",
               top: "0px",
               zIndex: 400,
-              background: "rgba(255,255,255,0.5)",
+              background: "rgba(255,255,255,0.7)",
               backdropFilter: "blur(10px)",
+              borderRadius: "15px",
+              width: "105%",
+              transform: "translateX(-2.5%)",
             }}
           >
             <Button
@@ -255,9 +307,25 @@ const AddForm = () => {
                 });
               }}
             />
+            <TextField
+              label="جستجو"
+              value={addModal.search}
+              type="text"
+              security="true"
+              size="small"
+              sx={{
+                gridColumn: "span 2",
+              }}
+              onChange={(e) => {
+                setAddModal({
+                  ...addModal,
+                  search: e.target.value,
+                });
+              }}
+            />
           </Box>
           <Stack width={"100%"} height={"50%"}>
-            {formObjData?.formObject_getFormObjects?.result.items.map(
+            {addModal.search != "" && formObjBySearchData?.formObject_getFormObjects?.result?.items.map(
               (item: FormObj, index: number) => {
                 return (
                   <Box
@@ -282,6 +350,7 @@ const AddForm = () => {
                       marginBottom: "1rem",
                       display: "flex",
                       flexDirection: "column",
+                      gap: "0.5rem",
                       justifyContent: "center",
                       alignItems: "center",
                       transition: "all ease 100ms",
@@ -295,6 +364,85 @@ const AddForm = () => {
                       },
                     }}
                   >
+                    <Typography variant="caption" sx={{
+                      textAlign:"start",
+                      width:"100%",
+                    }}>
+                      نام فیلد: {item.name}
+                    </Typography>
+                    <Divider sx={{ width: "100%" }} />
+                    <FormObjPreview
+                      color={
+                        addModal.selected == item.id
+                          ? Green
+                          : item.color
+                      }
+                      formObjectType={item.formObjectType}
+                      stickyText={item.stickyText}
+                      label={item.label}
+                      unit={item.unit}
+                      id={item.id}
+                      name={item.label}
+                      key={item.id}
+                      isDeletable={true}
+                      handleDelete={() => {
+                        void deleteFormObj({
+                          variables: {
+                            id: item.id,
+                          },
+                        });
+                      }}
+                    />
+                  </Box>
+                );
+              }
+            )}
+            {addModal.search=="" && formObjData?.formObject_getFormObjects?.result.items.map(
+              (item: FormObj, index: number) => {
+                return (
+                  <Box
+                    key={index}
+                    onClick={() => {
+                      setAddModal({
+                        ...addModal,
+                        selected: item.id,
+                      });
+                    }}
+                    sx={{
+                      width: "100%",
+                      height: "max-content",
+                      padding: "0.6rem",
+                      backgroundColor: "white",
+                      borderRadius: "1rem",
+                      boxShadow: `0 0 10px ${
+                        addModal.selected == item.id
+                          ? GreenLight
+                          : "rgba(0,0,0,0.2)"
+                      }`,
+                      marginBottom: "1rem",
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "0.5rem",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      transition: "all ease 100ms",
+                      position: "relative",
+                      outline: `${
+                        addModal.selected == item.id ? "2px" : 0
+                      } solid ${Green}`,
+                      userSelect: "none",
+                      "&: hover": {
+                        cursor: "pointer",
+                      },
+                    }}
+                  >
+                    <Typography variant="caption" sx={{
+                      textAlign:"start",
+                      width:"100%",
+                    }}>
+                      نام فیلد: {item.name}
+                    </Typography>
+                    <Divider sx={{ width: "100%" }} />
                     <FormObjPreview
                       color={
                         addModal.selected == item.id
@@ -347,9 +495,62 @@ const AddForm = () => {
                         complaintFormId: formId && parseInt(formId),
                         formObjectId:
                           data?.formObject_getFormObject?.result?.id,
-                        gridColumn: addModal.gridColumn,
+                        gridColumn: data?.formObject_getFormObject =="TITLE_H1"?12:addModal.gridColumn,
                         gridRow: addModal.gridRow,
                         gridColumnStart: addModal.girdColumnStart,
+                      },
+                      onCompleted(addFormObjToComplaintFormData) {
+                        setAddModal({
+                          ...addModal,
+
+                          open: false,
+                          label:
+                            formObjByIdData?.formObject_getFormObject
+                              ?.result?.label,
+                          id: addFormObjToComplaintFormData
+                            ?.formObjectComplaintForm_addFormObjectComplaintForm
+                            ?.result?.id,
+                          type: formObjByIdData
+                            ?.formObject_getFormObject?.result
+                            ?.formObjectType,
+                          stickyText:
+                            formObjByIdData?.formObject_getFormObject
+                              ?.result?.stickyText,
+                        });
+
+                        setFormList([
+                          ...formList,
+                          {
+                            gridRow: addModal.gridRow,
+                            gridColumn:
+                              data?.formObject_getFormObject?.result
+                                ?.formObjectType == "TITLE_H1"
+                                ? 12
+                                : addModal.gridColumn,
+                            gridColumnStart: addModal.girdColumnStart,
+                            label:
+                              data?.formObject_getFormObject?.result
+                                ?.label,
+                            formObjectType:
+                              data?.formObject_getFormObject?.result
+                                ?.formObjectType,
+                            stickyText:
+                              data?.formObject_getFormObject?.result
+                                ?.stickyText,
+                            required: false,
+                            unit: data?.formObject_getFormObject
+                              ?.result?.unit,
+                            id: addFormObjToComplaintFormData
+                              ?.formObjectComplaintForm_addFormObjectComplaintForm
+                              ?.result?.id,
+                            formObjectId:
+                              data?.formObject_getFormObject?.result
+                                ?.id,
+                            color:
+                              data?.formObject_getFormObject?.result
+                                ?.color,
+                          },
+                        ]);
                       },
                     });
                   } else if (fromType == "response") {
@@ -363,51 +564,62 @@ const AddForm = () => {
                         gridRow: addModal.gridRow,
                         gridColumnStart: addModal.girdColumnStart,
                       },
+                      onCompleted(addFormObjToComplaintResponseFormData) {
+                        setAddModal({
+                          ...addModal,
+
+                          open: false,
+                          label:
+                            formObjByIdData?.formObject_getFormObject
+                              ?.result?.label,
+                          id: addFormObjToComplaintResponseFormData
+                            ?.formObjectComplaintForm_addFormObjectComplaintForm
+                            ?.result?.id,
+                          type: formObjByIdData
+                            ?.formObject_getFormObject?.result
+                            ?.formObjectType,
+                          stickyText:
+                            formObjByIdData?.formObject_getFormObject
+                              ?.result?.stickyText,
+                        });
+
+                        setFormList([
+                          ...formList,
+                          {
+                            gridRow: addModal.gridRow,
+                            gridColumn:
+                              data?.formObject_getFormObject?.result
+                                ?.formObjectType == "TITLE_H1"
+                                ? 12
+                                : addModal.gridColumn,
+                            gridColumnStart: addModal.girdColumnStart,
+                            label:
+                              data?.formObject_getFormObject?.result
+                                ?.label,
+                            formObjectType:
+                              data?.formObject_getFormObject?.result
+                                ?.formObjectType,
+                            stickyText:
+                              data?.formObject_getFormObject?.result
+                                ?.stickyText,
+                            required: false,
+                            unit: data?.formObject_getFormObject
+                              ?.result?.unit,
+                            id: addFormObjToComplaintResponseFormData
+                              ?.formObjectComplaintForm_addFormObjectComplaintForm
+                              ?.result?.id,
+                            formObjectId:
+                              data?.formObject_getFormObject?.result
+                                ?.id,
+                            color:
+                              data?.formObject_getFormObject?.result
+                                ?.color,
+                          },
+                        ]);
+                      },
                     });
                   }
-                  setAddModal({
-                    ...addModal,
-                    open: false,
-                    label:
-                      formObjByIdData?.formObject_getFormObject
-                        ?.result?.label,
-                    id: formObjByIdData?.formObject_getFormObject
-                      ?.result?.id,
-                    type: formObjByIdData?.formObject_getFormObject
-                      ?.result?.formObjectType,
-                    stickyText:
-                      formObjByIdData?.formObject_getFormObject
-                        ?.result?.stickyText,
-                  });
 
-                  setFormList([
-                    ...formList,
-                    {
-                      gridRow: addModal.gridRow,
-                      gridColumn:
-                        data?.formObject_getFormObject?.result
-                          ?.formObjectType == "TITLE_H1"
-                          ? 12
-                          : addModal.gridColumn,
-                      gridColumnStart: addModal.girdColumnStart,
-                      label:
-                        data?.formObject_getFormObject?.result?.label,
-                      formObjectType:
-                        data?.formObject_getFormObject?.result
-                          ?.formObjectType,
-                      stickyText:
-                        data?.formObject_getFormObject?.result
-                          ?.stickyText,
-                      required: false,
-                      unit: data?.formObject_getFormObject?.result
-                        ?.unit,
-                      id: data?.formObject_getFormObject?.result?.id,
-                      formObjectId:
-                        data?.formObject_getFormObject?.result?.id,
-                      color:
-                        data?.formObject_getFormObject?.result?.color,
-                    },
-                  ]);
                   if (table[addModal.gridRow - 1] == undefined) {
                     table[addModal.gridRow - 1] =
                       data?.formObject_getFormObject?.result
