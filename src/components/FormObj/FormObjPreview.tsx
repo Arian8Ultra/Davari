@@ -1,20 +1,15 @@
-import React from "react";
-import "./FormObjPreview.css";
-import { FormObj } from "../../GraphQL/FormObj/Queries";
+import {
+  Close,
+  UploadFile
+} from "@mui/icons-material";
 import { Box, Divider, IconButton } from "@mui/material";
+import { FormObj } from "../../GraphQL/FormObj/Queries";
 import {
   Red,
   RedLight,
-  primary,
-  primaryLight,
-  primaryLightTransparent,
+  primary
 } from "../../theme/color";
-import { VscFile } from "react-icons/vsc";
-import {
-  Close,
-  DeleteForeverOutlined,
-  UploadFile,
-} from "@mui/icons-material";
+import "./FormObjPreview.css";
 interface Props extends FormObj {
   name: string;
   gridColumn?: number;
@@ -71,26 +66,27 @@ const FormObjPreview = (props: Props) => {
               sx={{
                 position: "absolute",
                 // width:'100%',
-                height: "50%",
+                height: "20px",
+                fontSize:"10px",
                 top: "-10px",
                 right: "-10px",
                 color: props.color ? props.color : "white",
-                borderRadius: "10px",
-                borderBottomLeftRadius: 0,
+                borderRadius: "5px",
+                // borderBottomLeftRadius: 0,
                 background: Red,
-                aspectRatio: "1/1",
+                // aspectRatio: "1/1",
                 zIndex: 200,
-                outline: `2px solid ${
-                  props.color ? props.color : Red
-                }`,
+                // outline: `2px solid ${
+                //   props.color ? props.color : Red
+                // }`,
                 // backgroundColor: "white",
                 "&:hover": {
                   backgroundColor: props.color
                     ? props.color
                     : RedLight,
-                  outline: `2px solid ${
-                    props.color ? props.color : Red
-                  }`,
+                  // outline: `2px solid ${
+                  //   props.color ? props.color : Red
+                  // }`,
                   color: Red,
                 },
               }}
@@ -192,26 +188,26 @@ const FormObjPreview = (props: Props) => {
               sx={{
                 position: "absolute",
                 // width:'100%',
-                height: "50%",
+                height: "20px",
                 top: "-10px",
                 right: "-10px",
                 color: props.color ? props.color : "white",
-                borderRadius: "10px",
-                borderBottomLeftRadius: 0,
+                borderRadius: "5px",
+                // borderBottomLeftRadius: 0,
                 background: Red,
-                aspectRatio: "1/1",
+                // aspectRatio: "1/1",
                 zIndex: 200,
-                outline: `2px solid ${
-                  props.color ? props.color : Red
-                }`,
+                // outline: `2px solid ${
+                //   props.color ? props.color : Red
+                // }`,
                 // backgroundColor: "white",
                 "&:hover": {
                   backgroundColor: props.color
                     ? props.color
                     : RedLight,
-                  outline: `2px solid ${
-                    props.color ? props.color : Red
-                  }`,
+                  // outline: `2px solid ${
+                  //   props.color ? props.color : Red
+                  // }`,
                   color: Red,
                 },
               }}
@@ -329,26 +325,26 @@ const FormObjPreview = (props: Props) => {
               sx={{
                 position: "absolute",
                 // width:'100%',
-                height: "60%",
+                height: "20px",
                 top: "-10px",
                 right: "-10px",
                 color: props.color ? props.color : "white",
-                borderRadius: "10px",
-                borderBottomLeftRadius: 0,
+                borderRadius: "5px",
+                // borderBottomLeftRadius: 0,
                 background: Red,
-                aspectRatio: "1/1",
+                // aspectRatio: "1/1",
                 zIndex: 200,
-                outline: `2px solid ${
-                  props.color ? props.color : Red
-                }`,
+                // outline: `2px solid ${
+                //   props.color ? props.color : Red
+                // }`,
                 // backgroundColor: "white",
                 "&:hover": {
                   backgroundColor: props.color
                     ? props.color
                     : RedLight,
-                  outline: `2px solid ${
-                    props.color ? props.color : Red
-                  }`,
+                  // outline: `2px solid ${
+                  //   props.color ? props.color : Red
+                  // }`,
                   color: Red,
                 },
               }}
@@ -424,26 +420,26 @@ const FormObjPreview = (props: Props) => {
               sx={{
                 position: "absolute",
                 // width:'100%',
-                height: "65%",
+                height: "20px",
                 top: "-10px",
                 right: "-10px",
                 color: props.color ? props.color : "white",
-                borderRadius: "10px",
-                borderBottomLeftRadius: 0,
+                borderRadius: "5px",
+                // borderBottomLeftRadius: 0,
                 background: Red,
-                aspectRatio: "1/1",
+                // aspectRatio: "1/1",
                 zIndex: 200,
-                outline: `2px solid ${
-                  props.color ? props.color : Red
-                }`,
+                // outline: `2px solid ${
+                //   props.color ? props.color : Red
+                // }`,
                 // backgroundColor: "white",
                 "&:hover": {
                   backgroundColor: props.color
                     ? props.color
                     : RedLight,
-                  outline: `2px solid ${
-                    props.color ? props.color : Red
-                  }`,
+                  // outline: `2px solid ${
+                  //   props.color ? props.color : Red
+                  // }`,
                   color: Red,
                 },
               }}

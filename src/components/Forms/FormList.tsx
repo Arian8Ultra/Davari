@@ -69,6 +69,38 @@ const FormList = (props: FormListProps) => {
           >
             فرم های شکایات
           </Box>
+          <Box display={"grid"} gridTemplateColumns={"repeat(5,1fr)"}>
+            <Box
+              sx={{
+                padding: "0.5rem 1rem",
+                width: "100%",
+                textAlign: "center",
+                borderInline: "1px solid #ccc",
+                borderBottom: "1px solid #ccc",
+                gridColumn: {
+                  xs: "span 5",
+                  lg: "span 3",
+                },
+              }}
+            >
+              عنوان
+            </Box>
+            <Box
+              sx={{
+                padding: "0.5rem 1rem",
+                width: "100%",
+                textAlign: "center",
+                borderRight: "1px solid #ccc",
+                borderBottom: "1px solid #ccc",
+                gridColumn: {
+                  xs: "span 5",
+                  lg: "span 2",
+                },
+              }}
+            >
+              عملیات ها
+            </Box>
+          </Box>
           {complaintFormsLoading ? (
             <div>
               <Skeleton />
@@ -114,6 +146,38 @@ const FormList = (props: FormListProps) => {
             }}
           >
             فرم های پاسخ به شکایات
+          </Box>
+          <Box display={"grid"} gridTemplateColumns={"repeat(5,1fr)"}>
+            <Box
+              sx={{
+                padding: "0.5rem 1rem",
+                width: "100%",
+                textAlign: "center",
+                borderInline: "1px solid #ccc",
+                borderBottom: "1px solid #ccc",
+                gridColumn: {
+                  xs: "span 5",
+                  lg: "span 3",
+                },
+              }}
+            >
+              عنوان
+            </Box>
+            <Box
+              sx={{
+                padding: "0.5rem 1rem",
+                width: "100%",
+                textAlign: "center",
+                borderRight: "1px solid #ccc",
+                borderBottom: "1px solid #ccc",
+                gridColumn: {
+                  xs: "span 5",
+                  lg: "span 2",
+                },
+              }}
+            >
+              عملیات ها
+            </Box>
           </Box>
           {complaintAnswersFormsLoading ? (
             <div>

@@ -4,8 +4,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
-import React, { useEffect } from "react";
-import "./AddForm.css";
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import {
   Box,
   Button,
@@ -16,24 +15,9 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import {
-  Green,
-  GreenLight,
-  background,
-  primary,
-} from "../../../../theme/color";
-import { VscAdd, VscDiffAdded } from "react-icons/vsc";
-import NewModal from "../../../../components/Modals";
-import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
-import {
-  FormObj,
-  FormObjComplete,
-  FormObjTypeEnum,
-  GET_FORM_OBJ,
-  GET_FORM_OBJS,
-  GET_FORM_OBJS_BY_SEARCH,
-} from "../../../../GraphQL/FormObj/Queries";
-import FormObjPreview from "../../../../components/FormObj/FormObjPreview";
+import React, { useEffect } from "react";
+import { VscAdd } from "react-icons/vsc";
+import { useParams } from "react-router-dom";
 import {
   ADD_FORM_OBJ_TO_COMPLAINT_FORM,
   ADD_FORM_OBJ_TO_COMPLAINT_RESPONSE_FORM,
@@ -42,8 +26,23 @@ import {
   DELETE_FORM_OBJ_FROM_COMPLAINT_FORM,
   DELETE_FORM_OBJ_FROM_COMPLAINT_RESPONSE_FORM,
 } from "../../../../GraphQL/FormObj/Mutation";
-import { useParams } from "react-router-dom";
+import {
+  FormObj,
+  FormObjComplete,
+  FormObjTypeEnum,
+  GET_FORM_OBJ,
+  GET_FORM_OBJS,
+  GET_FORM_OBJS_BY_SEARCH,
+} from "../../../../GraphQL/FormObj/Queries";
 import BackButton from "../../../../components/BackButton";
+import FormObjPreview from "../../../../components/FormObj/FormObjPreview";
+import NewModal from "../../../../components/Modals";
+import {
+  Green,
+  GreenLight,
+  background
+} from "../../../../theme/color";
+import "./AddForm.css";
 const AddForm = () => {
   const { formId, fromType } = useParams<{
     formId: string;
@@ -75,11 +74,6 @@ const AddForm = () => {
     stickyText: null as string | null,
     unit: null as string | null,
   });
-  const [ColumnAddButton, setColumnAddButton] = React.useState([
-    {
-      gridRow: 1,
-    },
-  ]);
   const [table, setTable] = React.useState([0]);
   const [formList, setFormList] = React.useState(
     // list of objects as FormObjComplete type
@@ -129,14 +123,14 @@ const AddForm = () => {
       isRequired: false,
       // color: createFormObjModal.color,
     },
-    onCompleted(data, clientOptions) {
+    onCompleted(data) {
       console.log(data);
       void refetch();
     },
   });
 
   const [deleteFormObj] = useMutation(DELETE_FORM_OBJ, {
-    onCompleted(data, clientOptions) {
+    onCompleted(data) {
       console.log(data);
       void refetch();
     },
@@ -149,7 +143,7 @@ const AddForm = () => {
   const [addFormObjToComplaintForm] = useMutation(
     ADD_FORM_OBJ_TO_COMPLAINT_FORM,
     {
-      onCompleted(data, clientOptions) {
+      onCompleted(data) {
         console.log(data);
         void refetch();
       },
@@ -162,7 +156,7 @@ const AddForm = () => {
   const [addFormObjToComplaintResponseForm] = useMutation(
     ADD_FORM_OBJ_TO_COMPLAINT_RESPONSE_FORM,
     {
-      onCompleted(data, clientOptions) {
+      onCompleted(data) {
         console.log(data);
         void refetch();
       },
@@ -170,7 +164,7 @@ const AddForm = () => {
   );
 
   const [deleteFormObjToComplaintForm]=useMutation(DELETE_FORM_OBJ_FROM_COMPLAINT_FORM,{
-    onCompleted(data, clientOptions) {
+    onCompleted(data) {
       alert("فیلد مورد نظر حذف شد");
       console.log(data);
       void refetch();
@@ -178,7 +172,7 @@ const AddForm = () => {
   })
 
   const[deleteFormObjToComplaintResponseForm]=useMutation(DELETE_FORM_OBJ_FROM_COMPLAINT_RESPONSE_FORM,{
-    onCompleted(data, clientOptions) {
+    onCompleted(data) {
       alert("فیلد مورد نظر حذف شد");
       console.log(data);
       void refetch();
@@ -658,7 +652,7 @@ const AddForm = () => {
       </NewModal>
 
       <div className="ruler">
-        {[...Array(12)].map((item, index) => {
+        {[...Array(12)].map((_item, index) => {
           return (
             <div
               key={index}
@@ -725,7 +719,7 @@ const AddForm = () => {
           );
         })}
 
-        {table.map((item, index) => {
+        {table.map((_item, index) => {
           return (
             <IconButton
               sx={{

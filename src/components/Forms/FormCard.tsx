@@ -1,5 +1,16 @@
-import { DeleteOutline, DeleteOutlineRounded, EditOutlined, ViewAgenda } from "@mui/icons-material";
-import { Box, Button, Collapse, IconButton } from "@mui/material";
+import {
+  DeleteOutline,
+  DeleteOutlineRounded,
+  EditOutlined,
+  ViewAgenda,
+} from "@mui/icons-material";
+import {
+  Box,
+  Button,
+  Collapse,
+  IconButton,
+  Typography,
+} from "@mui/material";
 import React from "react";
 import {
   Green,
@@ -77,6 +88,7 @@ const FormCard = (props: FormCardProps) => {
         sx={{
           padding: "0.5rem 1rem",
           width: "100%",
+          borderRight: "1px solid #ccc",
           gridColumn: {
             xs: "span 5",
             lg: "span 3",
@@ -84,16 +96,22 @@ const FormCard = (props: FormCardProps) => {
         }}
         onClick={() => setOpen(!open)}
       >
-        عنوان: {props.title}
+        <Typography variant="body1" textAlign={{
+          xs:'center',
+          lg:'start'
+        }}>{props.title}</Typography>
       </Box>
       <Box
         sx={{
-          padding: "0.5rem 1rem",
+          padding: "0.25rem 0.5rem",
           width: "100%",
-          display:'flex',
-          gap:'5px',
-          justifyContent:'flex-end',
-          alignItems:'center',
+          display: "flex",
+          gap: "5px",
+          justifyContent: {
+            xs: "center",
+            lg: "flex-end",
+          },
+          alignItems: "center",
           gridColumn: {
             xs: "span 5",
             lg: "span 2",
@@ -106,10 +124,10 @@ const FormCard = (props: FormCardProps) => {
             padding: "0.25rem 0.5rem",
             borderRadius: "5px",
             background: Green,
-            display:'flex',
-            justifyContent:'center',
-            alignItems:'center',
-            fontSize:'12px',
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            fontSize: "12px",
             "&:hover": {
               background: GreenLight,
               color: Green,
@@ -120,10 +138,12 @@ const FormCard = (props: FormCardProps) => {
             navigate(`viewForm/${props.id}/${props.type}`);
           }}
         >
-            مشاهده
-          <ViewAgenda sx={{
-            height:'17px'
-          }} />
+          مشاهده
+          <ViewAgenda
+            sx={{
+              height: "17px",
+            }}
+          />
         </Button>
         <Button
           sx={{
@@ -131,10 +151,10 @@ const FormCard = (props: FormCardProps) => {
             padding: "0.25rem 0.5rem",
             borderRadius: "5px",
             background: Red,
-            display:'flex',
-            justifyContent:'center',
-            alignItems:'center',
-            fontSize:'12px',
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            fontSize: "12px",
             "&:hover": {
               background: RedLight,
               color: Red,
@@ -156,10 +176,12 @@ const FormCard = (props: FormCardProps) => {
             }
           }}
         >
-            حذف
-          <DeleteOutlineRounded sx={{
-            height:'17px'
-          }} />
+          حذف
+          <DeleteOutlineRounded
+            sx={{
+              height: "17px",
+            }}
+          />
         </Button>
         {/* <Button
           sx={{
@@ -211,7 +233,10 @@ const FormCard = (props: FormCardProps) => {
             color: "black",
           }}
         >
-          توضیحات: {props.description}
+           {/* توضیحات:  */}
+          <Typography variant="caption">
+           {props.description}
+          </Typography>
         </Box>
       </Collapse>
     </Box>
