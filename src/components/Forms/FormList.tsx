@@ -63,7 +63,7 @@ const FormList = (props: FormListProps) => {
               alignItems: "center",
               backgroundColor: primaryGrey,
               color: "white",
-              padding: "1rem",
+              padding: "0.6rem",
               borderRadius: "5px 5px 0 0",
             }}
           >
@@ -141,7 +141,7 @@ const FormList = (props: FormListProps) => {
               alignItems: "center",
               backgroundColor: primaryGrey,
               color: "white",
-              padding: "1rem",
+              padding: "0.6rem",
               borderRadius: "5px 5px 0 0",
             }}
           >

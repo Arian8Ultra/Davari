@@ -19,6 +19,7 @@ import {
   RedLight,
   primary,
   primaryLightTransparent,
+  primaryLighter,
 } from "../../theme/color";
 import { useMutation } from "@apollo/client";
 import {
@@ -81,7 +82,6 @@ const FormCard = (props: FormCardProps) => {
         fontSize: "1.2rem",
         color: primary,
         userSelect: "none",
-        cursor: "pointer",
       }}
     >
       <Box
@@ -92,6 +92,15 @@ const FormCard = (props: FormCardProps) => {
           gridColumn: {
             xs: "span 5",
             lg: "span 3",
+          },
+          cursor: "pointer",
+          transition: "all ease-in-out 0.3s",
+          background: open ? primaryLighter : "white",
+
+          "&:hover": {
+            color: primary,
+            borderRadius: "15px 15px 0 0",
+            background: primaryLighter,
           },
         }}
         onClick={() => setOpen(!open)}
@@ -215,9 +224,13 @@ const FormCard = (props: FormCardProps) => {
           width: "100%",
           //   marginBlock:open ? '0.5rem' : 0,
           transition: "all ease-in-out 0.3s",
-          borderRadius: "10px 10px 0 0",
-          background: primaryLightTransparent,
+          // borderRadius: "10px 10px 0 0",
           gridColumn: "span 5",
+          cursor: "pointer",
+          background: primaryLighter,
+          "&:hover": {
+            color: primary,
+          },
         }}
         onClick={() => setOpen(!open)}
       >
