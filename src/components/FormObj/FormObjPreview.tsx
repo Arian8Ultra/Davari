@@ -377,79 +377,7 @@ const FormObjPreview = (props: Props) => {
           </Box>
         </Box>
       );
-    case "TITLE_H2":
-      return (
-        <Box
-          sx={{
-            display: "grid",
-            gridTemplateColumns: "repeat(1, 1fr)",
-            // outline: `1px solid ${
-            //   props.color ? props.color : primary
-            // }`,
-            borderRadius: "10px",
-            width: "100%",
-            textAlign: "start",
-            color: props.color ? props.color : primary,
-            fontSize: "1rem",
-            padding: "5px",
-            paddingInlineStart: "1.5rem",
-            gridRow: props.gridRow ? props.gridRow : "span 1",
-            gridColumnStart: props.girdColumnStart
-              ? props.girdColumnStart
-              : 0,
-            gridColumnEnd:
-              props.gridColumn && props.girdColumnStart
-                ? props.gridColumn + props.girdColumnStart
-                : props.gridColumn
-                ? props.gridColumn
-                : 4,
-            position: "relative",
-          }}
-        >
-          {props.isDeletable && (
-            <IconButton
-              onClick={() => {
-                props.handleDelete &&
-                  props.handleDelete(
-                    props.gridRow,
-                    props.gridColumn,
-                    props.girdColumnStart,
-                    props.id
-                  );
-              }}
-              sx={{
-                position: "absolute",
-                // width:'100%',
-                height: "20px",
-                top: "-10px",
-                right: "-10px",
-                color: props.color ? props.color : "white",
-                borderRadius: "5px",
-                // borderBottomLeftRadius: 0,
-                background: Red,
-                // aspectRatio: "1/1",
-                zIndex: 200,
-                // outline: `2px solid ${
-                //   props.color ? props.color : Red
-                // }`,
-                // backgroundColor: "white",
-                "&:hover": {
-                  backgroundColor: props.color
-                    ? props.color
-                    : RedLight,
-                  // outline: `2px solid ${
-                  //   props.color ? props.color : Red
-                  // }`,
-                  color: Red,
-                },
-              }}
-            >
-              <Close />
-            </IconButton>
-          )}
-          <span spellCheck>{props.label}</span>
-        </Box>
-      );
+    
 
     default:
       return (
@@ -478,6 +406,19 @@ const FormObjPreview = (props: Props) => {
           <span>{props.unit}</span>
           <span>{props.formObjectType}</span>
           <span>{props.stickyText}</span>
+          <IconButton
+            onClick={() => {
+              props.handleDelete &&
+                props.handleDelete(
+                  props.gridRow,
+                  props.gridColumn,
+                  props.girdColumnStart,
+                  props.id
+                );
+            }}
+          >
+            <Close />
+          </IconButton>
         </Box>
       );
   }

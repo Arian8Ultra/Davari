@@ -3,12 +3,14 @@ import { gql } from "@apollo/client";
 export const CREATE_FORM_OBJ = gql`
   mutation formObject_createFormObject(
     $color: String
-    $formObjectType: FormObjectType!
+    $formObjectType: FormObjectType
     $isRequired: Boolean!
-    $label: String!
-    $name: String!
-    $stickyText: String
-    $unit: String
+    $label: String
+    $name: String
+    $stickyText: String!
+    $unit: String!
+    $menuItems: [String!]
+    $parentId: Int
   ) {
     formObject_addFormObject(
       input: {
@@ -19,6 +21,8 @@ export const CREATE_FORM_OBJ = gql`
         name: $name
         stickyText: $stickyText
         unit: $unit
+        menuItems:$menuItems
+        parentId: $parentId
       }
     ) {
       result {
@@ -141,3 +145,12 @@ export const DELETE_FORM_OBJ = gql`
     }
   }
 `;
+
+
+
+
+export type MenuItemType = {
+  id: number;
+  label: string;
+  value:boolean;
+}

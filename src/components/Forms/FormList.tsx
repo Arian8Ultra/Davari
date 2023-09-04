@@ -2,16 +2,13 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import {
-  ApolloQueryResult,
-  useLazyQuery,
-  useQuery,
+  useQuery
 } from "@apollo/client";
-import React from "react";
+import { Box, Skeleton, Stack } from "@mui/material";
 import {
   GET_COMPLAINT_ANSWER_FORMS,
   GET_COMPLAINT_FORMS,
 } from "../../GraphQL/Form/Queries";
-import { Box, Skeleton, Stack } from "@mui/material";
 import { primaryGrey } from "../../theme/color";
 import FormCard from "./FormCard";
 
