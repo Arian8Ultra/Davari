@@ -2,43 +2,43 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import {
-  Box,
-  Button,
-  Divider,
-  IconButton,
-  Stack,
-  TextField,
-  Typography,
+    Box,
+    Button,
+    Divider,
+    IconButton,
+    Stack,
+    TextField,
+    Typography,
 } from "@mui/material";
 import React, { useEffect } from "react";
-import {
-  Green,
-  GreenLight,
-  Red,
-  background,
-  primary,
-} from "../../../theme/color";
-import {
-  FormObj,
-  FormObjComplete,
-  FormObjTypeEnum,
-  GET_FORM_OBJ,
-  GET_FORM_OBJS,
-  GET_FORM_OBJS_BY_SEARCH,
-} from "../../../GraphQL/FormObj/Queries";
-import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
-import NewModal from "../../Modals";
-import FormObjPreview from "../../FormObj/FormObjPreview";
 import { VscAdd } from "react-icons/vsc";
 import { DELETE_FORM_OBJ } from "../../../GraphQL/FormObj/Mutation";
+import {
+    FormObj,
+    FormObjComplete,
+    FormObjTypeEnum,
+    GET_FORM_OBJ,
+    GET_FORM_OBJS,
+    GET_FORM_OBJS_BY_SEARCH,
+} from "../../../GraphQL/FormObj/Queries";
+import {
+    Green,
+    GreenLight,
+    background,
+    primary
+} from "../../../theme/color";
+import FormObjPreview from "../../FormObj/FormObjPreview";
+import NewModal from "../../Modals";
 interface Props {
   title?: string;
   id: string;
   children?: React.ReactNode;
+  value?:boolean
 }
 const TitleWithGrid = (props: Props) => {
-  const formType = "response";
+//   const formType = "response";
   const [table, setTable] = React.useState([0]);
   const [formList, setFormList] = React.useState(
     // list of objects as FormObjComplete type
@@ -74,7 +74,7 @@ const TitleWithGrid = (props: Props) => {
     gridRow: number | undefined,
     gridColumn: number | undefined,
     gridColumnStart: number | undefined,
-    id: number | undefined
+    // id: number | undefined
   ) => {
     setFormList(
       formList.filter(

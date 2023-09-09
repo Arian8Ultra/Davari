@@ -1,6 +1,5 @@
-import React from "react";
-import { FormObj } from "../../GraphQL/FormObj/Queries";
 import { MenuItem, TextField, Typography } from "@mui/material";
+import { FormObj } from "../../GraphQL/FormObj/Queries";
 interface Props extends FormObj {
   name: string;
   gridColumn?: number;

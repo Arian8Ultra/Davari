@@ -6,7 +6,7 @@ import {
   BsPersonCircle,
   BsViewStacked,
 } from "react-icons/bs";
-import { VscHome, VscWarning } from "react-icons/vsc";
+import { VscDebug, VscHome, VscWarning } from "react-icons/vsc";
 import { Titles } from "./Titles";
 
 export const SideBarMenu = [
@@ -75,6 +75,12 @@ export const SideBarMenu = [
         to: "/admin/formanager",
         icon: <BsInputCursorText />,
         hasLink: true,
+        hasCollapse: false,
+      },{
+        primary: "debug",
+        to: "/test",
+        icon: <VscDebug/>,
+        hasLink:true,
         hasCollapse: false,
       }
     ],
