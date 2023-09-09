@@ -8,7 +8,7 @@
   color: rgb(33, 33, 33);
 
   font-synthesis: none;
-  text-rendering: optimizeLegibility;
+  text-rendering: geometricPrecision;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
@@ -18,14 +18,19 @@
   font-family: 'Shabnam-Light';
   src: local('Shabnam-Light'), url(./font/Shabnam-Light.ttf) format('truetype');
 }
-text{
+
+@font-face {
+  font-family: 'Shabnam-Bold';
+  src: local('Shabnam-Bold'), url(./font/Shabnam-Bold.ttf) format('truetype');
+}
+
+*{
   font-family: "Shabnam-Light";
 }
 
 
 ::-webkit-scrollbar {
   width: 10px;
-  height: 10px;
 }
 
 ::-webkit-scrollbar-track {

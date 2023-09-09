@@ -21,7 +21,7 @@ export const CREATE_FORM_OBJ = gql`
         name: $name
         stickyText: $stickyText
         unit: $unit
-        menuItems:$menuItems
+        menuItems: $menuItems
         parentId: $parentId
       }
     ) {
@@ -146,13 +146,59 @@ export const DELETE_FORM_OBJ = gql`
   }
 `;
 
+export const ADD_FORM_OBJ_TO_TITLE = gql`
+  mutation formObjectFormTitle_addFormObjectFormTitle(
+    $formObjectId: Int!
+    $formTitleId: Int!
+    $gridColumn: Int!
+    $gridColumnStart: Int!
+    $gridRow: Int!
+  ) {
+    formObjectFormTitle_addFormObjectFormTitle(
+      input: {
+        formObjectId: $formObjectId
+        formTitleId: $formTitleId
+        gridColumn: $gridColumn
+        gridColumnStart: $gridColumnStart
+        gridRow: $gridRow
+      }
+    ) {
+      result {
+        formTitleId
+        formObjectId
+        formObject {
+          label
+        }
+        formTitle {
+          content
+        }
+        id
+      }
+      status {
+        code
+        value
+      }
+    }
+  }
+`;
 
 
-
-
+export const DELETE_FORM_OBJ_FROM_TITLE = gql`
+  mutation formObjectFormTitle_deleteFormObjectFormTitle($id: Int!) {
+     formObjectFormTitle_deleteFormObjectFormTitle(entityId: $id){
+      result{
+        id
+      },
+      status{
+        code
+        value
+      }
+     }
+  }`
 
 export type MenuItemType = {
   id: number;
   label: string;
-  value:boolean;
-}
+  value: boolean;
+  parentId: number;
+};

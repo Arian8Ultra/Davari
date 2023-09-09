@@ -8,6 +8,14 @@ export const GET_COMPLAINT_FORMS = gql`
           id
           title
           description
+          formTitles{
+            content
+            value
+            formObjectFormTitles{
+              formObjectId
+              formTitleId
+            }
+          }
           formObjectComplaintForms {
             gridColumn
             gridRow

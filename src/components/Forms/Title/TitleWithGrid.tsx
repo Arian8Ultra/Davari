@@ -4,30 +4,34 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import {
-    Box,
-    Button,
-    Divider,
-    IconButton,
-    Stack,
-    TextField,
-    Typography,
+  Box,
+  Button,
+  Divider,
+  IconButton,
+  Stack,
+  TextField,
+  Typography,
 } from "@mui/material";
 import React, { useEffect } from "react";
 import { VscAdd } from "react-icons/vsc";
-import { DELETE_FORM_OBJ } from "../../../GraphQL/FormObj/Mutation";
 import {
-    FormObj,
-    FormObjComplete,
-    FormObjTypeEnum,
-    GET_FORM_OBJ,
-    GET_FORM_OBJS,
-    GET_FORM_OBJS_BY_SEARCH,
+  ADD_FORM_OBJ_TO_TITLE,
+  DELETE_FORM_OBJ,
+  DELETE_FORM_OBJ_FROM_TITLE,
+} from "../../../GraphQL/FormObj/Mutation";
+import {
+  FormObj,
+  FormObjComplete,
+  FormObjTypeEnum,
+  GET_FORM_OBJ,
+  GET_FORM_OBJS,
+  GET_FORM_OBJS_BY_SEARCH,
 } from "../../../GraphQL/FormObj/Queries";
 import {
-    Green,
-    GreenLight,
-    background,
-    primary
+  Green,
+  GreenLight,
+  background,
+  primary,
 } from "../../../theme/color";
 import FormObjPreview from "../../FormObj/FormObjPreview";
 import NewModal from "../../Modals";
@@ -35,10 +39,10 @@ interface Props {
   title?: string;
   id: string;
   children?: React.ReactNode;
-  value?:boolean
+  value?: boolean;
 }
 const TitleWithGrid = (props: Props) => {
-//   const formType = "response";
+  //   const formType = "response";
   const [table, setTable] = React.useState([0]);
   const [formList, setFormList] = React.useState(
     // list of objects as FormObjComplete type
@@ -74,7 +78,7 @@ const TitleWithGrid = (props: Props) => {
     gridRow: number | undefined,
     gridColumn: number | undefined,
     gridColumnStart: number | undefined,
-    // id: number | undefined
+    id: number | undefined
   ) => {
     setFormList(
       formList.filter(
@@ -94,6 +98,15 @@ const TitleWithGrid = (props: Props) => {
       table[gridRow - 1] = table[gridRow - 1] - gridColumn;
       setTable([...table]);
     }
+
+    void deleteFormObjFromTitle({
+      variables: {
+        id: id
+      },
+      onCompleted(data) {
+        console.log("deleteFormObjFromTitleData :", data);
+      }
+    })
   };
 
   const [getFormObjBySearch, { data: formObjBySearchData }] =
@@ -140,6 +153,9 @@ const TitleWithGrid = (props: Props) => {
       void refetch();
     },
   });
+
+  const [addFormObjToTitle] = useMutation(ADD_FORM_OBJ_TO_TITLE);
+  const [deleteFormObjFromTitle] = useMutation(DELETE_FORM_OBJ_FROM_TITLE);
 
   useEffect(() => {
     console.log("formList", formList);
@@ -410,74 +426,99 @@ const TitleWithGrid = (props: Props) => {
                   id: addModal.selected,
                 },
                 onCompleted(data) {
-                  console.log("data", data);
-                  setAddModal({
-                    ...addModal,
-                    open: false,
-                    label:
-                      formObjByIdData?.formObject_getFormObject
-                        ?.result?.label,
-                    id: 12312323,
-                    type: formObjByIdData?.formObject_getFormObject
-                      ?.result?.formObjectType,
-                    stickyText:
-                      formObjByIdData?.formObject_getFormObject
-                        ?.result?.stickyText,
-                  });
+                  console.log("getFormObjData :", data);
 
-                  setFormList([
-                    ...formList,
-                    {
+                  void addFormObjToTitle({
+                    variables: {
+                      formObjectId:
+                        data?.formObject_getFormObject?.result?.id,
+                      formTitleId: props.id,
                       gridRow: addModal.gridRow,
                       gridColumn:
                         data?.formObject_getFormObject?.result
-                          ?.formObjectType == "TITLE_H1"
+                          ?.formObjectType == "TITLE"
                           ? 12
                           : addModal.gridColumn,
                       gridColumnStart: addModal.girdColumnStart,
-                      label:
-                        data?.formObject_getFormObject?.result?.label,
-                      formObjectType:
-                        data?.formObject_getFormObject?.result
-                          ?.formObjectType,
-                      stickyText:
-                        data?.formObject_getFormObject?.result
-                          ?.stickyText,
-                      required: false,
-                      unit: data?.formObject_getFormObject?.result
-                        ?.unit,
-                      id: 213213123123,
-                      formObjectId:
-                        data?.formObject_getFormObject?.result?.id,
-                      color:
-                        data?.formObject_getFormObject?.result?.color,
                     },
-                  ]);
+                    onCompleted(formObjectFormTitle_addFormObjectFormTitle) {
+                      console.log("addFormObjToTitleData :", formObjectFormTitle_addFormObjectFormTitle);
+                      setAddModal({
+                        ...addModal,
+                        open: false,
+                        label:
+                          formObjByIdData?.formObject_getFormObject
+                            ?.result?.label,
+                        id: formObjectFormTitle_addFormObjectFormTitle.formObjectFormTitle_addFormObjectFormTitle.result.id,
+                        type: formObjByIdData
+                          ?.formObject_getFormObject?.result
+                          ?.formObjectType,
+                        stickyText:
+                          formObjByIdData?.formObject_getFormObject
+                            ?.result?.stickyText,
+                      });
 
-                  if (table[addModal.gridRow - 1] == undefined) {
-                    table[addModal.gridRow - 1] =
-                      data?.formObject_getFormObject?.result
-                        ?.formObjectType == "TITLE_H1"
-                        ? 12
-                        : addModal.gridColumn;
-                    setTable([...table]);
-                  } else if (table[addModal.gridRow - 1] == 0) {
-                    table[addModal.gridRow - 1] =
-                      table[addModal.gridRow - 1] +
-                      (data?.formObject_getFormObject?.result
-                        ?.formObjectType == "TITLE_H1"
-                        ? 12
-                        : addModal.gridColumn);
-                    setTable([...table]);
-                  } else {
-                    table[addModal.gridRow - 1] =
-                      table[addModal.gridRow - 1] +
-                      (data?.formObject_getFormObject?.result
-                        ?.formObjectType == "TITLE_H1"
-                        ? 12
-                        : addModal.gridColumn);
-                    setTable([...table]);
-                  }
+                      setFormList([
+                        ...formList,
+                        {
+                          gridRow: addModal.gridRow,
+                          gridColumn:
+                            data?.formObject_getFormObject?.result
+                              ?.formObjectType == "TITLE"
+                              ? 12
+                              : addModal.gridColumn,
+                          gridColumnStart: addModal.girdColumnStart,
+                          label:
+                            data?.formObject_getFormObject?.result
+                              ?.label,
+                          formObjectType:
+                            data?.formObject_getFormObject?.result
+                              ?.formObjectType,
+                          stickyText:
+                            data?.formObject_getFormObject?.result
+                              ?.stickyText,
+                          required: false,
+                          unit: data?.formObject_getFormObject?.result
+                            ?.unit,
+                          id: formObjectFormTitle_addFormObjectFormTitle.formObjectFormTitle_addFormObjectFormTitle.result.id,
+                          formObjectId:
+                            data?.formObject_getFormObject?.result
+                              ?.id,
+                          color:
+                            data?.formObject_getFormObject?.result
+                              ?.color,
+                        },
+                      ]);
+
+                      if (table[addModal.gridRow - 1] == undefined) {
+                        table[addModal.gridRow - 1] =
+                          data?.formObject_getFormObject?.result
+                            ?.formObjectType == "TITLE_H1"
+                            ? 12
+                            : addModal.gridColumn;
+                        setTable([...table]);
+                      } else if (table[addModal.gridRow - 1] == 0) {
+                        table[addModal.gridRow - 1] =
+                          table[addModal.gridRow - 1] +
+                          (data?.formObject_getFormObject?.result
+                            ?.formObjectType == "TITLE_H1"
+                            ? 12
+                            : addModal.gridColumn);
+                        setTable([...table]);
+                      } else {
+                        table[addModal.gridRow - 1] =
+                          table[addModal.gridRow - 1] +
+                          (data?.formObject_getFormObject?.result
+                            ?.formObjectType == "TITLE_H1"
+                            ? 12
+                            : addModal.gridColumn);
+                        setTable([...table]);
+                      }
+                    },
+                    onError(error) {
+                      console.error(error);
+                    }
+                  });
                 },
                 onError(error) {
                   console.error(error);
@@ -486,7 +527,6 @@ const TitleWithGrid = (props: Props) => {
             }}
           >
             افزودن
-            {/* {formObjByIdData?.formObject_getFormObject?.result?.label} */}
           </Button>
         </Box>
       </NewModal>
@@ -581,8 +621,11 @@ const TitleWithGrid = (props: Props) => {
                 width: "max-content",
                 padding: "1rem",
                 color: "white",
-                display: table[index] + 3 >= 12 || (table[index] == 0 && index != 0)
-                 ? "none" : "flex",
+                display:
+                  table[index] + 3 >= 12 ||
+                  (table[index] == 0 && index != 0)
+                    ? "none"
+                    : "flex",
                 // aspectRatio: "1/1",
                 backgroundColor: Green,
                 "&:hover": {

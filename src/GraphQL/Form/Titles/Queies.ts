@@ -9,9 +9,14 @@ query getTitles {
                 content
                 formId
                 value
-                formObjects{
-                    parentId
+                row
+                formObjectFormTitles{
+                    formTitleId
+                    formObjectId
                     id
+                    gridColumn
+                    gridColumnStart
+                    gridRow
                 }
                 id
                 isDeleted
@@ -29,4 +34,5 @@ export type FormTitle = {
     formObjects: FormObjComplete[];
     id: number;
     isDeleted: boolean;
+    row: number;
 }
