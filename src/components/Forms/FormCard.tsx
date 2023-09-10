@@ -105,10 +105,15 @@ const FormCard = (props: FormCardProps) => {
         }}
         onClick={() => setOpen(!open)}
       >
-        <Typography variant="body1" textAlign={{
-          xs:'center',
-          lg:'start'
-        }}>{props.title}</Typography>
+        <Typography
+          variant="body1"
+          textAlign={{
+            xs: "center",
+            lg: "start",
+          }}
+        >
+          {props.title}
+        </Typography>
       </Box>
       <Box
         sx={{
@@ -159,6 +164,33 @@ const FormCard = (props: FormCardProps) => {
             color: "white",
             padding: "0.25rem 0.5rem",
             borderRadius: "5px",
+            background: primary,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            fontSize: "12px",
+            "&:hover": {
+              background: primaryLightTransparent,
+              color: primary,
+              // outline:`2px ${Red} solid`
+            },
+          }}
+          onClick={() => {
+            navigate(`editForm/${props.id}/${props.type}`);
+          }}
+        >
+          ویرایش
+          <EditOutlined
+            sx={{
+              height: "17px",
+            }}
+          />
+        </Button>
+        <Button
+          sx={{
+            color: "white",
+            padding: "0.25rem 0.5rem",
+            borderRadius: "5px",
             background: Red,
             display: "flex",
             justifyContent: "center",
@@ -192,31 +224,6 @@ const FormCard = (props: FormCardProps) => {
             }}
           />
         </Button>
-        {/* <Button
-          sx={{
-            color: "white",
-            padding: "0.25rem 0.5rem",
-            borderRadius: "5px",
-            background: primary,
-            display:'flex',
-            justifyContent:'center',
-            alignItems:'center',
-            fontSize:'12px',
-            "&:hover": {
-              background: primaryLightTransparent,
-              color: primary,
-              // outline:`2px ${Red} solid`
-            },
-          }}
-          onClick={() => {
-            const agree = confirm("آیا ا حذف این فرم مطمئن هستید؟");
-          }}
-        >
-            ویرایش
-          <EditOutlined sx={{
-            height:'17px'
-          }} />
-        </Button> */}
       </Box>
       <Collapse
         in={open}
@@ -246,9 +253,9 @@ const FormCard = (props: FormCardProps) => {
             color: "black",
           }}
         >
-           {/* توضیحات:  */}
+          {/* توضیحات:  */}
           <Typography variant="caption">
-           {props.description}
+            {props.description}
           </Typography>
         </Box>
       </Collapse>

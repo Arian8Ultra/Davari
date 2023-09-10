@@ -16,6 +16,8 @@ import FormManager from "../pages/Admin/FormManager/FormManager";
 import AddForm from "../pages/Admin/FormManager/AddForm/AddForm";
 import ViewForm from "../pages/Admin/FormManager/ViewForm/ViewForm";
 import Test from "../pages/Admin/Test/Test";
+import EditForm from "../pages/Admin/FormManager/EditForm/EditForm";
+import NewAddForm from "../pages/Admin/FormManager/AddForm/NewAddForm";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -45,11 +47,19 @@ const router = createBrowserRouter(
         />
         <Route
           path="admin/formanager/addForm/:formId/:fromType"
-          element={<AddForm />}
+          element={<NewAddForm />}
         />
+        {/* <Route
+          path="admin/formanager/addForm/:formId/:fromType"
+          element={<AddForm />}
+        /> */}
         <Route
           path="admin/formanager/viewForm/:formId/:fromType"
           element={<ViewForm />}
+        />
+        <Route
+          path="admin/formanager/editForm/:formId/:fromType"
+          element={<EditForm />}
         />
 
         <Route path="test" element={<Test/>} />

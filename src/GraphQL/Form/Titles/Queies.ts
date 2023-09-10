@@ -27,6 +27,36 @@ query getTitles {
 `
 
 
+export const GET_TITLE = gql`
+query getTitle($id: Int!) {
+    formTitle_getFormTitle(entityId: $id) {
+        result{
+            content
+            formId
+            value
+            row
+            formObjectFormTitles{
+                formTitleId
+                formObjectId
+                id
+                gridColumn
+                gridColumnStart
+                gridRow
+            }
+            id
+            isDeleted
+        }
+        status{
+            code
+            value
+        }
+    }
+}`
+
+
+
+
+
 export type FormTitle = {
     content: string;
     formId: number;

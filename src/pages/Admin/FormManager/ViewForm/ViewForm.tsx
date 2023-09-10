@@ -83,7 +83,7 @@ const ViewForm = () => {
   return (
     <React.Fragment>
       <BackButton steps={-2} />
-      <div className="main_grid">
+      <div className="main_grid_view">
         {fromType === "complaint" &&
           complaintData?.complaintForm_getComplaintForm?.result?.formObjectComplaintForms?.map(
             (item: FormObjComplete, index: number) => {

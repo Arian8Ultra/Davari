@@ -3,15 +3,16 @@ import { gql } from "@apollo/client";
 export const GET_COMPLAINT_FORMS = gql`
   query complaintForm_getComplaintForms {
     complaintForm_getComplaintForms {
-      result (take: 2000){
+      result(take: 2000) {
         items {
           id
           title
           description
-          formTitles{
+          formTitles {
             content
             value
-            formObjectFormTitles{
+            id
+            formObjectFormTitles {
               formObjectId
               formTitleId
             }
@@ -45,6 +46,15 @@ export const GET_COMPLAINT_FORM = gql`
         id
         title
         description
+        formTitles {
+          content
+          value
+          id
+          formObjectFormTitles {
+            formObjectId
+            formTitleId
+          }
+        }
         formObjectComplaintForms {
           gridColumn
           gridRow
@@ -72,7 +82,7 @@ export const GET_COMPLAINT_FORM = gql`
 export const GET_COMPLAINT_ANSWER_FORMS = gql`
   query complaintResponseForm_getComplaintResponseForms {
     complaintResponseForm_getComplaintResponseForms {
-      result (take: 2000){
+      result(take: 2000) {
         items {
           title
           description
@@ -106,6 +116,15 @@ export const GET_COMPLAINT_ANSWER_FORM = gql`
         id
         title
         description
+        formTitles {
+          content
+          value
+          id
+          formObjectFormTitles {
+            formObjectId
+            formTitleId
+          }
+        }
         formObjectComplaintResponseForms {
           gridColumn
           gridRow

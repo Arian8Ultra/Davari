@@ -30,11 +30,14 @@ import {
 import {
   Green,
   GreenLight,
+  Red,
+  RedLight,
   background,
   primary,
 } from "../../../theme/color";
 import FormObjPreview from "../../FormObj/FormObjPreview";
 import NewModal from "../../Modals";
+import { Cancel, CancelOutlined, Delete } from "@mui/icons-material";
 interface Props {
   title?: string;
   id: string;
@@ -544,6 +547,22 @@ const TitleWithGrid = (props: Props) => {
           gap: "1rem",
         }}
       >
+        <IconButton 
+          sx={{
+            position: "absolute",
+            top: "-15px",
+            right: "-15px",
+            backgroundColor: Red,
+            // paddingInline: "10px",
+            color: 'white',
+            "&:hover": {
+              backgroundColor: RedLight,
+              color: Red,
+              boxShadow: "0 0 10px rgba(0,0,0,0.4)",
+            },
+          }}>
+            <CancelOutlined />
+          </IconButton>
         <Typography
           variant="h6"
           sx={{
