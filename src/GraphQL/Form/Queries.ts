@@ -12,6 +12,7 @@ export const GET_COMPLAINT_FORMS = gql`
             content
             value
             id
+            row
             formObjectFormTitles {
               formObjectId
               formTitleId
@@ -50,6 +51,7 @@ export const GET_COMPLAINT_FORM = gql`
           content
           value
           id
+          row
           formObjectFormTitles {
             formObjectId
             formTitleId
@@ -101,6 +103,16 @@ export const GET_COMPLAINT_ANSWER_FORMS = gql`
               id
             }
           }
+          formTitles {
+          content
+          value
+          id
+          row
+          formObjectFormTitles {
+            formObjectId
+            formTitleId
+          }
+        }
         }
       }
       status
@@ -120,6 +132,7 @@ export const GET_COMPLAINT_ANSWER_FORM = gql`
           content
           value
           id
+          row
           formObjectFormTitles {
             formObjectId
             formTitleId

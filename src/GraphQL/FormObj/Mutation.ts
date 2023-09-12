@@ -5,10 +5,10 @@ export const CREATE_FORM_OBJ = gql`
     $color: String
     $formObjectType: FormObjectType
     $isRequired: Boolean!
-    $label: String
+    $label: String!
     $name: String
-    $stickyText: String!
-    $unit: String!
+    $stickyText: String
+    $unit: String
     $menuItems: [String!]
     $parentId: Int
   ) {
@@ -29,7 +29,13 @@ export const CREATE_FORM_OBJ = gql`
         name
         id
         label
+        __typename
       }
+      status {
+        code
+        value
+      }
+      __typename
     }
   }
 `;
@@ -182,23 +188,23 @@ export const ADD_FORM_OBJ_TO_TITLE = gql`
   }
 `;
 
-
 export const DELETE_FORM_OBJ_FROM_TITLE = gql`
   mutation formObjectFormTitle_deleteFormObjectFormTitle($id: Int!) {
-     formObjectFormTitle_deleteFormObjectFormTitle(entityId: $id){
-      result{
+    formObjectFormTitle_deleteFormObjectFormTitle(entityId: $id) {
+      result {
         id
-      },
-      status{
+      }
+      status {
         code
         value
       }
-     }
-  }`
+    }
+  }
+`;
 
 export type MenuItemType = {
   id: number;
   label: string;
   value: boolean;
-  parentId: number;
+  // parentId: number;
 };

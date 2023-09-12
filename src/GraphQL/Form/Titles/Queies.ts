@@ -2,67 +2,66 @@ import { gql } from "@apollo/client";
 import { FormObjComplete } from "../../FormObj/Queries";
 
 export const GET_TITLES = gql`
-query getTitles {
+  query getTitles {
     formTitle_getFormTitles {
-        result{
-            items{
-                content
-                formId
-                value
-                row
-                formObjectFormTitles{
-                    formTitleId
-                    formObjectId
-                    id
-                    gridColumn
-                    gridColumnStart
-                    gridRow
-                }
-                id
-                isDeleted
-            }
+      result {
+        items {
+          content
+          complaintFormId
+          complaintResponseFormId
+          value
+          row
+          formObjectFormTitles {
+            formTitleId
+            formObjectId
+            id
+            gridColumn
+            gridColumnStart
+            gridRow
+          }
+          id
+          isDeleted
         }
+      }
     }
-}
-`
-
+  }
+`;
 
 export const GET_TITLE = gql`
-query getTitle($id: Int!) {
+  query getTitle($id: Int!) {
     formTitle_getFormTitle(entityId: $id) {
-        result{
-            content
-            formId
-            value
-            row
-            formObjectFormTitles{
-                formTitleId
-                formObjectId
-                id
-                gridColumn
-                gridColumnStart
-                gridRow
-            }
-            id
-            isDeleted
+      result {
+        content
+        complaintFormId
+        complaintResponseFormId
+        value
+        row
+        formObjectFormTitles {
+          formTitleId
+          formObjectId
+          id
+          gridColumn
+          gridColumnStart
+          gridRow
         }
-        status{
-            code
-            value
-        }
+        id
+        isDeleted
+      }
+      status {
+        code
+        value
+      }
     }
-}`
-
-
-
-
+  }
+`;
 
 export type FormTitle = {
-    content: string;
-    formId: number;
-    value: string;
-    formObjects: FormObjComplete[];
-    id: number;
-    isDeleted: boolean;
-    row: number;
-}
+  content: string;
+  complaintFormId?: number;
+  complaintResponseFormId?: number;
+  value: string;
+  formObjects: FormObjComplete[];
+  id: number;
+  isDeleted: boolean;
+  row: number;
+};

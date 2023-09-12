@@ -123,6 +123,7 @@ export type FormObjComplete = {
   gridRow: number;
   gridColumnStart: number;
   required: boolean;
+  menuItems?: [string];
 };
 
 export const FormObjType = {
@@ -142,6 +143,15 @@ export enum FormObjTypeEnum {
   Select = 4,
   Typography = 5,
 }
+
+export const FormObjTypeArray = [
+  { id: 0, name: "TEXT", faName:'متن'},
+  { id: 1, name: "FILE" , faName:'فایل'},
+  { id: 2, name: "TEXT_WITH_FILE" , faName:'متن با فایل'},
+  { id: 3, name: "TITLE_H1" , faName:'عنوان'},
+  { id: 4, name: "SELECT" , faName:'انتخابی'},
+  { id: 5, name: "TYPOGRAPHY" , faName:'تایپوگرافی'},
+];
 
 export const FormObjTypeText = {
   Text: 0,

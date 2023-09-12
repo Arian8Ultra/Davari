@@ -1,27 +1,34 @@
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
+import { CancelOutlined } from "@mui/icons-material";
 import {
   Box,
   Button,
   Divider,
   IconButton,
+  MenuItem,
   Stack,
   TextField,
   Typography,
 } from "@mui/material";
 import React, { useEffect } from "react";
-import { VscAdd } from "react-icons/vsc";
+import { VscAdd, VscPlug } from "react-icons/vsc";
 import {
   ADD_FORM_OBJ_TO_TITLE,
+  CREATE_FORM_OBJ,
   DELETE_FORM_OBJ,
   DELETE_FORM_OBJ_FROM_TITLE,
+  MenuItemType,
 } from "../../../GraphQL/FormObj/Mutation";
 import {
   FormObj,
   FormObjComplete,
+  FormObjTypeArray,
   FormObjTypeEnum,
   GET_FORM_OBJ,
   GET_FORM_OBJS,
@@ -36,17 +43,30 @@ import {
   primary,
 } from "../../../theme/color";
 import FormObjPreview from "../../FormObj/FormObjPreview";
+import FormObject from "../../FormObj/FormObject";
 import NewModal from "../../Modals";
-import { Cancel, CancelOutlined, Delete } from "@mui/icons-material";
+import { GET_TITLE } from "../../../GraphQL/Form/Titles/Queies";
+import FormObjectWihQuery from "../../FormObj/FormObjectWihQuery";
+import {
+  BsDashCircle,
+  BsNodeMinus,
+  BsPlusCircle,
+} from "react-icons/bs";
 interface Props {
   title?: string;
-  id: string;
+  id: number;
   children?: React.ReactNode;
   value?: boolean;
+  row?: number;
+  onDelete?: (id: number) => void;
 }
 const TitleWithGrid = (props: Props) => {
   //   const formType = "response";
   const [table, setTable] = React.useState([0]);
+  const [isExist, setIsExist] = React.useState(false);
+  const [oldFormList, setOldFormList] = React.useState(
+    [] as FormObjComplete[]
+  );
   const [formList, setFormList] = React.useState(
     // list of objects as FormObjComplete type
     [] as FormObjComplete[]
@@ -68,14 +88,60 @@ const TitleWithGrid = (props: Props) => {
   });
   const [createFormObjModal, setCreateFormObjModal] = React.useState({
     open: false,
-    color: null as string | null,
+    color: "" as string | null,
     formObjectType: "" as unknown as FormObjTypeEnum,
     isRequired: false,
-    label: null as string | null,
-    name: null as string | null,
-    stickyText: null as string | null,
-    unit: null as string | null,
+    label: "" as string | null,
+    name: "" as string | null,
+    stickyText: "" as string | null,
+    unit: "" as string | null,
+    menuItems: [] as MenuItemType[],
+    menuItemText: "" as string,
   });
+
+  const [createFormObj] = useMutation(CREATE_FORM_OBJ, {
+    variables: {
+      formObjectType: createFormObjModal.formObjectType,
+      label: createFormObjModal.label,
+      name: createFormObjModal.name,
+      stickyText: createFormObjModal.stickyText,
+      unit: createFormObjModal.unit,
+      isRequired: false,
+      menuItems: createFormObjModal.menuItems.map((item) =>
+        JSON.stringify(item)
+      ),
+      // color: createFormObjModal.color,
+    },
+    onCompleted(data) {
+      // console.log(data);
+      void refetch();
+    },
+  });
+
+  // const { data: dataTitle } = useQuery(GET_TITLE, {
+  //   variables: {
+  //     id: props.id,
+  //   },
+  //   onCompleted(data) {
+  //     console.log("dataTitle :", data);
+  //     if (
+  //       data.formTitle_getFormTitle.result.formObjectFormTitles
+  //         .length >= 1
+  //     ) {
+  //       setIsExist(true);
+  //       setOldFormList(
+  //         data.formTitle_getFormTitle.result.formObjectFormTitles
+  //       );
+  //       data.formTitle_getFormTitle.result.formObjectFormTitles.map(
+  //         (item: any) => {
+  //           console.log("item", item);
+  //           table[item.gridRow - 1] =
+  //             table[item.gridRow - 1] + item.gridColumn;
+  //         }
+  //       );
+  //     }
+  //   },
+  // });
 
   const handleDeleteFormObj = (
     gridRow: number | undefined,
@@ -104,12 +170,12 @@ const TitleWithGrid = (props: Props) => {
 
     void deleteFormObjFromTitle({
       variables: {
-        id: id
+        id: id,
       },
       onCompleted(data) {
         console.log("deleteFormObjFromTitleData :", data);
-      }
-    })
+      },
+    });
   };
 
   const [getFormObjBySearch, { data: formObjBySearchData }] =
@@ -118,7 +184,7 @@ const TitleWithGrid = (props: Props) => {
         search: addModal.search,
       },
       onCompleted(data) {
-        console.log("data", data);
+        // console.log("data", data);
       },
       onError(error) {
         console.error(error);
@@ -127,7 +193,7 @@ const TitleWithGrid = (props: Props) => {
 
   const { data: formObjData, refetch } = useQuery(GET_FORM_OBJS, {
     onCompleted(data) {
-      console.log("data", data);
+      // console.log("data", data);
     },
     onError(error) {
       console.error(error);
@@ -138,7 +204,7 @@ const TitleWithGrid = (props: Props) => {
     GET_FORM_OBJ,
     {
       onCompleted(data) {
-        console.log("data", data);
+        // console.log("data", data);
       },
       onError(error) {
         console.error(error);
@@ -158,10 +224,12 @@ const TitleWithGrid = (props: Props) => {
   });
 
   const [addFormObjToTitle] = useMutation(ADD_FORM_OBJ_TO_TITLE);
-  const [deleteFormObjFromTitle] = useMutation(DELETE_FORM_OBJ_FROM_TITLE);
+  const [deleteFormObjFromTitle] = useMutation(
+    DELETE_FORM_OBJ_FROM_TITLE
+  );
 
   useEffect(() => {
-    console.log("formList", formList);
+    // console.log("formList", formList);
   }, [formList]);
 
   useEffect(() => {
@@ -169,7 +237,12 @@ const TitleWithGrid = (props: Props) => {
   }, [addModal.search, getFormObjBySearch]);
 
   return (
-    <React.Fragment>
+    <Box
+      sx={{
+        gridRow: props.row && `${props.row}`,
+        gridColumn: "1/span 12",
+      }}
+    >
       <NewModal
         name="افزودن فیلد"
         open={addModal.open}
@@ -444,15 +517,22 @@ const TitleWithGrid = (props: Props) => {
                           : addModal.gridColumn,
                       gridColumnStart: addModal.girdColumnStart,
                     },
-                    onCompleted(formObjectFormTitle_addFormObjectFormTitle) {
-                      console.log("addFormObjToTitleData :", formObjectFormTitle_addFormObjectFormTitle);
+                    onCompleted(
+                      formObjectFormTitle_addFormObjectFormTitle
+                    ) {
+                      console.log(
+                        "addFormObjToTitleData :",
+                        formObjectFormTitle_addFormObjectFormTitle
+                      );
                       setAddModal({
                         ...addModal,
                         open: false,
                         label:
                           formObjByIdData?.formObject_getFormObject
                             ?.result?.label,
-                        id: formObjectFormTitle_addFormObjectFormTitle.formObjectFormTitle_addFormObjectFormTitle.result.id,
+                        id: formObjectFormTitle_addFormObjectFormTitle
+                          .formObjectFormTitle_addFormObjectFormTitle
+                          .result.id,
                         type: formObjByIdData
                           ?.formObject_getFormObject?.result
                           ?.formObjectType,
@@ -483,13 +563,19 @@ const TitleWithGrid = (props: Props) => {
                           required: false,
                           unit: data?.formObject_getFormObject?.result
                             ?.unit,
-                          id: formObjectFormTitle_addFormObjectFormTitle.formObjectFormTitle_addFormObjectFormTitle.result.id,
+                          id: formObjectFormTitle_addFormObjectFormTitle
+                            .formObjectFormTitle_addFormObjectFormTitle
+                            .result.id,
                           formObjectId:
                             data?.formObject_getFormObject?.result
                               ?.id,
                           color:
                             data?.formObject_getFormObject?.result
                               ?.color,
+
+                          menuItems:
+                            data?.formObject_getFormObject?.result
+                              ?.menuItems,
                         },
                       ]);
 
@@ -520,7 +606,7 @@ const TitleWithGrid = (props: Props) => {
                     },
                     onError(error) {
                       console.error(error);
-                    }
+                    },
                   });
                 },
                 onError(error) {
@@ -547,22 +633,29 @@ const TitleWithGrid = (props: Props) => {
           gap: "1rem",
         }}
       >
-        <IconButton 
+        <IconButton
+          onClick={() => {
+            props.onDelete && props.onDelete(props.id);
+          }}
           sx={{
             position: "absolute",
             top: "-15px",
             right: "-15px",
             backgroundColor: Red,
             // paddingInline: "10px",
-            color: 'white',
+            color: "white",
             "&:hover": {
               backgroundColor: RedLight,
               color: Red,
               boxShadow: "0 0 10px rgba(0,0,0,0.4)",
             },
-          }}>
-            <CancelOutlined />
-          </IconButton>
+          }}
+        >
+          <CancelOutlined />
+        </IconButton>
+        {/* {JSON.stringify(formList)} */}
+        {/* {JSON.stringify(oldFormList)} */}
+        {/* {JSON.stringify(table)} */}
         <Typography
           variant="h6"
           sx={{
@@ -574,7 +667,7 @@ const TitleWithGrid = (props: Props) => {
             color: primary,
           }}
         >
-          {props.title}
+          {props.title} - {props.id}
         </Typography>
         {formList.map((item: FormObjComplete) => {
           if (item.gridRow != 0) {
@@ -593,26 +686,10 @@ const TitleWithGrid = (props: Props) => {
             setTable([...table]);
           }
 
+          console.log("item", item);
+
           return (
-            // <TextField
-            //   key={index}
-            //   // label={item.label}
-            //   required={item.required}
-            //   value={`row: ${item.gridRow} col: ${item.gridColumn} table: ${table}`}
-            //   InputProps={{
-            //     endAdornment: (
-            //       <div className="sticky_text">{item.stickyText}</div>
-            //     ),
-            //   }}
-            //   sx={{
-            //     gridRow: item.gridRow,
-            //     // gridColumn: `span ${item.gridColumn}`,
-            //     gridColumnStart: item.girdColumnStart,
-            //     gridColumnEnd: item.girdColumnStart + item.gridColumn,
-            //     height: "max-content",
-            //   }}
-            // />
-            <FormObjPreview
+            <FormObject
               color={item.color}
               formObjectType={item.formObjectType}
               stickyText={item.stickyText}
@@ -626,13 +703,43 @@ const TitleWithGrid = (props: Props) => {
               key={item.id}
               isDeletable={true}
               handleDelete={handleDeleteFormObj}
+              // @ts-ignore
+              menuItems={item.menuItems ? item.menuItems : []}
             />
+            // <Box
+            // sx={{
+            //   gridColumn: `${item.gridColumnStart}/span ${ item.gridColumn}`,
+            //   gridRow: item.gridRow,
+            //   outline: `1px solid ${primary}`,
+            // }}>
+            // {item.label}
+            // </Box>
           );
         })}
+
+        {/* {isExist &&
+          oldFormList.map((item: FormObjComplete) => (
+            <FormObjectWihQuery
+              color={item.color}
+              formObjectType={item.formObjectType}
+              stickyText={item.stickyText}
+              label={item.label}
+              unit={item.unit}
+              id={item.formObjectId}
+              name={item.label}
+              girdColumnStart={item.gridColumnStart}
+              gridColumn={item.gridColumn}
+              gridRow={item.gridRow}
+              key={item.id}
+              isDeletable={true}
+              handleDelete={handleDeleteFormObj}
+            />
+          ))} */}
 
         {table.map((_item, index) => {
           return (
             <IconButton
+              key={index}
               sx={{
                 gridRow: index + 1,
                 gridColumn: `${table[index] + 1}/span 1`,
@@ -696,7 +803,289 @@ const TitleWithGrid = (props: Props) => {
           </IconButton>
         )}
       </Box>
-    </React.Fragment>
+      <NewModal
+        open={createFormObjModal.open}
+        onClose={() => {
+          setCreateFormObjModal({
+            ...createFormObjModal,
+            open: false,
+          });
+        }}
+        name="ساخت فیلد جدید"
+        backgroundColor={background}
+        color={Green}
+        isCloseable={true}
+        height={"80vh"}
+        width={{
+          xs: "100%",
+          md: "50%",
+        }}
+      >
+        <Box
+          width={"100%"}
+          height={"100%"}
+          sx={{
+            display: "grid",
+            gridTemplateColumns: "repeat(2, 1fr)",
+            gap: "1rem",
+          }}
+        >
+          <TextField
+            label="نوع فیلد"
+            value={createFormObjModal.formObjectType}
+            onChange={(e) => {
+              console.log("e.target.value", e.target.value);
+
+              setCreateFormObjModal({
+                ...createFormObjModal,
+                formObjectType: e.target
+                  .value as unknown as FormObjTypeEnum,
+              });
+            }}
+            sx={{
+              gridColumn: "span 2",
+            }}
+            select
+          >
+            {FormObjTypeArray.map(
+              (
+                item: {
+                  id: number;
+                  name: string;
+                  faName: string;
+                },
+                index: number
+              ) => (
+                <MenuItem key={item.id} value={item.name}>
+                  {item.faName}
+                </MenuItem>
+              )
+            )}
+          </TextField>
+          <TextField
+            label="نام فیلد"
+            value={createFormObjModal.name}
+            disabled={
+              createFormObjModal.formObjectType.toString() == ""
+            }
+            onChange={(e) => {
+              setCreateFormObjModal({
+                ...createFormObjModal,
+                name: e.target.value,
+              });
+            }}
+          />
+          <TextField
+            label="عنوان فیلد"
+            value={createFormObjModal.label}
+            disabled={
+              createFormObjModal.formObjectType.toString() == ""
+            }
+            onChange={(e) => {
+              setCreateFormObjModal({
+                ...createFormObjModal,
+                label: e.target.value,
+              });
+            }}
+          />
+          <TextField
+            label="متن چسبیده"
+            value={createFormObjModal.stickyText}
+            disabled={
+              createFormObjModal.formObjectType.toString() == "" ||
+              createFormObjModal.formObjectType.toString() ==
+                "TITLE_H2" ||
+              createFormObjModal.formObjectType.toString() ==
+                "TITLE_H1" ||
+              createFormObjModal.formObjectType.toString() == "FILE"
+            }
+            onChange={(e) => {
+              setCreateFormObjModal({
+                ...createFormObjModal,
+                stickyText: e.target.value,
+              });
+            }}
+          />
+          <TextField
+            label="واحد"
+            value={createFormObjModal.unit}
+            disabled={
+              createFormObjModal.formObjectType.toString() == "" ||
+              createFormObjModal.formObjectType.toString() ==
+                "TITLE_H2" ||
+              createFormObjModal.formObjectType.toString() ==
+                "TITLE_H1" ||
+              createFormObjModal.formObjectType.toString() == "FILE"
+            }
+            onChange={(e) => {
+              setCreateFormObjModal({
+                ...createFormObjModal,
+                unit: e.target.value,
+              });
+            }}
+          />
+          <TextField
+            label="گزینه"
+            disabled={
+              createFormObjModal.formObjectType.toString() != "SELECT"
+            }
+            value={createFormObjModal.menuItemText}
+            onChange={(e) => {
+              setCreateFormObjModal({
+                ...createFormObjModal,
+                menuItemText: e.target.value,
+              });
+            }}
+            InputProps={{
+              endAdornment: (
+                <IconButton
+                  disabled={
+                    createFormObjModal.formObjectType.toString() !=
+                    "SELECT"
+                  }
+                  onClick={() => {
+                    setCreateFormObjModal({
+                      ...createFormObjModal,
+                      menuItems: [
+                        ...createFormObjModal.menuItems,
+                        {
+                          id: createFormObjModal.menuItems.length,
+                          label: createFormObjModal.menuItemText,
+                          value: true,
+                        },
+                      ],
+                    });
+                  }}
+                >
+                  <VscAdd />
+                </IconButton>
+              ),
+            }}
+          />
+
+          <Box
+            sx={{
+              gridColumn: "span 2",
+              outline: `1px solid ${primary}`,
+            }}
+          >
+            {createFormObjModal.menuItems.map((item, index) => (
+              <Box
+                key={index}
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  gap: "1rem",
+                  padding: "0.5rem",
+                  backgroundColor:
+                    item.value == true ? GreenLight : RedLight,
+                  borderRadius: "15px",
+                  marginBottom: "1rem",
+                }}
+              >
+                <Typography>{item.label}</Typography>
+                <IconButton
+                  onClick={() => {
+                    setCreateFormObjModal({
+                      ...createFormObjModal,
+                      menuItems: createFormObjModal.menuItems.filter(
+                        (item2) => item2.id != item.id
+                      ),
+                    });
+                  }}
+                >
+                  <CancelOutlined />
+                </IconButton>
+
+                {/* adding positive and negetive button to change the value of the menu item */}
+                <Box
+                  sx={{
+                    display: "flex",
+                    gap: "1rem",
+                    alignItems: "center",
+                  }}
+                >
+                  <IconButton
+                    onClick={() => {
+                      setCreateFormObjModal({
+                        ...createFormObjModal,
+                        menuItems: createFormObjModal.menuItems.map(
+                          (item2) => {
+                            if (item2.id == item.id) {
+                              item2.value = true;
+                            }
+                            return item2;
+                          }
+                        ),
+                      });
+                    }}
+                    sx={{
+                      background: Green,
+                      color: "white",
+                      aspectRatio: "1/1",
+                      "&:hover": {
+                        background: GreenLight,
+                        color: Green,
+                      },
+                    }}
+                  >
+                    <BsPlusCircle />
+                  </IconButton>
+                  <IconButton
+                    onClick={() => {
+                      setCreateFormObjModal({
+                        ...createFormObjModal,
+                        menuItems: createFormObjModal.menuItems.map(
+                          (item2) => {
+                            if (item2.id == item.id) {
+                              item2.value = false;
+                            }
+                            return item2;
+                          }
+                        ),
+                      });
+                    }}
+                    sx={{
+                      background: Red,
+                      color: "white",
+                      aspectRatio: "1/1",
+                      "&:hover": {
+                        background: RedLight,
+                        color: Red,
+                      },
+                    }}
+                  >
+                    <BsDashCircle />
+                  </IconButton>
+                </Box>
+              </Box>
+            ))}
+          </Box>
+
+          <Button
+            sx={{
+              gridColumn: "span 2",
+              backgroundColor: Green,
+              color: "white",
+              "&:hover": {
+                backgroundColor: GreenLight,
+                color: Green,
+              },
+            }}
+            onClick={() => {
+              void createFormObj();
+              setCreateFormObjModal({
+                ...createFormObjModal,
+                open: false,
+              });
+            }}
+          >
+            افزودن
+          </Button>
+        </Box>
+      </NewModal>
+    </Box>
   );
 };
 

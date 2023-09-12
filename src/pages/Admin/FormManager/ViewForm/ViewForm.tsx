@@ -19,15 +19,14 @@ import FormObjPreview from "../../../../components/FormObj/FormObjPreview";
 import { primary } from "../../../../theme/color";
 import FormObjPreviewWithQuery from "../../../../components/FormObj/FormObjPreviewWithQuery";
 import BackButton from "../../../../components/BackButton";
+import { FormTitle } from "../../../../GraphQL/Form/Titles/Queies";
+import Title from "../../../../components/Forms/Title/Title";
 const ViewForm = () => {
   const { formId, fromType } = useParams<{
     formId: string;
     fromType: string;
   }>();
-  // const [data, setData] = React.useState<any>();
-  const [formObjs, setFormObjs] = React.useState<FormObjComplete[]>(
-    []
-  );
+
   const [getCompalintForm, { data: complaintData }] = useLazyQuery(
     GET_COMPLAINT_FORM,
     {
@@ -35,7 +34,7 @@ const ViewForm = () => {
         id: formId && parseInt(formId),
       },
       onCompleted(data) {
-        // console.log(data);
+        console.log(data);
         data.complaintForm_getComplaintForm.result.formObjectComplaintForms.map(
           (item: {
             formObjectId: number;
@@ -82,54 +81,27 @@ const ViewForm = () => {
 
   return (
     <React.Fragment>
-      <BackButton steps={-2} />
+      <BackButton to="/admin/formanager" />
       <div className="main_grid_view">
         {fromType === "complaint" &&
-          complaintData?.complaintForm_getComplaintForm?.result?.formObjectComplaintForms?.map(
-            (item: FormObjComplete, index: number) => {
+          complaintData?.complaintForm_getComplaintForm?.result?.formTitles?.map(
+            (item: FormTitle, index: number) => {
               return (
-                <FormObjPreviewWithQuery
+                <Title
                   key={index}
-                  formObjectId={item.formObjectId}
-                  gridColumn={item.gridColumn}
-                  gridRow={item.gridRow}
-                  girdColumnStart={item.gridColumnStart}
-                />
+                  id={item.id}
+                  row={index + 1}
+                  // setValue={setValue}
+                  // value={value}
+                  />
+                // <FormObjPreviewWithQuery
+                //   key={index}
+                //   formObjectId={item.formObjectId}
+                //   gridColumn={item.gridColumn}
+                //   gridRow={item.gridRow}
+                //   girdColumnStart={item.gridColumnStart}
+                // />
               );
-              // void getFormObj({
-              //   variables: {
-              //     id: item.formObjectId,
-              //   },
-              //   onCompleted(data) {
-              //     return (
-              //       <FormObjPreview
-              //         key={index}
-              //         id={item.formObjectId}
-              //         formObjectType={item.formObjectType}
-              //         gridColumn={item.gridColumn}
-              //         gridRow={item.gridRow}
-              //         girdColumnStart={item.gridColumnStart}
-              //         label={
-              //           data?.formObject_getFormObject
-              //             ?.result?.label
-              //         }
-              //         name={
-              //           data?.formObject_getFormObject
-              //             ?.result?.name
-              //         }
-              //         unit={
-              //           data?.formObject_getFormObject
-              //             ?.result?.unit
-              //         }
-              //         stickyText={
-              //           data?.formObject_getFormObject
-              //             ?.result?.stickyText
-              //         }
-              //         color={primary}
-              //       />
-              //     );
-              //   },
-              // });
             }
           )}
 

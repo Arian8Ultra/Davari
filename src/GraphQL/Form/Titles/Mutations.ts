@@ -3,14 +3,16 @@ import { gql } from "@apollo/client";
 export const CREATE_FORM_TITLE = gql`
   mutation formTitle_createFormTitle(
     $content: String!
-    $formId: Int!
+    $complaintFormId: Int
+    $complaintResponseFormId: Int
     $value: String
     $row: Int
   ) {
     formTitle_addFormTitle(
       input: {
         content: $content
-        formId: $formId
+        complaintFormId: $complaintFormId
+        complaintResponseFormId: $complaintResponseFormId
         value: $value
         row: $row
       }
@@ -27,7 +29,8 @@ export const CREATE_FORM_TITLE = gql`
 export const UPDATE_FORM_TITLE = gql`
   mutation formTitle_updateFormTitle(
     $content: String!
-    $formId: Int!
+    $complaintFormId: Int
+    $complaintResponseFormId: Int
     $value: String
     $row: Int
     $id: Int!
@@ -35,7 +38,8 @@ export const UPDATE_FORM_TITLE = gql`
     formTitle_updateFormTitle(
       input: {
         content: $content
-        formId: $formId
+        complaintFormId: $complaintFormId
+        complaintResponseFormId: $complaintResponseFormId
         row: $row
         value: $value
         id: $id
@@ -69,6 +73,7 @@ export const DELETE_FORM_TITLE = gql`
 export type FormTitleMutation = {
   content: string;
   value?: string;
-  formId: number;
+  complaintFormId?: number;
+  complaintResponseFormId?: number;
   row?: number;
 };
