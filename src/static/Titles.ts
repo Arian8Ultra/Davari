@@ -72,5 +72,6 @@ export const Titles = {
     employeeManagement: 'مدیریت کارمندان',
     employee: 'کارمند',
     formManager: 'مدیریت فرم ها',
+    contracts:"قراردادها"
 
 }

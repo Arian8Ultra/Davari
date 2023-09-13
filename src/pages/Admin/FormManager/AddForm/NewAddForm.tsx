@@ -182,12 +182,14 @@ const NewAddForm = () => {
       <div className="main_grid">
         {table.map((item, index) => {
           if (table[0].id === 0) return null;
+
+          // setLastRow(index + 2)
           return (
             <TitleWithGrid
               key={index}
               id={item.id}
               title={item.content}
-              row={item.row}
+              row={index+1}
               onDelete={handleDeleteTitle}
             />
               
@@ -195,7 +197,7 @@ const NewAddForm = () => {
         })}
         <IconButton
           sx={{
-            gridRow: lastRow + 1,
+            gridRow: table.length + 1,
             gridColumn: `0/span 1`,
             height: "max-content",
             width: "max-content",

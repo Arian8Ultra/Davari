@@ -149,7 +149,7 @@ const FormObject = (props: Props) => {
               props.menuItems.map((item) => {
                 item= JSON.parse(String(item))
                 return (
-                  <MenuItem key={item.id} value={item.value}>
+                  <MenuItem key={item.id} value={item.label}>
                     {item.label}
                   </MenuItem>
                 );
@@ -201,9 +201,10 @@ const FormObject = (props: Props) => {
               testOverflow: "ellipsis",
               padding: "5px",
               width: "100%",
+              wordWrap:'break-word'
             }}
           >
-            {props.value}
+            {props.label}
           </Typography>
           {props.isDeletable && (
             <IconButton
@@ -287,6 +288,11 @@ const FormObject = (props: Props) => {
                 : props.gridColumn
                 ? props.gridColumn
                 : 4,
+                display:'flex',
+                justifyContent:'center',
+                alignItems:'center',
+                height:'100%',
+                width:'100%'
           }}
         >
           <FileButton setFiles={props.setValue} text={props.label} />

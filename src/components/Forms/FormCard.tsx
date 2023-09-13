@@ -43,7 +43,7 @@ const FormCard = (props: FormCardProps) => {
     },
     onCompleted(data) {
       console.log(data);
-      alert("فرم مورد نظر حذف شد");
+      // alert("فرم مورد نظر حذف شد");
       window.location.reload();
     },
     onError(error) {

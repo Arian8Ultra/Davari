@@ -18,6 +18,8 @@ import ViewForm from "../pages/Admin/FormManager/ViewForm/ViewForm";
 import Test from "../pages/Admin/Test/Test";
 import EditForm from "../pages/Admin/FormManager/EditForm/EditForm";
 import NewAddForm from "../pages/Admin/FormManager/AddForm/NewAddForm";
+import Contracts from "../pages/Contracts/Contracts";
+import ViewFormAll from "../pages/Contracts/ViewForm/ViewForm";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -26,6 +28,7 @@ const router = createBrowserRouter(
         <Route path="" element={<Home />} />
         <Route path="home" element={<Home />} />
         <Route path="complaints" element={<Complaints />} />
+        <Route path="contracts" element={<Contracts />} />
         <Route path="portal" element={<Protal />} />
         <Route path="portal/messages" element={<Messages />} />
         <Route
@@ -56,6 +59,10 @@ const router = createBrowserRouter(
         <Route
           path="admin/formanager/viewForm/:formId/:fromType"
           element={<ViewForm />}
+        />
+        <Route
+          path="/viewForm/:formId/:fromType"
+          element={<ViewFormAll />}
         />
         <Route
           path="admin/formanager/editForm/:formId/:fromType"

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unused-vars */
@@ -17,7 +18,7 @@ import {
 } from "../../GraphQL/FormObj/Queries";
 import { Cancel } from "@mui/icons-material";
 import FileButton from "../FileButton";
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import {
   JSXElementConstructor,
   Key,
@@ -26,6 +27,7 @@ import {
   ReactPortal,
   useState,
 } from "react";
+import { DELETE_FORM_OBJ_FROM_COMPLAINT_FORM, DELETE_FORM_OBJ_FROM_TITLE } from "../../GraphQL/FormObj/Mutation";
 interface Props{
   name: string;
   gridColumn?: number;
@@ -35,6 +37,7 @@ interface Props{
   setValue?: (value: string) => void;
   value?: string;
   isDeletable?: boolean;
+  deleteId?:number
   handleDelete?: (
     gridRow: number | undefined,
     gridColumn: number | undefined,
@@ -51,6 +54,17 @@ const FormObjectWihQuery = (props: Props) => {
       console.log("FORM_OBJ_DATA :", data);
     },
   });
+
+
+  const [deleteFormObj]= useMutation(DELETE_FORM_OBJ_FROM_TITLE,{
+    variables:{
+      id:props.deleteId
+    },
+    onCompleted(data, clientOptions) {
+      console.log(data);
+      
+    },
+  })
 
   //   return (
   //     <Box
@@ -126,6 +140,7 @@ const FormObjectWihQuery = (props: Props) => {
           {props.isDeletable && (
             <IconButton
               onClick={() => {
+                void deleteFormObj()
                 props.handleDelete &&
                   props.handleDelete(
                     props.gridRow,
@@ -225,7 +240,8 @@ const FormObjectWihQuery = (props: Props) => {
                 }) => {
                   item= JSON.parse(String(item))
                   return (
-                    <MenuItem key={item.id} value={item.value}>
+                    // @ts-ignore
+                    <MenuItem key={item.id} value={item.label}>
                       {item.label}
                     </MenuItem>
                   );
@@ -235,6 +251,7 @@ const FormObjectWihQuery = (props: Props) => {
           {props.isDeletable && (
             <IconButton
               onClick={() => {
+                void deleteFormObj()
                 props.handleDelete &&
                   props.handleDelete(
                     props.gridRow,
@@ -280,11 +297,12 @@ const FormObjectWihQuery = (props: Props) => {
               width: "100%",
             }}
           >
-            {props.value}
+            {data.formObject_getFormObject.result.label}
           </Typography>
           {props.isDeletable && (
             <IconButton
               onClick={() => {
+                void deleteFormObj()
                 props.handleDelete &&
                   props.handleDelete(
                     props.gridRow,
@@ -330,6 +348,7 @@ const FormObjectWihQuery = (props: Props) => {
           {props.isDeletable && (
             <IconButton
               onClick={() => {
+                void deleteFormObj()
                 props.handleDelete &&
                   props.handleDelete(
                     props.gridRow,
@@ -373,6 +392,7 @@ const FormObjectWihQuery = (props: Props) => {
           {props.isDeletable && (
             <IconButton
               onClick={() => {
+                void deleteFormObj()
                 props.handleDelete &&
                   props.handleDelete(
                     props.gridRow,

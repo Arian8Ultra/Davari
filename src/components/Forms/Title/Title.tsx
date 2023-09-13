@@ -14,9 +14,10 @@ interface Props {
   // setValue?: (value: string) => void;
   // value?: string;
   row?: number;
+  isDeletable?: boolean;
 }
 const Title = (props: Props) => {
-    const { data: dataTitle } = useQuery(GET_TITLE, {
+  const { data: dataTitle } = useQuery(GET_TITLE, {
     variables: {
       id: props.id,
     },
@@ -31,14 +32,16 @@ const Title = (props: Props) => {
         gridColumn: "1/span 12",
         width: "100%",
         height: "100%",
-        padding: "1rem",
+        padding: "0rem",
         outline: `1px solid ${primary}`,
         borderRadius: "15px",
         marginBlock: "2rem",
         position: "relative",
         display: "grid",
         gridTemplateColumns: "repeat(12, 1fr)",
-        gap: "1rem",
+        gridAutoRows: "max-content",
+        gap: "0.3rem",
+        alignItems: "center",
       }}
     >
       <Typography
@@ -54,23 +57,26 @@ const Title = (props: Props) => {
       >
         {dataTitle?.formTitle_getFormTitle?.result?.content}
       </Typography>
-      {dataTitle?.formTitle_getFormTitle?.result?.formObjectFormTitles.map((item:{
-        formObjectId: number
-        formTitleId: number
-        gridColumn: number
-        gridColumnStart: number
-        gridRow: number
-        id: number
-      })=>(
-        <FormObjectWihQuery
-        id={item.formObjectId}
-        gridColumn={item.gridColumn}
-        gridRow={item.gridRow}
-        girdColumnStart={item.gridColumnStart}
-        key={item.id}
-        name=""
-        />
-      ))}
+      {dataTitle?.formTitle_getFormTitle?.result?.formObjectFormTitles.map(
+        (item: {
+          formObjectId: number;
+          formTitleId: number;
+          gridColumn: number;
+          gridColumnStart: number;
+          gridRow: number;
+          id: number;
+        }) => (
+          <FormObjectWihQuery
+            id={item.formObjectId}
+            gridColumn={item.gridColumn}
+            gridRow={item.gridRow}
+            girdColumnStart={item.gridColumnStart}
+            key={item.id}
+            deleteId={item.id}
+            name=""
+          />
+        )
+      )}
 
       {props.children}
     </Box>

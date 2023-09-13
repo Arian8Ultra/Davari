@@ -6,7 +6,7 @@ import {
   BsPersonCircle,
   BsViewStacked,
 } from "react-icons/bs";
-import { VscDebug, VscHome, VscWarning } from "react-icons/vsc";
+import { VscDebug, VscFile, VscHome, VscWarning } from "react-icons/vsc";
 import { Titles } from "./Titles";
 
 export const SideBarMenu = [
@@ -22,6 +22,14 @@ export const SideBarMenu = [
     primary: Titles.complaints,
     to: "/complaints",
     icon: <VscWarning />,
+    hasLink: true,
+    hasCollapse: false,
+    children: [],
+  },
+  {
+    primary: Titles.contracts,
+    to: "/contracts",
+    icon: <VscFile />,
     hasLink: true,
     hasCollapse: false,
     children: [],

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
@@ -118,30 +119,14 @@ const TitleWithGrid = (props: Props) => {
     },
   });
 
-  // const { data: dataTitle } = useQuery(GET_TITLE, {
-  //   variables: {
-  //     id: props.id,
-  //   },
-  //   onCompleted(data) {
-  //     console.log("dataTitle :", data);
-  //     if (
-  //       data.formTitle_getFormTitle.result.formObjectFormTitles
-  //         .length >= 1
-  //     ) {
-  //       setIsExist(true);
-  //       setOldFormList(
-  //         data.formTitle_getFormTitle.result.formObjectFormTitles
-  //       );
-  //       data.formTitle_getFormTitle.result.formObjectFormTitles.map(
-  //         (item: any) => {
-  //           console.log("item", item);
-  //           table[item.gridRow - 1] =
-  //             table[item.gridRow - 1] + item.gridColumn;
-  //         }
-  //       );
-  //     }
-  //   },
-  // });
+  const { data: dataTitle ,refetch:refetchTitle} = useQuery(GET_TITLE, {
+    variables: {
+      id: props.id,
+    },
+    onCompleted(data) {
+      console.log("dataTitle :", data);
+    },
+  });
 
   const handleDeleteFormObj = (
     gridRow: number | undefined,
@@ -524,6 +509,9 @@ const TitleWithGrid = (props: Props) => {
                         "addFormObjToTitleData :",
                         formObjectFormTitle_addFormObjectFormTitle
                       );
+
+                      void refetchTitle()
+                      
                       setAddModal({
                         ...addModal,
                         open: false,
@@ -630,7 +618,10 @@ const TitleWithGrid = (props: Props) => {
           position: "relative",
           display: "grid",
           gridTemplateColumns: "repeat(12, 1fr)",
-          gap: "1rem",
+          gridAutoRows:'max-content',
+          gap: "0.3rem",
+          alignItems:'center',
+          justifyContent:'center'
         }}
       >
         <IconButton
@@ -669,7 +660,14 @@ const TitleWithGrid = (props: Props) => {
         >
           {props.title} - {props.id}
         </Typography>
-        {formList.map((item: FormObjComplete) => {
+        {dataTitle?.formTitle_getFormTitle?.result?.formObjectFormTitles.map((item: {
+          formObjectId: number;
+          formTitleId: number;
+          gridColumn: number;
+          gridColumnStart: number;
+          gridRow: number;
+          id: number;
+        }) => {
           if (item.gridRow != 0) {
             if (item.gridRow > lastRow) setLastRow(item.gridRow);
           }
@@ -681,31 +679,28 @@ const TitleWithGrid = (props: Props) => {
           if (table[item.gridRow - 1] == undefined) {
             setTable([...table, item.gridColumn]);
           }
-          if (table[item.gridRow - 1] == 0) {
+          else if (table[item.gridRow - 1] == 0) {
             table[item.gridRow - 1] = item.gridColumn;
             setTable([...table]);
+          }
+          else if(table[item.gridRow - 1] < item.gridColumnStart +item.gridColumn -1){
+            table[item.gridRow -1] = item.gridColumnStart +item.gridColumn -1
+            setTable([...table])
           }
 
           console.log("item", item);
 
           return (
-            <FormObject
-              color={item.color}
-              formObjectType={item.formObjectType}
-              stickyText={item.stickyText}
-              label={item.label}
-              unit={item.unit}
-              id={item.id}
-              name={item.label}
-              girdColumnStart={item.gridColumnStart}
-              gridColumn={item.gridColumn}
-              gridRow={item.gridRow}
-              key={item.id}
-              isDeletable={true}
-              handleDelete={handleDeleteFormObj}
-              // @ts-ignore
-              menuItems={item.menuItems ? item.menuItems : []}
-            />
+            <FormObjectWihQuery
+            id={item.formObjectId}
+            deleteId={item.id}
+            gridColumn={item.gridColumn}
+            gridRow={item.gridRow}
+            girdColumnStart={item.gridColumnStart}
+            key={item.id}
+            name=""
+            isDeletable
+          />
             // <Box
             // sx={{
             //   gridColumn: `${item.gridColumnStart}/span ${ item.gridColumn}`,
