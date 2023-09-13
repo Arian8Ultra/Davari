@@ -26,6 +26,7 @@ const Contracts = () => {
         "boxShadow": "none",
         "&:hover": {
           backgroundColor: GreenLight,
+          color:Green
         },
       }}
     >

@@ -84,13 +84,14 @@ export const SideBarMenu = [
         icon: <BsInputCursorText />,
         hasLink: true,
         hasCollapse: false,
-      },{
-        primary: "debug",
-        to: "/test",
-        icon: <VscDebug/>,
-        hasLink:true,
-        hasCollapse: false,
-      }
+      },
+      // {
+      //   primary: "debug",
+      //   to: "/test",
+      //   icon: <VscDebug/>,
+      //   hasLink:true,
+      //   hasCollapse: false,
+      // }
     ],
   },
 ];

@@ -61,7 +61,7 @@ function FileButton(props: FileButtonProps) {
   const minWidth =
     props.minWidth != null ? props.minWidth : "max-content";
   const textColor =
-    props.textColor != null ? props.textColor : onPrimary;
+    props.textColor != null ? props.textColor : secondaryLight;
   const backgroundColor =
     props.backgroundColor != null ? props.backgroundColor : primary;
   const hoverColor =
@@ -119,7 +119,7 @@ function FileButton(props: FileButtonProps) {
         width: width,
         height: height,
         borderRadius: borderRadius,
-        color: textColor,
+        color: hoverColor,
         backgroundColor: backgroundColor,
         fontSize: fontSize,
         position: position,
@@ -148,6 +148,7 @@ function FileButton(props: FileButtonProps) {
         "&:hover": {
           backgroundColor: hoverColor,
           boxShadow: boxShadow,
+          color:backgroundColor
         },
       }}
       disabled={props.disabled}

@@ -74,7 +74,7 @@ const FormCard = (props: FormCardProps) => {
         borderTop: "none",
         width: "100%",
         display: "grid",
-        gridTemplateColumns: "repeat(5,1fr)",
+        gridTemplateColumns: "repeat(10,1fr)",
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
@@ -88,15 +88,37 @@ const FormCard = (props: FormCardProps) => {
         sx={{
           padding: "0.5rem 1rem",
           width: "100%",
+          textAlign: "center",
           borderRight: "1px solid #ccc",
           gridColumn: {
-            xs: "span 5",
-            lg: "span 3",
+            xs: "span 1",
+            lg: "span 1",
           },
+        }}
+      >
+        <Typography
+          variant="body1"
+          textAlign={{
+            xs: "center",
+            lg: "center",
+          }}
+        >
+          {props.id}
+        </Typography>
+      </Box>
+      <Box
+        sx={{
+          padding: "0.5rem 1rem",
+          width: "100%",
+          borderRight: "1px solid #ccc",
           cursor: "pointer",
           transition: "all ease-in-out 0.3s",
           background: open ? primaryLighter : "white",
-
+          gridColumn: {
+            xs: "span 6",
+            md: "span 5",
+            lg: "span 5",
+          },
           "&:hover": {
             color: primary,
             borderRadius: "15px 15px 0 0",
@@ -111,6 +133,11 @@ const FormCard = (props: FormCardProps) => {
             xs: "center",
             lg: "start",
           }}
+          fontSize={{
+            xs: "0.8rem",
+            md: "0.9rem",
+            lg: "1rem",
+          }}
         >
           {props.title}
         </Typography>
@@ -120,15 +147,17 @@ const FormCard = (props: FormCardProps) => {
           padding: "0.25rem 0.5rem",
           width: "100%",
           display: "flex",
+          flexWrap: "wrap",
           gap: "5px",
           justifyContent: {
             xs: "center",
-            lg: "flex-end",
+            lg: "center",
           },
           alignItems: "center",
           gridColumn: {
-            xs: "span 5",
-            lg: "span 2",
+            xs: "span 3",
+            md: "span 4",
+            lg: "span 4",
           },
         }}
       >
@@ -141,7 +170,11 @@ const FormCard = (props: FormCardProps) => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            fontSize: "12px",
+            fontSize: {
+              xs: "0.8rem",
+              md: "0.6rem",
+              lg: "0.8rem",
+            },
             "&:hover": {
               background: GreenLight,
               color: Green,
@@ -168,7 +201,11 @@ const FormCard = (props: FormCardProps) => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            fontSize: "12px",
+            fontSize: {
+              xs: "0.8rem",
+              md: "0.6rem",
+              lg: "0.8rem",
+            },
             "&:hover": {
               background: primaryLightTransparent,
               color: primary,
@@ -195,7 +232,11 @@ const FormCard = (props: FormCardProps) => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            fontSize: "12px",
+            fontSize: {
+              xs: "0.8rem",
+              md: "0.6rem",
+              lg: "0.8rem",
+            },
             "&:hover": {
               background: RedLight,
               color: Red,

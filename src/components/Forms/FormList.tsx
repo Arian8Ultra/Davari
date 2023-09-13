@@ -1,9 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import {
-  useQuery
-} from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { Box, Skeleton, Stack } from "@mui/material";
 import {
   GET_COMPLAINT_ANSWER_FORMS,
@@ -66,7 +64,10 @@ const FormList = (props: FormListProps) => {
           >
             فرم های شکایات
           </Box>
-          <Box display={"grid"} gridTemplateColumns={"repeat(5,1fr)"}>
+          <Box
+            display={"grid"}
+            gridTemplateColumns={"repeat(10,1fr)"}
+          >
             <Box
               sx={{
                 padding: "0.5rem 1rem",
@@ -75,8 +76,34 @@ const FormList = (props: FormListProps) => {
                 borderInline: "1px solid #ccc",
                 borderBottom: "1px solid #ccc",
                 gridColumn: {
-                  xs: "span 5",
-                  lg: "span 3",
+                  xs: "span 1",
+                  lg: "span 1",
+                },
+                fontSize: {
+                  xs: "1rem",
+                  md: "0.6rem",
+                  lg: "0.8rem",
+                },
+              }}
+            >
+              کد
+            </Box>
+            <Box
+              sx={{
+                padding: "0.5rem 1rem",
+                width: "100%",
+                textAlign: "center",
+                borderRight: "1px solid #ccc",
+                borderBottom: "1px solid #ccc",
+                gridColumn: {
+                  xs: "span 6",
+                  md: "span 5",
+                  lg: "span 5",
+                },
+                fontSize: {
+                  xs: "1rem",
+                  md: "0.6rem",
+                  lg: "0.8rem",
                 },
               }}
             >
@@ -90,8 +117,14 @@ const FormList = (props: FormListProps) => {
                 borderRight: "1px solid #ccc",
                 borderBottom: "1px solid #ccc",
                 gridColumn: {
-                  xs: "span 5",
-                  lg: "span 2",
+                  xs: "span 3",
+                  md: "span 4",
+                  lg: "span 4",
+                },
+                fontSize: {
+                  xs: "1rem",
+                  md: "0.6rem",
+                  lg: "0.8rem",
                 },
               }}
             >
@@ -142,9 +175,12 @@ const FormList = (props: FormListProps) => {
               borderRadius: "5px 5px 0 0",
             }}
           >
-            فرم های پاسخ به شکایات
+            فرم های پاسخ شکایات
           </Box>
-          <Box display={"grid"} gridTemplateColumns={"repeat(5,1fr)"}>
+          <Box
+            display={"grid"}
+            gridTemplateColumns={"repeat(10,1fr)"}
+          >
             <Box
               sx={{
                 padding: "0.5rem 1rem",
@@ -153,8 +189,34 @@ const FormList = (props: FormListProps) => {
                 borderInline: "1px solid #ccc",
                 borderBottom: "1px solid #ccc",
                 gridColumn: {
-                  xs: "span 5",
-                  lg: "span 3",
+                  xs: "span 1",
+                  lg: "span 1",
+                },
+                fontSize: {
+                  xs: "1rem",
+                  md: "0.6rem",
+                  lg: "0.8rem",
+                },
+              }}
+            >
+              کد
+            </Box>
+            <Box
+              sx={{
+                padding: "0.5rem 1rem",
+                width: "100%",
+                textAlign: "center",
+                borderRight: "1px solid #ccc",
+                borderBottom: "1px solid #ccc",
+                gridColumn: {
+                  xs: "span 6",
+                  md: "span 5",
+                  lg: "span 5",
+                },
+                fontSize: {
+                  xs: "1rem",
+                  md: "0.6rem",
+                  lg: "0.8rem",
                 },
               }}
             >
@@ -168,8 +230,14 @@ const FormList = (props: FormListProps) => {
                 borderRight: "1px solid #ccc",
                 borderBottom: "1px solid #ccc",
                 gridColumn: {
-                  xs: "span 5",
-                  lg: "span 2",
+                  xs: "span 3",
+                  md: "span 4",
+                  lg: "span 4",
+                },
+                fontSize: {
+                  xs: "1rem",
+                  md: "0.6rem",
+                  lg: "0.8rem",
                 },
               }}
             >
