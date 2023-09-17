@@ -28,7 +28,7 @@ const AddContract = () => {
       gridTemplateColumns={"repeat(12, 1fr)"}
       alignItems={"center"}
       justifyContent={"center"}
-      gap={4}
+      gap={2}
       padding={"2rem"}
     >
         <BackButton to="/complaints"/>
