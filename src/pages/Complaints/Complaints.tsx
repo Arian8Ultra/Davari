@@ -2,8 +2,9 @@ import { useState } from "react";
 import ComplaintsList from "../../components/Complaints/ComplaintsList";
 import NewModal from "../../components/Modals";
 import { Box, Button, TextField } from "@mui/material";
-import { Green, GreenLight, background } from "../../theme/color";
+import { Green, GreenLight, Yellow, YellowLight, background } from "../../theme/color";
 import { AiFillFileAdd } from "react-icons/ai";
+import { useNavigate } from "react-router-dom";
 
 const Complaints = () => {
   const [addModal, setAddModal] = useState({
@@ -20,6 +21,7 @@ const Complaints = () => {
     complaintDescription: "",
     complaintCategory: "",
   });
+  const navigate = useNavigate();
   return (
     <>
       <Box
@@ -29,16 +31,16 @@ const Complaints = () => {
         paddingY={1}
       >
         <Button
-          variant='contained'
+          variant="contained"
           endIcon={<AiFillFileAdd />}
           onClick={() => [setAddModal({ ...addModal, open: true })]}
           sx={{
-            "borderRadius": 2,
-            "backgroundColor": Green,
-            "fontWeight": 700,
-            "fontStyle": "normal",
-            "fontSize": "1rem",
-            "boxShadow": "none",
+            borderRadius: 2,
+            backgroundColor: Green,
+            fontWeight: 700,
+            fontStyle: "normal",
+            fontSize: "1rem",
+            boxShadow: "none",
             "&:hover": {
               backgroundColor: GreenLight,
             },
@@ -50,7 +52,7 @@ const Complaints = () => {
       <ComplaintsList />
 
       <NewModal
-        name='ثبت شکایت'
+        name="ثبت شکایت"
         width={{
           xs: "90%",
           sm: "60%",
@@ -73,8 +75,8 @@ const Complaints = () => {
           }}
         >
           <TextField
-            label='عنوان پروژه'
-            variant='outlined'
+            label="شماره قرارداد"
+            variant="outlined"
             value={addModal.projectTitle}
             onChange={(e) =>
               setAddModal({
@@ -83,108 +85,29 @@ const Complaints = () => {
               })
             }
           />
-          <TextField
-            label='توضیحات پروژه'
-            variant='outlined'
-            value={addModal.projectDescription}
-            onChange={(e) =>
-              setAddModal({
-                ...addModal,
-                projectDescription: e.target.value,
-              })
-            }
-          />
-          <TextField
-            label='مدیر پروژه'
-            variant='outlined'
-            value={addModal.projectManager}
-            onChange={(e) =>
-              setAddModal({
-                ...addModal,
-                projectManager: e.target.value,
-              })
-            }
-          />
-          <TextField
-            label='تاریخ شروع پروژه'
-            variant='outlined'
-            value={addModal.projectStartDate}
-            onChange={(e) =>
-              setAddModal({
-                ...addModal,
-                projectStartDate: e.target.value,
-              })
-            }
-          />
-          <TextField
-            label='تاریخ پایان پروژه'
-            variant='outlined'
-            value={addModal.projectEndDate}
-            onChange={(e) =>
-              setAddModal({
-                ...addModal,
-                projectEndDate: e.target.value,
-              })
-            }
-          />
-          <TextField
-            label='وضعیت پروژه'
-            variant='outlined'
-            value={addModal.projectStatus}
-            onChange={(e) =>
-              setAddModal({
-                ...addModal,
-                projectStatus: e.target.value,
-              })
-            }
-          />
-          <TextField
-            label='دپارتمان'
-            variant='outlined'
-            value={addModal.projectDepartment}
-            onChange={(e) =>
-              setAddModal({
-                ...addModal,
-                projectDepartment: e.target.value,
-              })
-            }
-          />
-          <TextField
-            label='عنوان شکایت'
-            variant='outlined'
-            value={addModal.complaintTitle}
-            onChange={(e) =>
-              setAddModal({
-                ...addModal,
-                complaintTitle: e.target.value,
-              })
-            }
-          />
-          <TextField
-            label='توضیحات شکایت'
-            variant='outlined'
-            value={addModal.complaintDescription}
-            onChange={(e) =>
-              setAddModal({
-                ...addModal,
-                complaintDescription: e.target.value,
-              })
-            }
-          />
-          <TextField
-            label='دسته بندی شکایت'
-            variant='outlined'
-            value={addModal.complaintCategory}
-            onChange={(e) =>
-              setAddModal({
-                ...addModal,
-                complaintCategory: e.target.value,
-              })
-            }
-          />
-
           <Button
-            variant='contained'
+            variant="contained"
+            sx={{
+              borderRadius: 2,
+              backgroundColor: Yellow,
+              fontWeight: 700,
+              fontStyle: "normal",
+              fontSize: "1rem",
+              boxShadow: "none",
+              height: "max-content",
+              color: "black",
+              "&:hover": {
+                backgroundColor: YellowLight,
+              },
+            }}
+            onClick={()=>{
+              navigate("addContract")
+            }}
+          >
+            نداشتن کد قرارداد و ادامه
+          </Button>
+          <Button
+            variant="contained"
             sx={{
               borderRadius: 2,
               backgroundColor: Green,
@@ -202,7 +125,7 @@ const Complaints = () => {
               },
             }}
           >
-            ثبت شکایت
+            ادامه
           </Button>
         </Box>
       </NewModal>

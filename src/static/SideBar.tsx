@@ -26,14 +26,14 @@ export const SideBarMenu = [
     hasCollapse: false,
     children: [],
   },
-  {
-    primary: Titles.contracts,
-    to: "/contracts",
-    icon: <VscFile />,
-    hasLink: true,
-    hasCollapse: false,
-    children: [],
-  },
+  // {
+  //   primary: Titles.contracts,
+  //   to: "/contracts",
+  //   icon: <VscFile />,
+  //   hasLink: true,
+  //   hasCollapse: false,
+  //   children: [],
+  // },
   {
     primary: Titles.portal,
     to: "/portal",

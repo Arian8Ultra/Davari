@@ -28,6 +28,8 @@ import {
   useState,
 } from "react";
 import { DELETE_FORM_OBJ_FROM_COMPLAINT_FORM, DELETE_FORM_OBJ_FROM_TITLE } from "../../GraphQL/FormObj/Mutation";
+
+
 interface Props{
   name: string;
   gridColumn?: number;

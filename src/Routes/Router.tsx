@@ -20,6 +20,7 @@ import EditForm from "../pages/Admin/FormManager/EditForm/EditForm";
 import NewAddForm from "../pages/Admin/FormManager/AddForm/NewAddForm";
 import Contracts from "../pages/Contracts/Contracts";
 import ViewFormAll from "../pages/Contracts/ViewForm/ViewForm";
+import AddContract from "../pages/Complaints/AddContract/AddContract";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -28,6 +29,8 @@ const router = createBrowserRouter(
         <Route path="" element={<Home />} />
         <Route path="home" element={<Home />} />
         <Route path="complaints" element={<Complaints />} />
+        <Route path="complaints/addContract" element={<AddContract />} />
+
         <Route path="contracts" element={<Contracts />} />
         <Route path="portal" element={<Protal />} />
         <Route path="portal/messages" element={<Messages />} />

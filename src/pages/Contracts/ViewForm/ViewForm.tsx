@@ -94,16 +94,7 @@ const ViewFormAll = () => {
                   key={index}
                   id={item.id}
                   row={index + 1}
-                  // setValue={setValue}
-                  // value={value}
                   />
-                // <FormObjPreviewWithQuery
-                //   key={index}
-                //   formObjectId={item.formObjectId}
-                //   gridColumn={item.gridColumn}
-                //   gridRow={item.gridRow}
-                //   girdColumnStart={item.gridColumnStart}
-                // />
               );
             }
           )}
