@@ -43,6 +43,15 @@ const AddContract = () => {
       padding={"2rem"}
     >
       <BackButton to="/complaints" />
+
+      {/* 
+
+
+      1-4- نمايندگان (وكلا)
+
+
+      
+      */}
       <Typography variant="h5" gridColumn={"span 12"}>
         {"1-4- نمايندگان (وكلا): "}
       </Typography>
@@ -76,6 +85,14 @@ const AddContract = () => {
           gridColumn: "span 12",
         }}
       />
+
+      {/* 
+
+
+        2- تابعيت
+
+      
+      */}
       <Typography variant="h5" gridColumn={"span 12"}>
         {"2- تابعيت: "}
       </Typography>
@@ -109,6 +126,15 @@ const AddContract = () => {
           gridColumn: "span 12",
         }}
       />
+
+      {/* 
+
+
+        3- مشخصات خوانده (امضاکننده قرارداد)
+
+      
+      */}
+
       <Typography variant="h5" gridColumn={"span 12"}>
         {"3- مشخصات خوانده (امضاکننده قرارداد): "}
       </Typography>
@@ -188,6 +214,13 @@ const AddContract = () => {
 
       <Divider sx={{ gridColumn: "span 12" }} />
 
+      {/* 
+
+
+        4- مشخصات قرارداد
+
+      
+      */}
       <Typography variant="h5" gridColumn={"span 12"}>
         {"4- مشخصات قرارداد: "}
       </Typography>
@@ -255,10 +288,24 @@ const AddContract = () => {
 
       <Divider sx={{ gridColumn: "span 12" }} />
 
+      {/* 
+
+
+        4-1- موضوع قرارداد
+
+      
+      */}
       <Typography variant="h5" gridColumn={"span 12"}>
         4-1- موضوع قرارداد:
       </Typography>
 
+      {/* 
+
+
+        4-2
+
+      
+      */}
       <Typography variant="h6" gridColumn={"span 1"}>
         4-2-
       </Typography>
@@ -287,7 +334,13 @@ const AddContract = () => {
           gridColumn: "span 12",
         }}
       />
+      {/* 
 
+
+        4-3
+
+      
+      */}
       <Typography variant="h6" gridColumn={"span 1"}>
         4-3-
       </Typography>
@@ -311,6 +364,14 @@ const AddContract = () => {
           gridColumn: "span 12",
         }}
       />
+
+      {/* 
+
+
+        4-4
+
+      
+      */}
       <Typography variant="h6" gridColumn={"span 1"}>
         4-4-
       </Typography>
@@ -334,9 +395,25 @@ const AddContract = () => {
           gridColumn: "span 12",
         }}
       />
+
+      {/* 
+
+
+        4-5- فهرست‌هاي پايه منضم به پيمان و سال انتشار
+
+      
+      */}
       <Typography variant="h6" gridColumn={"span 12"}>
         4-5- فهرست‌هاي پايه منضم به پيمان و سال انتشار{" "}
       </Typography>
+
+      {/* 
+
+
+        4-5-1- فهرست بهاي واحد پايه رشته
+
+      
+      */}
       <Typography variant="body1" gridColumn={"span 1"}>
         4-5-1-
       </Typography>
@@ -358,6 +435,14 @@ const AddContract = () => {
           gridColumn: "span 12",
         }}
       />
+
+      {/* 
+
+
+        4-6- فهرست بهاي خاص (غيرپايه) منضم به پيمان
+
+      
+      */}
       <Typography variant="h6" gridColumn={"span 12"}>
         4-6- فهرست بهاي خاص (غيرپايه) منضم به پيمان:
       </Typography>
@@ -387,6 +472,14 @@ const AddContract = () => {
           gridColumn: "span 12",
         }}
       />
+
+      {/* 
+
+
+        4-7- "ضريب پيشنهادي
+
+      
+      */}
       <Typography variant="h6" gridColumn={"span 1"}>
         4-7-{" "}
       </Typography>
@@ -420,6 +513,14 @@ const AddContract = () => {
           gridColumn: "span 12",
         }}
       />
+
+      {/* 
+
+
+        4-8- نحوه واگذاري كار
+
+      
+      */}
       <Typography variant="h6" gridColumn={"span 1"}>
         4-8-
       </Typography>
@@ -462,6 +563,14 @@ const AddContract = () => {
           gridColumn: "span 12",
         }}
       />
+
+      {/* 
+
+
+        4-9- پيمان مشمول تعديل
+
+      
+      */}
       <Typography variant="h6" gridColumn={"span 1"}>
         4-9-
       </Typography>
@@ -498,6 +607,14 @@ const AddContract = () => {
           gridColumn: "span 12",
         }}
       />
+
+      {/* 
+
+
+        4-10- دوره شاخص مبنا
+
+      
+      */}
       <Typography variant="h6" gridColumn={"span 2"}>
         4-10- دوره شاخص مبنا
       </Typography>
@@ -527,9 +644,24 @@ const AddContract = () => {
           gridColumn: "span 12",
         }}
       />
+
+      {/* 
+
+
+        4-11- تاريخ شروع كار
+
+      
+      */}
       <Typography variant="h6" gridColumn={"span 2"}>
         4-11- تاريخ شروع كار:
       </Typography>
+      {/* 
+
+
+        4-12- پيشرفت فيزيكي كار در تاريخ درخواست داوري
+
+      
+      */}
       <Typography variant="h6" gridColumn={"span 2"}>
         4-12- پيشرفت فيزيكي كار در تاريخ درخواست داوري:{" "}
       </Typography>
@@ -586,7 +718,13 @@ const AddContract = () => {
           gridColumn: "span 3",
         }}
       />
+      {/* 
 
+
+        4-13- پيشرفت ریالی كار در تاريخ درخواست داوري
+
+      
+      */}
       <Typography variant="h6" gridColumn={"span 5"}>
         4-13- پيشرفت ریالی كار در تاريخ درخواست داوري:{" "}
       </Typography>
@@ -623,6 +761,14 @@ const AddContract = () => {
           gridColumn: "span 12",
         }}
       />
+
+      {/* 
+
+
+        4-14- وضعیت قرارداد در تاریخ درخواست داوری
+
+      
+      */}
       <Typography variant="h6" gridColumn={"span 4"}>
         4-14- وضعیت قرارداد در تاریخ درخواست داوری:
       </Typography>
@@ -682,6 +828,14 @@ const AddContract = () => {
           gridColumn: "span 12",
         }}
       />
+
+      {/* 
+
+
+        4-15- دستگاه نظارت (مهندس مشاور) 
+
+      
+      */}
       <Typography variant="h6" gridColumn={"span 1"}>
         4-15-
       </Typography>
@@ -702,6 +856,13 @@ const AddContract = () => {
           gridColumn: "span 12",
         }}
       />
+      {/* 
+
+
+        4-16- تاخیرات
+
+      
+      */}
       <Typography variant="h6" gridColumn={"span 12"}>
         4-16- تاخیرات
       </Typography>
@@ -759,7 +920,13 @@ const AddContract = () => {
         }}
       />
       <Divider sx={{ gridColumn: "span 12" }} />
+      {/* 
 
+
+        توجهات
+
+      
+      */}
       <Typography
         variant="h5"
         fontWeight={800}
