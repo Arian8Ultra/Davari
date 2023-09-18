@@ -38,8 +38,8 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-primaryLight);
-  border-radius: 50px;
+  background: var(--color-primary);
+  /* border-radius: 50px; */
 }
 
 ::-webkit-scrollbar-thumb:hover {
