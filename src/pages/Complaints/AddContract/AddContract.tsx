@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import {
   Box,
   Checkbox,
@@ -21,9 +24,92 @@ import BackButton from "../../../components/BackButton";
 import countries from "../../../static/Countries";
 
 const AddContract = () => {
-  const [peoples, setPeoples] = React.useState([
+  const [RelatedPeople, setRelatedPeople] = React.useState([
     { name: "" as string, phone: "" as string },
   ]);
+  const [AccuserNationality, setAccuserNationality] =
+    React.useState("");
+  const [AccusedNationality, setAccusedNationality] =
+    React.useState("");
+  const [contratDetails, setContratDetails] = React.useState({
+    contratTypes: [] as string[],
+    other: false as boolean,
+    CircularNumber: "" as string,
+    CircularDate: "" as string,
+  });
+  const [ContractSubject, setContractSubject] = React.useState("");
+  const [ContractNumber, setContractNumber] = React.useState("");
+  const [ContractDate, setContractDate] = React.useState("");
+  const [InitialBudget, setInitialBudget] = React.useState("");
+  const [InitialTimePeriod, setInitialTimePeriod] =
+    React.useState("");
+  const [
+    PriceListOfBasicUnitOfField,
+    setPriceListOfBasicUnitOfField,
+  ] = React.useState([{ year: "" as string, price: "" as string }]);
+
+  const [
+    IsSpecialPriceListAttachedToContract,
+    setIsSpecialPriceListAttachedToContract,
+  ] = React.useState(false);
+
+  const [RecommendedCoefficient, setRecommendedCoefficient] =
+    React.useState("");
+
+  const [CoefficientType, setCoefficientType] = React.useState("");
+  const [AssigningType, setAssigningType] = React.useState("");
+  const [DoesContainAdjustment, setDoesContainAdjustment] =
+    React.useState(true);
+  const [BaseIndexPeriod, setBaseIndexPeriod] = React.useState({
+    month: "",
+    year: "",
+  });
+  const [OperationStartDateAccuser, setOperationStartDateAccuser] =
+    React.useState("");
+  const [OperationStartDateAccused, setOperationStartDateAccused] =
+    React.useState("");
+  const [
+    PhysicalProgressInArbitrationDateAccuser,
+    setPhysicalProgressInArbitrationDateAccuser,
+  ] = React.useState("");
+  const [
+    PhysicalProgressInArbitrationDateAccused,
+    setPhysicalProgressInArbitrationDateAccused,
+  ] = React.useState("");
+
+  const [
+    FinancialProgressInArbitrationDateAccuser,
+    setFinancialProgressInArbitrationDateAccuser,
+  ] = React.useState("");
+  const [
+    FinancialProgressInArbitrationDateAccused,
+    setFinancialProgressInArbitrationDateAccused,
+  ] = React.useState("");
+
+  const [
+    ContractStatusInArbitration,
+    setContractStatusInArbitration,
+  ] = React.useState("");
+
+  const [
+    ContractStatusInArbitrationDate,
+    setContractStatusInArbitrationDate,
+  ] = React.useState("");
+
+  const [SupervisionDepartment, setSupervisionDepartment] =
+    React.useState("");
+
+  const [AuthorizedDelaysAccuser, setAuthorizedDelaysAccuser] =
+    React.useState("");
+
+  const [AuthorizedDelaysAccused, setAuthorizedDelaysAccused] =
+    React.useState("");
+
+  const [UnauthorizedDelaysAccuser, setUnauthorizedDelaysAccuser] =
+    React.useState("");
+  const [UnauthorizedDelaysAccused, setUnauthorizedDelaysAccused] =
+    React.useState("");
+
   countries.sort((a, b) => {
     if (a.name_fa < b.name_fa) {
       return -1;
@@ -114,6 +200,10 @@ const AddContract = () => {
           variant="outlined"
           sx={{ gridColumn: "span 4" }}
           select
+          value={AccuserNationality}
+          onChange={(e) => {
+            setAccuserNationality(e.target.value);
+          }}
         >
           {countries.map((item, index) => (
             <MenuItem key={index} value={item.name_fa}>
@@ -126,6 +216,10 @@ const AddContract = () => {
           variant="outlined"
           sx={{ gridColumn: "8 /span 4" }}
           select
+          value={AccusedNationality}
+          onChange={(e) => {
+            setAccusedNationality(e.target.value);
+          }}
         >
           {countries.map((item, index) => (
             <MenuItem key={index} value={item.name_fa}>
@@ -155,7 +249,7 @@ const AddContract = () => {
           اسامی و تلفن (ثابت و همراه) افراد مطلع و مرتبط با پروژه:
         </Typography>
 
-        {peoples.map((item, index) => (
+        {RelatedPeople.map((item, index) => (
           <Box
             key={index}
             gridColumn={{
@@ -183,10 +277,10 @@ const AddContract = () => {
                 sx={{ gridColumn: "span 1" }}
                 value={item.name}
                 onChange={(e) => {
-                  const newPeoples = [...peoples];
+                  const newPeoples = [...RelatedPeople];
                   newPeoples[index].name = e.target.value;
-                  setPeoples(newPeoples);
-                  console.log(peoples);
+                  setRelatedPeople(newPeoples);
+                  console.log(RelatedPeople);
                 }}
               ></TextField>
               <TextField
@@ -197,10 +291,10 @@ const AddContract = () => {
                 sx={{ gridColumn: "span 1" }}
                 value={item.phone}
                 onChange={(e) => {
-                  const newPeoples = [...peoples];
+                  const newPeoples = [...RelatedPeople];
                   newPeoples[index].phone = e.target.value;
-                  setPeoples(newPeoples);
-                  console.log(peoples);
+                  setRelatedPeople(newPeoples);
+                  console.log(RelatedPeople);
                 }}
               ></TextField>
             </Box>
@@ -219,7 +313,10 @@ const AddContract = () => {
             margin: "0rem 2rem",
           }}
           onClick={() => {
-            setPeoples([...peoples, { name: "", phone: "" }]);
+            setRelatedPeople([
+              ...RelatedPeople,
+              { name: "", phone: "" },
+            ]);
           }}
         >
           <Add />
@@ -251,57 +348,251 @@ const AddContract = () => {
           <FormControlLabel
             control={<Checkbox />}
             label="•	موافقتنامه و شرایط عمومی و شرایط خصوصی پیمان‌ها- نشریه شماره ۴۳۱۱ – بخشنامه شماره 842/54-1088/102 مورخ ۱۳۷۸/۰۳/۰۳ "
+            onChange={(e) => {
+              setContratDetails({
+                ...contratDetails,
+                // @ts-ignore
+                contratTypes: e.target.checked
+                  ? // @ts-ignore
+                    [...contratDetails.contratTypes, e.target.value]
+                  : contratDetails.contratTypes.filter(
+                      // @ts-ignore
+                      (item) => item !== e.target.value
+                    ),
+              });
+            }}
           />
           <FormControlLabel
             control={<Checkbox />}
             label="•	انعقاد پیمان اجرای کارهای ساختمانی به صورت سرجمع- بخشنامه شماره ۹۶/۱۲۹۹۱۸۸ مورخ 1396/05/04 "
+            onChange={(e) => {
+              setContratDetails({
+                ...contratDetails,
+                // @ts-ignore
+                contratTypes: e.target.checked
+                  ? // @ts-ignore
+                    [...contratDetails.contratTypes, e.target.value]
+                  : contratDetails.contratTypes.filter(
+                      // @ts-ignore
+                      (item) => item !== e.target.value
+                    ),
+              });
+            }}
           />
           <FormControlLabel
             control={<Checkbox />}
             label="•	انعقاد پیمان اجرای کارهای ساختمانی به صورت سرجمع- بخشنامه شماره 100/6405  مورخ 1389/02/04 "
+            onChange={(e) => {
+              setContratDetails({
+                ...contratDetails,
+                // @ts-ignore
+                contratTypes: e.target.checked
+                  ? // @ts-ignore
+                    [...contratDetails.contratTypes, e.target.value]
+                  : contratDetails.contratTypes.filter(
+                      // @ts-ignore
+                      (item) => item !== e.target.value
+                    ),
+              });
+            }}
           />
           <FormControlLabel
             control={<Checkbox />}
             label="•	انعقاد پیمان بر اساس فهرست بهای تجمیع شده راه، باند فرودگاه و زیرسازی راه آهن – شماره 65637/100 مورخ 1391/08/14 "
+            onChange={(e) => {
+              setContratDetails({
+                ...contratDetails,
+                // @ts-ignore
+                contratTypes: e.target.checked
+                  ? // @ts-ignore
+                    [...contratDetails.contratTypes, e.target.value]
+                  : contratDetails.contratTypes.filter(
+                      // @ts-ignore
+                      (item) => item !== e.target.value
+                    ),
+              });
+            }}
           />
           <FormControlLabel
             control={<Checkbox />}
             label="•	موافقتنامه و شرایط عمومی همسان قراردادهای خدمات مشاوره - نشریه شماره ۴۳۱۸- بخشنامه شماره ۱۰۵/۸۴۲-۵۴/۲۴۶۰- مورخ ۱۳۷۹/۰۴/۲۹ "
+            onChange={(e) => {
+              setContratDetails({
+                ...contratDetails,
+                // @ts-ignore
+                contratTypes: e.target.checked
+                  ? // @ts-ignore
+                    [...contratDetails.contratTypes, e.target.value]
+                  : contratDetails.contratTypes.filter(
+                      // @ts-ignore
+                      (item) => item !== e.target.value
+                    ),
+              });
+            }}
           />
           <FormControlLabel
             control={<Checkbox />}
             label="•	موافقتنامه و شرایط عمومی همسان قراردادهای خدمات مشاوره پژوهشی - نشریه شماره 3419- بخشنامه شماره 2753/54-1670/102 مورخ ۱۳۷۹/۰5/۲۴ "
+            onChange={(e) => {
+              setContratDetails({
+                ...contratDetails,
+                // @ts-ignore
+                contratTypes: e.target.checked
+                  ? // @ts-ignore
+                    [...contratDetails.contratTypes, e.target.value]
+                  : contratDetails.contratTypes.filter(
+                      // @ts-ignore
+                      (item) => item !== e.target.value
+                    ),
+              });
+            }}
           />
           <FormControlLabel
             control={<Checkbox />}
             label="•	موافقتنامه و شرایط عمومی همسان قراردادهای خدمات مدیریت طرح- نشریه شماره ۲۴۱۲۱ مورخ ۱۳۸۰/۰۱/۲۸ "
+            onChange={(e) => {
+              setContratDetails({
+                ...contratDetails,
+                // @ts-ignore
+                contratTypes: e.target.checked
+                  ? // @ts-ignore
+                    [...contratDetails.contratTypes, e.target.value]
+                  : contratDetails.contratTypes.filter(
+                      // @ts-ignore
+                      (item) => item !== e.target.value
+                    ),
+              });
+            }}
           />
           <FormControlLabel
             control={<Checkbox />}
             label="•	موافقتنامه، پیوست‌ها، شرایط عمومی و شرایط خصوصی پیمان‌های مهندسی، تأمین کالا و تجهیزات، ساختمان و نصب به صورت توأم (EPC) برای کارهای صنعتی - نشریه شماره ۵۴۹۰ مورخ ۰۱/۰۳/۱۳۸۱ "
+            onChange={(e) => {
+              setContratDetails({
+                ...contratDetails,
+                // @ts-ignore
+                contratTypes: e.target.checked
+                  ? // @ts-ignore
+                    [...contratDetails.contratTypes, e.target.value]
+                  : contratDetails.contratTypes.filter(
+                      // @ts-ignore
+                      (item) => item !== e.target.value
+                    ),
+              });
+            }}
           />
           <FormControlLabel
             control={<Checkbox />}
             label="•	موافقتنامه، پیوست‌ها، شرایط عمومی و شرایط خصوصی پیمان‌های تامین کالا و تجهیزات، ساختمان و نصب به صورت توام  (PC)، برای کارهای صنعتی مورخ  ۱۸/۱۲/۱۳۸۳ "
+            onChange={(e) => {
+              setContratDetails({
+                ...contratDetails,
+                // @ts-ignore
+                contratTypes: e.target.checked
+                  ? // @ts-ignore
+                    [...contratDetails.contratTypes, e.target.value]
+                  : contratDetails.contratTypes.filter(
+                      // @ts-ignore
+                      (item) => item !== e.target.value
+                    ),
+              });
+            }}
           />
           <FormControlLabel
             control={<Checkbox />}
             label="•	قرارداد همسان طرح و ساخت (EPC غیر صنعتی)- 85428/101 مورخ ۱۵/۰۵/۱۳۸۴ "
+            onChange={(e) => {
+              setContratDetails({
+                ...contratDetails,
+                // @ts-ignore
+                contratTypes: e.target.checked
+                  ? // @ts-ignore
+                    [...contratDetails.contratTypes, e.target.value]
+                  : contratDetails.contratTypes.filter(
+                      // @ts-ignore
+                      (item) => item !== e.target.value
+                    ),
+              });
+            }}
           />
           <FormControlLabel
             control={<Checkbox />}
             label="•	موافقت‌نامه مشارکت عمومی- خصوصی (PPP) بخشنامه شماره ۹۳/۱۷۲۸۰۴-مورخ ۲۶/۱۲/۱۳۹۳ "
+            onChange={(e) => {
+              setContratDetails({
+                ...contratDetails,
+                // @ts-ignore
+                contratTypes: e.target.checked
+                  ? // @ts-ignore
+                    [...contratDetails.contratTypes, e.target.value]
+                  : contratDetails.contratTypes.filter(
+                      // @ts-ignore
+                      (item) => item !== e.target.value
+                    ),
+              });
+            }}
           />
           <FormControlLabel
             control={<Checkbox />}
             label="•	موافقتنامه ساخت، بهره‌برداری، واگذاری  (BOT)- نشریه شماره ۴۶۹ مورخ ۲۴/۱۰/۱۳۸۷ "
+            onChange={(e) => {
+              setContratDetails({
+                ...contratDetails,
+                // @ts-ignore
+                contratTypes: e.target.checked
+                  ? // @ts-ignore
+                    [...contratDetails.contratTypes, e.target.value]
+                  : contratDetails.contratTypes.filter(
+                      // @ts-ignore
+                      (item) => item !== e.target.value
+                    ),
+              });
+            }}
           />
           <FormControlLabel
             control={<Checkbox />}
             label="•    سایر "
+            onChange={(e) => {
+              setContratDetails({
+                ...contratDetails,
+                // @ts-ignore
+                other: e.target.checked,
+              });
+            }}
           />
         </FormGroup>
-
+        <TextField
+          label={"شماره بخشنامه"}
+          variant={"outlined"}
+          sx={{
+            gridColumn: "span 2",
+            display: contratDetails.other ? "block" : "none",
+          }}
+          value={contratDetails.CircularNumber}
+          onChange={(e) => {
+            setContratDetails({
+              ...contratDetails,
+              CircularNumber: e.target.value,
+            });
+          }}
+        />
+        <TextField
+          label={"تاریخ بخشنامه"}
+          variant={"outlined"}
+          type={"date"}
+          focused
+          sx={{
+            gridColumn: "span 2",
+            display: contratDetails.other ? "block" : "none",
+          }}
+          value={contratDetails.CircularDate}
+          onChange={(e) => {
+            setContratDetails({
+              ...contratDetails,
+              CircularDate: e.target.value,
+            });
+          }}
+        />
         <Divider sx={{ gridColumn: "span 12" }} />
 
         {/* 
@@ -311,9 +602,31 @@ const AddContract = () => {
 
       
       */}
-        <Typography variant="h5" gridColumn={"span 12"}>
-          4-1- موضوع قرارداد:
+        <Typography variant="h5" gridColumn={"span 1"}>
+          4-1-
         </Typography>
+
+        <TextField
+          label="موضوع قرارداد: "
+          variant="outlined"
+          sx={{ gridColumn: "span 3" }}
+          value={ContractSubject}
+          onChange={(e) => {
+            setContractSubject(e.target.value);
+          }}
+        />
+
+        <div
+          style={{
+            gridColumn: "span 12",
+          }}
+        />
+        <Divider sx={{ gridColumn: "span 6" }} />
+        <div
+          style={{
+            gridColumn: "span 12",
+          }}
+        />
 
         {/* 
 
@@ -329,6 +642,10 @@ const AddContract = () => {
           label="شماره: "
           variant="outlined"
           sx={{ gridColumn: "span 3" }}
+          value={ContractNumber}
+          onChange={(e) => {
+            setContractNumber(e.target.value);
+          }}
         />
         <TextField
           label="تاریخ: "
@@ -336,6 +653,10 @@ const AddContract = () => {
           type="date"
           focused
           sx={{ gridColumn: "span 3" }}
+          value={ContractDate}
+          onChange={(e) => {
+            setContractDate(e.target.value);
+          }}
         />
 
         {/* <Divider sx={{ gridColumn: "span 3" }} /> */}
@@ -363,11 +684,15 @@ const AddContract = () => {
         <TextField
           label="مبلغ اوليه/ حق‌الزحمه: "
           variant="outlined"
-          type="text"
+          type="number"
           InputProps={{
             endAdornment: "ریال",
           }}
           sx={{ gridColumn: "span 3" }}
+          value={InitialBudget}
+          onChange={(e) => {
+            setInitialBudget(e.target.value);
+          }}
         />
         <div
           style={{
@@ -399,6 +724,10 @@ const AddContract = () => {
             endAdornment: "ماه",
           }}
           sx={{ gridColumn: "span 3" }}
+          value={InitialTimePeriod}
+          onChange={(e) => {
+            setInitialTimePeriod(e.target.value);
+          }}
         />
         <div
           style={{
@@ -430,7 +759,82 @@ const AddContract = () => {
 
       
       */}
-        <Typography variant="body1" gridColumn={"span 1"}>
+
+        {PriceListOfBasicUnitOfField.map((item, index) => (
+          <Box
+            key={index}
+            gridColumn={{
+              xs: "span 12",
+              lg: "span 12",
+            }}
+            display={"grid"}
+            gridTemplateColumns={"repeat(12,1fr)"}
+          >
+            <Box
+              gridColumn={{
+                xs: "span 12",
+                lg: "span 6",
+              }}
+              display={"grid"}
+              gridTemplateColumns={"repeat(2,1fr)"}
+              columnGap={"2rem"}
+              padding={"0rem 2rem"}
+            >
+              <TextField
+                label="سال"
+                variant="outlined"
+                autoComplete="name"
+                type="text"
+                sx={{ gridColumn: "span 1" }}
+                value={item.year}
+                onChange={(e) => {
+                  const newPeoples = [...PriceListOfBasicUnitOfField];
+                  newPeoples[index].year = e.target.value;
+                  setPriceListOfBasicUnitOfField(newPeoples);
+                  console.log(PriceListOfBasicUnitOfField);
+                }}
+              ></TextField>
+              <TextField
+                label="فهرست بهاي واحد پايه رشته"
+                variant="outlined"
+                type="number"
+                autoComplete="phone"
+                sx={{ gridColumn: "span 1" }}
+                value={item.price}
+                onChange={(e) => {
+                  const newPeoples = [...PriceListOfBasicUnitOfField];
+                  newPeoples[index].price = e.target.value;
+                  setPriceListOfBasicUnitOfField(newPeoples);
+                  console.log(PriceListOfBasicUnitOfField);
+                }}
+              ></TextField>
+            </Box>
+          </Box>
+        ))}
+
+        <IconButton
+          sx={{
+            gridColumn: "span 12",
+            justifySelf: "start",
+            backgroundColor: Green,
+            color: "white",
+            "&:hover": {
+              backgroundColor: GreenLight,
+              color: Green,
+            },
+            margin: "0rem 2rem",
+          }}
+          onClick={() => {
+            setPriceListOfBasicUnitOfField([
+              ...PriceListOfBasicUnitOfField,
+              { year: "", price: "" },
+            ]);
+          }}
+        >
+          <Add />
+        </IconButton>
+
+        {/* <Typography variant="body1" gridColumn={"span 1"}>
           4-5-1-
         </Typography>
         <TextField
@@ -439,7 +843,7 @@ const AddContract = () => {
             endAdornment: "سال",
           }}
           sx={{ gridColumn: "span 3" }}
-        />
+        /> */}
         <div
           style={{
             gridColumn: "span 12",
@@ -463,19 +867,34 @@ const AddContract = () => {
           4-6- فهرست بهاي خاص (غيرپايه) منضم به پيمان:
         </Typography>
 
-        <RadioGroup defaultValue="true" name="radio-buttons-group" row sx={{
-          gridColumn: "span 6",
-        }}>
+        <RadioGroup
+          defaultValue={IsSpecialPriceListAttachedToContract}
+          name="radio-buttons-group"
+          row
+          sx={{
+            gridColumn: "span 6",
+          }}
+        >
           <FormControlLabel
-            value="true"
+            value={true}
             control={<Radio />}
             label="دارد"
             defaultChecked
+            checked={IsSpecialPriceListAttachedToContract}
+            onChange={(e) => {
+              // @ts-ignore
+              setIsSpecialPriceListAttachedToContract(e.target.value);
+            }}
           />
           <FormControlLabel
-            value="false"
+            value={false}
             control={<Radio />}
             label="ندارد"
+            checked={IsSpecialPriceListAttachedToContract}
+            onChange={(e) => {
+              // @ts-ignore
+              setIsSpecialPriceListAttachedToContract(e.target.value);
+            }}
           />
         </RadioGroup>
 
@@ -505,18 +924,32 @@ const AddContract = () => {
         <TextField
           label="ضريب پيشنهادي: "
           sx={{ gridColumn: "span 3" }}
+          value={RecommendedCoefficient}
+          onChange={(e) => {
+            setRecommendedCoefficient(e.target.value);
+          }}
         />
-        <RadioGroup defaultValue="true" row>
+        <RadioGroup defaultValue={CoefficientType} row>
           <FormControlLabel
-            value="true"
+            value="درصدپلوس"
             control={<Radio />}
             label="درصدپلوس"
             defaultChecked
+            checked={CoefficientType === "درصدپلوس"}
+            onChange={(e) => {
+              // @ts-ignore
+              setCoefficientType(e.target.value);
+            }}
           />
           <FormControlLabel
-            value="false"
+            value="مينوس"
             control={<Radio />}
             label="مينوس"
+            checked={CoefficientType === "مينوس"}
+            onChange={(e) => {
+              // @ts-ignore
+              setCoefficientType(e.target.value);
+            }}
           />
         </RadioGroup>
 
@@ -558,15 +991,38 @@ const AddContract = () => {
           >
             <FormControlLabel
               value="مناقصه "
+              checked={AssigningType === "مناقصه "}
               control={<Radio />}
               label="مناقصه "
+              onChange={(e) => {
+                // @ts-ignore
+                setAssigningType(e.target.value);
+              }}
             />
             <FormControlLabel
-              value="ترك مناقصه  "
+              value="ترك مناقصه"
+              checked={AssigningType === "ترك مناقصه"}
               control={<Radio />}
               label="ترك مناقصه  "
+              onChange={(e) => {
+                // @ts-ignore
+                setAssigningType(e.target.value);
+              }}
             />
-            <FormControlLabel control={<TextField />} label="" />
+            <FormControlLabel
+              control={<TextField />}
+              label=""
+              value={
+                AssigningType !== "مناقصه " &&
+                AssigningType !== "ترك مناقصه"
+                  ? AssigningType
+                  : ""
+              }
+              onChange={(e) => {
+                // @ts-ignore
+                setAssigningType(e.target.value);
+              }}
+            />
           </RadioGroup>
         </FormControl>
 
@@ -602,14 +1058,24 @@ const AddContract = () => {
           </FormLabel>
           <RadioGroup row>
             <FormControlLabel
-              value="مي‌باشد "
+              value={true}
               control={<Radio />}
-              label="مي‌باشد "
+              label="مي‌باشد"
+              checked={DoesContainAdjustment}
+              onChange={(e) => {
+                // @ts-ignore
+                setDoesContainAdjustment(e.target.value);
+              }}
             />
             <FormControlLabel
-              value="نمي‌باشد"
+              value={false}
               control={<Radio />}
               label="نمي‌باشد"
+              checked={!DoesContainAdjustment}
+              onChange={(e) => {
+                // @ts-ignore
+                setDoesContainAdjustment(e.target.value);
+              }}
             />
           </RadioGroup>
         </FormControl>
@@ -642,12 +1108,26 @@ const AddContract = () => {
           sx={{
             gridColumn: "span 2",
           }}
+          value={BaseIndexPeriod.month}
+          onChange={(e) => {
+            setBaseIndexPeriod({
+              ...BaseIndexPeriod,
+              month: e.target.value,
+            });
+          }}
         />
         <TextField
           label="سال"
           type="number"
           sx={{
             gridColumn: "span 2",
+          }}
+          value={BaseIndexPeriod.year}
+          onChange={(e) => {
+            setBaseIndexPeriod({
+              ...BaseIndexPeriod,
+              year: e.target.value,
+            });
           }}
         />
 
@@ -674,11 +1154,27 @@ const AddContract = () => {
           4-11- تاريخ شروع كار:
         </Typography>
         <TextField
-          label="تاريخ شروع كار"
+          label="تاريخ شروع كار خواهان"
           type="date"
           focused
           sx={{
             gridColumn: "span 3",
+          }}
+          value={OperationStartDateAccuser}
+          onChange={(e) => {
+            setOperationStartDateAccuser(e.target.value);
+          }}
+        />
+        <TextField
+          label="تاريخ شروع كار خوانده"
+          type="date"
+          focused
+          sx={{
+            gridColumn: "span 3",
+          }}
+          value={OperationStartDateAccused}
+          onChange={(e) => {
+            setOperationStartDateAccused(e.target.value);
           }}
         />
         <div
@@ -699,38 +1195,6 @@ const AddContract = () => {
 
       
       */}
-        <Typography variant="h6" gridColumn={"span 4"}>
-          4-12- پيشرفت فيزيكي كار در تاريخ درخواست داوري:{" "}
-        </Typography>
-
-        <TextField
-          label="خواهان"
-          type="date"
-          focused
-          sx={{
-            gridColumn: "span 3",
-          }}
-        />
-        <TextField
-          label="خوانده"
-          type="date"
-          focused
-          sx={{
-            gridColumn: "span 3",
-          }}
-        />
-
-        <div
-          style={{
-            gridColumn: "span 12",
-          }}
-        />
-        <Divider sx={{ gridColumn: "span 6" }} />
-        <div
-          style={{
-            gridColumn: "span 12",
-          }}
-        />
         <Typography variant="h6" gridColumn={"span 5"}>
           4-12- پيشرفت فيزيكي كار در تاريخ درخواست داوري:{" "}
         </Typography>
@@ -744,6 +1208,12 @@ const AddContract = () => {
           sx={{
             gridColumn: "span 3",
           }}
+          value={PhysicalProgressInArbitrationDateAccuser}
+          onChange={(e) => {
+            setPhysicalProgressInArbitrationDateAccuser(
+              e.target.value
+            );
+          }}
         />
         <TextField
           label="خوانده"
@@ -753,6 +1223,12 @@ const AddContract = () => {
           }}
           sx={{
             gridColumn: "span 3",
+          }}
+          value={PhysicalProgressInArbitrationDateAccused}
+          onChange={(e) => {
+            setPhysicalProgressInArbitrationDateAccused(
+              e.target.value
+            );
           }}
         />
         {/* 
@@ -775,6 +1251,12 @@ const AddContract = () => {
           sx={{
             gridColumn: "span 3",
           }}
+          value={FinancialProgressInArbitrationDateAccuser}
+          onChange={(e) => {
+            setFinancialProgressInArbitrationDateAccuser(
+              e.target.value
+            );
+          }}
         />
         <TextField
           label="خوانده"
@@ -784,6 +1266,12 @@ const AddContract = () => {
           }}
           sx={{
             gridColumn: "span 3",
+          }}
+          value={FinancialProgressInArbitrationDateAccused}
+          onChange={(e) => {
+            setFinancialProgressInArbitrationDateAccused(
+              e.target.value
+            );
           }}
         />
 
@@ -821,35 +1309,65 @@ const AddContract = () => {
             name="row-radio-buttons-group"
           >
             <FormControlLabel
-              value="ابلاغ خاتمه "
+              value="ابلاغ خاتمه"
               control={<Radio />}
-              label="ابلاغ خاتمه "
+              label="ابلاغ خاتمه"
+              checked={ContractStatusInArbitration === "ابلاغ خاتمه"}
+              onChange={(e) => {
+                // @ts-ignore
+                setContractStatusInArbitration(e.target.value);
+              }}
             />
             <FormControlLabel
               value="ابلاغ فسخ"
               control={<Radio />}
               label="ابلاغ فسخ"
+              checked={ContractStatusInArbitration === "ابلاغ فسخ"}
+              onChange={(e) => {
+                // @ts-ignore
+                setContractStatusInArbitration(e.target.value);
+              }}
             />
             <FormControlLabel
               value="جاری"
               control={<Radio />}
               label="جاری"
+              checked={ContractStatusInArbitration === "جاری"}
+              onChange={(e) => {
+                // @ts-ignore
+                setContractStatusInArbitration(e.target.value);
+              }}
             />
             <FormControlLabel
               value="تحویل موقت"
               control={<Radio />}
               label="تحویل موقت"
+              checked={ContractStatusInArbitration === "تحویل موقت"}
+              onChange={(e) => {
+                // @ts-ignore
+                setContractStatusInArbitration(e.target.value);
+              }}
             />
             <FormControlLabel
-              value="تحویل قطعی "
+              value="تحویل قطعی"
               control={<Radio />}
-              label="تحویل قطعی "
+              label="تحویل قطعی"
+              checked={ContractStatusInArbitration === "تحویل قطعی"}
+              onChange={(e) => {
+                // @ts-ignore
+                setContractStatusInArbitration(e.target.value);
+              }}
             />
             <FormControlLabel
               control={
                 <TextField label={"تاریخ"} type="date" focused />
               }
               label=""
+              value={ContractStatusInArbitrationDate}
+              onChange={(e) => {
+                // @ts-ignore
+                setContractStatusInArbitrationDate(e.target.value);
+              }}
             />
           </RadioGroup>
         </FormControl>
@@ -914,6 +1432,10 @@ const AddContract = () => {
           InputProps={{
             endAdornment: "روز",
           }}
+          value={AuthorizedDelaysAccuser}
+          onChange={(e) => {
+            setAuthorizedDelaysAccuser(e.target.value);
+          }}
         />
         <TextField
           label={"از نظر خوانده:"}
@@ -922,6 +1444,10 @@ const AddContract = () => {
           }}
           InputProps={{
             endAdornment: "روز",
+          }}
+          value={AuthorizedDelaysAccused}
+          onChange={(e) => {
+            setAuthorizedDelaysAccused(e.target.value);
           }}
         />
         <div
@@ -946,6 +1472,10 @@ const AddContract = () => {
           InputProps={{
             endAdornment: "روز",
           }}
+          value={UnauthorizedDelaysAccuser}
+          onChange={(e) => {
+            setUnauthorizedDelaysAccuser(e.target.value);
+          }}
         />
         <TextField
           label={"از نظر خوانده:"}
@@ -954,6 +1484,10 @@ const AddContract = () => {
           }}
           InputProps={{
             endAdornment: "روز",
+          }}
+          value={UnauthorizedDelaysAccused}
+          onChange={(e) => {
+            setUnauthorizedDelaysAccused(e.target.value);
           }}
         />
         <Divider sx={{ gridColumn: "span 12" }} />

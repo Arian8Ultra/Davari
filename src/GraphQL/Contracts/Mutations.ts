@@ -10,9 +10,7 @@ export const CREATE_COMPLAINT = gql`
     contract_addContract(
       input: {
         contractNumber: $contractNumber
-        contractorId: $contractorId
-        isExecutive: $isExecutive
-        organizationId: $organizationId
+        
       }
     ) {
       result {
