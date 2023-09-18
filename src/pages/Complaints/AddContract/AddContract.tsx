@@ -1,36 +1,19 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import {
-  Box,
-  Checkbox,
-  Divider,
-  FormControl,
-  FormControlLabel,
-  FormGroup,
-  FormLabel,
-  IconButton,
-  List,
-  MenuItem,
-  Radio,
-  RadioGroup,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Checkbox, Divider, FormControl, FormControlLabel, FormGroup, FormLabel, IconButton, List, MenuItem, Radio, RadioGroup, TextField, Typography } from "@mui/material";
 import React from "react";
 import { Green, GreenLight, primary } from "../../../theme/color";
 import { Add } from "@mui/icons-material";
 import BackButton from "../../../components/BackButton";
 import countries from "../../../static/Countries";
+import { useMutation } from "@apollo/client";
+import { CREATE_CONTRACT } from "../../../GraphQL/Contracts/Mutations";
 
 const AddContract = () => {
-  const [RelatedPeople, setRelatedPeople] = React.useState([
-    { name: "" as string, phone: "" as string },
-  ]);
-  const [AccuserNationality, setAccuserNationality] =
-    React.useState("");
-  const [AccusedNationality, setAccusedNationality] =
-    React.useState("");
+  const [RelatedPeople, setRelatedPeople] = React.useState([{ name: "" as string, phone: "" as string }]);
+  const [AccuserNationality, setAccuserNationality] = React.useState("");
+  const [AccusedNationality, setAccusedNationality] = React.useState("");
   const [contratDetails, setContratDetails] = React.useState({
     contratTypes: [] as string[],
     other: false as boolean,
@@ -41,74 +24,76 @@ const AddContract = () => {
   const [ContractNumber, setContractNumber] = React.useState("");
   const [ContractDate, setContractDate] = React.useState("");
   const [InitialBudget, setInitialBudget] = React.useState("");
-  const [InitialTimePeriod, setInitialTimePeriod] =
-    React.useState("");
-  const [
-    PriceListOfBasicUnitOfField,
-    setPriceListOfBasicUnitOfField,
-  ] = React.useState([{ year: "" as string, price: "" as string }]);
+  const [InitialTimePeriod, setInitialTimePeriod] = React.useState("");
+  const [PriceListOfBasicUnitOfField, setPriceListOfBasicUnitOfField] = React.useState([{ year: "" as string, price: "" as string }]);
 
-  const [
-    IsSpecialPriceListAttachedToContract,
-    setIsSpecialPriceListAttachedToContract,
-  ] = React.useState(false);
+  const [IsSpecialPriceListAttachedToContract, setIsSpecialPriceListAttachedToContract] = React.useState(false);
 
-  const [RecommendedCoefficient, setRecommendedCoefficient] =
-    React.useState("");
+  const [RecommendedCoefficient, setRecommendedCoefficient] = React.useState("");
 
   const [CoefficientType, setCoefficientType] = React.useState("");
   const [AssigningType, setAssigningType] = React.useState("");
-  const [DoesContainAdjustment, setDoesContainAdjustment] =
-    React.useState(true);
+  const [DoesContainAdjustment, setDoesContainAdjustment] = React.useState(true);
   const [BaseIndexPeriod, setBaseIndexPeriod] = React.useState({
     month: "",
     year: "",
   });
-  const [OperationStartDateAccuser, setOperationStartDateAccuser] =
-    React.useState("");
-  const [OperationStartDateAccused, setOperationStartDateAccused] =
-    React.useState("");
-  const [
-    PhysicalProgressInArbitrationDateAccuser,
-    setPhysicalProgressInArbitrationDateAccuser,
-  ] = React.useState("");
-  const [
-    PhysicalProgressInArbitrationDateAccused,
-    setPhysicalProgressInArbitrationDateAccused,
-  ] = React.useState("");
+  const [OperationStartDateAccuser, setOperationStartDateAccuser] = React.useState("");
+  const [OperationStartDateAccused, setOperationStartDateAccused] = React.useState("");
+  const [PhysicalProgressInArbitrationDateAccuser, setPhysicalProgressInArbitrationDateAccuser] = React.useState("");
+  const [PhysicalProgressInArbitrationDateAccused, setPhysicalProgressInArbitrationDateAccused] = React.useState("");
 
-  const [
-    FinancialProgressInArbitrationDateAccuser,
-    setFinancialProgressInArbitrationDateAccuser,
-  ] = React.useState("");
-  const [
-    FinancialProgressInArbitrationDateAccused,
-    setFinancialProgressInArbitrationDateAccused,
-  ] = React.useState("");
+  const [FinancialProgressInArbitrationDateAccuser, setFinancialProgressInArbitrationDateAccuser] = React.useState("");
+  const [FinancialProgressInArbitrationDateAccused, setFinancialProgressInArbitrationDateAccused] = React.useState("");
 
-  const [
-    ContractStatusInArbitration,
-    setContractStatusInArbitration,
-  ] = React.useState("");
+  const [ContractStatusInArbitration, setContractStatusInArbitration] = React.useState("");
 
-  const [
-    ContractStatusInArbitrationDate,
-    setContractStatusInArbitrationDate,
-  ] = React.useState("");
+  const [ContractStatusInArbitrationDate, setContractStatusInArbitrationDate] = React.useState("");
 
-  const [SupervisionDepartment, setSupervisionDepartment] =
-    React.useState("");
+  const [SupervisionDepartment, setSupervisionDepartment] = React.useState("");
 
-  const [AuthorizedDelaysAccuser, setAuthorizedDelaysAccuser] =
-    React.useState("");
+  const [AuthorizedDelaysAccuser, setAuthorizedDelaysAccuser] = React.useState("");
 
-  const [AuthorizedDelaysAccused, setAuthorizedDelaysAccused] =
-    React.useState("");
+  const [AuthorizedDelaysAccused, setAuthorizedDelaysAccused] = React.useState("");
 
-  const [UnauthorizedDelaysAccuser, setUnauthorizedDelaysAccuser] =
-    React.useState("");
-  const [UnauthorizedDelaysAccused, setUnauthorizedDelaysAccused] =
-    React.useState("");
+  const [UnauthorizedDelaysAccuser, setUnauthorizedDelaysAccuser] = React.useState("");
+  const [UnauthorizedDelaysAccused, setUnauthorizedDelaysAccused] = React.useState("");
+
+  const [createContractMutation, { data, loading, error }] = useMutation(CREATE_CONTRACT, {
+    variables: {
+      RelatedPeople,
+      AccuserNationality,
+      AccusedNationality,
+      ContractType: contratDetails.contratTypes,
+      CircularNumber: contratDetails.CircularNumber,
+      CircularDate: contratDetails.CircularDate,
+      ContractSubject,
+      ContractNumber,
+      ContractDate,
+      InitialBudget,
+      InitialTimePeriod,
+      PriceListOfBasicUnitOfField,
+      IsSpecialPriceListAttachedToContract,
+      RecommendedCoefficient,
+      CoefficientType,
+      AssigningType,
+      DoesContainAdjustment,
+      BaseIndexPeriod,
+      OperationStartDateAccuser,
+      OperationStartDateAccused,
+      PhysicalProgressInArbitrationDateAccuser,
+      PhysicalProgressInArbitrationDateAccused,
+      FinancialProgressInArbitrationDateAccuser,
+      FinancialProgressInArbitrationDateAccused,
+      ContractStatusInArbitration,
+      ContractStatusInArbitrationDate,
+      SupervisionDepartment,
+      AuthorizedDelaysAccuser,
+      AuthorizedDelaysAccused,
+      UnauthorizedDelaysAccuser,
+      UnauthorizedDelaysAccused,
+    },
+  });
 
   countries.sort((a, b) => {
     if (a.name_fa < b.name_fa) {
@@ -122,16 +107,7 @@ const AddContract = () => {
   return (
     <>
       <BackButton to="/complaints" />
-      <Box
-        display={"grid"}
-        gridTemplateColumns={"repeat(12, 1fr)"}
-        alignItems={"center"}
-        justifyContent={"center"}
-        gap={2}
-        padding={"2rem"}
-        border={`2px solid ${primary}`}
-        borderRadius={"1rem"}
-      >
+      <Box display={"grid"} gridTemplateColumns={"repeat(12, 1fr)"} alignItems={"center"} justifyContent={"center"} gap={2} padding={"2rem"} border={`2px solid ${primary}`} borderRadius={"1rem"}>
         <Typography
           variant="h4"
           gridColumn={"span 12"}
@@ -156,27 +132,15 @@ const AddContract = () => {
         </Typography>
 
         <Typography variant="body1" gridColumn={"span 12"}>
-          {
-            "حداکثر دو نفر نماینده معرفی شده صرفا دارای سمت در شرکت/دستگاه اجرایی یا در پروژه محل اختلاف (که یک نفر از آنها می تواند وکیل دادگستری (با وکالتنامه رسمی) باشد."
-          }
+          {"حداکثر دو نفر نماینده معرفی شده صرفا دارای سمت در شرکت/دستگاه اجرایی یا در پروژه محل اختلاف (که یک نفر از آنها می تواند وکیل دادگستری (با وکالتنامه رسمی) باشد."}
         </Typography>
 
         <List sx={{ gridColumn: "span 12" }}>
-          <Typography variant="body1">
-            {"	الف) شركت در جلسه و امضاي قرارنامه داوري"}
-          </Typography>
-          <Typography variant="body1">
-            {"ب) شركت در جلسات كارشناسي"}
-          </Typography>
-          <Typography variant="body1">
-            {"پ) شركت در جلسه استماع"}
-          </Typography>
-          <Typography variant="body1">
-            {"ت) دریافت رای داوری "}
-          </Typography>
-          <Typography variant="body1">
-            {"ث) ساير همكاري‌هاي لازم و مرتبط با موضوع اختلاف"}
-          </Typography>
+          <Typography variant="body1">{"	الف) شركت در جلسه و امضاي قرارنامه داوري"}</Typography>
+          <Typography variant="body1">{"ب) شركت در جلسات كارشناسي"}</Typography>
+          <Typography variant="body1">{"پ) شركت در جلسه استماع"}</Typography>
+          <Typography variant="body1">{"ت) دریافت رای داوری "}</Typography>
+          <Typography variant="body1">{"ث) ساير همكاري‌هاي لازم و مرتبط با موضوع اختلاف"}</Typography>
         </List>
 
         <Divider
@@ -313,10 +277,7 @@ const AddContract = () => {
             margin: "0rem 2rem",
           }}
           onClick={() => {
-            setRelatedPeople([
-              ...RelatedPeople,
-              { name: "", phone: "" },
-            ]);
+            setRelatedPeople([...RelatedPeople, { name: "", phone: "" }]);
           }}
         >
           <Add />
@@ -335,9 +296,7 @@ const AddContract = () => {
           {"4- مشخصات قرارداد: "}
         </Typography>
         <Typography variant="h6" gridColumn={"span 12"}>
-          {
-            "در این قسمت لازم است نوع قرارداد همسان سازمان برنامه و بودجه کشور که مورد استفاده قرار گرفته علامت زده شود:"
-          }
+          {"در این قسمت لازم است نوع قرارداد همسان سازمان برنامه و بودجه کشور که مورد استفاده قرار گرفته علامت زده شود:"}
         </Typography>
 
         <FormGroup
@@ -825,10 +784,7 @@ const AddContract = () => {
             margin: "0rem 2rem",
           }}
           onClick={() => {
-            setPriceListOfBasicUnitOfField([
-              ...PriceListOfBasicUnitOfField,
-              { year: "", price: "" },
-            ]);
+            setPriceListOfBasicUnitOfField([...PriceListOfBasicUnitOfField, { year: "", price: "" }]);
           }}
         >
           <Add />
@@ -981,14 +937,8 @@ const AddContract = () => {
             gridColumn: "span 6",
           }}
         >
-          <FormLabel id="demo-row-radio-buttons-group-label">
-            نحوه واگذاري كار
-          </FormLabel>
-          <RadioGroup
-            row
-            aria-labelledby="demo-row-radio-buttons-group-label"
-            name="row-radio-buttons-group"
-          >
+          <FormLabel id="demo-row-radio-buttons-group-label">نحوه واگذاري كار</FormLabel>
+          <RadioGroup row aria-labelledby="demo-row-radio-buttons-group-label" name="row-radio-buttons-group">
             <FormControlLabel
               value="مناقصه "
               checked={AssigningType === "مناقصه "}
@@ -1012,12 +962,7 @@ const AddContract = () => {
             <FormControlLabel
               control={<TextField />}
               label=""
-              value={
-                AssigningType !== "مناقصه " &&
-                AssigningType !== "ترك مناقصه"
-                  ? AssigningType
-                  : ""
-              }
+              value={AssigningType !== "مناقصه " && AssigningType !== "ترك مناقصه" ? AssigningType : ""}
               onChange={(e) => {
                 // @ts-ignore
                 setAssigningType(e.target.value);
@@ -1053,9 +998,7 @@ const AddContract = () => {
             gridColumn: "span 6",
           }}
         >
-          <FormLabel id="demo-row-radio-buttons-group-label">
-            پيمان مشمول تعديل{" "}
-          </FormLabel>
+          <FormLabel id="demo-row-radio-buttons-group-label">پيمان مشمول تعديل </FormLabel>
           <RadioGroup row>
             <FormControlLabel
               value={true}
@@ -1210,9 +1153,7 @@ const AddContract = () => {
           }}
           value={PhysicalProgressInArbitrationDateAccuser}
           onChange={(e) => {
-            setPhysicalProgressInArbitrationDateAccuser(
-              e.target.value
-            );
+            setPhysicalProgressInArbitrationDateAccuser(e.target.value);
           }}
         />
         <TextField
@@ -1226,9 +1167,7 @@ const AddContract = () => {
           }}
           value={PhysicalProgressInArbitrationDateAccused}
           onChange={(e) => {
-            setPhysicalProgressInArbitrationDateAccused(
-              e.target.value
-            );
+            setPhysicalProgressInArbitrationDateAccused(e.target.value);
           }}
         />
         {/* 
@@ -1253,9 +1192,7 @@ const AddContract = () => {
           }}
           value={FinancialProgressInArbitrationDateAccuser}
           onChange={(e) => {
-            setFinancialProgressInArbitrationDateAccuser(
-              e.target.value
-            );
+            setFinancialProgressInArbitrationDateAccuser(e.target.value);
           }}
         />
         <TextField
@@ -1269,9 +1206,7 @@ const AddContract = () => {
           }}
           value={FinancialProgressInArbitrationDateAccused}
           onChange={(e) => {
-            setFinancialProgressInArbitrationDateAccused(
-              e.target.value
-            );
+            setFinancialProgressInArbitrationDateAccused(e.target.value);
           }}
         />
 
@@ -1303,11 +1238,7 @@ const AddContract = () => {
             gridColumn: "span 12",
           }}
         >
-          <RadioGroup
-            row
-            aria-labelledby="demo-row-radio-buttons-group-label"
-            name="row-radio-buttons-group"
-          >
+          <RadioGroup row aria-labelledby="demo-row-radio-buttons-group-label" name="row-radio-buttons-group">
             <FormControlLabel
               value="ابلاغ خاتمه"
               control={<Radio />}
@@ -1359,9 +1290,7 @@ const AddContract = () => {
               }}
             />
             <FormControlLabel
-              control={
-                <TextField label={"تاریخ"} type="date" focused />
-              }
+              control={<TextField label={"تاریخ"} type="date" focused />}
               label=""
               value={ContractStatusInArbitrationDate}
               onChange={(e) => {
@@ -1398,6 +1327,10 @@ const AddContract = () => {
           label={"دستگاه نظارت (مهندس مشاور) :"}
           sx={{
             gridColumn: "span 4",
+          }}
+          value={SupervisionDepartment}
+          onChange={(e) => {
+            setSupervisionDepartment(e.target.value);
           }}
         />
         <div
@@ -1498,37 +1431,38 @@ const AddContract = () => {
 
       
       */}
-        <Typography
-          variant="h5"
-          fontWeight={800}
-          gridColumn={"span 12"}
-        >
-          توجه مهم: چنانچه در خصوص تاخیرات و یا تبعات ناشی از آن
-          اختلافی وجود دارد، لازم است موارد زیر ارسال شوند:
+        <Typography variant="h5" fontWeight={800} gridColumn={"span 12"}>
+          توجه مهم: چنانچه در خصوص تاخیرات و یا تبعات ناشی از آن اختلافی وجود دارد، لازم است موارد زیر ارسال شوند:
         </Typography>
-        <Typography
-          variant="h6"
-          fontWeight={800}
-          gridColumn={"span 12"}
-        >
+        <Typography variant="h6" fontWeight={800} gridColumn={"span 12"}>
           • گزارش توجیهی تاخیرات قرارداد شامل:
         </Typography>
         <List sx={{ gridColumn: "span 12" }}>
-          <Typography variant="body1">
-            • برنامه های زمان‏بندی اولیه و اصلاحی ابلاغ شده
-          </Typography>
-          <Typography variant="body1">
-            • گزارش تهیه شده توسط پیمانکار (به همراه کلیه مستندات و
-            پیوست‏ها)
-          </Typography>
-          <Typography variant="body1">
-            • گزارش رسیدگی به تاخیرات توسط مهندس مشاور
-          </Typography>
-          <Typography variant="body1">
-            • مستندات ابلاغ نتایج رسیدگی به تاخیرات به پیمانکار توسط
-            کارفرما
-          </Typography>
+          <Typography variant="body1">• برنامه های زمان‏بندی اولیه و اصلاحی ابلاغ شده</Typography>
+          <Typography variant="body1">• گزارش تهیه شده توسط پیمانکار (به همراه کلیه مستندات و پیوست‏ها)</Typography>
+          <Typography variant="body1">• گزارش رسیدگی به تاخیرات توسط مهندس مشاور</Typography>
+          <Typography variant="body1">• مستندات ابلاغ نتایج رسیدگی به تاخیرات به پیمانکار توسط کارفرما</Typography>
         </List>
+
+        <Button
+          variant="contained"
+          disabled={loading}
+          sx={{
+            gridColumn: "span 12",
+            // justifySelf: "center",
+            backgroundColor: Green,
+            color: "white",
+            "&:hover": {
+              backgroundColor: GreenLight,
+              color: Green,
+            },
+          }}
+          onClick={() => {
+            void createContractMutation();
+          }}
+        >
+          ثبت و ادامه
+        </Button>
       </Box>
     </>
   );

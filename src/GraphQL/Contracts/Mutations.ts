@@ -1,16 +1,72 @@
 import { gql } from "@apollo/client";
 
-export const CREATE_COMPLAINT = gql`
+export const CREATE_CONTRACT = gql`
   mutation CreateComplaint(
-    $contractNumber: String
-    $contractorId: Int
-    $isExecutive: Boolean
-    $organizationId: Int
+    $RelatedPeople: [String!]
+    $AccuserNationality: String!
+    $AccusedNationality: String!
+    $ContractType: [String!]
+    $CircularNumber: String!
+    $CircularDate: Date!
+    $ContractSubject: String!
+    $ContractNumber: String!
+    $ContractDate: Date!
+    $InitialBudget: Decimal!
+    $InitialTimePeriod: Int!
+    $PriceListOfBasicUnitOfField: [String!]
+    $IsSpecialPriceListAttachedToContract: Boolean!
+    $RecommendedCoefficient: Int!
+    $CoefficientType: String!
+    $AssigningType: String!
+    $DoesContainAdjustment: Boolean!
+    $BaseIndexPeriod: Int!
+    $OperationStartDateAccuser: Date!
+    $OperationStartDateAccused: Date!
+    $PhysicalProgressInArbitrationDateAccuser: Int!
+    $PhysicalProgressInArbitrationDateAccused: Int!
+    $FinancialProgressInArbitrationDateAccuser: Int!
+    $FinancialProgressInArbitrationDateAccused: Int!
+    $ContractStatusInArbitration: String!
+    $ContractStatusInArbitrationDate: Date!
+    $SupervisionDepartment: String!
+    $AuthorizedDelaysAccuser: Int!
+    $AuthorizedDelaysAccused: Int!
+    $UnauthorizedDelaysAccuser: Int!
+    $UnauthorizedDelaysAccused: Int!
   ) {
     contract_addContract(
       input: {
-        contractNumber: $contractNumber
-        
+        relatedPeople: $RelatedPeople
+        accuserNationality: $AccuserNationality
+        accusedNationality: $AccusedNationality
+        contractType: $ContractType
+        circularNumber: $CircularNumber
+        circularDate: $CircularDate
+        contractSubject: $ContractSubject
+        contractNumber: $ContractNumber
+        contractDate: $ContractDate
+        initialBudget: $InitialBudget
+        initialTimePeriod: $InitialTimePeriod
+        priceListOfBasicUnitOfField: $PriceListOfBasicUnitOfField
+        isSpecialPriceListAttachedToContract: $IsSpecialPriceListAttachedToContract
+        recommendedCoefficient: $RecommendedCoefficient
+        coefficientType: $CoefficientType
+        assigningType: $AssigningType
+        doesContainAdjustment: $DoesContainAdjustment
+        baseIndexPeriod: $BaseIndexPeriod
+        operationStartDateAccuser: $OperationStartDateAccuser
+        operationStartDateAccused: $OperationStartDateAccused
+        physicalProgressInArbitrationDateAccuser: $PhysicalProgressInArbitrationDateAccuser
+        physicalProgressInArbitrationDateAccused: $PhysicalProgressInArbitrationDateAccused
+        financialProgressInArbitrationDateAccuser: $FinancialProgressInArbitrationDateAccuser
+        financialProgressInArbitrationDateAccused: $FinancialProgressInArbitrationDateAccused
+        contractStatusInArbitration: $ContractStatusInArbitration
+        contractStatusInArbitrationDate: $ContractStatusInArbitrationDate
+        supervisionDepartment: $SupervisionDepartment
+        authorizedDelaysAccuser: $AuthorizedDelaysAccuser
+        authorizedDelaysAccused: $AuthorizedDelaysAccused
+        unauthorizedDelaysAccuser: $UnauthorizedDelaysAccuser
+        unauthorizedDelaysAccused: $UnauthorizedDelaysAccused
       }
     ) {
       result {
@@ -37,74 +93,3 @@ export const DELETE_CONTRACT = gql`
     }
   }
 `;
-
-export const UPDATE_CONTRACT = gql`
-  mutation UpdateContract(
-    $id: Int!
-    $contractNumber: String
-    $contractorId: Int
-    $isExecutive: Boolean
-    $organizationId: Int
-  ) {
-    contract_updateContract(
-      input: {
-        contractNumber: $contractNumber
-        contractorId: $contractorId
-        id: $id
-        isExecutive: $isExecutive
-        organizationId: $organizationId
-      }
-    ){
-        result{
-            id
-            contractorId
-            contractNumber
-            isExecutive
-            organizationId
-            complaints{
-                id
-                accuserDepartmentId
-                accusedDepartmentId
-                assignedUserId
-                complaintFormId
-                complaintResponseFormId
-            }
-        }
-    }
-  }
-`;
-
-export type CreateComplaintInput = {
-  contractNumber: string;
-  contractorId: number;
-  isExecutive: boolean;
-  organizationId: number;
-};
-
-export type UpdateContractInput = {
-    id: number;
-    contractNumber: string;
-    contractorId: number;
-    isExecutive: boolean;
-    organizationId: number;
-}
-
-
-export type Contract = {
-    id: number;
-    contractNumber: string;
-    contractorId: number;
-    isExecutive: boolean;
-    organizationId: number;
-    complaints: ContractComplaint[];
-}
-
-
-export type ContractComplaint={
-    id: number;
-    accuserDepartmentId: number;
-    accusedDepartmentId: number;
-    assignedUserId: number;
-    complaintFormId: number;
-    complaintResponseFormId: number;
-}
