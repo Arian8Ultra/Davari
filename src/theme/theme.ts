@@ -14,6 +14,26 @@ const theme = createTheme({
   typography: {
     fontFamily: "Shabnam-Light,sans-serif",
   },
+  transitions: {
+    duration: {
+      shortest: 150,
+      shorter: 200,
+      short: 250,
+      standard: 300,
+      complex: 375,
+      enteringScreen: 225,
+      leavingScreen: 195,
+    },
+  },
+  components:{
+    MuiButton:{
+      styleOverrides:{
+        contained:{
+          borderRadius:"0.5rem"
+        }
+      }
+    }
+  },
   palette: {
     mode: "light",
     primary: {

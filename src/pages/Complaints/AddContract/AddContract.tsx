@@ -8,6 +8,7 @@ import {
   FormLabel,
   IconButton,
   List,
+  MenuItem,
   Radio,
   RadioGroup,
   TextField,
@@ -17,11 +18,21 @@ import React from "react";
 import { Green, GreenLight } from "../../../theme/color";
 import { Add } from "@mui/icons-material";
 import BackButton from "../../../components/BackButton";
+import countries from "../../../static/Countries";
 
 const AddContract = () => {
   const [peoples, setPeoples] = React.useState([
     { name: "" as string, phone: "" as string },
   ]);
+  countries.sort((a, b) => {
+    if (a.name_fa < b.name_fa) {
+      return -1;
+    }
+    if (a.name_fa > b.name_fa) {
+      return 1;
+    }
+    return 0;
+  });
   return (
     <Box
       display={"grid"}
@@ -31,7 +42,7 @@ const AddContract = () => {
       gap={2}
       padding={"2rem"}
     >
-        <BackButton to="/complaints"/>
+      <BackButton to="/complaints" />
       <Typography variant="h5" gridColumn={"span 12"}>
         {"1-4- نمايندگان (وكلا): "}
       </Typography>
@@ -72,12 +83,26 @@ const AddContract = () => {
         label="تابعيت خواهان: "
         variant="outlined"
         sx={{ gridColumn: "span 4" }}
-      ></TextField>
+        select
+      >
+        {countries.map((item, index) => (
+          <MenuItem key={index} value={item.name_fa}>
+            {item.name_fa}
+          </MenuItem>
+        ))}
+      </TextField>
       <TextField
         label="تابعيت خوانده: "
         variant="outlined"
         sx={{ gridColumn: "8 /span 4" }}
-      ></TextField>
+        select
+      >
+        {countries.map((item, index) => (
+          <MenuItem key={index} value={item.name_fa}>
+            {item.name_fa}
+          </MenuItem>
+        ))}
+      </TextField>
 
       <Divider
         sx={{
@@ -93,6 +118,7 @@ const AddContract = () => {
 
       {peoples.map((item, index) => (
         <Box
+          key={index}
           gridColumn={{
             xs: "span 12",
             lg: "span 12",
@@ -111,20 +137,32 @@ const AddContract = () => {
             padding={"0rem 2rem"}
           >
             <TextField
-              key={index}
               label="نام و نام خانوادگی"
               variant="outlined"
               autoComplete="name"
               type="text"
               sx={{ gridColumn: "span 1" }}
+              value={item.name}
+              onChange={(e) => {
+                const newPeoples = [...peoples];
+                newPeoples[index].name = e.target.value;
+                setPeoples(newPeoples);
+                console.log(peoples);
+              }}
             ></TextField>
             <TextField
-              key={index}
               label="تلفن"
               variant="outlined"
               type="number"
               autoComplete="phone"
               sx={{ gridColumn: "span 1" }}
+              value={item.phone}
+              onChange={(e) => {
+                const newPeoples = [...peoples];
+                newPeoples[index].phone = e.target.value;
+                setPeoples(newPeoples);
+                console.log(peoples);
+              }}
             ></TextField>
           </Box>
         </Box>
@@ -139,7 +177,7 @@ const AddContract = () => {
             backgroundColor: GreenLight,
             color: Green,
           },
-          margin: "2rem 2rem",
+          margin: "0rem 2rem",
         }}
         onClick={() => {
           setPeoples([...peoples, { name: "", phone: "" }]);
