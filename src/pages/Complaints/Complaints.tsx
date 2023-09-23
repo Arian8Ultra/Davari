@@ -71,6 +71,8 @@ const Complaints = () => {
               xs: "1fr",
               lg: "repeat(2, 1fr)",
             },
+            justifyContent: "center",
+            alignItems: "stretch",
             gap: 2,
           }}
         >
@@ -94,7 +96,7 @@ const Complaints = () => {
               fontStyle: "normal",
               fontSize: "1rem",
               boxShadow: "none",
-              height: "max-content",
+              // height: "max-content",
               color: "black",
               "&:hover": {
                 backgroundColor: YellowLight,

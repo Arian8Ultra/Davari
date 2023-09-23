@@ -1,99 +1,476 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { Box, Button, Checkbox, Divider, FormControl, FormControlLabel, FormGroup, FormLabel, IconButton, List, MenuItem, Radio, RadioGroup, TextField, Typography } from "@mui/material";
-import React from "react";
-import { Green, GreenLight, primary } from "../../../theme/color";
+import { useMutation } from "@apollo/client";
 import { Add } from "@mui/icons-material";
+import {
+  Alert,
+  Box,
+  Button,
+  Checkbox,
+  Divider,
+  FormControl,
+  FormControlLabel,
+  FormGroup,
+  FormLabel,
+  IconButton,
+  List,
+  MenuItem,
+  Radio,
+  RadioGroup,
+  TextField,
+  Typography,
+} from "@mui/material";
+import React from "react";
+import { CREATE_CONTRACT } from "../../../GraphQL/Contracts/Mutations";
 import BackButton from "../../../components/BackButton";
 import countries from "../../../static/Countries";
-import { useMutation } from "@apollo/client";
-import { CREATE_CONTRACT } from "../../../GraphQL/Contracts/Mutations";
+import { Green, GreenLight, primary } from "../../../theme/color";
 
 const AddContract = () => {
-  const [RelatedPeople, setRelatedPeople] = React.useState([{ name: "" as string, phone: "" as string }]);
-  const [AccuserNationality, setAccuserNationality] = React.useState("");
-  const [AccusedNationality, setAccusedNationality] = React.useState("");
+  const [RelatedPeople, setRelatedPeople] = React.useState([
+    { name: "" as string, phone: "" as string },
+  ]);
+  const [RelatedPeopleError, setRelatedPeopleError] = React.useState({
+    error: false as boolean,
+    text: "" as string,
+  });
+  const [AccuserNationality, setAccuserNationality] =
+    React.useState("");
+  const [AccuserNationalityError, setAccuserNationalityError] =
+    React.useState({ error: false as boolean, text: "" as string });
+  const [AccusedNationality, setAccusedNationality] =
+    React.useState("");
+  const [AccusedNationalityError, setAccusedNationalityError] =
+    React.useState({ error: false as boolean, text: "" as string });
   const [contratDetails, setContratDetails] = React.useState({
     contratTypes: [] as string[],
     other: false as boolean,
     CircularNumber: "" as string,
     CircularDate: "" as string,
   });
+  const [contratDetailsError, setContratDetailsError] =
+    React.useState({ error: false as boolean, text: "" as string });
   const [ContractSubject, setContractSubject] = React.useState("");
+  const [ContractSubjectError, setContractSubjectError] =
+    React.useState({ error: false as boolean, text: "" as string });
   const [ContractNumber, setContractNumber] = React.useState("");
+  const [ContractNumberError, setContractNumberError] =
+    React.useState({ error: false as boolean, text: "" as string });
   const [ContractDate, setContractDate] = React.useState("");
+  const [ContractDateError, setContractDateError] = React.useState({
+    error: false as boolean,
+    text: "" as string,
+  });
   const [InitialBudget, setInitialBudget] = React.useState("");
-  const [InitialTimePeriod, setInitialTimePeriod] = React.useState("");
-  const [PriceListOfBasicUnitOfField, setPriceListOfBasicUnitOfField] = React.useState([{ year: "" as string, price: "" as string }]);
+  const [InitialBudgetError, setInitialBudgetError] = React.useState({
+    error: false as boolean,
+    text: "" as string,
+  });
+  const [InitialTimePeriod, setInitialTimePeriod] =
+    React.useState("");
+  const [InitialTimePeriodError, setInitialTimePeriodError] =
+    React.useState({ error: false as boolean, text: "" as string });
+  const [
+    PriceListOfBasicUnitOfField,
+    setPriceListOfBasicUnitOfField,
+  ] = React.useState([{ year: "" as string, price: "" as string }]);
+  const [
+    PriceListOfBasicUnitOfFieldError,
+    setPriceListOfBasicUnitOfFieldError,
+  ] = React.useState([
+    { error: false as boolean, text: "" as string },
+  ]);
 
-  const [IsSpecialPriceListAttachedToContract, setIsSpecialPriceListAttachedToContract] = React.useState(false);
+  const [
+    IsSpecialPriceListAttachedToContract,
+    setIsSpecialPriceListAttachedToContract,
+  ] = React.useState(false);
 
-  const [RecommendedCoefficient, setRecommendedCoefficient] = React.useState("");
+  const [RecommendedCoefficient, setRecommendedCoefficient] =
+    React.useState("");
+  const [
+    RecommendedCoefficientError,
+    setRecommendedCoefficientError,
+  ] = React.useState([
+    { error: false as boolean, text: "" as string },
+  ]);
 
   const [CoefficientType, setCoefficientType] = React.useState("");
+  const [CoefficientTypeError, setCoefficientTypeError] =
+    React.useState({ error: false as boolean, text: "" as string });
   const [AssigningType, setAssigningType] = React.useState("");
-  const [DoesContainAdjustment, setDoesContainAdjustment] = React.useState(true);
+  const [AssigningTypeError, setAssigningTypeError] = React.useState([
+    { error: false as boolean, text: "" as string },
+  ]);
+  const [DoesContainAdjustment, setDoesContainAdjustment] =
+    React.useState(true);
+  const [DoesContainAdjustmentEror, setDoesContainAdjustmentError] =
+    React.useState({ error: false as boolean, text: "" as string });
   const [BaseIndexPeriod, setBaseIndexPeriod] = React.useState({
     month: "",
     year: "",
   });
-  const [OperationStartDateAccuser, setOperationStartDateAccuser] = React.useState("");
-  const [OperationStartDateAccused, setOperationStartDateAccused] = React.useState("");
-  const [PhysicalProgressInArbitrationDateAccuser, setPhysicalProgressInArbitrationDateAccuser] = React.useState("");
-  const [PhysicalProgressInArbitrationDateAccused, setPhysicalProgressInArbitrationDateAccused] = React.useState("");
+  const [BaseIndexPeriodError, setBaseIndexPeriodError] =
+    React.useState({ error: false as boolean, text: "" as string });
+  const [OperationStartDateAccuser, setOperationStartDateAccuser] =
+    React.useState("");
+  const [
+    OperationStartDateAccuserError,
+    setOperationStartDateAccuserError,
+  ] = React.useState({ error: false as boolean, text: "" as string });
+  const [OperationStartDateAccused, setOperationStartDateAccused] =
+    React.useState("");
+  const [
+    OperationStartDateAccusedError,
+    setOperationStartDateAccusedError,
+  ] = React.useState({ error: false as boolean, text: "" as string });
+  const [
+    PhysicalProgressInArbitrationDateAccuser,
+    setPhysicalProgressInArbitrationDateAccuser,
+  ] = React.useState("");
+  const [
+    PhysicalProgressInArbitrationDateAccuserError,
+    setPhysicalProgressInArbitrationDateAccuserError,
+  ] = React.useState({ error: false as boolean, text: "" as string });
+  const [
+    PhysicalProgressInArbitrationDateAccused,
+    setPhysicalProgressInArbitrationDateAccused,
+  ] = React.useState("");
+  const [
+    PhysicalProgressInArbitrationDateAccusedError,
+    setPhysicalProgressInArbitrationDateAccusedError,
+  ] = React.useState({ error: false as boolean, text: "" as string });
+  const [
+    FinancialProgressInArbitrationDateAccuser,
+    setFinancialProgressInArbitrationDateAccuser,
+  ] = React.useState("");
+  const [
+    FinancialProgressInArbitrationDateAccuserError,
+    setFinancialProgressInArbitrationDateAccuserError,
+  ] = React.useState({ error: false as boolean, text: "" as string });
+  const [
+    FinancialProgressInArbitrationDateAccused,
+    setFinancialProgressInArbitrationDateAccused,
+  ] = React.useState("");
+  const [
+    FinancialProgressInArbitrationDateAccusedError,
+    setFinancialProgressInArbitrationDateAccusedError,
+  ] = React.useState({ error: false as boolean, text: "" as string });
+  const [
+    ContractStatusInArbitration,
+    setContractStatusInArbitration,
+  ] = React.useState("");
+  const [
+    ContractStatusInArbitrationError,
+    setContractStatusInArbitrationError,
+  ] = React.useState([
+    { error: false as boolean, text: "" as string },
+  ]);
+  const [
+    ContractStatusInArbitrationDate,
+    setContractStatusInArbitrationDate,
+  ] = React.useState("");
+  const [
+    ContractStatusInArbitrationDateError,
+    setContractStatusInArbitrationDateError,
+  ] = React.useState({ error: false as boolean, text: "" as string });
+  const [SupervisionDepartment, setSupervisionDepartment] =
+    React.useState("");
+  const [SupervisionDepartmentError, setSupervisionDepartmentError] =
+    React.useState({ error: false as boolean, text: "" as string });
+  const [AuthorizedDelaysAccuser, setAuthorizedDelaysAccuser] =
+    React.useState("");
+  const [
+    AuthorizedDelaysAccuserError,
+    setAuthorizedDelaysAccuserError,
+  ] = React.useState({ error: false as boolean, text: "" as string });
+  const [AuthorizedDelaysAccused, setAuthorizedDelaysAccused] =
+    React.useState("");
+  const [
+    AuthorizedDelaysAccusedError,
+    setAuthorizedDelaysAccusedError,
+  ] = React.useState({ error: false as boolean, text: "" as string });
+  const [UnauthorizedDelaysAccuser, setUnauthorizedDelaysAccuser] =
+    React.useState("");
+  const [
+    UnauthorizedDelaysAccuserError,
+    setUnauthorizedDelaysAccuserError,
+  ] = React.useState({ error: false as boolean, text: "" as string });
+  const [UnauthorizedDelaysAccused, setUnauthorizedDelaysAccused] =
+    React.useState("");
+  const [
+    UnauthorizedDelaysAccusedError,
+    setUnauthorizedDelaysAccusedError,
+  ] = React.useState({ error: false as boolean, text: "" as string });
 
-  const [FinancialProgressInArbitrationDateAccuser, setFinancialProgressInArbitrationDateAccuser] = React.useState("");
-  const [FinancialProgressInArbitrationDateAccused, setFinancialProgressInArbitrationDateAccused] = React.useState("");
+  const handleErrors = () => {
+    if (RelatedPeople.length <= 0) {
+      setRelatedPeopleError({
+        error: true,
+        text: "مقدار فیلد نباید خالی باشد",
+      });
+    }
+    if (AccuserNationality.length <= 0) {
+      setAccuserNationalityError({
+        error: true,
+        text: "مقدار فیلد نباید خالی باشد",
+      });
+    }
+    if (AccusedNationality.length <= 0) {
+      setAccusedNationalityError({
+        error: true,
+        text: "مقدار فیلد نباید خالی باشد",
+      });
+    }
+    if (contratDetails.contratTypes.length <= 0) {
+      setContratDetailsError({
+        error: true,
+        text: "مقدار فیلد نباید خالی باشد",
+      });
+    }
+    if (ContractSubject.length <= 0) {
+      setContractSubjectError({
+        error: true,
+        text: "مقدار فیلد نباید خالی باشد",
+      });
+    }
+    if (ContractNumber.length <= 0) {
+      setContractNumberError({
+        error: true,
+        text: "مقدار فیلد نباید خالی باشد",
+      });
+    }
+    if (ContractDate.length <= 0) {
+      setContractDateError({
+        error: true,
+        text: "مقدار فیلد نباید خالی باشد",
+      });
+    }
 
-  const [ContractStatusInArbitration, setContractStatusInArbitration] = React.useState("");
+    if (InitialBudget.length <= 0) {
+      setInitialBudgetError({
+        error: true,
+        text: "مقدار فیلد نباید خالی باشد",
+      });
+    }
 
-  const [ContractStatusInArbitrationDate, setContractStatusInArbitrationDate] = React.useState("");
+    if (InitialTimePeriod.length <= 0) {
+      setInitialTimePeriodError({
+        error: true,
+        text: "مقدار فیلد نباید خالی باشد",
+      });
+    }
 
-  const [SupervisionDepartment, setSupervisionDepartment] = React.useState("");
+    PriceListOfBasicUnitOfField.forEach((item, index) => {
+      if (item.year.length <= 0 || item.price.length <= 0) {
+        const newPriceListOfBasicUnitOfFieldError = [
+          ...PriceListOfBasicUnitOfFieldError,
+        ];
+        newPriceListOfBasicUnitOfFieldError[index] = {
+          error: true,
+          text: "مقدار فیلد نباید خالی باشد",
+        };
+        setPriceListOfBasicUnitOfFieldError(
+          newPriceListOfBasicUnitOfFieldError
+        );
+      }
+    });
 
-  const [AuthorizedDelaysAccuser, setAuthorizedDelaysAccuser] = React.useState("");
+    if (RecommendedCoefficient.length <= 0) {
+      setRecommendedCoefficientError([
+        { error: true, text: "مقدار فیلد نباید خالی باشد" },
+      ]);
+    }
 
-  const [AuthorizedDelaysAccused, setAuthorizedDelaysAccused] = React.useState("");
+    if (CoefficientType.length <= 0) {
+      setCoefficientTypeError({
+        error: true,
+        text: "مقدار فیلد نباید خالی باشد",
+      });
+    }
 
-  const [UnauthorizedDelaysAccuser, setUnauthorizedDelaysAccuser] = React.useState("");
-  const [UnauthorizedDelaysAccused, setUnauthorizedDelaysAccused] = React.useState("");
+    if (AssigningType.length <= 0) {
+      setAssigningTypeError([
+        { error: true, text: "مقدار فیلد نباید خالی باشد" },
+      ]);
+    }
 
-  const [createContractMutation, { data, loading, error }] = useMutation(CREATE_CONTRACT, {
-    variables: {
-      RelatedPeople,
-      AccuserNationality,
-      AccusedNationality,
-      ContractType: contratDetails.contratTypes,
-      CircularNumber: contratDetails.CircularNumber,
-      CircularDate: contratDetails.CircularDate,
-      ContractSubject,
-      ContractNumber,
-      ContractDate,
-      InitialBudget,
-      InitialTimePeriod,
-      PriceListOfBasicUnitOfField,
-      IsSpecialPriceListAttachedToContract,
-      RecommendedCoefficient,
-      CoefficientType,
-      AssigningType,
-      DoesContainAdjustment,
-      BaseIndexPeriod,
-      OperationStartDateAccuser,
-      OperationStartDateAccused,
-      PhysicalProgressInArbitrationDateAccuser,
-      PhysicalProgressInArbitrationDateAccused,
-      FinancialProgressInArbitrationDateAccuser,
-      FinancialProgressInArbitrationDateAccused,
-      ContractStatusInArbitration,
-      ContractStatusInArbitrationDate,
-      SupervisionDepartment,
-      AuthorizedDelaysAccuser,
-      AuthorizedDelaysAccused,
-      UnauthorizedDelaysAccuser,
-      UnauthorizedDelaysAccused,
-    },
-  });
+    if (BaseIndexPeriod.month.length <= 0) {
+      setBaseIndexPeriodError({
+        error: true,
+        text: "مقدار فیلد نباید خالی باشد",
+      });
+    }
+
+    if (BaseIndexPeriod.year.length <= 0) {
+      setBaseIndexPeriodError({
+        error: true,
+        text: "مقدار فیلد نباید خالی باشد",
+      });
+    }
+
+    if (OperationStartDateAccuser.length <= 0) {
+      setOperationStartDateAccuserError({
+        error: true,
+        text: "مقدار فیلد نباید خالی باشد",
+      });
+    }
+
+    if (OperationStartDateAccused.length <= 0) {
+      setOperationStartDateAccusedError({
+        error: true,
+        text: "مقدار فیلد نباید خالی باشد",
+      });
+    }
+
+    if (PhysicalProgressInArbitrationDateAccuser.length <= 0) {
+      setPhysicalProgressInArbitrationDateAccuserError({
+        error: true,
+        text: "مقدار فیلد نباید خالی باشد",
+      });
+    }
+
+    if (PhysicalProgressInArbitrationDateAccused.length <= 0) {
+      setPhysicalProgressInArbitrationDateAccusedError({
+        error: true,
+        text: "مقدار فیلد نباید خالی باشد",
+      });
+    }
+
+    if (FinancialProgressInArbitrationDateAccuser.length <= 0) {
+      setFinancialProgressInArbitrationDateAccuserError({
+        error: true,
+        text: "مقدار فیلد نباید خالی باشد",
+      });
+    }
+
+    if (FinancialProgressInArbitrationDateAccused.length <= 0) {
+      setFinancialProgressInArbitrationDateAccusedError({
+        error: true,
+        text: "مقدار فیلد نباید خالی باشد",
+      });
+    }
+
+    if (ContractStatusInArbitration.length <= 0) {
+      setContractStatusInArbitrationError([
+        { error: true, text: "مقدار فیلد نباید خالی باشد" },
+      ]);
+    }
+
+    if (ContractStatusInArbitrationDate.length <= 0) {
+      setContractStatusInArbitrationDateError({
+        error: true,
+        text: "مقدار فیلد نباید خالی باشد",
+      });
+    }
+
+    if (SupervisionDepartment.length <= 0) {
+      setSupervisionDepartmentError({
+        error: true,
+        text: "مقدار فیلد نباید خالی باشد",
+      });
+    }
+
+    if (AuthorizedDelaysAccuser.length <= 0) {
+      setAuthorizedDelaysAccuserError({
+        error: true,
+        text: "مقدار فیلد نباید خالی باشد",
+      });
+    }
+
+    if (AuthorizedDelaysAccused.length <= 0) {
+      setAuthorizedDelaysAccusedError({
+        error: true,
+        text: "مقدار فیلد نباید خالی باشد",
+      });
+    }
+
+    if (UnauthorizedDelaysAccuser.length <= 0) {
+      setUnauthorizedDelaysAccuserError({
+        error: true,
+        text: "مقدار فیلد نباید خالی باشد",
+      });
+    }
+
+    if (UnauthorizedDelaysAccused.length <= 0) {
+      setUnauthorizedDelaysAccusedError({
+        error: true,
+        text: "مقدار فیلد نباید خالی باشد",
+      });
+    }
+
+    return (
+      RelatedPeopleError.error ||
+      AccuserNationalityError.error ||
+      AccusedNationalityError.error ||
+      contratDetailsError.error ||
+      ContractSubjectError.error ||
+      ContractNumberError.error ||
+      ContractDateError.error ||
+      InitialBudgetError.error ||
+      InitialTimePeriodError.error ||
+      PriceListOfBasicUnitOfFieldError.some((item) => item.error) ||
+      RecommendedCoefficientError.some((item) => item.error) ||
+      CoefficientTypeError.error ||
+      AssigningTypeError.some((item) => item.error) ||
+      DoesContainAdjustmentEror.error ||
+      BaseIndexPeriodError.error ||
+      OperationStartDateAccuserError.error ||
+      OperationStartDateAccusedError.error ||
+      PhysicalProgressInArbitrationDateAccuserError.error ||
+      PhysicalProgressInArbitrationDateAccusedError.error ||
+      FinancialProgressInArbitrationDateAccuserError.error ||
+      FinancialProgressInArbitrationDateAccusedError.error ||
+      ContractStatusInArbitrationError.some((item) => item.error) ||
+      ContractStatusInArbitrationDateError.error ||
+      SupervisionDepartmentError.error ||
+      AuthorizedDelaysAccuserError.error ||
+      AuthorizedDelaysAccusedError.error ||
+      UnauthorizedDelaysAccuserError.error ||
+      UnauthorizedDelaysAccusedError.error
+    );
+  };
+  const [createContractMutation, { data, loading, error }] =
+    useMutation(CREATE_CONTRACT, {
+      variables: {
+        RelatedPeople,
+        AccuserNationality,
+        AccusedNationality,
+        ContractType: contratDetails.contratTypes,
+        CircularNumber: contratDetails.CircularNumber,
+        CircularDate: contratDetails.CircularDate,
+        ContractSubject,
+        ContractNumber,
+        ContractDate,
+        InitialBudget,
+        InitialTimePeriod,
+        PriceListOfBasicUnitOfField,
+        IsSpecialPriceListAttachedToContract,
+        RecommendedCoefficient,
+        CoefficientType,
+        AssigningType,
+        DoesContainAdjustment,
+        BaseIndexPeriod,
+        OperationStartDateAccuser,
+        OperationStartDateAccused,
+        PhysicalProgressInArbitrationDateAccuser,
+        PhysicalProgressInArbitrationDateAccused,
+        FinancialProgressInArbitrationDateAccuser,
+        FinancialProgressInArbitrationDateAccused,
+        ContractStatusInArbitration,
+        ContractStatusInArbitrationDate,
+        SupervisionDepartment,
+        AuthorizedDelaysAccuser,
+        AuthorizedDelaysAccused,
+        UnauthorizedDelaysAccuser,
+        UnauthorizedDelaysAccused,
+      },
+      onCompleted(data, clientOptions) {
+        console.log(data);
+      },
+    });
 
   countries.sort((a, b) => {
     if (a.name_fa < b.name_fa) {
@@ -107,7 +484,16 @@ const AddContract = () => {
   return (
     <>
       <BackButton to="/complaints" />
-      <Box display={"grid"} gridTemplateColumns={"repeat(12, 1fr)"} alignItems={"center"} justifyContent={"center"} gap={2} padding={"2rem"} border={`2px solid ${primary}`} borderRadius={"1rem"}>
+      <Box
+        display={"grid"}
+        gridTemplateColumns={"repeat(12, 1fr)"}
+        alignItems={"center"}
+        justifyContent={"center"}
+        gap={2}
+        padding={"2rem"}
+        border={`2px solid ${primary}`}
+        borderRadius={"1rem"}
+      >
         <Typography
           variant="h4"
           gridColumn={"span 12"}
@@ -132,15 +518,27 @@ const AddContract = () => {
         </Typography>
 
         <Typography variant="body1" gridColumn={"span 12"}>
-          {"حداکثر دو نفر نماینده معرفی شده صرفا دارای سمت در شرکت/دستگاه اجرایی یا در پروژه محل اختلاف (که یک نفر از آنها می تواند وکیل دادگستری (با وکالتنامه رسمی) باشد."}
+          {
+            "حداکثر دو نفر نماینده معرفی شده صرفا دارای سمت در شرکت/دستگاه اجرایی یا در پروژه محل اختلاف (که یک نفر از آنها می تواند وکیل دادگستری (با وکالتنامه رسمی) باشد."
+          }
         </Typography>
 
         <List sx={{ gridColumn: "span 12" }}>
-          <Typography variant="body1">{"	الف) شركت در جلسه و امضاي قرارنامه داوري"}</Typography>
-          <Typography variant="body1">{"ب) شركت در جلسات كارشناسي"}</Typography>
-          <Typography variant="body1">{"پ) شركت در جلسه استماع"}</Typography>
-          <Typography variant="body1">{"ت) دریافت رای داوری "}</Typography>
-          <Typography variant="body1">{"ث) ساير همكاري‌هاي لازم و مرتبط با موضوع اختلاف"}</Typography>
+          <Typography variant="body1">
+            {"	الف) شركت در جلسه و امضاي قرارنامه داوري"}
+          </Typography>
+          <Typography variant="body1">
+            {"ب) شركت در جلسات كارشناسي"}
+          </Typography>
+          <Typography variant="body1">
+            {"پ) شركت در جلسه استماع"}
+          </Typography>
+          <Typography variant="body1">
+            {"ت) دریافت رای داوری "}
+          </Typography>
+          <Typography variant="body1">
+            {"ث) ساير همكاري‌هاي لازم و مرتبط با موضوع اختلاف"}
+          </Typography>
         </List>
 
         <Divider
@@ -168,6 +566,8 @@ const AddContract = () => {
           onChange={(e) => {
             setAccuserNationality(e.target.value);
           }}
+          error={AccuserNationalityError.error}
+          helperText={AccuserNationalityError.text}
         >
           {countries.map((item, index) => (
             <MenuItem key={index} value={item.name_fa}>
@@ -184,6 +584,8 @@ const AddContract = () => {
           onChange={(e) => {
             setAccusedNationality(e.target.value);
           }}
+          error={AccusedNationalityError.error}
+          helperText={AccusedNationalityError.text}
         >
           {countries.map((item, index) => (
             <MenuItem key={index} value={item.name_fa}>
@@ -277,7 +679,10 @@ const AddContract = () => {
             margin: "0rem 2rem",
           }}
           onClick={() => {
-            setRelatedPeople([...RelatedPeople, { name: "", phone: "" }]);
+            setRelatedPeople([
+              ...RelatedPeople,
+              { name: "", phone: "" },
+            ]);
           }}
         >
           <Add />
@@ -296,7 +701,9 @@ const AddContract = () => {
           {"4- مشخصات قرارداد: "}
         </Typography>
         <Typography variant="h6" gridColumn={"span 12"}>
-          {"در این قسمت لازم است نوع قرارداد همسان سازمان برنامه و بودجه کشور که مورد استفاده قرار گرفته علامت زده شود:"}
+          {
+            "در این قسمت لازم است نوع قرارداد همسان سازمان برنامه و بودجه کشور که مورد استفاده قرار گرفته علامت زده شود:"
+          }
         </Typography>
 
         <FormGroup
@@ -534,6 +941,8 @@ const AddContract = () => {
               CircularNumber: e.target.value,
             });
           }}
+          error={contratDetailsError.error}
+          helperText={contratDetailsError.text}
         />
         <TextField
           label={"تاریخ بخشنامه"}
@@ -551,6 +960,8 @@ const AddContract = () => {
               CircularDate: e.target.value,
             });
           }}
+          error={contratDetailsError.error}
+          helperText={contratDetailsError.text}
         />
         <Divider sx={{ gridColumn: "span 12" }} />
 
@@ -573,6 +984,8 @@ const AddContract = () => {
           onChange={(e) => {
             setContractSubject(e.target.value);
           }}
+          error={ContractSubjectError.error}
+          helperText={ContractSubjectError.text}
         />
 
         <div
@@ -605,6 +1018,8 @@ const AddContract = () => {
           onChange={(e) => {
             setContractNumber(e.target.value);
           }}
+          error={ContractNumberError.error}
+          helperText={ContractNumberError.text}
         />
         <TextField
           label="تاریخ: "
@@ -616,6 +1031,8 @@ const AddContract = () => {
           onChange={(e) => {
             setContractDate(e.target.value);
           }}
+          error={ContractDateError.error}
+          helperText={ContractDateError.text}
         />
 
         {/* <Divider sx={{ gridColumn: "span 3" }} /> */}
@@ -652,6 +1069,8 @@ const AddContract = () => {
           onChange={(e) => {
             setInitialBudget(e.target.value);
           }}
+          error={InitialBudgetError.error}
+          helperText={InitialBudgetError.text}
         />
         <div
           style={{
@@ -687,6 +1106,8 @@ const AddContract = () => {
           onChange={(e) => {
             setInitialTimePeriod(e.target.value);
           }}
+          error={InitialTimePeriodError.error}
+          helperText={InitialTimePeriodError.text}
         />
         <div
           style={{
@@ -784,7 +1205,10 @@ const AddContract = () => {
             margin: "0rem 2rem",
           }}
           onClick={() => {
-            setPriceListOfBasicUnitOfField([...PriceListOfBasicUnitOfField, { year: "", price: "" }]);
+            setPriceListOfBasicUnitOfField([
+              ...PriceListOfBasicUnitOfField,
+              { year: "", price: "" },
+            ]);
           }}
         >
           <Add />
@@ -937,8 +1361,14 @@ const AddContract = () => {
             gridColumn: "span 6",
           }}
         >
-          <FormLabel id="demo-row-radio-buttons-group-label">نحوه واگذاري كار</FormLabel>
-          <RadioGroup row aria-labelledby="demo-row-radio-buttons-group-label" name="row-radio-buttons-group">
+          <FormLabel id="demo-row-radio-buttons-group-label">
+            نحوه واگذاري كار
+          </FormLabel>
+          <RadioGroup
+            row
+            aria-labelledby="demo-row-radio-buttons-group-label"
+            name="row-radio-buttons-group"
+          >
             <FormControlLabel
               value="مناقصه "
               checked={AssigningType === "مناقصه "}
@@ -962,7 +1392,12 @@ const AddContract = () => {
             <FormControlLabel
               control={<TextField />}
               label=""
-              value={AssigningType !== "مناقصه " && AssigningType !== "ترك مناقصه" ? AssigningType : ""}
+              value={
+                AssigningType !== "مناقصه " &&
+                AssigningType !== "ترك مناقصه"
+                  ? AssigningType
+                  : ""
+              }
               onChange={(e) => {
                 // @ts-ignore
                 setAssigningType(e.target.value);
@@ -998,7 +1433,9 @@ const AddContract = () => {
             gridColumn: "span 6",
           }}
         >
-          <FormLabel id="demo-row-radio-buttons-group-label">پيمان مشمول تعديل </FormLabel>
+          <FormLabel id="demo-row-radio-buttons-group-label">
+            پيمان مشمول تعديل{" "}
+          </FormLabel>
           <RadioGroup row>
             <FormControlLabel
               value={true}
@@ -1058,6 +1495,8 @@ const AddContract = () => {
               month: e.target.value,
             });
           }}
+          error={BaseIndexPeriodError.error}
+          helperText={BaseIndexPeriodError.text}
         />
         <TextField
           label="سال"
@@ -1072,6 +1511,8 @@ const AddContract = () => {
               year: e.target.value,
             });
           }}
+          error={BaseIndexPeriodError.error}
+          helperText={BaseIndexPeriodError.text}
         />
 
         <div
@@ -1107,6 +1548,8 @@ const AddContract = () => {
           onChange={(e) => {
             setOperationStartDateAccuser(e.target.value);
           }}
+          error={OperationStartDateAccuserError.error}
+          helperText={OperationStartDateAccuserError.text}
         />
         <TextField
           label="تاريخ شروع كار خوانده"
@@ -1119,6 +1562,8 @@ const AddContract = () => {
           onChange={(e) => {
             setOperationStartDateAccused(e.target.value);
           }}
+          error={OperationStartDateAccusedError.error}
+          helperText={OperationStartDateAccusedError.text}
         />
         <div
           style={{
@@ -1153,8 +1598,14 @@ const AddContract = () => {
           }}
           value={PhysicalProgressInArbitrationDateAccuser}
           onChange={(e) => {
-            setPhysicalProgressInArbitrationDateAccuser(e.target.value);
+            setPhysicalProgressInArbitrationDateAccuser(
+              e.target.value
+            );
           }}
+          error={PhysicalProgressInArbitrationDateAccuserError.error}
+          helperText={
+            PhysicalProgressInArbitrationDateAccuserError.text
+          }
         />
         <TextField
           label="خوانده"
@@ -1167,8 +1618,14 @@ const AddContract = () => {
           }}
           value={PhysicalProgressInArbitrationDateAccused}
           onChange={(e) => {
-            setPhysicalProgressInArbitrationDateAccused(e.target.value);
+            setPhysicalProgressInArbitrationDateAccused(
+              e.target.value
+            );
           }}
+          error={PhysicalProgressInArbitrationDateAccusedError.error}
+          helperText={
+            PhysicalProgressInArbitrationDateAccusedError.text
+          }
         />
         {/* 
 
@@ -1192,8 +1649,14 @@ const AddContract = () => {
           }}
           value={FinancialProgressInArbitrationDateAccuser}
           onChange={(e) => {
-            setFinancialProgressInArbitrationDateAccuser(e.target.value);
+            setFinancialProgressInArbitrationDateAccuser(
+              e.target.value
+            );
           }}
+          error={FinancialProgressInArbitrationDateAccuserError.error}
+          helperText={
+            FinancialProgressInArbitrationDateAccuserError.text
+          }
         />
         <TextField
           label="خوانده"
@@ -1206,8 +1669,14 @@ const AddContract = () => {
           }}
           value={FinancialProgressInArbitrationDateAccused}
           onChange={(e) => {
-            setFinancialProgressInArbitrationDateAccused(e.target.value);
+            setFinancialProgressInArbitrationDateAccused(
+              e.target.value
+            );
           }}
+          error={FinancialProgressInArbitrationDateAccusedError.error}
+          helperText={
+            FinancialProgressInArbitrationDateAccusedError.text
+          }
         />
 
         <div
@@ -1238,7 +1707,11 @@ const AddContract = () => {
             gridColumn: "span 12",
           }}
         >
-          <RadioGroup row aria-labelledby="demo-row-radio-buttons-group-label" name="row-radio-buttons-group">
+          <RadioGroup
+            row
+            aria-labelledby="demo-row-radio-buttons-group-label"
+            name="row-radio-buttons-group"
+          >
             <FormControlLabel
               value="ابلاغ خاتمه"
               control={<Radio />}
@@ -1290,7 +1763,9 @@ const AddContract = () => {
               }}
             />
             <FormControlLabel
-              control={<TextField label={"تاریخ"} type="date" focused />}
+              control={
+                <TextField label={"تاریخ"} type="date" focused />
+              }
               label=""
               value={ContractStatusInArbitrationDate}
               onChange={(e) => {
@@ -1332,6 +1807,8 @@ const AddContract = () => {
           onChange={(e) => {
             setSupervisionDepartment(e.target.value);
           }}
+          error={SupervisionDepartmentError.error}
+          helperText={SupervisionDepartmentError.text}
         />
         <div
           style={{
@@ -1369,6 +1846,8 @@ const AddContract = () => {
           onChange={(e) => {
             setAuthorizedDelaysAccuser(e.target.value);
           }}
+          error={AuthorizedDelaysAccuserError.error}
+          helperText={AuthorizedDelaysAccuserError.text}
         />
         <TextField
           label={"از نظر خوانده:"}
@@ -1382,6 +1861,8 @@ const AddContract = () => {
           onChange={(e) => {
             setAuthorizedDelaysAccused(e.target.value);
           }}
+          error={AuthorizedDelaysAccusedError.error}
+          helperText={AuthorizedDelaysAccusedError.text}
         />
         <div
           style={{
@@ -1409,6 +1890,8 @@ const AddContract = () => {
           onChange={(e) => {
             setUnauthorizedDelaysAccuser(e.target.value);
           }}
+          error={UnauthorizedDelaysAccuserError.error}
+          helperText={UnauthorizedDelaysAccuserError.text}
         />
         <TextField
           label={"از نظر خوانده:"}
@@ -1422,6 +1905,8 @@ const AddContract = () => {
           onChange={(e) => {
             setUnauthorizedDelaysAccused(e.target.value);
           }}
+          error={UnauthorizedDelaysAccusedError.error}
+          helperText={UnauthorizedDelaysAccusedError.text}
         />
         <Divider sx={{ gridColumn: "span 12" }} />
         {/* 
@@ -1431,17 +1916,36 @@ const AddContract = () => {
 
       
       */}
-        <Typography variant="h5" fontWeight={800} gridColumn={"span 12"}>
-          توجه مهم: چنانچه در خصوص تاخیرات و یا تبعات ناشی از آن اختلافی وجود دارد، لازم است موارد زیر ارسال شوند:
+        <Typography
+          variant="h5"
+          fontWeight={800}
+          gridColumn={"span 12"}
+        >
+          توجه مهم: چنانچه در خصوص تاخیرات و یا تبعات ناشی از آن
+          اختلافی وجود دارد، لازم است موارد زیر ارسال شوند:
         </Typography>
-        <Typography variant="h6" fontWeight={800} gridColumn={"span 12"}>
+        <Typography
+          variant="h6"
+          fontWeight={800}
+          gridColumn={"span 12"}
+        >
           • گزارش توجیهی تاخیرات قرارداد شامل:
         </Typography>
         <List sx={{ gridColumn: "span 12" }}>
-          <Typography variant="body1">• برنامه های زمان‏بندی اولیه و اصلاحی ابلاغ شده</Typography>
-          <Typography variant="body1">• گزارش تهیه شده توسط پیمانکار (به همراه کلیه مستندات و پیوست‏ها)</Typography>
-          <Typography variant="body1">• گزارش رسیدگی به تاخیرات توسط مهندس مشاور</Typography>
-          <Typography variant="body1">• مستندات ابلاغ نتایج رسیدگی به تاخیرات به پیمانکار توسط کارفرما</Typography>
+          <Typography variant="body1">
+            • برنامه های زمان‏بندی اولیه و اصلاحی ابلاغ شده
+          </Typography>
+          <Typography variant="body1">
+            • گزارش تهیه شده توسط پیمانکار (به همراه کلیه مستندات و
+            پیوست‏ها)
+          </Typography>
+          <Typography variant="body1">
+            • گزارش رسیدگی به تاخیرات توسط مهندس مشاور
+          </Typography>
+          <Typography variant="body1">
+            • مستندات ابلاغ نتایج رسیدگی به تاخیرات به پیمانکار توسط
+            کارفرما
+          </Typography>
         </List>
 
         <Button
@@ -1458,11 +1962,19 @@ const AddContract = () => {
             },
           }}
           onClick={() => {
-            void createContractMutation();
+            if (handleErrors()) {
+              void createContractMutation();
+            }else{
+              void createContractMutation();
+            }
           }}
         >
           ثبت و ادامه
         </Button>
+
+        {data?.contract_addContract?.result && (
+          <Alert severity="success">قرارداد با موفقیت ثبت شد</Alert>
+        )}
       </Box>
     </>
   );

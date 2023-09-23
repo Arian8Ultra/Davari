@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const CREATE_CONTRACT = gql`
-  mutation CreateComplaint(
+  mutation contract_addContract(
     $RelatedPeople: [String!]
     $AccuserNationality: String!
     $AccusedNationality: String!

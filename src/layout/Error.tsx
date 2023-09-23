@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { Box, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { useRouteError } from "react-router-dom";
 
 const Error = () => {
@@ -11,19 +11,18 @@ const Error = () => {
   } = useRouteError();
   return (
     <Box
-      height={"100dvh"}
-      // width={"100%"}
+      minHeight={"95vh"}
       display={"flex"}
       justifyContent={"center"}
       alignItems={"center"}
-      padding={"3rem"}
+      // padding={"3rem"}
     >
       <Box
         zIndex={2}
         sx={{
           backgroundColor: "rgba(255,0,0,0.2)",
           borderRadius: "25px",
-          padding: "2rem",
+          padding: "3rem",
           direction: "rtl",
           display: "flex",
           flexDirection: "column",
@@ -31,7 +30,7 @@ const Error = () => {
         }}
       >
         <Typography
-          variant='h2'
+          variant="h2"
           sx={{
             position: "absolute",
             transform: "translate(-50%, -50%)",
@@ -45,12 +44,12 @@ const Error = () => {
         >
           {error?.status}
         </Typography>
-        <Typography variant='body1'>{error?.statusText}</Typography>
-        <Typography variant='caption'>
+        <Typography variant="body1">{error?.statusText}</Typography>
+        <Typography variant="caption">
           {error?.error?.message}
         </Typography>
         <Typography
-          variant='caption'
+          variant="caption"
           whiteSpace={"pre-line"}
           color={"gray"}
           sx={{
@@ -61,6 +60,25 @@ const Error = () => {
         >
           {error?.error.stack}
         </Typography>
+        <Button
+          variant="contained"
+          sx={{
+            borderRadius: 2,
+            backgroundColor: "black",
+            fontWeight: 700,
+            fontStyle: "normal",
+            fontSize: "1rem",
+            boxShadow: "none",
+            color: "white",
+            marginTop: "2rem",
+            "&:hover": {
+              backgroundColor: "black",
+            },
+          }}
+          onClick={() => window.history.back()}
+        >
+          بازگشت
+        </Button>
       </Box>
     </Box>
   );

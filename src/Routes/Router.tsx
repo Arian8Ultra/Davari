@@ -3,7 +3,7 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
 } from "react-router-dom";
-// import Error from "../layout/Error";
+import Error from "../layout/Error";
 import MainLayout from "../layout/MainLayout";
 import Root from "../layout/Root";
 import UserManagement from "../pages/Admin/UserManager/UserManagement";
@@ -24,7 +24,7 @@ import AddContract from "../pages/Complaints/AddContract/AddContract";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<Root />} >
+    <Route path="/" element={<Root />} errorElement={<Error/>} >
       <Route path="" element={<MainLayout />}>
         <Route path="" element={<Home />} />
         <Route path="home" element={<Home />} />
