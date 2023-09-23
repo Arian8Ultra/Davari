@@ -3,16 +3,16 @@ import React from "react";
 import { primaryGreyTransparent } from "../../theme/color";
 interface Props {
   id: number;
-  complaintId: number;
-  conteactId: number;
-  date: string;
-  acussed: string;
-  acussedId: number;
-  acusser: string;
-  acusserId: number;
-  state: string;
-  summary: string;
-  projectId: number;
+  complaintId?: number;
+  conteactId?: number;
+  date?: string;
+  acussed?: string;
+  acussedId?: number;
+  acusser?: string;
+  acusserId?: number;
+  state?: string;
+  summary?: string;
+  projectId?: number;
 }
 const ComplaintCardNew = (props: Props) => {
   const [open, setOpen] = React.useState(false);
