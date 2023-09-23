@@ -168,7 +168,7 @@ export default function MainLayout() {
       setSignedIn(false);
       setSignInModal({ ...signInModal, open: false });
     }
-  }, [token]);
+  }, [signInModal, token]);
 
   useEffect(() => {
     const now = new Date();
