@@ -28,31 +28,52 @@ const ComplaintCardNew = (props: Props) => {
           display: "grid",
           gridTemplateColumns: "repeat(4,1fr)",
           padding: "1rem",
+          cursor: "pointer",
         }}
         onClick={() => setOpen(!open)}
       >
-        <Typography textAlign={"center"}>
+        <Typography
+          textAlign={"center"}
+          sx={{
+            userSelect: "none",
+          }}
+        >
           شماره قرارداد:
           {
             // if title is not provided, use id + title
             // props.title ? String(props.title) : String(props.id) + " title "
           }
         </Typography>
-        <Typography textAlign={"center"}>
+        <Typography
+          textAlign={"center"}
+          sx={{
+            userSelect: "none",
+          }}
+        >
           شماره قرارداد:
           {
             // if title is not provided, use id + title
             // props.title ? String(props.title) : String(props.id) + " title "
           }
         </Typography>
-        <Typography textAlign={"center"}>
+        <Typography
+          textAlign={"center"}
+          sx={{
+            userSelect: "none",
+          }}
+        >
           شماره قرارداد:
           {
             // if title is not provided, use id + title
             // props.title ? String(props.title) : String(props.id) + " title "
           }
         </Typography>
-        <Typography textAlign={"center"}>
+        <Typography
+          textAlign={"center"}
+          sx={{
+            userSelect: "none",
+          }}
+        >
           شماره قرارداد:
           {
             // if title is not provided, use id + title
@@ -60,7 +81,7 @@ const ComplaintCardNew = (props: Props) => {
           }
         </Typography>
       </Box>
-      <Collapse in={open} timeout="auto" unmountOnExit>
+      <Collapse in={open} timeout="auto">
         <Box
           sx={{
             width: "100%",
@@ -70,28 +91,48 @@ const ComplaintCardNew = (props: Props) => {
             padding: "1rem",
           }}
         >
-          <Typography textAlign={"center"}>
+          <Typography
+            textAlign={"center"}
+            sx={{
+              userSelect: "none",
+            }}
+          >
             شماره قرارداد:
             {
               // if title is not provided, use id + title
               // props.title ? String(props.title) : String(props.id) + " title "
             }
           </Typography>
-          <Typography textAlign={"center"}>
+          <Typography
+            textAlign={"center"}
+            sx={{
+              userSelect: "none",
+            }}
+          >
             شماره قرارداد:
             {
               // if title is not provided, use id + title
               // props.title ? String(props.title) : String(props.id) + " title "
             }
           </Typography>
-          <Typography textAlign={"center"}>
+          <Typography
+            textAlign={"center"}
+            sx={{
+              userSelect: "none",
+            }}
+          >
             شماره قرارداد:
             {
               // if title is not provided, use id + title
               // props.title ? String(props.title) : String(props.id) + " title "
             }
           </Typography>
-          <Typography textAlign={"center"}>
+          <Typography
+            textAlign={"center"}
+            sx={{
+              userSelect: "none",
+            }}
+          >
             شماره قرارداد:
             {
               // if title is not provided, use id + title
