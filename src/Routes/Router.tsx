@@ -21,7 +21,7 @@ import NewAddForm from "../pages/Admin/FormManager/AddForm/NewAddForm";
 import Contracts from "../pages/Contracts/Contracts";
 import ViewFormAll from "../pages/Contracts/ViewForm/ViewForm";
 import AddContract from "../pages/Complaints/AddContract/AddContract";
-
+import "../index.css"
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Root />} errorElement={<Error/>} >

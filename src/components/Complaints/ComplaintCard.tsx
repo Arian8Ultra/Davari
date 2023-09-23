@@ -48,26 +48,34 @@ const ComplaintCard = (props: Props) => {
         }}
       >
         <Typography textAlign={"center"} gridArea={"title"}>
-          عنوان:
+          شماره قرارداد:
           {
             // if title is not provided, use id + title
             props.title ? String(props.title) : String(props.id) + " title "
           }
         </Typography>
         <Typography textAlign={"center"} gridArea={"number"}>
-          شناسه شکایت:
+          شماره شکایت:
           {
             // if number is not provided, use id + "number"
             props.number ? props.number : props.id + " number "
           }
         </Typography>
         <Typography textAlign={"center"} gridArea={"status"}>
-          وضعیت:
+          شماره پرونده:
           {
             // if status is not provided, use id + "status"
             props.status ? props.status : props.id + " status "
           }
         </Typography>
+        <Typography textAlign={"center"}>
+          شماره طرح:
+          {
+            // if status is not provided, use id + "status"
+            props.status ? props.status : props.id + " status "
+          }
+        </Typography>
+     
         <Box
           gridArea={"icon"}
           display={"flex"}

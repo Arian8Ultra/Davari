@@ -2,6 +2,7 @@ import { Stack } from "@mui/material"
 import { primaryTransparent } from "../../theme/color"
 import theme from "../../theme/theme"
 import ComplaintCard from "./ComplaintCard"
+import ComplaintCardNew from "./ComplaintCardNew"
 
 const ComplaintsList = () => {
   return (
@@ -14,7 +15,7 @@ const ComplaintsList = () => {
         scrollSnapType: 'y mandatory',    
     }}>
         {[1,2,3,4,5,6,7,8,9,10].map((item, index) => (
-            <ComplaintCard key={index} id={index} title={item}/>
+            <ComplaintCardNew key={index}/>
         ))}
     </Stack>
   )
