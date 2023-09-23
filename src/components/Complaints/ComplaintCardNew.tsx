@@ -1,4 +1,4 @@
-import { Box, Collapse, Typography } from "@mui/material";
+import { Box, Collapse, LinearProgress, Typography } from "@mui/material";
 import React from "react";
 import { primaryGreyTransparent } from "../../theme/color";
 interface Props {
@@ -27,8 +27,10 @@ const ComplaintCardNew = (props: Props) => {
           backgroundColor: "white",
           display: "grid",
           gridTemplateColumns: "repeat(4,1fr)",
-          padding: "1rem",
+          // padding: "1rem",
+          paddingTop: "1rem",
           cursor: "pointer",
+          position: "relative",
         }}
         onClick={() => setOpen(!open)}
       >
@@ -80,6 +82,12 @@ const ComplaintCardNew = (props: Props) => {
             // props.title ? String(props.title) : String(props.id) + " title "
           }
         </Typography>
+        <LinearProgress variant="determinate" value={50} sx={{
+          height: 7,
+          marginTop: "1rem",
+          width: "100%",
+          gridColumn: "1/5",
+        }} />
       </Box>
       <Collapse in={open} timeout="auto">
         <Box
