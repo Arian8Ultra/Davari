@@ -9,8 +9,14 @@ import {
   FormGroup,
   Typography,
 } from "@mui/material";
-import { Green, GreenLight, primary } from "../../../theme/color";
+import {
+  Green,
+  GreenLight,
+  primary,
+  primaryLighter,
+} from "../../../theme/color";
 import { RoundedCorner } from "@mui/icons-material";
+import FileButton from "../../../components/FileButton";
 
 const AddComplaint = () => {
   const [FisrtCondition, setFisrtCondition] = React.useState({
@@ -56,7 +62,7 @@ const AddComplaint = () => {
           label="شرط اول (عمرانی بودن محل اعتبار طرح)"
           sx={{
             cursor: "default",
-            gridColumn: "span 12",
+            gridColumn: "span 9",
           }}
           control={
             <Checkbox
@@ -74,6 +80,13 @@ const AddComplaint = () => {
             />
           }
         />
+        <Box sx={{ gridColumn: "span 3" }}>
+          <FileButton
+            text="افزودن فایل"
+            textColor={primary}
+            borderRadius="0.5rem"
+          />
+        </Box>
         <FormGroup
           sx={{
             gridColumn: "2/span 11",
@@ -112,7 +125,7 @@ const AddComplaint = () => {
             gridColumn: "span 12",
           }}
         />
-        <Divider sx={{ gridColumn: "span 6" }} />
+        <Divider sx={{ gridColumn: "span 12" }} />
         <div
           style={{
             gridColumn: "span 12",
@@ -123,7 +136,7 @@ const AddComplaint = () => {
           label="شرط دوم (تراضی بر داوری شورا)"
           sx={{
             cursor: "default",
-            gridColumn: "span 12",
+            gridColumn: "span 9",
           }}
           control={
             <Checkbox
@@ -145,6 +158,13 @@ const AddComplaint = () => {
             />
           }
         />
+        <Box sx={{ gridColumn: "span 3" }}>
+          <FileButton
+            text="افزودن فایل"
+            textColor={primary}
+            borderRadius="0.5rem"
+          />
+        </Box>
         <FormGroup
           sx={{
             gridColumn: "2/span 11",
@@ -202,7 +222,7 @@ const AddComplaint = () => {
             gridColumn: "span 12",
           }}
         />
-        <Divider sx={{ gridColumn: "span 6" }} />
+        <Divider sx={{ gridColumn: "span 12" }} />
         <div
           style={{
             gridColumn: "span 12",
@@ -213,7 +233,7 @@ const AddComplaint = () => {
           label="شرط سوم (عدم تسویه حساب)"
           sx={{
             cursor: "default",
-            gridColumn: "span 12",
+            gridColumn: "span 9",
           }}
           control={
             <Checkbox
@@ -236,6 +256,13 @@ const AddComplaint = () => {
             />
           }
         />
+        <Box sx={{ gridColumn: "span 3" }}>
+          <FileButton
+            text="افزودن فایل"
+            textColor={primary}
+            borderRadius="0.5rem"
+          />
+        </Box>
         <FormGroup
           sx={{
             gridColumn: "2/span 11",
@@ -304,7 +331,7 @@ const AddComplaint = () => {
             gridColumn: "span 12",
           }}
         />
-        <Divider sx={{ gridColumn: "span 6" }} />
+        <Divider sx={{ gridColumn: "span 12" }} />
         <div
           style={{
             gridColumn: "span 12",
@@ -315,7 +342,7 @@ const AddComplaint = () => {
           label="شرط چهارم (عدم طرح در مراجع قضایی یا داوری)"
           sx={{
             cursor: "default",
-            gridColumn: "span 12",
+            gridColumn: "span 9",
           }}
           control={
             <Checkbox
@@ -337,6 +364,13 @@ const AddComplaint = () => {
             />
           }
         />
+        <Box sx={{ gridColumn: "span 3" }}>
+          <FileButton
+            text="افزودن فایل"
+            textColor={primary}
+            borderRadius="0.5rem"
+          />
+        </Box>
         <FormGroup
           sx={{
             gridColumn: "2/span 11",
@@ -431,7 +465,7 @@ const AddComplaint = () => {
           sx={{
             gridColumn: "span 12",
             background: Green,
-            color: GreenLight,
+            color: "white",
             width: "max-content",
             justifySelf: "center",
             padding: "0.5rem 3rem",
