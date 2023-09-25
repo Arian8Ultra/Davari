@@ -501,7 +501,7 @@ const AddContract = () => {
           gridColumn={"span 12"}
           textAlign={"center"}
           sx={{
-            borderBottom: `2px solid ${primary}`,
+            // borderBottom: `2px solid ${primary}`,
           }}
         >
           فرم اطلاعات قرارداد
