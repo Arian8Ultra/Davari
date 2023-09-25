@@ -1,5 +1,4 @@
-import React from "react";
-import BackButton from "../../../components/BackButton";
+import { RoundedCorner } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -9,14 +8,15 @@ import {
   FormGroup,
   Typography,
 } from "@mui/material";
+import React from "react";
+import { BsUpload } from "react-icons/bs";
+import BackButton from "../../../components/BackButton";
+import FileButton from "../../../components/FileButton";
 import {
   Green,
   GreenLight,
-  primary,
-  primaryLighter,
+  primary
 } from "../../../theme/color";
-import { RoundedCorner } from "@mui/icons-material";
-import FileButton from "../../../components/FileButton";
 
 const AddComplaint = () => {
   const [FisrtCondition, setFisrtCondition] = React.useState({
@@ -85,7 +85,13 @@ const AddComplaint = () => {
             text="افزودن فایل"
             textColor={primary}
             borderRadius="0.5rem"
-          />
+          >
+            <BsUpload
+              style={{
+                marginInline: "0.5rem",
+              }}
+            />
+          </FileButton>
         </Box>
         <FormGroup
           sx={{
@@ -163,7 +169,13 @@ const AddComplaint = () => {
             text="افزودن فایل"
             textColor={primary}
             borderRadius="0.5rem"
-          />
+          >
+            <BsUpload
+              style={{
+                marginInline: "0.5rem",
+              }}
+            />
+          </FileButton>
         </Box>
         <FormGroup
           sx={{
@@ -261,7 +273,13 @@ const AddComplaint = () => {
             text="افزودن فایل"
             textColor={primary}
             borderRadius="0.5rem"
-          />
+          >
+            <BsUpload
+              style={{
+                marginInline: "0.5rem",
+              }}
+            />
+          </FileButton>
         </Box>
         <FormGroup
           sx={{
@@ -369,7 +387,13 @@ const AddComplaint = () => {
             text="افزودن فایل"
             textColor={primary}
             borderRadius="0.5rem"
-          />
+          >
+            <BsUpload
+              style={{
+                marginInline: "0.5rem",
+              }}
+            />
+          </FileButton>
         </Box>
         <FormGroup
           sx={{
