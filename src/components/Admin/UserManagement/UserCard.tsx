@@ -8,6 +8,10 @@ import {
   Button,
   Collapse,
   IconButton,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  Modal,
   Select,
   TextField,
   Tooltip,
@@ -49,6 +53,22 @@ interface Props {
   userRoles?: UserRole[];
 }
 const UserCard = (props: Props) => {
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+  const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: "20%",
+    height: "30%",
+    bgcolor: "background.paper",
+    border: "2px solid #000",
+    boxShadow: 24,
+    p: 4,
+  };
   const [editModal, setEditModal] = useState({
     open: false,
     username: "",
@@ -136,7 +156,8 @@ const UserCard = (props: Props) => {
       }}
       onClick={() => {
         console.log(props.id);
-        setCollapse(!collapse);
+        handleOpen();
+        // setCollapse(!collapse);
       }}
     >
       <Typography
@@ -148,6 +169,7 @@ const UserCard = (props: Props) => {
           md: 14,
           lg: 16,
         }}
+     
       >
         {props.firstName && props.firstName}
       </Typography>
@@ -484,7 +506,31 @@ const UserCard = (props: Props) => {
           </Button>
         </Box>
       </NewModal>
-      <Collapse
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Button onClick={()=>console.log("close")}>click</Button>
+            <ListItem sx={{display:"flex",flexDirection:"column" , alignItems:"flex-start"}}>
+                <ListItemButton>
+                  <ListItemText>دسترسی کاربر</ListItemText>
+                </ListItemButton>
+                <ListItemButton>
+                  <ListItemText>دسترسی کاربر</ListItemText>
+                </ListItemButton>
+                <ListItemButton>
+                  <ListItemText>دسترسی کاربر</ListItemText>
+                </ListItemButton>
+                <ListItemButton>
+                  <ListItemText>دسترسی کاربر</ListItemText>
+                </ListItemButton>
+            </ListItem>
+        </Box>
+      </Modal>
+      {/* <Collapse
         in={collapse}
         sx={{
           gridColumn: {
@@ -538,7 +584,7 @@ const UserCard = (props: Props) => {
               ))}
           </Box>
         </Box>
-      </Collapse>
+      </Collapse> */}
     </Box>
   );
 };
