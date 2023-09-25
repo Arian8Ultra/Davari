@@ -26,7 +26,7 @@ interface Props {
   summary?: string;
   projectId?: number;
 }
-const ComplaintCardNew = () => {
+const ComplaintCardNew = (props: Props) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);

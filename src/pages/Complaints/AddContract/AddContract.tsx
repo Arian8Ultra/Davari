@@ -27,8 +27,10 @@ import { CREATE_CONTRACT } from "../../../GraphQL/Contracts/Mutations";
 import BackButton from "../../../components/BackButton";
 import countries from "../../../static/Countries";
 import { Green, GreenLight, primary } from "../../../theme/color";
+import { useNavigate } from "react-router-dom";
 
 const AddContract = () => {
+  const navigate = useNavigate();
   const [RelatedPeople, setRelatedPeople] = React.useState([
     { name: "" as string, phone: "" as string },
   ]);
@@ -1964,8 +1966,10 @@ const AddContract = () => {
           onClick={() => {
             if (handleErrors()) {
               void createContractMutation();
+              navigate("/complaints/addComplaint")
             }else{
               void createContractMutation();
+              navigate("/complaints/addComplaint")
             }
           }}
         >

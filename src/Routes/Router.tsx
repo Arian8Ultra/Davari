@@ -22,6 +22,7 @@ import Contracts from "../pages/Contracts/Contracts";
 import ViewFormAll from "../pages/Contracts/ViewForm/ViewForm";
 import AddContract from "../pages/Complaints/AddContract/AddContract";
 import "../index.css"
+import AddComplaint from "../pages/Complaints/AddComplaints/AddComplaints";
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Root />} errorElement={<Error/>} >
@@ -30,6 +31,7 @@ const router = createBrowserRouter(
         <Route path="home" element={<Home />} />
         <Route path="complaints" element={<Complaints />} />
         <Route path="complaints/addContract" element={<AddContract />} />
+        <Route path="complaints/addComplaint" element={<AddComplaint />} />
 
         <Route path="contracts" element={<Contracts />} />
         <Route path="portal" element={<Protal />} />

@@ -1,9 +1,9 @@
 import React from 'react'
 
-const AddComplaints = () => {
+const AddComplaint = () => {
   return (
-    <div>AddComplaints</div>
+    <div>AddComplaint</div>
   )
 }
 
-export default AddComplaints
+export default AddComplaint
