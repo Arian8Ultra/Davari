@@ -11,6 +11,8 @@ import {
   ListItem,
   ListItemButton,
   ListItemText,
+  Menu,
+  MenuItem,
   Modal,
   Select,
   TextField,
@@ -39,9 +41,10 @@ import {
   background,
   primary,
   primaryGrey,
-  primaryTransparent
+  primaryTransparent,
 } from "../../../theme/color";
 import NewModal from "../../Modals";
+import { Person2Outlined } from "@mui/icons-material";
 interface Props {
   firstName?: string;
   lastName?: string;
@@ -53,10 +56,20 @@ interface Props {
   userRoles?: UserRole[];
 }
 const UserCard = (props: Props) => {
+  // alijh state for modal
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
+  // alijh state for menuItem
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const openAnchor = Boolean(anchorEl);
+  const handleClickAnchor = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleCloseAnchor = () => {
+    setAnchorEl(null);
+  };
+  //alijh style for modal
   const style = {
     position: "absolute",
     top: "50%",
@@ -69,6 +82,7 @@ const UserCard = (props: Props) => {
     boxShadow: 24,
     p: 4,
   };
+
   const [editModal, setEditModal] = useState({
     open: false,
     username: "",
@@ -79,7 +93,7 @@ const UserCard = (props: Props) => {
 
   const [roleModal, setRoleModal] = useState({
     open: false,
-    roleType: '',
+    roleType: "",
   });
   const [collapse, setCollapse] = useState(false);
 
@@ -154,11 +168,6 @@ const UserCard = (props: Props) => {
           cursor: "pointer",
         },
       }}
-      onClick={() => {
-        console.log(props.id);
-        handleOpen();
-        // setCollapse(!collapse);
-      }}
     >
       <Typography
         gridArea={"firstName"}
@@ -169,7 +178,6 @@ const UserCard = (props: Props) => {
           md: 14,
           lg: 16,
         }}
-     
       >
         {props.firstName && props.firstName}
       </Typography>
@@ -245,113 +253,161 @@ const UserCard = (props: Props) => {
           // outline: "1px solid red",
         }}
       >
-        <Tooltip title={"ویرایش کاربر"}>
-          <IconButton
-            sx={{
-              // backgroundColor: Blue,
-              outline: `2px solid ${Blue}`,
-              color: Blue,
-              "&:hover": {
-                backgroundColor: BlueLight,
-              },
-              fontSize: {
-                xs: "0.8rem",
-                sm: "1rem",
-                md: "1.2rem",
-                lg: "1.4rem",
-              },
-            }}
-            onClick={() => {
-              setEditModal({
-                open: true,
-                username: props.userName ? props.userName : "",
-                firstName: props.firstName ? props.firstName : "",
-                lastName: props.lastName ? props.lastName : "",
-                nationalCode: props.personalCode
-                  ? props.personalCode
-                  : "",
-              });
-            }}
-          >
-            <AiOutlineEdit />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title={"حذف کاربر"}>
-          <IconButton
-            onClick={() => {
-              const agree = confirm(
-                `آیا از حذف کاربر '${props.firstName} ${props.lastName}' مطمئن هستید؟`
-              );
-              if (agree) {
-                void deleteUser();
-              }
-            }}
-            sx={{
-              // backgroundColor: Red,
-              outline: `2px solid ${Red}`,
-              color: Red,
-              "&:hover": {
-                backgroundColor: RedLight,
-              },
-              fontSize: {
-                xs: "0.8rem",
-                sm: "1rem",
-                md: "1.2rem",
-                lg: "1.4rem",
-              },
-            }}
-          >
-            <AiOutlineDelete />
-          </IconButton>
-        </Tooltip>
-
-        <Tooltip title={"تغییر دسترسی ها"}>
-          <IconButton
-            sx={{
-              // backgroundColor: Green,
-              outline: `2px solid ${Green}`,
-              color: Green,
-              "&:hover": {
-                backgroundColor: GreenLight,
-              },
-              fontSize: {
-                xs: "0.8rem",
-                sm: "1rem",
-                md: "1.2rem",
-                lg: "1.4rem",
-              },
-            }}
-            onClick={() => {
-              setRoleModal({
-                open: true,
-                roleType: "",
-              });
-            }}
-          >
-            <VscPreview />
-          </IconButton>
-        </Tooltip>
-
-        <Tooltip title={"تغییر رمز عبور"}>
-          <IconButton
-            sx={{
-              // backgroundColor: primary,
-              outline: `2px solid ${primary}`,
-              color: primary,
-              "&:hover": {
-                backgroundColor: primaryTransparent,
-              },
-              fontSize: {
-                xs: "0.8rem",
-                sm: "1rem",
-                md: "1.2rem",
-                lg: "1.4rem",
-              },
-            }}
-          >
-            <BsKey />
-          </IconButton>
-        </Tooltip>
+        <Button
+          id="basic-button"
+          aria-controls={openAnchor ? "basic-menu" : undefined}
+          aria-haspopup="true"
+          aria-expanded={openAnchor ? "true" : undefined}
+          onClick={handleClickAnchor}
+        >
+          ...
+        </Button>
+        <Menu
+          id="basic-menu"
+          anchorEl={anchorEl}
+          open={openAnchor}
+          onClose={handleCloseAnchor}
+          MenuListProps={{
+            "aria-labelledby": "basic-button",
+          }}
+        >
+          <MenuItem onClick={handleCloseAnchor}>
+            <Tooltip title={"ویرایش کاربر"}>
+              <IconButton
+                sx={{
+                  // backgroundColor: Blue,
+                  outline: `2px solid ${Blue}`,
+                  color: Blue,
+                  "&:hover": {
+                    backgroundColor: BlueLight,
+                  },
+                  fontSize: {
+                    xs: "0.8rem",
+                    sm: "1rem",
+                    md: "1.2rem",
+                    lg: "1.4rem",
+                  },
+                }}
+                onClick={() => {
+                  setEditModal({
+                    open: true,
+                    username: props.userName ? props.userName : "",
+                    firstName: props.firstName ? props.firstName : "",
+                    lastName: props.lastName ? props.lastName : "",
+                    nationalCode: props.personalCode ? props.personalCode : "",
+                  });
+                }}
+              >
+                <AiOutlineEdit />
+              </IconButton>
+            </Tooltip>
+          </MenuItem>
+          <MenuItem onClick={handleCloseAnchor}>
+            <Tooltip title={"دسترسی های کاربر"}>
+              <IconButton
+                sx={{
+                  // backgroundColor: Blue,
+                  outline: `2px solid ${Blue}`,
+                  color: Blue,
+                  "&:hover": {
+                    backgroundColor: BlueLight,
+                  },
+                  fontSize: {
+                    xs: "0.8rem",
+                    sm: "1rem",
+                    md: "1.2rem",
+                    lg: "1.4rem",
+                  },
+                }}
+                onClick={() => {
+                  handleOpen();
+                }}
+              >
+                <Person2Outlined />
+              </IconButton>
+            </Tooltip>
+          </MenuItem>
+          <MenuItem onClick={handleCloseAnchor}>
+            <Tooltip title={"حذف کاربر"}>
+              <IconButton
+                onClick={() => {
+                  const agree = confirm(
+                    `آیا از حذف کاربر '${props.firstName} ${props.lastName}' مطمئن هستید؟`
+                  );
+                  if (agree) {
+                    void deleteUser();
+                  }
+                }}
+                sx={{
+                  // backgroundColor: Red,
+                  outline: `2px solid ${Red}`,
+                  color: Red,
+                  "&:hover": {
+                    backgroundColor: RedLight,
+                  },
+                  fontSize: {
+                    xs: "0.8rem",
+                    sm: "1rem",
+                    md: "1.2rem",
+                    lg: "1.4rem",
+                  },
+                }}
+              >
+                <AiOutlineDelete />
+              </IconButton>
+            </Tooltip>
+          </MenuItem>
+          <MenuItem onClick={handleCloseAnchor}>
+            <Tooltip title={"تغییر دسترسی ها"}>
+              <IconButton
+                sx={{
+                  // backgroundColor: Green,
+                  outline: `2px solid ${Green}`,
+                  color: Green,
+                  "&:hover": {
+                    backgroundColor: GreenLight,
+                  },
+                  fontSize: {
+                    xs: "0.8rem",
+                    sm: "1rem",
+                    md: "1.2rem",
+                    lg: "1.4rem",
+                  },
+                }}
+                onClick={() => {
+                  setRoleModal({
+                    open: true,
+                    roleType: "",
+                  });
+                }}
+              >
+                <VscPreview />
+              </IconButton>
+            </Tooltip>
+          </MenuItem>
+          <MenuItem onClick={handleCloseAnchor}>
+            <Tooltip title={"تغییر رمز عبور"}>
+              <IconButton
+                sx={{
+                  // backgroundColor: primary,
+                  outline: `2px solid ${primary}`,
+                  color: primary,
+                  "&:hover": {
+                    backgroundColor: primaryTransparent,
+                  },
+                  fontSize: {
+                    xs: "0.8rem",
+                    sm: "1rem",
+                    md: "1.2rem",
+                    lg: "1.4rem",
+                  },
+                }}
+              >
+                <BsKey />
+              </IconButton>
+            </Tooltip>
+          </MenuItem>
+        </Menu>
       </Box>
 
       <NewModal
@@ -384,10 +440,9 @@ const UserCard = (props: Props) => {
             variant={"outlined"}
             value={editModal.firstName}
             sx={{
-              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
-                {
-                  borderRadius: "15px",
-                },
+              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+                borderRadius: "15px",
+              },
             }}
             onChange={(e) =>
               setEditModal({
@@ -403,10 +458,9 @@ const UserCard = (props: Props) => {
             variant={"outlined"}
             value={editModal.lastName}
             sx={{
-              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
-                {
-                  borderRadius: "15px",
-                },
+              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+                borderRadius: "15px",
+              },
             }}
             onChange={(e) =>
               setEditModal({ ...editModal, lastName: e.target.value })
@@ -419,10 +473,9 @@ const UserCard = (props: Props) => {
             variant={"outlined"}
             value={editModal.nationalCode}
             sx={{
-              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
-                {
-                  borderRadius: "15px",
-                },
+              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+                borderRadius: "15px",
+              },
             }}
             onChange={(e) =>
               setEditModal({
@@ -513,21 +566,27 @@ const UserCard = (props: Props) => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <Button onClick={()=>console.log("close")}>click</Button>
-            <ListItem sx={{display:"flex",flexDirection:"column" , alignItems:"flex-start"}}>
-                <ListItemButton>
-                  <ListItemText>دسترسی کاربر</ListItemText>
-                </ListItemButton>
-                <ListItemButton>
-                  <ListItemText>دسترسی کاربر</ListItemText>
-                </ListItemButton>
-                <ListItemButton>
-                  <ListItemText>دسترسی کاربر</ListItemText>
-                </ListItemButton>
-                <ListItemButton>
-                  <ListItemText>دسترسی کاربر</ListItemText>
-                </ListItemButton>
-            </ListItem>
+          <Button onClick={handleClose}>click</Button>
+          <ListItem
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-start",
+            }}
+          >
+            <ListItemButton>
+              <ListItemText>دسترسی کاربر</ListItemText>
+            </ListItemButton>
+            <ListItemButton>
+              <ListItemText>دسترسی کاربر</ListItemText>
+            </ListItemButton>
+            <ListItemButton>
+              <ListItemText>دسترسی کاربر</ListItemText>
+            </ListItemButton>
+            <ListItemButton>
+              <ListItemText>دسترسی کاربر</ListItemText>
+            </ListItemButton>
+          </ListItem>
         </Box>
       </Modal>
       {/* <Collapse
