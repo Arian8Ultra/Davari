@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { RoundedCorner } from "@mui/icons-material";
 import {
   Box,
@@ -15,7 +18,9 @@ import FileButton from "../../../components/FileButton";
 import {
   Green,
   GreenLight,
-  primary
+  primary,
+  secondary,
+  secondaryLight,
 } from "../../../theme/color";
 
 const AddComplaint = () => {
@@ -32,6 +37,20 @@ const AddComplaint = () => {
     checked: [] as boolean[],
   });
   const [AgreeWithTerms, setAgreeWithTerms] = React.useState(false);
+
+  const complaints = JSON.parse(
+    localStorage.getItem("complaints") || "{}"
+  );
+
+  React.useEffect(() => {
+    if (complaints?.FisrtCondition) {
+      setFisrtCondition(complaints.FisrtCondition);
+      setSecondCondition(complaints.SecondCondition);
+      setThirdCondition(complaints.ThirdCondition);
+      setFourthCondition(complaints.FourthCondition);
+      setAgreeWithTerms(complaints.AgreeWithTerms);
+    }
+  }, [complaints]);
   return (
     <>
       <BackButton to="/complaints/addContract" />
@@ -480,14 +499,47 @@ const AddComplaint = () => {
           variant="contained"
           sx={{
             gridColumn: "10 / span 3",
+            width: "max-content",
+            justifySelf: "center",
           }}
         >
           دانلود شیوه نامه داوری شورای عالی فنی
         </Button>
+
         <Button
           variant="contained"
           sx={{
-            gridColumn: "span 12",
+            gridColumn: "span 6",
+            background: secondary,
+            color: "white",
+            width: "max-content",
+            justifySelf: "center",
+            padding: "0.5rem 3rem",
+            "&:hover": {
+              background: secondaryLight,
+              color: primary,
+            },
+          }}
+          onClick={() => {
+            localStorage.setItem(
+              "complaints",
+              JSON.stringify({
+                FisrtCondition,
+                SecondCondition,
+                ThirdCondition,
+                FourthCondition,
+                AgreeWithTerms,
+              })
+            );
+            alert("ذخیره شد");
+          }}
+        >
+          ذخیره موقت
+        </Button>
+        <Button
+          variant="contained"
+          sx={{
+            gridColumn: "span 6",
             background: Green,
             color: "white",
             width: "max-content",
