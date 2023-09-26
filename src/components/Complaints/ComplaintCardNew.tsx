@@ -132,6 +132,29 @@ const ComplaintCardNew = (props: Props) => {
                   borderBottom: `1px solid ${primary}`,
                 }}
               >
+
+              </TableHead>
+              <TableBody>
+              <TableRow
+                  sx={{
+                    borderBottom: `1px solid ${primary}`,
+                  }}
+                >
+                  <TableCell
+                    sx={{
+                      color: primary,
+                    }}
+                  >
+                    شماره شکایت:
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      color: primary,
+                    }}
+                  >
+                    شماره شکایت
+                  </TableCell>
+                </TableRow>
                 <TableRow
                   sx={{
                     borderBottom: `1px solid ${primary}`,
@@ -142,7 +165,75 @@ const ComplaintCardNew = (props: Props) => {
                       color: primary,
                     }}
                   >
-                    شماره شکایت
+                    خونده:
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      color: primary,
+                    }}
+                  >
+                    خونده
+                  </TableCell>
+                </TableRow>
+
+
+                <TableRow
+                  sx={{
+                    borderBottom: `1px solid ${primary}`,
+                  }}
+                >
+                  <TableCell
+                    sx={{
+                      color: primary,
+                    }}
+                  >
+                    خواهان:
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      color: primary,
+                    }}
+                  >
+                    خواهان
+                  </TableCell>
+                </TableRow>
+
+
+
+                <TableRow
+                  sx={{
+                    borderBottom: `1px solid ${primary}`,
+                  }}
+                >
+                  <TableCell
+                    sx={{
+                      color: primary,
+                    }}
+                  >
+                   وضعیت:
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      color: primary,
+                    }}
+                  >
+                    وضعیت
+                  </TableCell>
+                </TableRow>
+
+
+
+                <TableRow
+                  sx={{
+                    borderBottom: `1px solid ${primary}`,
+                  }}
+                >
+                  <TableCell
+                    sx={{
+                      color: primary,
+                    }}
+                  >
+                    خلاصه:
                   </TableCell>
                   <TableCell
                     sx={{
@@ -152,11 +243,90 @@ const ComplaintCardNew = (props: Props) => {
                     خلاصه
                   </TableCell>
                 </TableRow>
-              </TableHead>
-              <TableBody>
-                <TableRow>
-                  <TableCell>شماره شکایت:</TableCell>
-                  <TableCell>خلاصه</TableCell>
+
+
+
+
+
+                <TableRow
+                  sx={{
+                    borderBottom: `1px solid ${primary}`,
+                  }}
+                >
+                  <TableCell
+                    sx={{
+                      color: primary,
+                    }}
+                  >
+                    شماره قرارداد:
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      color: primary,
+                    }}
+                  >
+                    شماره قرارداد
+                  </TableCell>
+                </TableRow>
+                <TableRow
+                  sx={{
+                    borderBottom: `1px solid ${primary}`,
+                  }}
+                >
+                  <TableCell
+                    sx={{
+                      color: primary,
+                    }}
+                  >
+                    شماره طرح:
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      color: primary,
+                    }}
+                  >
+                    شماره طرح
+                  </TableCell>
+                </TableRow>
+                <TableRow
+                  sx={{
+                    borderBottom: `1px solid ${primary}`,
+                  }}
+                >
+                  <TableCell
+                    sx={{
+                      color: primary,
+                    }}
+                  >
+                    شماره پروژه:
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      color: primary,
+                    }}
+                  >
+                    شماره پروژه
+                  </TableCell>
+                </TableRow>
+                <TableRow
+                  sx={{
+                    borderBottom: `1px solid ${primary}`,
+                  }}
+                >
+                  <TableCell
+                    sx={{
+                      color: primary,
+                    }}
+                  >
+                    تاریخ ثبت:
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      color: primary,
+                    }}
+                  >
+                    تایخ ثبت
+                  </TableCell>
                 </TableRow>
               </TableBody>
             </Table>
