@@ -22,8 +22,12 @@ import {
   secondary,
   secondaryLight,
 } from "../../../theme/color";
+import { useNavigate, useParams } from "react-router-dom";
+import { useQuery } from "@apollo/client";
+import { GET_CONTRACT } from "../../../GraphQL/Contracts/Queries";
 
 const AddComplaint = () => {
+  const navigate = useNavigate();
   const [FisrtCondition, setFisrtCondition] = React.useState({
     checked: [] as boolean[],
   });
@@ -42,6 +46,17 @@ const AddComplaint = () => {
     localStorage.getItem("complaints") || "{}"
   );
 
+  const {contractId} = useParams();
+
+  const {data} = useQuery(GET_CONTRACT,{
+    variables:{
+      id:contractId && parseInt(contractId)
+    },
+    onCompleted(data) {
+      console.log(data);
+    },
+  })
+
   React.useEffect(() => {
     if (complaints?.FisrtCondition) {
       setFisrtCondition(complaints.FisrtCondition);
@@ -50,7 +65,7 @@ const AddComplaint = () => {
       setFourthCondition(complaints.FourthCondition);
       setAgreeWithTerms(complaints.AgreeWithTerms);
     }
-  }, [complaints]);
+  }, []);
   return (
     <>
       <BackButton to="/complaints/addContract" />
@@ -550,8 +565,22 @@ const AddComplaint = () => {
               color: Green,
             },
           }}
+          onClick={() => {
+            localStorage.setItem(
+              "complaints",
+              JSON.stringify({
+                FisrtCondition,
+                SecondCondition,
+                ThirdCondition,
+                FourthCondition,
+                AgreeWithTerms,
+              })
+            );
+            navigate("/complaints/a");
+          }
+          }
         >
-          ارسال درخواست
+          ادامه
         </Button>
       </Box>
     </>

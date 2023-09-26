@@ -33,6 +33,8 @@ export const CREATE_CONTRACT = gql`
     $AuthorizedDelaysAccused: Int!
     $UnauthorizedDelaysAccuser: Int!
     $UnauthorizedDelaysAccused: Int!
+    $AccusedDepartmentId: Int!
+    $AccuserDepartmentId: Int!
   ) {
     contract_addContract(
       input: {
@@ -67,6 +69,8 @@ export const CREATE_CONTRACT = gql`
         authorizedDelaysAccused: $AuthorizedDelaysAccused
         unauthorizedDelaysAccuser: $UnauthorizedDelaysAccuser
         unauthorizedDelaysAccused: $UnauthorizedDelaysAccused
+        accusedDepartmentId:$AccusedDepartmentId
+        accuserDepartmentId:$AccuserDepartmentId
       }
     ) {
       result {

@@ -1,11 +1,15 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { Add } from "@mui/icons-material";
 import {
   Alert,
+  Autocomplete,
   Box,
   Button,
   Checkbox,
@@ -28,6 +32,10 @@ import BackButton from "../../../components/BackButton";
 import countries from "../../../static/Countries";
 import { Green, GreenLight, primary } from "../../../theme/color";
 import { useNavigate } from "react-router-dom";
+import {
+  Department,
+  GET_DEPARTMENTS,
+} from "../../../GraphQL/Departments/Queries";
 
 const AddContract = () => {
   const navigate = useNavigate();
@@ -208,6 +216,17 @@ const AddContract = () => {
     UnauthorizedDelaysAccusedError,
     setUnauthorizedDelaysAccusedError,
   ] = React.useState({ error: false as boolean, text: "" as string });
+
+  const [AccusedDepartmentId, setAccusedDepartmentId] =
+    React.useState("");
+  const [AccusedDepartmentIdError, setAccusedDepartmentIdError] =
+    React.useState({ error: false as boolean, text: "" as string });
+
+  const [AccuserDepartmentId, setAccuserDepartmentId] =
+    React.useState("");
+
+  const [AccuserDepartmentIdError, setAccuserDepartmentIdError] =
+    React.useState({ error: false as boolean, text: "" as string });
 
   const handleErrors = () => {
     if (RelatedPeople.length <= 0) {
@@ -405,6 +424,19 @@ const AddContract = () => {
       });
     }
 
+    if (AccusedDepartmentId.length <= 0) {
+      setAccusedDepartmentIdError({
+        error: true,
+        text: "مقدار فیلد نباید خالی باشد",
+      });
+    }
+    if (AccuserDepartmentId.length <= 0) {
+      setAccuserDepartmentIdError({
+        error: true,
+        text: "مقدار فیلد نباید خالی باشد",
+      });
+    }
+
     return (
       RelatedPeopleError.error ||
       AccuserNationalityError.error ||
@@ -433,7 +465,9 @@ const AddContract = () => {
       AuthorizedDelaysAccuserError.error ||
       AuthorizedDelaysAccusedError.error ||
       UnauthorizedDelaysAccuserError.error ||
-      UnauthorizedDelaysAccusedError.error
+      UnauthorizedDelaysAccusedError.error ||
+      AccusedDepartmentIdError.error ||
+      AccuserDepartmentIdError.error
     );
   };
   const [createContractMutation, { data, loading }] = useMutation(
@@ -474,9 +508,27 @@ const AddContract = () => {
       },
       onCompleted(data) {
         console.log(data);
+        navigate(`/complaints/${data.contract_addContract.result.id}/addComplaint`);
       },
     }
   );
+
+  const [departments, setDepartments] = React.useState([]);
+  const { data: departmentsData } = useQuery(GET_DEPARTMENTS, {
+    onCompleted(data) {
+      console.log(data);
+      data.department_getDepartments.result.items.forEach(
+        (item: Department) => {
+          // @ts-ignore
+          setDepartments((prev: Department) => [
+            // @ts-ignore
+            ...prev,
+            { label: item.title, id: item.id },
+          ]);
+        }
+      );
+    },
+  });
 
   countries.sort((a, b) => {
     if (a.name_fa < b.name_fa) {
@@ -513,6 +565,59 @@ const AddContract = () => {
           فرم اطلاعات قرارداد
         </Typography>
 
+        {/* 
+
+
+          1- طرفین قرارداد
+
+
+      
+      */}
+        <Typography variant="h5" gridColumn={"span 12"}>
+          1- طرفین قرارداد:
+        </Typography>
+        <Autocomplete
+          disablePortal
+          options={departments}
+          sx={{ width: "100%", gridColumn: "span 4" }}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label="نام بخش خوانده"
+              error={AccusedDepartmentIdError.error}
+              helperText={AccusedDepartmentIdError.text}
+            />
+          )}
+          onChange={(_e, value) => {
+            console.log(value);
+            // @ts-ignore
+            setAccusedDepartmentId(value.id);
+          }}
+          value={departments.find(
+            (item: Department) => item.id === AccusedDepartmentId
+          )}
+        />
+        <Autocomplete
+          disablePortal
+          options={departments}
+          sx={{ width: "100%", gridColumn: "9/span 4" }}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label="نام بخش خواهان"
+              error={AccuserDepartmentIdError.error}
+              helperText={AccuserDepartmentIdError.text}
+            />
+          )}
+          onChange={(_e, value) => {
+            console.log(value);
+            // @ts-ignore
+            setAccuserDepartmentId(value.id);
+          }}
+          value={departments.find(
+            (item: Department) => item.id === AccuserDepartmentId
+          )}
+        />
         {/* 
 
 
@@ -1015,8 +1120,8 @@ const AddContract = () => {
 
       
       */}
-        <Typography variant="h6" gridColumn={"span 1"}>
-          4-2-
+        <Typography variant="h6" gridColumn={"span 12"}>
+          4-2- قرارداد شماره و تاريخ:{" "}
         </Typography>
         <TextField
           label="شماره: "
@@ -1271,17 +1376,17 @@ const AddContract = () => {
             checked={IsSpecialPriceListAttachedToContract}
             onChange={(e) => {
               // @ts-ignore
-              setIsSpecialPriceListAttachedToContract(e.target.value);
+              setIsSpecialPriceListAttachedToContract(true);
             }}
           />
           <FormControlLabel
             value={false}
             control={<Radio />}
             label="ندارد"
-            checked={IsSpecialPriceListAttachedToContract}
+            checked={!IsSpecialPriceListAttachedToContract}
             onChange={(e) => {
               // @ts-ignore
-              setIsSpecialPriceListAttachedToContract(e.target.value);
+              setIsSpecialPriceListAttachedToContract(false);
             }}
           />
         </RadioGroup>
@@ -1452,7 +1557,7 @@ const AddContract = () => {
               checked={DoesContainAdjustment}
               onChange={(e) => {
                 // @ts-ignore
-                setDoesContainAdjustment(e.target.value);
+                setDoesContainAdjustment(true);
               }}
             />
             <FormControlLabel
@@ -1462,7 +1567,7 @@ const AddContract = () => {
               checked={!DoesContainAdjustment}
               onChange={(e) => {
                 // @ts-ignore
-                setDoesContainAdjustment(e.target.value);
+                setDoesContainAdjustment(false);
               }}
             />
           </RadioGroup>
@@ -1972,10 +2077,10 @@ const AddContract = () => {
           onClick={() => {
             if (handleErrors()) {
               void createContractMutation();
-              navigate("/complaints/addComplaint");
+              
             } else {
               void createContractMutation();
-              navigate("/complaints/addComplaint");
+              // navigate("/complaints/addComplaint");
             }
           }}
         >

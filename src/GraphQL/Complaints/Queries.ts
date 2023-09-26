@@ -6,34 +6,33 @@ export const GET_COMPLAINTS = gql`
     complaint_getComplaints {
       result {
         items {
-          department {
-            title
-            id
-            departments {
-              id
-              title
-            }
-          }
-          complaintForm {
-            title
-            id
-            description
-            formTitles {
-              row
-              value
-              content
-            }
-          }
           userId
           id
-          accuserDepartmentId
-          accusedDepartmentId
           contractId
-          assignedUserId
-          complaintFormId
-          complaintResponseFormId
-          complaintCode
+          arbitrationTermsForms {
+            firstCondition
+            firstConditionFileName
+            secondCondition
+            secondConditionFileName
+            thirdCondition
+            thirdConditionFileName
+            fourthCondition
+            fourthConditionFileName
+          }
           complaintState
+          complaintCode
+          assignedUser {
+            userName
+            firstName
+            lastName
+            departmentId
+            phoneNumber
+          }
+          contract {
+            contractNumber
+            contractDate
+            initialBudget
+          }
         }
       }
     }
@@ -42,16 +41,23 @@ export const GET_COMPLAINTS = gql`
 
 export type Complaint = {
   id: number;
-  accuserDepartmentId: number;
-  accusedDepartmentId: number;
+  userId: string;
   contractId: number;
-  assignedUserId: string;
-  complaintFormId: number;
-  complaintResponseFormId: number;
-  complaintCode: string;
+  arbitrationTermsForms: ArbitrationTermsForms[];
   complaintState: string;
-  department: Department;
-  complaintForm: ComplaintForm;
+  complaintCode: string;
+  assignedUser: {
+    userName: string;
+    firstName: string;
+    lastName: string;
+    departmentId: number;
+    phoneNumber: string;
+  };
+  contract: {
+    contractNumber: string;
+    contractDate: string;
+    initialBudget: number;
+  };
 };
 
 export type Department = {
@@ -65,4 +71,15 @@ export type ComplaintForm = {
   id: number;
   description: string;
   formTitles: FormTitle[];
+};
+
+export type ArbitrationTermsForms = {
+  firstCondition: string;
+  firstConditionFileName: string;
+  secondCondition: string;
+  secondConditionFileName: string;
+  thirdCondition: string;
+  thirdConditionFileName: string;
+  fourthCondition: string;
+  fourthConditionFileName: string;
 };
