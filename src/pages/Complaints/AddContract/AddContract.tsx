@@ -108,8 +108,10 @@ const AddContract = () => {
   ]);
   const [DoesContainAdjustment, setDoesContainAdjustment] =
     React.useState(true);
-  const [DoesContainAdjustmentEror, setDoesContainAdjustmentError] =
-    React.useState({ error: false as boolean, text: "" as string });
+  const [DoesContainAdjustmentEror] = React.useState({
+    error: false as boolean,
+    text: "" as string,
+  });
   const [BaseIndexPeriod, setBaseIndexPeriod] = React.useState({
     month: "",
     year: "",
@@ -434,8 +436,9 @@ const AddContract = () => {
       UnauthorizedDelaysAccusedError.error
     );
   };
-  const [createContractMutation, { data, loading, error }] =
-    useMutation(CREATE_CONTRACT, {
+  const [createContractMutation, { data, loading }] = useMutation(
+    CREATE_CONTRACT,
+    {
       variables: {
         RelatedPeople,
         AccuserNationality,
@@ -469,10 +472,11 @@ const AddContract = () => {
         UnauthorizedDelaysAccuser,
         UnauthorizedDelaysAccused,
       },
-      onCompleted(data, clientOptions) {
+      onCompleted(data) {
         console.log(data);
       },
-    });
+    }
+  );
 
   countries.sort((a, b) => {
     if (a.name_fa < b.name_fa) {
@@ -500,9 +504,11 @@ const AddContract = () => {
           variant="h4"
           gridColumn={"span 12"}
           textAlign={"center"}
-          sx={{
-            // borderBottom: `2px solid ${primary}`,
-          }}
+          sx={
+            {
+              // borderBottom: `2px solid ${primary}`,
+            }
+          }
         >
           فرم اطلاعات قرارداد
         </Typography>
@@ -1966,10 +1972,10 @@ const AddContract = () => {
           onClick={() => {
             if (handleErrors()) {
               void createContractMutation();
-              navigate("/complaints/addComplaint")
-            }else{
+              navigate("/complaints/addComplaint");
+            } else {
               void createContractMutation();
-              navigate("/complaints/addComplaint")
+              navigate("/complaints/addComplaint");
             }
           }}
         >

@@ -168,6 +168,7 @@ export default function MainLayout() {
       setSignedIn(false);
       setSignInModal({ ...signInModal, open: false });
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
   useEffect(() => {
