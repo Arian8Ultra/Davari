@@ -2,22 +2,20 @@ import {
   Box,
   Button,
   LinearProgress,
-  Modal,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  Typography,
+  Typography
 } from "@mui/material";
 import { useState } from "react";
 import { FiMoreHorizontal } from "react-icons/fi";
 import {
   background,
   primary,
-  primaryLight,
-  primaryLightTransparent,
+  primaryLightTransparent
 } from "../../theme/color";
 import NewModal from "../Modals";
 interface Props {
