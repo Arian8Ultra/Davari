@@ -31,4 +31,22 @@ export type Argument = {
     ContractId: number;
 }
 
+export type OptionalArgument = {
+    id?: string;
+    Summary?: string;
+    Description?: string;
+    FileName?: string;
+    SuggestedAmount?: number;
+    AccuserResponse?: string;
+    AccuserResponseFileName?: string;
+    ExpertOpinion?: string;
+    ExpertVerdict?: string;
+    ExpertOpinionFileName?: string;
+    ApprovedAmount?: number;
+    MailRoomExpertApprovedAmount?: number;
+    MailRoomChiefSuggestedAmount?: number;
+    CouncilApprovedAmount?: number;
+    ContractId?: number;
+}
+
 

@@ -38,8 +38,6 @@ export const GET_CONTRACT = gql`
         physicalProgressInArbitrationDateAccused
         financialProgressInArbitrationDateAccused
         financialProgressInArbitrationDateAccuser
-        contractStatusInArbitration
-        contractStatusInArbitrationDate
         supervisionDepartment
         accuserNationality
         authorizedDelaysAccuser

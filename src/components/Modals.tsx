@@ -18,6 +18,7 @@ interface NewModalProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   children?: any;
   name?: string;
+  title?: string;
   open: boolean;
   onClose?: Function;
   backgroundColor?: string;
@@ -88,7 +89,7 @@ export default function NewModal(props: NewModalProps) {
               color={color}
               textAlign={"center"}
             >
-              {name}
+              {props.title != null ? props.title : name}
             </Typography>
             {isCloseable && (
               <IconButton onClick={handleClose} sx={{

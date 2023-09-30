@@ -5,10 +5,7 @@ import { VscArrowCircleRight } from "react-icons/vsc";
 import { useNavigate } from "react-router-dom";
 import { primary } from "../theme/color";
 
-const BackButton = (props:{
-    steps?:number,
-    to?:string
-}) => {
+const BackButton = (props: { steps?: number; to?: string }) => {
   const navigate = useNavigate();
   return (
     <Button
@@ -27,8 +24,12 @@ const BackButton = (props:{
         },
       }}
       onClick={() => {
-        // @ts-ignore
-        navigate(props.to?props.to: (props.steps?props.steps : -1));
+        props.to
+          ? navigate(
+              // @ts-ignore
+              props.to ? props.to : props.steps ? props.steps : -1
+            )
+          : window.history.back();
       }}
     >
       <VscArrowCircleRight />

@@ -12,25 +12,23 @@ import {
 import { AiFillFileAdd } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import { useUserStore } from "../../Context/UserStore";
+import { GET_CONTRACT } from "../../GraphQL/Contracts/Queries";
+import { useLazyQuery, useQuery } from "@apollo/client";
 
 const Complaints = () => {
   const [addModal, setAddModal] = useState({
     open: false,
-    projectId: "",
-    projectTitle: "",
-    projectDescription: "",
-    projectManager: "",
-    projectStartDate: "",
-    projectEndDate: "",
-    projectStatus: "",
-    projectDepartment: "",
-    complaintTitle: "",
-    complaintDescription: "",
-    complaintCategory: "",
+    contractId: 0,
   });
   const navigate = useNavigate();
 
   const user = useUserStore((state) => state.user);
+
+  const [getContract] = useLazyQuery(GET_CONTRACT, {
+    variables: {
+      id: addModal.contractId,
+    },
+  });
   return (
     <>
       <Box
@@ -66,11 +64,11 @@ const Complaints = () => {
         }}
       >
         <ComplaintsList
-          type="accused"
+          type="accuser"
           departmentId={user.departmentId}
         />
         <ComplaintsList
-          type="accuser"
+          type="accused"
           departmentId={user.departmentId}
         />
       </Box>
@@ -103,11 +101,11 @@ const Complaints = () => {
           <TextField
             label="شماره قرارداد"
             variant="outlined"
-            value={addModal.projectTitle}
+            value={addModal.contractId}
             onChange={(e) =>
               setAddModal({
                 ...addModal,
-                projectTitle: e.target.value,
+                contractId: parseInt(e.target.value),
               })
             }
           />
@@ -149,6 +147,33 @@ const Complaints = () => {
               "&:hover": {
                 backgroundColor: GreenLight,
               },
+            }}
+            onClick={() => {
+              void getContract({
+                onCompleted(data: {
+                  contract_getContract: {
+                    result: string;
+                    status: {
+                      code: number;
+                      value: string;
+                    };
+                  };
+                }) {
+                  console.log(data);
+
+                  if (data.contract_getContract.status.code == 1) {
+                    setAddModal({
+                      ...addModal,
+                      open: false,
+                    });
+                    navigate(
+                      `/complaints/${addModal.contractId}/addComplaint/`
+                    );
+                  } else {
+                    alert("قراردادی با این شماره وجود ندارد");
+                  }
+                },
+              });
             }}
           >
             ادامه

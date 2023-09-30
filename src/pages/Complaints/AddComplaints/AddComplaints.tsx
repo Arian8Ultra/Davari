@@ -68,7 +68,7 @@ const AddComplaint = () => {
   }, []);
   return (
     <>
-      <BackButton to="/complaints/addContract" />
+      <BackButton />
       <Box
         display={"grid"}
         gridTemplateColumns={"repeat(12, 1fr)"}

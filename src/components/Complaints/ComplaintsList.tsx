@@ -26,6 +26,9 @@ const ComplaintsList = ({ departmentId, type }: Props) => {
       variables: {
         departmentId: departmentId,
       },
+      onCompleted(data) {
+        console.log("accuser data", data);
+      },
     }
   );
 
@@ -34,6 +37,9 @@ const ComplaintsList = ({ departmentId, type }: Props) => {
     {
       variables: {
         departmentId: departmentId,
+      },
+      onCompleted(data) {
+        console.log("accused data", data);
       },
     }
   );
@@ -63,7 +69,7 @@ const ComplaintsList = ({ departmentId, type }: Props) => {
             textAlign: "center",
           }}
         >
-          {accuserLoading ? "در حال دریافت اطلاعات" : "شکایات شما"}
+          {accuserLoading ? "در حال دریافت اطلاعات" : "شکایات علیه شما"}
         </Typography>
       ) : (
         <Typography
@@ -77,7 +83,7 @@ const ComplaintsList = ({ departmentId, type }: Props) => {
         >
           {accusedLoading
             ? "در حال دریافت اطلاعات"
-            : "شکایات علی شما"}
+            : "شکایات شما"}
         </Typography>
       )}
 
@@ -88,9 +94,10 @@ const ComplaintsList = ({ departmentId, type }: Props) => {
                 <ComplaintCardNew
                   key={complaint.id}
                   id={complaint.id}
-                  acussed={complaint.assignedUser.userName}
-                  date={complaint.createdDate}
-                  contractId={complaint.contractId}
+                  acussed={complaint?.assignedUser?.userName}
+                  date={complaint?.createdDate}
+                  contractId={complaint?.contractId}
+                  type="accused"
                 />
               )
             )
@@ -99,6 +106,10 @@ const ComplaintsList = ({ departmentId, type }: Props) => {
                 <ComplaintCardNew
                   key={complaint.id}
                   id={complaint.id}
+                  acussed={complaint?.assignedUser?.userName}
+                  date={complaint?.createdDate}
+                  contractId={complaint?.contractId}
+                  type="accuser"
                 />
               )
             )}

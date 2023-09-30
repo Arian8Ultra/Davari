@@ -13,12 +13,18 @@ import {
 import { useState } from "react";
 import { FiMoreHorizontal } from "react-icons/fi";
 import {
+  Green,
+  GreenLight,
+  Red,
+  RedLight,
   background,
   primary,
+  primaryLight,
   primaryLightTransparent,
 } from "../../theme/color";
 import NewModal from "../Modals";
-import { grey } from "@mui/material/colors";
+import { grey, red } from "@mui/material/colors";
+import { useNavigate } from "react-router-dom";
 interface Props {
   id: number;
   complaintId?: number;
@@ -37,6 +43,7 @@ const ComplaintCardNew = (props: Props) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const navigate = useNavigate();
 
   const style = {
     width: "100%",
@@ -151,199 +158,275 @@ const ComplaintCardNew = (props: Props) => {
           lg: "50vw",
         }}
       >
-        <Box sx={style}>
-          <TableContainer>
-            <Table>
-              <TableHead
-                sx={{
-                  backgroundColor: primaryLightTransparent,
-                  borderBottom: `1px solid ${primary}`,
-                }}
-              ></TableHead>
-              <TableBody>
-                <TableRow
+        <Box width={"100%"}>
+          <Box sx={style}>
+            <TableContainer>
+              <Table>
+                <TableHead
                   sx={{
-                    borderBottom: `2px solid ${grey[300]}`,
+                    backgroundColor: primaryLightTransparent,
+                    borderBottom: `1px solid ${primary}`,
                   }}
-                >
-                  <TableCell
+                ></TableHead>
+                <TableBody>
+                  <TableRow
                     sx={{
-                      color: primary,
+                      borderBottom: `2px solid ${grey[300]}`,
                     }}
                   >
-                    شماره شکایت:
-                  </TableCell>
-                  <TableCell
+                    <TableCell
+                      sx={{
+                        color: primary,
+                      }}
+                    >
+                      شماره شکایت:
+                    </TableCell>
+                    <TableCell
+                      sx={{
+                        color: primary,
+                      }}
+                    >
+                      شماره شکایت
+                    </TableCell>
+                  </TableRow>
+                  <TableRow
                     sx={{
-                      color: primary,
+                      borderBottom: `2px solid ${grey[300]}`,
                     }}
                   >
-                    شماره شکایت
-                  </TableCell>
-                </TableRow>
-                <TableRow
-                  sx={{
-                    borderBottom: `2px solid ${grey[300]}`,
-                  }}
-                >
-                  <TableCell
-                    sx={{
-                      color: primary,
-                    }}
-                  >
-                    خونده:
-                  </TableCell>
-                  <TableCell
-                    sx={{
-                      color: primary,
-                    }}
-                  >
-                    خونده
-                  </TableCell>
-                </TableRow>
+                    <TableCell
+                      sx={{
+                        color: primary,
+                      }}
+                    >
+                      خونده:
+                    </TableCell>
+                    <TableCell
+                      sx={{
+                        color: primary,
+                      }}
+                    >
+                      خونده
+                    </TableCell>
+                  </TableRow>
 
-                <TableRow
-                  sx={{
-                    borderBottom: `2px solid ${grey[300]}`,
-                  }}
-                >
-                  <TableCell
+                  <TableRow
                     sx={{
-                      color: primary,
+                      borderBottom: `2px solid ${grey[300]}`,
                     }}
                   >
-                    خواهان:
-                  </TableCell>
-                  <TableCell
-                    sx={{
-                      color: primary,
-                    }}
-                  >
-                    خواهان
-                  </TableCell>
-                </TableRow>
+                    <TableCell
+                      sx={{
+                        color: primary,
+                      }}
+                    >
+                      خواهان:
+                    </TableCell>
+                    <TableCell
+                      sx={{
+                        color: primary,
+                      }}
+                    >
+                      خواهان
+                    </TableCell>
+                  </TableRow>
 
-                <TableRow
-                  sx={{
-                    borderBottom: `2px solid ${grey[300]}`,
-                  }}
-                >
-                  <TableCell
+                  <TableRow
                     sx={{
-                      color: primary,
+                      borderBottom: `2px solid ${grey[300]}`,
                     }}
                   >
-                    وضعیت:
-                  </TableCell>
-                  <TableCell
-                    sx={{
-                      color: primary,
-                    }}
-                  >
-                    وضعیت
-                  </TableCell>
-                </TableRow>
+                    <TableCell
+                      sx={{
+                        color: primary,
+                      }}
+                    >
+                      وضعیت:
+                    </TableCell>
+                    <TableCell
+                      sx={{
+                        color: primary,
+                      }}
+                    >
+                      وضعیت
+                    </TableCell>
+                  </TableRow>
 
-                <TableRow
-                  sx={{
-                    borderBottom: `2px solid ${grey[300]}`,
-                  }}
-                >
-                  <TableCell
+                  <TableRow
                     sx={{
-                      color: primary,
+                      borderBottom: `2px solid ${grey[300]}`,
                     }}
                   >
-                    خلاصه:
-                  </TableCell>
-                  <TableCell
-                    sx={{
-                      color: primary,
-                    }}
-                  >
-                    خلاصه
-                  </TableCell>
-                </TableRow>
+                    <TableCell
+                      sx={{
+                        color: primary,
+                      }}
+                    >
+                      خلاصه:
+                    </TableCell>
+                    <TableCell
+                      sx={{
+                        color: primary,
+                      }}
+                    >
+                      خلاصه
+                    </TableCell>
+                  </TableRow>
 
-                <TableRow
-                  sx={{
-                    borderBottom: `2px solid ${grey[300]}`,
-                  }}
-                >
-                  <TableCell
+                  <TableRow
                     sx={{
-                      color: primary,
+                      borderBottom: `2px solid ${grey[300]}`,
                     }}
                   >
-                    شماره قرارداد:
-                  </TableCell>
-                  <TableCell
+                    <TableCell
+                      sx={{
+                        color: primary,
+                      }}
+                    >
+                      شماره قرارداد:
+                    </TableCell>
+                    <TableCell
+                      sx={{
+                        color: primary,
+                      }}
+                    >
+                      شماره قرارداد
+                    </TableCell>
+                  </TableRow>
+                  <TableRow
                     sx={{
-                      color: primary,
+                      borderBottom: `2px solid ${grey[300]}`,
                     }}
                   >
-                    شماره قرارداد
-                  </TableCell>
-                </TableRow>
-                <TableRow
-                  sx={{
-                    borderBottom: `2px solid ${grey[300]}`,
-                  }}
-                >
-                  <TableCell
+                    <TableCell
+                      sx={{
+                        color: primary,
+                      }}
+                    >
+                      شماره طرح:
+                    </TableCell>
+                    <TableCell
+                      sx={{
+                        color: primary,
+                      }}
+                    >
+                      شماره طرح
+                    </TableCell>
+                  </TableRow>
+                  <TableRow
                     sx={{
-                      color: primary,
+                      borderBottom: `2px solid ${grey[300]}`,
                     }}
                   >
-                    شماره طرح:
-                  </TableCell>
-                  <TableCell
-                    sx={{
-                      color: primary,
-                    }}
-                  >
-                    شماره طرح
-                  </TableCell>
-                </TableRow>
-                <TableRow
-                  sx={{
-                    borderBottom: `2px solid ${grey[300]}`,
-                  }}
-                >
-                  <TableCell
-                    sx={{
-                      color: primary,
-                    }}
-                  >
-                    شماره پروژه:
-                  </TableCell>
-                  <TableCell
-                    sx={{
-                      color: primary,
-                    }}
-                  >
-                    شماره پروژه
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell
-                    sx={{
-                      color: primary,
-                    }}
-                  >
-                    تاریخ ثبت:
-                  </TableCell>
-                  <TableCell
-                    sx={{
-                      color: primary,
-                    }}
-                  >
-                    تایخ ثبت
-                  </TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </TableContainer>
+                    <TableCell
+                      sx={{
+                        color: primary,
+                      }}
+                    >
+                      شماره پروژه:
+                    </TableCell>
+                    <TableCell
+                      sx={{
+                        color: primary,
+                      }}
+                    >
+                      شماره پروژه
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell
+                      sx={{
+                        color: primary,
+                      }}
+                    >
+                      تاریخ ثبت:
+                    </TableCell>
+                    <TableCell
+                      sx={{
+                        color: primary,
+                      }}
+                    >
+                      تایخ ثبت
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Box>
+          <Box
+            display={props.type == "accuser" ? "none" : "grid"}
+            gridTemplateColumns={"repeat(2,1fr)"}
+            mt={"1rem"}
+            gap={"6rem"}
+          >
+            <Button
+              sx={{
+                borderRadius: "0.5rem",
+                backgroundColor: Red,
+                color: "white",
+                "&:hover": {
+                  backgroundColor: red[100],
+                  color: Red,
+                },
+              }}
+              onClick={handleClose}
+            >
+              انصراف
+            </Button>
+            <Button
+              sx={{
+                borderRadius: "0.5rem",
+                backgroundColor: Green,
+                color: "white",
+                "&:hover": {
+                  backgroundColor: GreenLight,
+                  color: Green,
+                },
+              }}
+              onClick={() => {
+                navigate(`${props.id}/addArguements/1`);
+              }}
+            >
+              پاسخ به شکایت
+            </Button>
+          </Box>
+          <Box
+            display={props.type == "accused" ? "none" : "grid"}
+            gridTemplateColumns={"repeat(2,1fr)"}
+            mt={"1rem"}
+            gap={"6rem"}
+          >
+            <Button
+              sx={{
+                borderRadius: "0.5rem",
+                backgroundColor: Red,
+                color: "white",
+                "&:hover": {
+                  backgroundColor: red[100],
+                  color: Red,
+                },
+              }}
+              onClick={handleClose}
+            >
+              انصراف
+            </Button>
+            <Button
+              sx={{
+                borderRadius: "0.5rem",
+                backgroundColor: primary,
+                color: "white",
+                "&:hover": {
+                  backgroundColor: primaryLight,
+                  color: 'white',
+                },
+              }}
+              onClick={() => {
+                navigate(`${props.id}/addArguements/0`);
+              }}
+            >
+              ادامه شکایت
+            </Button>
+          </Box>
         </Box>
       </NewModal>
     </Box>

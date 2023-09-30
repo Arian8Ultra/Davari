@@ -21,17 +21,28 @@ import NewAddForm from "../pages/Admin/FormManager/AddForm/NewAddForm";
 import Contracts from "../pages/Contracts/Contracts";
 import ViewFormAll from "../pages/Contracts/ViewForm/ViewForm";
 import AddContract from "../pages/Complaints/AddContract/AddContract";
-import "../index.css"
+import "../index.css";
 import AddComplaint from "../pages/Complaints/AddComplaints/AddComplaints";
+import AddArgument from "../pages/Complaints/AddArguements/AddArguements";
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<Root />} >
+    <Route path="/" element={<Root />}>
       <Route path="" element={<MainLayout />}>
         <Route path="" element={<Home />} />
         <Route path="home" element={<Home />} />
         <Route path="complaints" element={<Complaints />} />
-        <Route path="complaints/addContract" element={<AddContract />} />
-        <Route path="complaints/:contractId/addComplaint" element={<AddComplaint />} />
+        <Route
+          path="complaints/addContract"
+          element={<AddContract />}
+        />
+        <Route
+          path="complaints/:contractId/addComplaint"
+          element={<AddComplaint />}
+        />
+        <Route
+          path="complaints/:contractId/addArguements/:state"
+          element={<AddArgument/>}
+        />
 
         <Route path="contracts" element={<Contracts />} />
         <Route path="portal" element={<Protal />} />
@@ -74,7 +85,7 @@ const router = createBrowserRouter(
           element={<EditForm />}
         />
 
-        <Route path="test" element={<Test/>} />
+        <Route path="test" element={<Test />} />
       </Route>
     </Route>
   )
