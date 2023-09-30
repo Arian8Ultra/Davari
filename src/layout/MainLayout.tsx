@@ -45,7 +45,10 @@ import {
 } from "react-router-dom";
 import useLayoutStore from "../Context/LayoutStore";
 import { useUserStore } from "../Context/UserStore";
-import { UserLogin } from "../GraphQL/Users/Mutations";
+import {
+  UserLogin,
+  UserUpdatePassword,
+} from "../GraphQL/Users/Mutations";
 // @ts-ignore
 import pboLogo from "../assets/PboLogo.png";
 // @ts-ignore
@@ -142,8 +145,15 @@ export default function MainLayout() {
   const token = useUserStore((state) => state.token);
   const firstName = useUserStore((state) => state.user.firstName);
   const lastName = useUserStore((state) => state.user.lastName);
+  const user = useUserStore((state) => state.user);
   const expireDate = useUserStore((state) => state.expireDate);
   const logout = useUserStore((state) => state.logout);
+  const [changePasswordModal, setChangePasswordModal] = useState({
+    open: false,
+    oldPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
   const [signedIn, setSignedIn] = React.useState(true);
   const [menuOpen, setMenuOpen] = React.useState(false);
   const [signInModal, setSignInModal] = useState({
@@ -200,8 +210,7 @@ export default function MainLayout() {
         },
       });
     }
-  }, [TokenCheck, token,path]);
-
+  }, [TokenCheck, token, path]);
 
   React.useEffect(() => {
     const handler = (e: MediaQueryListEvent) => {
@@ -267,6 +276,15 @@ export default function MainLayout() {
     },
     onError(error) {
       console.log(error);
+    },
+  });
+
+  const [changePassword] = useMutation(UserUpdatePassword, {
+    variables: {
+      oldPassword: changePasswordModal.oldPassword,
+      newPassword: changePasswordModal.newPassword,
+      confirmPassword: changePasswordModal.confirmPassword,
+      id: user.id,
     },
   });
 
@@ -553,7 +571,10 @@ export default function MainLayout() {
               <Button
                 onClick={() => {
                   setMenuOpen(false);
-                  navigate("/profile");
+                  setChangePasswordModal({
+                    ...changePasswordModal,
+                    open: true,
+                  });
                 }}
                 sx={{
                   color: "black",
@@ -847,6 +868,114 @@ export default function MainLayout() {
         <Title />
         <Outlet />
       </Box>
+      <NewModal
+        title="تغییر رمز عبور"
+        open={changePasswordModal.open}
+        onClose={() =>
+          setChangePasswordModal({
+            ...changePasswordModal,
+            open: false,
+          })
+        }
+        width={{
+          xs: "90%",
+          sm: "60%",
+          md: "40%",
+        }}
+        height={{
+          xs: "90%",
+          sm: "60%",
+          md: "40%",
+        }}
+        isCloseable={true}
+        backgroundColor={background}
+      >
+        <Box
+          display={"grid"}
+          gridTemplateColumns={"1fr 1fr"}
+          gap={1}
+          width={"100%"}
+          justifyContent={"center"}
+          alignItems={"stretch"}
+        >
+          <TextField
+            label={"رمز عبور قبلی"}
+            variant={"outlined"}
+            sx={{
+              borderRadius: "1rem",
+              "& .MuiOutlinedInput-root": {
+                borderRadius: "0.5rem",
+              },
+              gridColumn: "1/3",
+            }}
+            fullWidth
+            type={"password"}
+            value={changePasswordModal.oldPassword}
+            onChange={(e) => {
+              setChangePasswordModal({
+                ...changePasswordModal,
+                oldPassword: e.target.value,
+              });
+            }}
+          />
+          <TextField
+            label={"رمز عبور جدید"}
+            variant={"outlined"}
+            sx={{
+              borderRadius: "1rem",
+              "& .MuiOutlinedInput-root": {
+                borderRadius: "0.5rem",
+              },
+              gridColumn: "1/3",
+            }}
+            fullWidth
+            type={"password"}
+            value={changePasswordModal.newPassword}
+            onChange={(e) => {
+              setChangePasswordModal({
+                ...changePasswordModal,
+                newPassword: e.target.value,
+              });
+            }}
+          />
+          <TextField
+            label={"تکرار رمز عبور جدید"}
+            variant={"outlined"}
+            sx={{
+              borderRadius: "1rem",
+              "& .MuiOutlinedInput-root": {
+                borderRadius: "0.5rem",
+              },
+              gridColumn: "1/3",
+            }}
+            fullWidth
+            type={"password"}
+            value={changePasswordModal.confirmPassword}
+            onChange={(e) => {
+              setChangePasswordModal({
+                ...changePasswordModal,
+                confirmPassword: e.target.value,
+              });
+            }}
+          />
+          <Button
+            variant={"contained"}
+            sx={{
+              gridColumn: "1/3",
+              backgroundColor: primary,
+              color: "white",
+              "&:hover": {
+                backgroundColor: Green,
+              },
+            }}
+            onClick={() => {
+              void changePassword();
+            }}
+          >
+            تغییر رمز عبور
+          </Button>
+        </Box>
+      </NewModal>
     </Box>
   );
 }
