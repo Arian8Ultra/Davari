@@ -32,7 +32,7 @@ const theme = createTheme({
           borderRadius:"0.5rem"
         }
       }
-    }
+    },
   },
   palette: {
     mode: "light",

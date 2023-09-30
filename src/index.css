@@ -19,19 +19,35 @@
 }
 
 @font-face {
-  font-family: 'Shabnam-Light';
+  font-family: Shabnam;
+  font-weight: 300;
   src: local('Shabnam-Light'), url(./font/Shabnam-Light.ttf) format('truetype');
 }
 
 @font-face {
-  font-family: 'Shabnam-Bold';
+  font-family: Shabnam;
+  font-weight: 700;
   src: local('Shabnam-Bold'), url(./font/Shabnam-Bold.ttf) format('truetype');
 }
 
-*{
-  font-family: "Shabnam-Light";
+
+@font-face {
+  font-family: iranSans;
+  font-weight: 500;
+  src: url("./font/Webfonts/fonts/woff/IRANSansX-Regular.woff")
+      format("woff");
+}
+@font-face {
+  font-family: iranSans;
+  font-weight: 700;
+  src: url("./font/Webfonts/fonts/woff/IRANSansX-Bold.woff")
+      format("woff");
 }
 
+* {
+  box-sizing: border-box;
+  font-family: iranSans !important;
+}
 
 ::-webkit-scrollbar {
   width: 10px;

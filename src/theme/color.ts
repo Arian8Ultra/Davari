@@ -13,6 +13,7 @@ export const primaryLighter = 'rgb(227, 242, 253)';
 export const primaryLightTransparent = 'rgba(63, 81, 181,0.2)';
 export const primaryTransparent = 'rgba(35, 48, 94,0.2)';
 export const primaryGreyTransparent = 'rgba(60, 65, 87,0.6)';
+export const primaryGreyLightTransparent = 'rgba(60, 65, 87,0.25)';
 export const primaryDark = "rgb(49, 27, 146)";
 
 
