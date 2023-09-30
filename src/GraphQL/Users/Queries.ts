@@ -3,7 +3,7 @@ import { gql } from "@apollo/client";
 export const GET_ALL_USERS = gql`
   query GetUsers {
     user_getUsers {
-      result (take: 2000){
+      result(take: 2000) {
         items {
           id
           departmentId
@@ -28,6 +28,12 @@ export const GET_ALL_USERS = gql`
   }
 `;
 
+export const TOKEN_CHECK = gql`
+  query TokenCheck {
+    user_isTokenValid
+  }
+`;
+
 export type UserRole = {
   id: string;
   roleType: string;
@@ -35,4 +41,3 @@ export type UserRole = {
   isDeleted: boolean;
   createdDate: string;
 };
-

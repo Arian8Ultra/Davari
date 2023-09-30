@@ -1,24 +1,110 @@
-import { Stack } from "@mui/material"
-import { primaryTransparent } from "../../theme/color"
-import theme from "../../theme/theme"
-import ComplaintCardNew from "./ComplaintCardNew"
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable no-case-declarations */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable react-hooks/rules-of-hooks */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { Stack, Typography } from "@mui/material";
+import { primary, primaryTransparent } from "../../theme/color";
+import theme from "../../theme/theme";
+import ComplaintCardNew from "./ComplaintCardNew";
+import { useQuery } from "@apollo/client";
+import {
+  Complaint,
+  GET_ACCUSED_COMPLAINTS,
+  GET_ACCUSER_COMPLAINTS,
+} from "../../GraphQL/Complaints/Queries";
+interface Props {
+  userId?: string;
+  departmentId?: number;
+  type?: "accused" | "accuser";
+}
+const ComplaintsList = ({ departmentId, type }: Props) => {
+  const { data: accuserData, loading: accuserLoading } = useQuery(
+    GET_ACCUSER_COMPLAINTS,
+    {
+      variables: {
+        departmentId: departmentId,
+      },
+    }
+  );
 
-const ComplaintsList = () => {
+  const { data: accusedData, loading: accusedLoading } = useQuery(
+    GET_ACCUSED_COMPLAINTS,
+    {
+      variables: {
+        departmentId: departmentId,
+      },
+    }
+  );
   return (
-    <Stack spacing={1} width={'100%'}  maxHeight={`calc(100vh - ${theme.spacing(25)})`} sx={{
+    <Stack
+      spacing={1}
+      width={"100%"}
+      maxHeight={`calc(100vh - ${theme.spacing(25)})`}
+      sx={{
         backgroundColor: primaryTransparent,
         borderRadius: 2,
-        padding: 2,
-        overflow: 'auto',   
+        padding: 0,
+        paddingTop: 0,
+        overflow: "auto",
         scrollPadding: theme.spacing(2),
-        scrollSnapType: 'y mandatory',
-        scrollbarGutter:'stable'
-    }}>
-        {[1,2,3,4,5,6,7,8,9,10].map((item, index) => (
-            <ComplaintCardNew key={index} id={item}/>
-        ))}
-    </Stack>
-  )
-}
+        scrollSnapType: "y mandatory",
+        // scrollbarGutter: "stable",
+      }}
+    >
+      {type === "accused" ? (
+        <Typography
+          sx={{
+            color: "white",
+            backgroundColor: primary,
+            padding: "1rem",
+            borderRadius: 2,
+            textAlign: "center",
+          }}
+        >
+          {accuserLoading ? "در حال دریافت اطلاعات" : "شکایات شما"}
+        </Typography>
+      ) : (
+        <Typography
+          sx={{
+            color: "white",
+            backgroundColor: primary,
+            padding: "1rem",
+            borderRadius: 2,
+            textAlign: "center",
+          }}
+        >
+          {accusedLoading
+            ? "در حال دریافت اطلاعات"
+            : "شکایات علی شما"}
+        </Typography>
+      )}
 
-export default ComplaintsList
+      <Stack padding={"0.5rem"} spacing={1}>
+        {type === "accused"
+          ? accusedData?.complaint_getComplaints?.result.items.map(
+              (complaint: Complaint) => (
+                <ComplaintCardNew
+                  key={complaint.id}
+                  id={complaint.id}
+                  acussed={complaint.assignedUser.userName}
+                  date={complaint.createdDate}
+                  contractId={complaint.contractId}
+                />
+              )
+            )
+          : accuserData?.complaint_getComplaints?.result.items.map(
+              (complaint: Complaint) => (
+                <ComplaintCardNew
+                  key={complaint.id}
+                  id={complaint.id}
+                />
+              )
+            )}
+      </Stack>
+    </Stack>
+  );
+};
+
+export default ComplaintsList;

@@ -31,7 +31,7 @@ const UserList = () => {
         backgroundColor: primaryTransparent,
         // padding: 2,
         borderRadius: 2,
-        boxShadow: "2px 2px 5px 1px rgba(0,0,0,0.2)",
+        // boxShadow: "2px 2px 5px 1px rgba(0,0,0,0.2)",
       }}
     >
       <Box

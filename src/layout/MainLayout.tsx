@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { useMutation } from "@apollo/client";
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -44,18 +46,19 @@ import {
 import useLayoutStore from "../Context/LayoutStore";
 import { useUserStore } from "../Context/UserStore";
 import { UserLogin } from "../GraphQL/Users/Mutations";
+// @ts-ignore
 import pboLogo from "../assets/PboLogo.png";
+// @ts-ignore
 import sazmanImage from "../assets/Sazman.jpeg";
-import {
-  SideBarLinkType,
-  SideBarMenu,
-} from "../static/SideBar";
+import { SideBarLinkType, SideBarMenu } from "../static/SideBar";
 import { Titles } from "../static/Titles";
 import { User } from "../static/Types";
 import ListItemLink from "../components/ListItemLink";
 import NewModal from "../components/Modals";
 import Title from "../components/Title";
 import { Green, background, primary } from "../theme/color";
+import { TOKEN_CHECK } from "../GraphQL/Users/Queries";
+import { log } from "console";
 
 const drawerWidth = 240;
 
@@ -158,6 +161,8 @@ export default function MainLayout() {
     matchMedia("(max-width: 960px)").matches
   );
 
+  const path = useLocation().pathname;
+
   useEffect(() => {
     console.log("token" + token);
 
@@ -168,15 +173,35 @@ export default function MainLayout() {
       setSignedIn(false);
       setSignInModal({ ...signInModal, open: false });
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
+  const [TokenCheck] = useLazyQuery(TOKEN_CHECK, {
+    onCompleted(data) {
+      // console.log("tokenCheck", data);
+    },
+    // fetchPolicy: "network-only",
+    nextFetchPolicy: "network-only",
+    pollInterval: 1000,
+  });
+
   useEffect(() => {
-    const now = new Date();
-    if (expireDate && expireDate < now) {
-      logout();
+    if (token && token !== "") {
+      void TokenCheck({
+        onCompleted(data) {
+          console.log("tokenCheck", data);
+          if (data?.user_isTokenValid) {
+            setSignedIn(true);
+            setSignInModal({ ...signInModal, open: true });
+          } else {
+            setSignedIn(false);
+            setSignInModal({ ...signInModal, open: false });
+          }
+        },
+      });
     }
-  }, [expireDate, logout]);
+  }, [TokenCheck, token,path]);
+
 
   React.useEffect(() => {
     const handler = (e: MediaQueryListEvent) => {

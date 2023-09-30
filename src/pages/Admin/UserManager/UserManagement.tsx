@@ -1,18 +1,31 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import { useMutation } from "@apollo/client";
-import { Box, Button, IconButton, TextField } from "@mui/material";
+import { useMutation, useQuery } from "@apollo/client";
+import {
+  Autocomplete,
+  Box,
+  Button,
+  IconButton,
+  MenuItem,
+  TextField,
+} from "@mui/material";
 import { red } from "@mui/material/colors";
-import { useState } from "react";
+import React, { useState } from "react";
 import { BsEye, BsEyeSlash, BsPersonAdd } from "react-icons/bs";
 import { UserSignUp } from "../../../GraphQL/Users/Mutations";
 import { Titles } from "../../../static/Titles";
 import UserList from "../../../components/Admin/UserManagement/UserList";
 import NewModal from "../../../components/Modals";
+import { Green, GreenLight, background } from "../../../theme/color";
 import {
-  Green,
-  GreenLight,
-  background
-} from "../../../theme/color";
+  Department,
+  GET_DEPARTMENTS,
+} from "../../../GraphQL/Departments/Queries";
 
 const UserManagement = () => {
   const [addModal, setAddModal] = useState({
@@ -52,6 +65,23 @@ const UserManagement = () => {
       alert("مشکلی در افزودن کاربر به وجود آمده است");
     },
   });
+
+  const [departments, setDepartments] = React.useState([]);
+  const { data: departmentsData } = useQuery(GET_DEPARTMENTS, {
+    onCompleted(data) {
+      console.log(data);
+      data.department_getDepartments.result.items.forEach(
+        (item: Department) => {
+          // @ts-ignore
+          setDepartments((prev: Department) => [
+            // @ts-ignore
+            ...prev,
+            { label: item.title, id: item.id },
+          ]);
+        }
+      );
+    },
+  });
   return (
     <>
       <Box
@@ -73,7 +103,7 @@ const UserManagement = () => {
             boxShadow: "none",
             "&:hover": {
               backgroundColor: GreenLight,
-              color:Green
+              color: Green,
             },
           }}
         >
@@ -168,7 +198,6 @@ const UserManagement = () => {
             variant={"outlined"}
             autoComplete="nationalCode"
             value={addModal.nationalCode}
-
             sx={{
               "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
                 {
@@ -298,6 +327,25 @@ const UserManagement = () => {
             }
           />
 
+          {/* <TextField
+            fullWidth
+            label={"دپارتمان"}
+            variant={"outlined"}
+            value={addModal.departmentId}
+            sx={{
+              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
+                {
+                  borderRadius: "15px",
+                },
+            }}
+            onChange={(e) =>
+              setAddModal({
+                ...addModal,
+                departmentId: parseInt(e.target.value),
+              })
+            }
+          /> */}
+
           <TextField
             fullWidth
             label={"دپارتمان"}
@@ -315,7 +363,16 @@ const UserManagement = () => {
                 departmentId: parseInt(e.target.value),
               })
             }
-          />
+            select
+          >
+            {departments.map(
+              (option: { label: string; id: number }) => (
+                <MenuItem key={option.id} value={option.id}>
+                  {option.label}
+                </MenuItem>
+              )
+            )}
+          </TextField>
 
           <Button
             variant="contained"

@@ -8,20 +8,21 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Typography
+  Typography,
 } from "@mui/material";
 import { useState } from "react";
 import { FiMoreHorizontal } from "react-icons/fi";
 import {
   background,
   primary,
-  primaryLightTransparent
+  primaryLightTransparent,
 } from "../../theme/color";
 import NewModal from "../Modals";
+import { grey } from "@mui/material/colors";
 interface Props {
   id: number;
   complaintId?: number;
-  conteactId?: number;
+  contractId?: number;
   date?: string;
   acussed?: string;
   acussedId?: number;
@@ -30,6 +31,7 @@ interface Props {
   state?: string;
   summary?: string;
   projectId?: number;
+  type?: "accused" | "accuser";
 }
 const ComplaintCardNew = (props: Props) => {
   const [open, setOpen] = useState(false);
@@ -52,36 +54,61 @@ const ComplaintCardNew = (props: Props) => {
         gridTemplateColumns: "repeat(5,1fr)",
         alignItems: "center",
         borderRadius: "5px",
-        // ":hover": { backgroundColor: "#DAFFFB" },
         gap: "0.5rem",
       }}
     >
       <Typography
         textAlign={"center"}
-        fontSize={"16px"}
+        fontSize={{
+          xs: "0.8rem",
+          sm: "0.6rem",
+          md: "0.8rem",
+          lg: "1rem",
+        }}
         sx={{ userSelect: "none" }}
       >
         شماره قرارداد:
-        {
-          // if title is not provided, use id + title
-          // props.title ? String(props.title) : String(props.id) + " title "
-        }
+        {props.contractId}
       </Typography>
-      <Typography textAlign={"center"} sx={{ userSelect: "none" }}>
+      <Typography
+        textAlign={"center"}
+        fontSize={{
+          xs: "0.8rem",
+          sm: "0.6rem",
+          md: "0.8rem",
+          lg: "1rem",
+        }}
+        sx={{ userSelect: "none" }}
+      >
         شماره شکایت:
-        {
-          // if title is not provided, use id + title
-          // props.title ? String(props.title) : String(props.id) + " title "
-        }
+        {props.id}
       </Typography>
-      <Typography textAlign={"center"} sx={{ userSelect: "none" }}>
+      <Typography
+        textAlign={"center"}
+        fontSize={{
+          xs: "0.8rem",
+          sm: "0.6rem",
+          md: "0.8rem",
+          lg: "1rem",
+        }}
+        sx={{ userSelect: "none" }}
+      >
         شماره پرونده:
         {
           // if title is not provided, use id + title
           // props.title ? String(props.title) : String(props.id) + " title "
         }
       </Typography>
-      <Typography textAlign={"center"} sx={{ userSelect: "none" }}>
+      <Typography
+        textAlign={"center"}
+        fontSize={{
+          xs: "0.8rem",
+          sm: "0.6rem",
+          md: "0.8rem",
+          lg: "1rem",
+        }}
+        sx={{ userSelect: "none" }}
+      >
         تاریخ ثبت:
         {
           // if title is not provided, use id + title
@@ -100,13 +127,14 @@ const ComplaintCardNew = (props: Props) => {
         <FiMoreHorizontal />
       </Button>
       <LinearProgress
-        variant={"buffer"}
+        variant={"determinate"}
         // change color of progress bar based on status
         value={25}
         sx={{
           gridColumn: "span 5",
           height: 10,
-          // borderRadius: 5,
+          borderBottomLeftRadius: 5,
+          borderBottomRightRadius: 5,
         }}
       />
       <NewModal
@@ -131,13 +159,11 @@ const ComplaintCardNew = (props: Props) => {
                   backgroundColor: primaryLightTransparent,
                   borderBottom: `1px solid ${primary}`,
                 }}
-              >
-
-              </TableHead>
+              ></TableHead>
               <TableBody>
-              <TableRow
+                <TableRow
                   sx={{
-                    borderBottom: `1px solid ${primary}`,
+                    borderBottom: `2px solid ${grey[300]}`,
                   }}
                 >
                   <TableCell
@@ -157,7 +183,7 @@ const ComplaintCardNew = (props: Props) => {
                 </TableRow>
                 <TableRow
                   sx={{
-                    borderBottom: `1px solid ${primary}`,
+                    borderBottom: `2px solid ${grey[300]}`,
                   }}
                 >
                   <TableCell
@@ -176,10 +202,9 @@ const ComplaintCardNew = (props: Props) => {
                   </TableCell>
                 </TableRow>
 
-
                 <TableRow
                   sx={{
-                    borderBottom: `1px solid ${primary}`,
+                    borderBottom: `2px solid ${grey[300]}`,
                   }}
                 >
                   <TableCell
@@ -198,11 +223,9 @@ const ComplaintCardNew = (props: Props) => {
                   </TableCell>
                 </TableRow>
 
-
-
                 <TableRow
                   sx={{
-                    borderBottom: `1px solid ${primary}`,
+                    borderBottom: `2px solid ${grey[300]}`,
                   }}
                 >
                   <TableCell
@@ -210,7 +233,7 @@ const ComplaintCardNew = (props: Props) => {
                       color: primary,
                     }}
                   >
-                   وضعیت:
+                    وضعیت:
                   </TableCell>
                   <TableCell
                     sx={{
@@ -221,11 +244,9 @@ const ComplaintCardNew = (props: Props) => {
                   </TableCell>
                 </TableRow>
 
-
-
                 <TableRow
                   sx={{
-                    borderBottom: `1px solid ${primary}`,
+                    borderBottom: `2px solid ${grey[300]}`,
                   }}
                 >
                   <TableCell
@@ -244,13 +265,9 @@ const ComplaintCardNew = (props: Props) => {
                   </TableCell>
                 </TableRow>
 
-
-
-
-
                 <TableRow
                   sx={{
-                    borderBottom: `1px solid ${primary}`,
+                    borderBottom: `2px solid ${grey[300]}`,
                   }}
                 >
                   <TableCell
@@ -270,7 +287,7 @@ const ComplaintCardNew = (props: Props) => {
                 </TableRow>
                 <TableRow
                   sx={{
-                    borderBottom: `1px solid ${primary}`,
+                    borderBottom: `2px solid ${grey[300]}`,
                   }}
                 >
                   <TableCell
@@ -290,7 +307,7 @@ const ComplaintCardNew = (props: Props) => {
                 </TableRow>
                 <TableRow
                   sx={{
-                    borderBottom: `1px solid ${primary}`,
+                    borderBottom: `2px solid ${grey[300]}`,
                   }}
                 >
                   <TableCell
@@ -308,11 +325,7 @@ const ComplaintCardNew = (props: Props) => {
                     شماره پروژه
                   </TableCell>
                 </TableRow>
-                <TableRow
-                  sx={{
-                    borderBottom: `1px solid ${primary}`,
-                  }}
-                >
+                <TableRow>
                   <TableCell
                     sx={{
                       color: primary,

@@ -2,9 +2,16 @@ import { useState } from "react";
 import ComplaintsList from "../../components/Complaints/ComplaintsList";
 import NewModal from "../../components/Modals";
 import { Box, Button, TextField } from "@mui/material";
-import { Green, GreenLight, Yellow, YellowLight, background } from "../../theme/color";
+import {
+  Green,
+  GreenLight,
+  Yellow,
+  YellowLight,
+  background,
+} from "../../theme/color";
 import { AiFillFileAdd } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
+import { useUserStore } from "../../Context/UserStore";
 
 const Complaints = () => {
   const [addModal, setAddModal] = useState({
@@ -22,6 +29,8 @@ const Complaints = () => {
     complaintCategory: "",
   });
   const navigate = useNavigate();
+
+  const user = useUserStore((state) => state.user);
   return (
     <>
       <Box
@@ -49,7 +58,22 @@ const Complaints = () => {
           افزودن شکایت
         </Button>
       </Box>
-      <ComplaintsList />
+      <Box
+        sx={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: 1,
+        }}
+      >
+        <ComplaintsList
+          type="accused"
+          departmentId={user.departmentId}
+        />
+        <ComplaintsList
+          type="accuser"
+          departmentId={user.departmentId}
+        />
+      </Box>
 
       <NewModal
         name="ثبت شکایت"
@@ -102,8 +126,8 @@ const Complaints = () => {
                 backgroundColor: YellowLight,
               },
             }}
-            onClick={()=>{
-              navigate("addContract")
+            onClick={() => {
+              navigate("addContract");
             }}
           >
             نداشتن کد قرارداد و ادامه

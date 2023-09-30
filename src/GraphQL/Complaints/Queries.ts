@@ -39,13 +39,109 @@ export const GET_COMPLAINTS = gql`
   }
 `;
 
+export const GET_ACCUSED_COMPLAINTS = gql`
+  query GetComplaints(
+    $departmentId: Int!
+  ){
+    complaint_getComplaints {
+      result (where: {contract:{accusedDepartmentId: {eq: $departmentId}}}){
+        items {
+          userId
+          id
+          contractId
+          arbitrationTermsForms {
+            firstCondition
+            firstConditionFileName
+            secondCondition
+            secondConditionFileName
+            thirdCondition
+            thirdConditionFileName
+            fourthCondition
+            fourthConditionFileName
+          }
+          complaintState
+          complaintCode
+          assignedUser {
+            userName
+            firstName
+            lastName
+            departmentId
+            phoneNumber
+          }
+          contract {
+            contractNumber
+            contractDate
+            initialBudget
+            accusedDepartmentId
+            accuserDepartmentId
+            department{
+              id
+              users{
+                id
+              }
+            }
+          }
+        }
+      }
+    }
+  }`;
+
+export const GET_ACCUSER_COMPLAINTS = gql`
+  query GetComplaints(
+    $departmentId: Int!
+  ){
+    complaint_getComplaints {
+      result (where: {contract:{accuserDepartmentId: {eq: $departmentId}}}){
+        items {
+          userId
+          id
+          contractId
+          createdDate
+          arbitrationTermsForms {
+            firstCondition
+            firstConditionFileName
+            secondCondition
+            secondConditionFileName
+            thirdCondition
+            thirdConditionFileName
+            fourthCondition
+            fourthConditionFileName
+          }
+          complaintState
+          complaintCode
+          assignedUser {
+            userName
+            firstName
+            lastName
+            departmentId
+            phoneNumber
+          }
+          contract {
+            contractNumber
+            contractDate
+            initialBudget
+            accusedDepartmentId
+            accuserDepartmentId
+            department{
+              id
+              users{
+                id
+              }
+            }
+          }
+        }
+      }
+    }
+  }`
+
 export type Complaint = {
+  userId: number;
   id: number;
-  userId: string;
   contractId: number;
-  arbitrationTermsForms: ArbitrationTermsForms[];
+  arbitrationTermsForms: ArbitrationTermsForms;
   complaintState: string;
   complaintCode: string;
+  createdDate: string;
   assignedUser: {
     userName: string;
     firstName: string;
@@ -57,7 +153,11 @@ export type Complaint = {
     contractNumber: string;
     contractDate: string;
     initialBudget: number;
+    accusedDepartmentId: number;
+    accuserDepartmentId: number;
+    department: Department;
   };
+
 };
 
 export type Department = {

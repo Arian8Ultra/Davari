@@ -3,22 +3,20 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 import { useMutation } from "@apollo/client";
+import { Person2Outlined } from "@mui/icons-material";
 import {
   Box,
   Button,
-  Collapse,
   IconButton,
   ListItem,
-  ListItemButton,
-  ListItemText,
   Menu,
   MenuItem,
-  Modal,
   Select,
   TextField,
   Tooltip,
-  Typography,
+  Typography
 } from "@mui/material";
+import { grey } from "@mui/material/colors";
 import { useState } from "react";
 import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
 import { BsKey } from "react-icons/bs";
@@ -40,11 +38,9 @@ import {
   RedLight,
   background,
   primary,
-  primaryGrey,
-  primaryTransparent,
+  primaryTransparent
 } from "../../../theme/color";
 import NewModal from "../../Modals";
-import { Person2Outlined } from "@mui/icons-material";
 interface Props {
   firstName?: string;
   lastName?: string;
@@ -63,24 +59,13 @@ const UserCard = (props: Props) => {
   // alijh state for menuItem
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const openAnchor = Boolean(anchorEl);
-  const handleClickAnchor = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClickAnchor = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
     setAnchorEl(event.currentTarget);
   };
   const handleCloseAnchor = () => {
     setAnchorEl(null);
-  };
-  //alijh style for modal
-  const style = {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: "20%",
-    height: "30%",
-    bgcolor: "background.paper",
-    border: "2px solid #000",
-    boxShadow: 24,
-    p: 4,
   };
 
   const [editModal, setEditModal] = useState({
@@ -152,7 +137,7 @@ const UserCard = (props: Props) => {
         width: "100%",
         height: "100%",
         padding: 1.5,
-        borderBottom: "1px solid rgba(100,100,100,0.2)",
+        border: "1px solid rgba(100,100,100,0.2)",
         display: "grid",
         alignItems: "center",
         gap: 1,
@@ -165,7 +150,6 @@ const UserCard = (props: Props) => {
         gridAutoColumns: "1fr",
         "&:hover": {
           backgroundColor: "rgba(255,255,255,0.6)",
-          cursor: "pointer",
         },
       }}
     >
@@ -259,19 +243,47 @@ const UserCard = (props: Props) => {
           aria-haspopup="true"
           aria-expanded={openAnchor ? "true" : undefined}
           onClick={handleClickAnchor}
+          fullWidth
         >
           ...
         </Button>
         <Menu
-          id="basic-menu"
+          id="user-menu"
           anchorEl={anchorEl}
           open={openAnchor}
           onClose={handleCloseAnchor}
+          sx={{
+            "& .MuiMenu-paper": {
+              borderRadius: "15px",
+              border: `2px solid ${primary}`,
+            },
+          }}
           MenuListProps={{
-            "aria-labelledby": "basic-button",
+            sx: {
+              borderRadius: "15px",
+            },
           }}
         >
-          <MenuItem onClick={handleCloseAnchor}>
+          <MenuItem
+            onClick={() => {
+              handleCloseAnchor();
+              setEditModal({
+                open: true,
+                username: props.userName ? props.userName : "",
+                firstName: props.firstName ? props.firstName : "",
+                lastName: props.lastName ? props.lastName : "",
+                nationalCode: props.personalCode
+                  ? props.personalCode
+                  : "",
+              });
+            }}
+            sx={{
+              gap: 1,
+              "&:hover": {
+                background: grey[300],
+              },
+            }}
+          >
             <Tooltip title={"ویرایش کاربر"}>
               <IconButton
                 sx={{
@@ -288,30 +300,30 @@ const UserCard = (props: Props) => {
                     lg: "1.4rem",
                   },
                 }}
-                onClick={() => {
-                  setEditModal({
-                    open: true,
-                    username: props.userName ? props.userName : "",
-                    firstName: props.firstName ? props.firstName : "",
-                    lastName: props.lastName ? props.lastName : "",
-                    nationalCode: props.personalCode ? props.personalCode : "",
-                  });
-                }}
               >
                 <AiOutlineEdit />
               </IconButton>
             </Tooltip>
+            <Typography>ویرایش کاربر</Typography>
           </MenuItem>
-          <MenuItem onClick={handleCloseAnchor}>
+          <MenuItem
+            onClick={() => {
+              handleOpen();
+              handleCloseAnchor();
+            }}
+            sx={{
+              gap: 1,
+              "&:hover": {
+                background: grey[300],
+              },
+            }}
+          >
             <Tooltip title={"دسترسی های کاربر"}>
               <IconButton
                 sx={{
                   // backgroundColor: Blue,
-                  outline: `2px solid ${Blue}`,
-                  color: Blue,
-                  "&:hover": {
-                    backgroundColor: BlueLight,
-                  },
+                  outline: `2px solid ${grey[500]}`,
+                  color: grey[500],
                   fontSize: {
                     xs: "0.8rem",
                     sm: "1rem",
@@ -319,25 +331,31 @@ const UserCard = (props: Props) => {
                     lg: "1.4rem",
                   },
                 }}
-                onClick={() => {
-                  handleOpen();
-                }}
               >
                 <Person2Outlined />
               </IconButton>
             </Tooltip>
+            <Typography>مشاهده دسترسی ها</Typography>
           </MenuItem>
-          <MenuItem onClick={handleCloseAnchor}>
+          <MenuItem
+            onClick={() => {
+              const agree = confirm(
+                `آیا از حذف کاربر '${props.firstName} ${props.lastName}' مطمئن هستید؟`
+              );
+              if (agree) {
+                void deleteUser();
+                handleCloseAnchor();
+              }
+            }}
+            sx={{
+              gap: 1,
+              "&:hover": {
+                background: grey[300],
+              },
+            }}
+          >
             <Tooltip title={"حذف کاربر"}>
               <IconButton
-                onClick={() => {
-                  const agree = confirm(
-                    `آیا از حذف کاربر '${props.firstName} ${props.lastName}' مطمئن هستید؟`
-                  );
-                  if (agree) {
-                    void deleteUser();
-                  }
-                }}
                 sx={{
                   // backgroundColor: Red,
                   outline: `2px solid ${Red}`,
@@ -356,8 +374,23 @@ const UserCard = (props: Props) => {
                 <AiOutlineDelete />
               </IconButton>
             </Tooltip>
+            <Typography>حذف کاربر</Typography>
           </MenuItem>
-          <MenuItem onClick={handleCloseAnchor}>
+          <MenuItem
+            onClick={() => {
+              handleCloseAnchor();
+              setRoleModal({
+                open: true,
+                roleType: "",
+              });
+            }}
+            sx={{
+              gap: 1,
+              "&:hover": {
+                background: grey[300],
+              },
+            }}
+          >
             <Tooltip title={"تغییر دسترسی ها"}>
               <IconButton
                 sx={{
@@ -374,18 +407,21 @@ const UserCard = (props: Props) => {
                     lg: "1.4rem",
                   },
                 }}
-                onClick={() => {
-                  setRoleModal({
-                    open: true,
-                    roleType: "",
-                  });
-                }}
               >
                 <VscPreview />
               </IconButton>
             </Tooltip>
+            <Typography>تغییر دسترسی ها</Typography>
           </MenuItem>
-          <MenuItem onClick={handleCloseAnchor}>
+          <MenuItem
+            onClick={handleCloseAnchor}
+            sx={{
+              gap: 1,
+              "&:hover": {
+                background: grey[300],
+              },
+            }}
+          >
             <Tooltip title={"تغییر رمز عبور"}>
               <IconButton
                 sx={{
@@ -406,6 +442,7 @@ const UserCard = (props: Props) => {
                 <BsKey />
               </IconButton>
             </Tooltip>
+            <Typography>تغییر رمز عبور</Typography>
           </MenuItem>
         </Menu>
       </Box>
@@ -440,9 +477,10 @@ const UserCard = (props: Props) => {
             variant={"outlined"}
             value={editModal.firstName}
             sx={{
-              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-                borderRadius: "15px",
-              },
+              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
+                {
+                  borderRadius: "15px",
+                },
             }}
             onChange={(e) =>
               setEditModal({
@@ -458,9 +496,10 @@ const UserCard = (props: Props) => {
             variant={"outlined"}
             value={editModal.lastName}
             sx={{
-              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-                borderRadius: "15px",
-              },
+              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
+                {
+                  borderRadius: "15px",
+                },
             }}
             onChange={(e) =>
               setEditModal({ ...editModal, lastName: e.target.value })
@@ -473,9 +512,10 @@ const UserCard = (props: Props) => {
             variant={"outlined"}
             value={editModal.nationalCode}
             sx={{
-              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-                borderRadius: "15px",
-              },
+              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
+                {
+                  borderRadius: "15px",
+                },
             }}
             onChange={(e) =>
               setEditModal({
@@ -559,14 +599,19 @@ const UserCard = (props: Props) => {
           </Button>
         </Box>
       </NewModal>
-      <Modal
+      <NewModal
         open={open}
         onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
+        isCloseable
+        background={background}
+        name="دسترسی ها"
       >
-        <Box sx={style}>
-          <Button onClick={handleClose}>click</Button>
+        <Box
+          sx={{
+            display: "flex",
+            width: "100%",
+          }}
+        >
           <ListItem
             sx={{
               display: "flex",
@@ -574,21 +619,21 @@ const UserCard = (props: Props) => {
               alignItems: "flex-start",
             }}
           >
-            <ListItemButton>
-              <ListItemText>دسترسی کاربر</ListItemText>
-            </ListItemButton>
-            <ListItemButton>
-              <ListItemText>دسترسی کاربر</ListItemText>
-            </ListItemButton>
-            <ListItemButton>
-              <ListItemText>دسترسی کاربر</ListItemText>
-            </ListItemButton>
-            <ListItemButton>
-              <ListItemText>دسترسی کاربر</ListItemText>
-            </ListItemButton>
+            {props.userRoles &&
+              props.userRoles.map((role, index) => (
+                <ListItem>
+                  <Typography
+                    key={index}
+                    variant={"body2"}
+                    textAlign={"center"}
+                  >
+                    {convertRoleToPersian(role.roleType)}
+                  </Typography>
+                </ListItem>
+              ))}
           </ListItem>
         </Box>
-      </Modal>
+      </NewModal>
       {/* <Collapse
         in={collapse}
         sx={{
