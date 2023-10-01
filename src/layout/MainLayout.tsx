@@ -1,10 +1,11 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
+import { useLazyQuery, useMutation } from "@apollo/client";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -52,16 +53,15 @@ import {
 // @ts-ignore
 import pboLogo from "../assets/PboLogo.png";
 // @ts-ignore
+import { TOKEN_CHECK } from "../GraphQL/Users/Queries";
 import sazmanImage from "../assets/Sazman.jpeg";
-import { SideBarLinkType, SideBarMenu } from "../static/SideBar";
-import { Titles } from "../static/Titles";
-import { User } from "../static/Types";
 import ListItemLink from "../components/ListItemLink";
 import NewModal from "../components/Modals";
 import Title from "../components/Title";
+import { SideBarLinkType, SideBarMenu } from "../static/SideBar";
+import { Titles } from "../static/Titles";
+import { User } from "../static/Types";
 import { Green, background, primary } from "../theme/color";
-import { TOKEN_CHECK } from "../GraphQL/Users/Queries";
-import { log } from "console";
 
 const drawerWidth = 240;
 
@@ -146,7 +146,6 @@ export default function MainLayout() {
   const firstName = useUserStore((state) => state.user.firstName);
   const lastName = useUserStore((state) => state.user.lastName);
   const user = useUserStore((state) => state.user);
-  const expireDate = useUserStore((state) => state.expireDate);
   const logout = useUserStore((state) => state.logout);
   const [changePasswordModal, setChangePasswordModal] = useState({
     open: false,
@@ -187,7 +186,7 @@ export default function MainLayout() {
   }, [token]);
 
   const [TokenCheck] = useLazyQuery(TOKEN_CHECK, {
-    onCompleted(data) {
+    onCompleted() {
       // console.log("tokenCheck", data);
     },
     // fetchPolicy: "network-only",

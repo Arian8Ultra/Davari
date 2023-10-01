@@ -94,7 +94,8 @@ const ComplaintsList = ({ departmentId, type }: Props) => {
                 <ComplaintCardNew
                   key={complaint.id}
                   id={complaint.id}
-                  acussed={complaint?.assignedUser?.userName}
+                  acussedId={complaint?.contract?.accusedDepartmentId}
+                  acusserId={complaint?.contract?.accuserDepartmentId}
                   date={complaint?.createdDate}
                   contractId={complaint?.contractId}
                   type="accused"
@@ -109,6 +110,8 @@ const ComplaintsList = ({ departmentId, type }: Props) => {
                   acussed={complaint?.assignedUser?.userName}
                   date={complaint?.createdDate}
                   contractId={complaint?.contractId}
+                  acussedId={complaint?.contract?.accusedDepartmentId}
+                  acusserId={complaint?.contract?.accuserDepartmentId}
                   type="accuser"
                 />
               )

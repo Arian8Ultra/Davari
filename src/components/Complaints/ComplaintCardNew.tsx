@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+import { useQuery } from "@apollo/client";
 import {
   Box,
   Button,
@@ -10,21 +14,24 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
+import { grey, red } from "@mui/material/colors";
 import { useState } from "react";
 import { FiMoreHorizontal } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
+import {
+  Department,
+  GET_DEPARTMENTS,
+} from "../../GraphQL/Departments/Queries";
 import {
   Green,
   GreenLight,
   Red,
-  RedLight,
   background,
   primary,
   primaryLight,
   primaryLightTransparent,
 } from "../../theme/color";
 import NewModal from "../Modals";
-import { grey, red } from "@mui/material/colors";
-import { useNavigate } from "react-router-dom";
 interface Props {
   id: number;
   complaintId?: number;
@@ -51,6 +58,8 @@ const ComplaintCardNew = (props: Props) => {
     borderRadius: "0.5rem",
   };
 
+  const { data: departmentData } = useQuery(GET_DEPARTMENTS);
+
   return (
     <Box
       sx={{
@@ -58,7 +67,7 @@ const ComplaintCardNew = (props: Props) => {
         pt: "0.5rem",
         backgroundColor: "white",
         display: "grid",
-        gridTemplateColumns: "repeat(5,1fr)",
+        gridTemplateColumns: "repeat(5,auto)",
         alignItems: "center",
         borderRadius: "5px",
         gap: "0.5rem",
@@ -70,7 +79,7 @@ const ComplaintCardNew = (props: Props) => {
           xs: "0.8rem",
           sm: "0.6rem",
           md: "0.8rem",
-          lg: "1rem",
+          lg: "0.9rem",
         }}
         sx={{ userSelect: "none" }}
       >
@@ -83,7 +92,7 @@ const ComplaintCardNew = (props: Props) => {
           xs: "0.8rem",
           sm: "0.6rem",
           md: "0.8rem",
-          lg: "1rem",
+          lg: "0.9rem",
         }}
         sx={{ userSelect: "none" }}
       >
@@ -96,15 +105,12 @@ const ComplaintCardNew = (props: Props) => {
           xs: "0.8rem",
           sm: "0.6rem",
           md: "0.8rem",
-          lg: "1rem",
+          lg: "0.9rem",
         }}
         sx={{ userSelect: "none" }}
       >
-        شماره پرونده:
-        {
-          // if title is not provided, use id + title
-          // props.title ? String(props.title) : String(props.id) + " title "
-        }
+        تاریخ ثبت:
+        {new Date(props.date!).toLocaleDateString("fa-IR")}
       </Typography>
       <Typography
         textAlign={"center"}
@@ -112,14 +118,15 @@ const ComplaintCardNew = (props: Props) => {
           xs: "0.8rem",
           sm: "0.6rem",
           md: "0.8rem",
-          lg: "1rem",
+          lg: "0.9rem",
         }}
         sx={{ userSelect: "none" }}
       >
-        تاریخ ثبت:
+        خوانده:
         {
-          // if title is not provided, use id + title
-          // props.title ? String(props.title) : String(props.id) + " title "
+          departmentData?.department_getDepartments?.result.items.find(
+            (item: Department) => item.id === props.acusserId
+          ).title
         }
       </Typography>
       <Button
@@ -186,7 +193,7 @@ const ComplaintCardNew = (props: Props) => {
                         color: primary,
                       }}
                     >
-                      شماره شکایت
+                      {props.id}
                     </TableCell>
                   </TableRow>
                   <TableRow
@@ -199,14 +206,19 @@ const ComplaintCardNew = (props: Props) => {
                         color: primary,
                       }}
                     >
-                      خونده:
+                      خوانده:
                     </TableCell>
                     <TableCell
                       sx={{
                         color: primary,
                       }}
                     >
-                      خونده
+                      {
+                        departmentData?.department_getDepartments?.result.items.find(
+                          (item: Department) =>
+                            item.id === props.acussedId
+                        ).title
+                      }
                     </TableCell>
                   </TableRow>
 
@@ -227,7 +239,12 @@ const ComplaintCardNew = (props: Props) => {
                         color: primary,
                       }}
                     >
-                      خواهان
+                      {
+                        departmentData?.department_getDepartments?.result.items.find(
+                          (item: Department) =>
+                            item.id === props.acusserId
+                        ).title
+                      }
                     </TableCell>
                   </TableRow>
 
@@ -248,28 +265,7 @@ const ComplaintCardNew = (props: Props) => {
                         color: primary,
                       }}
                     >
-                      وضعیت
-                    </TableCell>
-                  </TableRow>
-
-                  <TableRow
-                    sx={{
-                      borderBottom: `2px solid ${grey[300]}`,
-                    }}
-                  >
-                    <TableCell
-                      sx={{
-                        color: primary,
-                      }}
-                    >
-                      خلاصه:
-                    </TableCell>
-                    <TableCell
-                      sx={{
-                        color: primary,
-                      }}
-                    >
-                      خلاصه
+                      {props.state}
                     </TableCell>
                   </TableRow>
 
@@ -290,7 +286,7 @@ const ComplaintCardNew = (props: Props) => {
                         color: primary,
                       }}
                     >
-                      شماره قرارداد
+                      {props.contractId}
                     </TableCell>
                   </TableRow>
                   <TableRow
@@ -310,27 +306,7 @@ const ComplaintCardNew = (props: Props) => {
                         color: primary,
                       }}
                     >
-                      شماره طرح
-                    </TableCell>
-                  </TableRow>
-                  <TableRow
-                    sx={{
-                      borderBottom: `2px solid ${grey[300]}`,
-                    }}
-                  >
-                    <TableCell
-                      sx={{
-                        color: primary,
-                      }}
-                    >
-                      شماره پروژه:
-                    </TableCell>
-                    <TableCell
-                      sx={{
-                        color: primary,
-                      }}
-                    >
-                      شماره پروژه
+                      {props.projectId}
                     </TableCell>
                   </TableRow>
                   <TableRow>
@@ -346,7 +322,9 @@ const ComplaintCardNew = (props: Props) => {
                         color: primary,
                       }}
                     >
-                      تایخ ثبت
+                      {new Date(props.date!).toLocaleDateString(
+                        "fa-IR"
+                      )}
                     </TableCell>
                   </TableRow>
                 </TableBody>
@@ -417,7 +395,7 @@ const ComplaintCardNew = (props: Props) => {
                 color: "white",
                 "&:hover": {
                   backgroundColor: primaryLight,
-                  color: 'white',
+                  color: "white",
                 },
               }}
               onClick={() => {

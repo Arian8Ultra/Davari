@@ -40,11 +40,13 @@ export const GET_COMPLAINTS = gql`
 `;
 
 export const GET_ACCUSED_COMPLAINTS = gql`
-  query GetComplaints(
-    $departmentId: Int!
-  ){
+  query GetComplaints($departmentId: Int!) {
     complaint_getComplaints {
-      result (where: {contract:{accusedDepartmentId: {eq: $departmentId}}}){
+      result(
+        where: {
+          contract: { accusedDepartmentId: { eq: $departmentId } }
+        }
+      ) {
         items {
           userId
           id
@@ -74,9 +76,9 @@ export const GET_ACCUSED_COMPLAINTS = gql`
             initialBudget
             accusedDepartmentId
             accuserDepartmentId
-            department{
+            department {
               id
-              users{
+              users {
                 id
               }
             }
@@ -84,14 +86,17 @@ export const GET_ACCUSED_COMPLAINTS = gql`
         }
       }
     }
-  }`;
+  }
+`;
 
 export const GET_ACCUSER_COMPLAINTS = gql`
-  query GetComplaints(
-    $departmentId: Int!
-  ){
+  query GetComplaints($departmentId: Int!) {
     complaint_getComplaints {
-      result (where: {contract:{accuserDepartmentId: {eq: $departmentId}}}){
+      result(
+        where: {
+          contract: { accuserDepartmentId: { eq: $departmentId } }
+        }
+      ) {
         items {
           userId
           id
@@ -122,9 +127,9 @@ export const GET_ACCUSER_COMPLAINTS = gql`
             initialBudget
             accusedDepartmentId
             accuserDepartmentId
-            department{
+            department {
               id
-              users{
+              users {
                 id
               }
             }
@@ -132,7 +137,38 @@ export const GET_ACCUSER_COMPLAINTS = gql`
         }
       }
     }
-  }`
+  }
+`;
+
+export const GET_COMPLAINT_ARGUMENTS = gql`
+  query GetComplaintArguments($complaintId: Int!) {
+    complaintArgument_getComplaintArguments {
+      result(where: { complaintId: { eq: $complaintId } }) {
+        items {
+          id
+          accuserResponse
+          accuserResponseFileName
+          approvedAmount
+          complaintId
+          councilApprovedAmount
+          description
+          expertId
+          expertOpinion
+          expertOpinionFileName
+          expertVerdict
+          fileName
+          filledBy
+          mailRoomChiefSuggestedAmount
+          mailRoomExpertApprovedAmount
+          suggestedAmount
+          summary
+          userId
+        }
+      }
+      status
+    }
+  }
+`;
 
 export type Complaint = {
   userId: number;
@@ -157,7 +193,6 @@ export type Complaint = {
     accuserDepartmentId: number;
     department: Department;
   };
-
 };
 
 export type Department = {

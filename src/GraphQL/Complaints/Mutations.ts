@@ -1,15 +1,9 @@
 import { gql } from "@apollo/client";
 
 export const CREATE_COMPLAINT = gql`
-  mutation CreateComplaint(
-    $contractId: Int!
-    $userId: String!
-  ) {
+  mutation CreateComplaint($contractId: Int!, $userId: String!) {
     complaint_addComplaint(
-      input: {
-        contractId: $contractId
-        userId: $userId
-      }
+      input: { contractId: $contractId, userId: $userId }
     ) {
       result {
         id
@@ -33,8 +27,6 @@ export const CREATE_COMPLAINT = gql`
   }
 `;
 
-
-
 export const CREATE_ARBITRATION_TERMS_FORM = gql`
   mutation CreateArbitrationTermsForm(
     $complaintId: Int!
@@ -51,24 +43,26 @@ export const CREATE_ARBITRATION_TERMS_FORM = gql`
     $projectName: String!
     $projectNumber: String!
     $hasReadAgreement: Boolean!
-  ){
-    arbitrationTermsForm_addArbitrationTermsForm(input: {
-      complaintId: $complaintId
-      userId: $userId
-      filledBy: $filledBy
-      firstCondition: $firstCondition
-      firstConditionFileName: $firstConditionFileName
-      secondCondition: $secondCondition
-      secondConditionFileName: $secondConditionFileName
-      thirdCondition: $thirdCondition
-      thirdConditionFileName: $thirdConditionFileName
-      fourthCondition: $fourthCondition
-      fourthConditionFileName: $fourthConditionFileName
-      projectName: $projectName
-      projectNumber: $projectNumber
-      hasReadAgreement: $hasReadAgreement
-    }){
-      result{
+  ) {
+    arbitrationTermsForm_addArbitrationTermsForm(
+      input: {
+        complaintId: $complaintId
+        userId: $userId
+        filledBy: $filledBy
+        firstCondition: $firstCondition
+        firstConditionFileName: $firstConditionFileName
+        secondCondition: $secondCondition
+        secondConditionFileName: $secondConditionFileName
+        thirdCondition: $thirdCondition
+        thirdConditionFileName: $thirdConditionFileName
+        fourthCondition: $fourthCondition
+        fourthConditionFileName: $fourthConditionFileName
+        projectName: $projectName
+        projectNumber: $projectNumber
+        hasReadAgreement: $hasReadAgreement
+      }
+    ) {
+      result {
         id
         complaintId
         userId
@@ -85,12 +79,153 @@ export const CREATE_ARBITRATION_TERMS_FORM = gql`
         projectNumber
         hasReadAgreement
       }
-      status{
+      status {
         code
         value
       }
     }
-  }`
+  }
+`;
+
+export const ADD_ARGUMENT_TO_COMPLAINT = gql`
+  mutation AddArgumentToComplaint(
+    $accuserResponse: String!
+    $accuserResponseFileName: String!
+    $approvedAmount: Decimal!
+    $complaintId: Int!
+    $councilApprovedAmount: Decimal!
+    $description: String!
+    $expertId: String!
+    $expertOpinion: String!
+    $expertOpinionFileName: String!
+    $expertVerdict: String!
+    $fileName: String!
+    $filledBy: RegistrarType!
+    $mailRoomChiefSuggestedAmount: Decimal!
+    $mailRoomExpertApprovedAmount: Decimal!
+    $suggestedAmount: Decimal!
+    $summary: String!
+    $userId: String!
+  ) {
+    complaintArgument_addComplaintArgument(
+      input: {
+        accuserResponse: $accuserResponse
+        accuserResponseFileName: $accuserResponseFileName
+        approvedAmount: $approvedAmount
+        complaintId: $complaintId
+        councilApprovedAmount: $councilApprovedAmount
+        description: $description
+        expertId: $expertId
+        expertOpinion: $expertOpinion
+        expertOpinionFileName: $expertOpinionFileName
+        expertVerdict: $expertVerdict
+        fileName: $fileName
+        filledBy: $filledBy
+        mailRoomChiefSuggestedAmount: $mailRoomChiefSuggestedAmount
+        mailRoomExpertApprovedAmount: $mailRoomExpertApprovedAmount
+        suggestedAmount: $suggestedAmount
+        summary: $summary
+        userId: $userId
+      }
+    ) {
+      result {
+        id
+        accuserResponse
+        accuserResponseFileName
+        approvedAmount
+        complaintId
+        councilApprovedAmount
+        description
+        expertId
+        expertOpinion
+        expertOpinionFileName
+        expertVerdict
+        fileName
+        filledBy
+        mailRoomChiefSuggestedAmount
+        mailRoomExpertApprovedAmount
+        suggestedAmount
+        summary
+        userId
+      }
+      status {
+        code
+        value
+      }
+    }
+  }
+`;
+
+export const UPDATE_ARGUMENT = gql`
+  mutation UpdateArgument(
+    $id: Int!
+    $accuserResponse: String!
+    $accuserResponseFileName: String!
+    $approvedAmount: Decimal!
+    $complaintId: Int!
+    $councilApprovedAmount: Decimal!
+    $description: String!
+    $expertId: String!
+    $expertOpinion: String!
+    $expertOpinionFileName: String!
+    $expertVerdict: String!
+    $fileName: String!
+    $filledBy: RegistrarType!
+    $mailRoomChiefSuggestedAmount: Decimal!
+    $mailRoomExpertApprovedAmount: Decimal!
+    $suggestedAmount: Decimal!
+    $summary: String!
+    $userId: String!
+  ) {
+    complaintArgument_updateComplaintArgument(
+      input: {
+        accuserResponse: $accuserResponse
+        accuserResponseFileName: $accuserResponseFileName
+        approvedAmount: $approvedAmount
+        complaintId: $complaintId
+        councilApprovedAmount: $councilApprovedAmount
+        description: $description
+        expertId: $expertId
+        expertOpinion: $expertOpinion
+        expertOpinionFileName: $expertOpinionFileName
+        expertVerdict: $expertVerdict
+        fileName: $fileName
+        filledBy: $filledBy
+        mailRoomChiefSuggestedAmount: $mailRoomChiefSuggestedAmount
+        mailRoomExpertApprovedAmount: $mailRoomExpertApprovedAmount
+        suggestedAmount: $suggestedAmount
+        summary: $summary
+        userId: $userId
+        id: $id
+      }
+    ) {
+      result {
+        id
+        accuserResponse
+        accuserResponseFileName
+        approvedAmount
+        complaintId
+        councilApprovedAmount
+        description
+        expertId
+        expertOpinion
+        expertOpinionFileName
+        expertVerdict
+        fileName
+        filledBy
+        mailRoomChiefSuggestedAmount
+        mailRoomExpertApprovedAmount
+        suggestedAmount
+        summary
+        userId
+      }
+      status {
+        code
+        value
+      }
+    }
+  }
+`;
 
 export type CreateComplaintInput = {
   accusedDepartmentId: number;
@@ -101,8 +236,7 @@ export type CreateComplaintInput = {
   userId: string;
 };
 
-
-export enum RegistrarType{
+export enum RegistrarType {
   Accuser = 0,
-  Accused = 1
+  Accused = 1,
 }

@@ -22,7 +22,7 @@ export const GET_DEPARTMENTS = gql`
 
 export type Department = {
     title: string;
-    id: string;
+    id: number;
     users: User[];
     identificationCode: string;
 }
