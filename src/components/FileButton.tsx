@@ -7,6 +7,7 @@
 import { Box, Button } from "@mui/material";
 import * as React from "react";
 import { onPrimary, primary, secondaryLight } from "../theme/color";
+import { UPLOAD_FILE } from "../api/upload";
 
 interface FileButtonProps {
   text?: string;

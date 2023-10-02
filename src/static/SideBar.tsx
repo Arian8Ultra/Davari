@@ -6,8 +6,14 @@ import {
   BsPersonCircle,
   BsViewStacked,
 } from "react-icons/bs";
-import { VscDebug, VscFile, VscHome, VscWarning } from "react-icons/vsc";
+import {
+  VscDebug,
+  VscFile,
+  VscHome,
+  VscWarning,
+} from "react-icons/vsc";
 import { Titles } from "./Titles";
+import { UserRole } from "../GraphQL/Users/Queries";
 
 export const SideBarMenu = [
   {
@@ -17,6 +23,7 @@ export const SideBarMenu = [
     hasLink: true,
     hasCollapse: false,
     children: [],
+    accessNeeded: ["NORMAL","SENIOR_USER","EXPERT","SUPER_ADMIN"],
   },
   {
     primary: Titles.complaints,
@@ -25,6 +32,7 @@ export const SideBarMenu = [
     hasLink: true,
     hasCollapse: false,
     children: [],
+    accessNeeded: ["SENIOR_USER","SUPER_ADMIN"],
   },
   // {
   //   primary: Titles.contracts,
@@ -40,6 +48,7 @@ export const SideBarMenu = [
     icon: <BsViewStacked />,
     hasLink: true,
     hasCollapse: true,
+    accessNeeded: ["EXPERT" ,"SENIOR_USER","SUPER_ADMIN"],
     children: [
       {
         primary: Titles.messages,
@@ -70,6 +79,7 @@ export const SideBarMenu = [
     icon: <BsPersonCircle />,
     hasLink: false,
     hasCollapse: true,
+    accessNeeded: ["SUPER_ADMIN"],
     children: [
       {
         primary: Titles.userManagement,
@@ -85,13 +95,6 @@ export const SideBarMenu = [
         hasLink: true,
         hasCollapse: false,
       },
-      // {
-      //   primary: "debug",
-      //   to: "/test",
-      //   icon: <VscDebug/>,
-      //   hasLink:true,
-      //   hasCollapse: false,
-      // }
     ],
   },
 ];
@@ -104,4 +107,5 @@ export type SideBarLinkType = {
   hasLink?: boolean;
   hasCollapse?: boolean;
   children?: SideBarLinkType[];
+  accessNeeded?: ["NORMAL","SENIOR_USER","EXPERT","SUPER_ADMIN"];
 };

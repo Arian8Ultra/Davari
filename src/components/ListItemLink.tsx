@@ -27,10 +27,11 @@ interface ListItemLinkProps extends ListItemButtonProps {
   hasLink?: boolean;
   setCollapseOpen?: React.Dispatch<React.SetStateAction<boolean>>;
   children?: React.ReactNode;
+  display?: string;
 }
 
 function ListItemLink(props: ListItemLinkProps) {
-  const { to, open, primary, ...other } = props;
+  const { to, open, primary,display, ...other } = props;
   const [collapseOpen, setCollapseOpen] = React.useState(
     props.collapseOpen || false,
   )
@@ -41,7 +42,7 @@ function ListItemLink(props: ListItemLinkProps) {
     const navigate = useNavigate();
 
   return (
-    <ListItem key={primary} disablePadding sx={{ display: "block",
+    <ListItem key={primary} disablePadding sx={{ display: display || "block",
     backgroundColor: collapseOpen ? "rgba(255,255,255,0.1)" : "transparent"
      }}>
       <Box sx={{ flexGrow: 1 }} display={"flex"}>

@@ -36,7 +36,7 @@ export const TOKEN_CHECK = gql`
 
 export type UserRole = {
   id: string;
-  roleType: string;
+  roleType: "SUPER_ADMIN" | "SENIOR_USER" | "EXPERT" | "NORMAL";
   userId: string;
   isDeleted: boolean;
   createdDate: string;

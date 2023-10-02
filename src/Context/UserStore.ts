@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { User } from "../static/Types";
+import { UserRole } from "../GraphQL/Users/Queries";
 
 interface UserStore {
   user: {
@@ -12,6 +13,7 @@ interface UserStore {
     personnelCode: string;
     departmentId: number;
     phoneNumber: string;
+    userRoles?: UserRole[];
   };
   token: string;
   expireDate: Date;
@@ -31,6 +33,7 @@ export const useUserStore = create<UserStore>()(
         departmentId: 0,
         phoneNumber: "",
         id: "",
+        userRole: "",
       },
       token: "",
       expireDate: new Date(),

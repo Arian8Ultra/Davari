@@ -1,10 +1,22 @@
-import React from "react";
-import { Argument, OptionalArgument } from "../../static/Types";
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import React, { useEffect } from "react";
+import { Argument, OptionalArgument, OptionalArgumentSamll } from "../../static/Types";
 import NewModal from "../Modals";
 import { Green, background } from "../../theme/color";
 import { Box, Button, TextField } from "@mui/material";
 import FileButton from "../FileButton";
-import { BsCloudUploadFill, BsUpload } from "react-icons/bs";
+import { BsCloudUploadFill } from "react-icons/bs";
+import { gql, useMutation, useQuery } from "@apollo/client";
+import {
+  ADD_ARGUMENT_TO_COMPLAINT,
+  UPDATE_ARGUMENT,
+} from "../../GraphQL/Complaints/Mutations";
+import { UPLOAD_FILE } from "../../api/upload";
+import { useUserStore } from "../../Context/UserStore";
 
 interface Props {
   state?: number;
@@ -13,16 +25,19 @@ interface Props {
   setArgumentModal?: React.Dispatch<
     React.SetStateAction<OptionalArgument>
   >;
-  ArgumentFromParent?: OptionalArgument;
+  ArgumentFromParent?: OptionalArgumentSamll;
   AddArgument?: ({
     Argument,
   }: {
     Argument: OptionalArgument;
   }) => void;
+
+  argumentId?: number;
+  complaintId?: number;
 }
 const ArgumentModal = (props: Props) => {
-  const [Argument, setArgument] = React.useState<OptionalArgument>(
-    {} as OptionalArgument
+  const [Argument, setArgument] = React.useState<OptionalArgumentSamll>(
+    {} as OptionalArgumentSamll
   );
   //   set argument from parent if exists
   React.useEffect(() => {
@@ -31,6 +46,50 @@ const ArgumentModal = (props: Props) => {
     }
   }, [props.ArgumentFromParent]);
 
+  const [AddArgument] = useMutation(ADD_ARGUMENT_TO_COMPLAINT, {
+    onCompleted(data) {
+      console.log(data);
+      props.onClose();
+
+    },
+  });
+  const [UpdateArgument] = useMutation(UPDATE_ARGUMENT,{
+    onCompleted(data) {
+      console.log(data);
+      props.onClose();
+    },
+  });
+  const user = useUserStore((state) => state.user);
+
+  const { data } = useQuery(
+    gql`
+      query getArgument($id: Int!) {
+        complaintArgument_getComplaintArgument(entityId: $id) {
+          result {
+            id
+            summary
+            description
+            suggestedAmount
+            accuserResponse
+            complaintId
+          }
+        }
+      }
+    `,
+    {
+      variables: {
+        id: props.argumentId,
+      },
+    }
+  );
+
+  useEffect(() => {
+    if (props.argumentId) {
+      setArgument(
+        data?.complaintArgument_getComplaintArgument.result
+      );
+    }
+  }, [data, props.argumentId]);
 
   switch (props.state) {
     case 0:
@@ -63,11 +122,11 @@ const ArgumentModal = (props: Props) => {
                 gridColumn: "1/3",
               }}
               fullWidth
-              value={Argument.Summary}
+              value={Argument?.summary}
               onChange={(e) => {
                 setArgument({
                   ...Argument,
-                  Summary: e.target.value,
+                  summary: e.target.value,
                 });
               }}
             />
@@ -84,11 +143,11 @@ const ArgumentModal = (props: Props) => {
               fullWidth
               multiline
               rows={4}
-              value={Argument.Description}
+              value={Argument?.description}
               onChange={(e) => {
                 setArgument({
                   ...Argument,
-                  Description: e.target.value,
+                  description: e.target.value,
                 });
               }}
             />
@@ -108,18 +167,28 @@ const ArgumentModal = (props: Props) => {
                 endAdornment: "ریال",
               }}
               value={
-                Argument.SuggestedAmount == 0
+                Argument?.suggestedAmount == 0
                   ? ""
-                  : Argument.SuggestedAmount
+                  : Argument?.suggestedAmount
               }
               onChange={(e) => {
                 setArgument({
                   ...Argument,
-                  SuggestedAmount: parseFloat(e.target.value),
+                  suggestedAmount: parseFloat(e.target.value),
                 });
               }}
             />
-            <FileButton width={"100%"} multiple height={"100%"}>
+            <FileButton
+              width={"100%"}
+              multiple
+              height={"100%"}
+              setFiles={(files: File[]) => {
+                setArgument({
+                  ...Argument,
+                  Files: files,
+                });
+              }}
+            >
               مستندات و نامه خوانده
               <BsCloudUploadFill
                 style={{
@@ -130,7 +199,30 @@ const ArgumentModal = (props: Props) => {
 
             <Button
               onClick={() => {
-                props.AddArgument && props.AddArgument({ Argument });
+                void UPLOAD_FILE({
+                  file: Argument?.Files
+                    ? Argument?.Files[0]
+                    : undefined,
+                  // @ts-ignore
+                  token: localStorage.getItem("token")
+                    ? localStorage.getItem("token")
+                    : undefined,
+                  onSuccess(res) {
+                    console.log(res);
+                    void AddArgument({
+                      variables: {
+                        complaintId: props.complaintId,
+                        summary: Argument?.summary,
+                        description: Argument?.description,
+                        suggestedAmount: Argument.suggestedAmount,
+                        // @ts-ignore
+                        fileName: res.result[0].newFileName,
+                        userId: user.id,
+                        filledBy: "ACCUSER",
+                      },
+                    });
+                  },
+                });
               }}
               sx={{
                 background: Green,
@@ -180,11 +272,21 @@ const ArgumentModal = (props: Props) => {
               onChange={(e) => {
                 setArgument({
                   ...Argument,
-                  AccuserResponse: e.target.value,
+                  accuserResponse: e.target.value,
                 });
               }}
             />
-            <FileButton width={"50%"} multiple>
+            <FileButton
+              width={"100%"}
+              multiple
+              height={"100%"}
+              setFiles={(files: File[]) => {
+                setArgument({
+                  ...Argument,
+                  Files: files,
+                });
+              }}
+            >
               مستندات و نامه خوانده
               <BsCloudUploadFill
                 style={{
@@ -195,7 +297,25 @@ const ArgumentModal = (props: Props) => {
 
             <Button
               onClick={() => {
-                props.AddArgument && props.AddArgument({ Argument });
+                void UPLOAD_FILE({
+                  file: Argument?.Files
+                    ? Argument?.Files[0]
+                    : undefined,
+                  // @ts-ignore
+                  token: localStorage.getItem("token")
+                    ? localStorage.getItem("token")
+                    : undefined,
+                  onSuccess(res) {
+                    console.log(res);
+                    void UpdateArgument({
+                      variables: {
+                        id: props.argumentId,
+                        accuserResponse: Argument?.accuserResponse,
+                        accuserResponseFileName: Argument?.accuserResponseFileName,
+                      },
+                    });
+                  },
+                });
               }}
               sx={{
                 background: Green,

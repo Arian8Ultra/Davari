@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import {
   Box,
@@ -21,8 +23,14 @@ import {
   primaryLightTransparent,
 } from "../../../theme/color";
 import { grey } from "@mui/material/colors";
-import { Argument, OptionalArgument } from "../../../static/Types";
+import {
+  Argument,
+  OptionalArgument,
+  OptionalArgumentSamll,
+} from "../../../static/Types";
 import ArgumentModal from "../../../components/Arguments/ArgumentModal";
+import { GET_COMPLAINT_ARGUMENTS } from "../../../GraphQL/Complaints/Queries";
+import { useQuery } from "@apollo/client";
 
 const AddArgument = () => {
   const { contractId, state } = useParams();
@@ -37,6 +45,21 @@ const AddArgument = () => {
   });
   const [selectedArgument, setSelectedArgument] =
     React.useState<OptionalArgument>({} as OptionalArgument);
+
+  const { data, loading } = useQuery(GET_COMPLAINT_ARGUMENTS, {
+    variables: {
+      id: contractIdInt,
+    },
+    onCompleted(data: {
+      complaintArgument_getComplaintArguments: {
+        result: {
+          items: OptionalArgumentSamll[];
+        };
+      };
+    }) {
+      console.log(data);
+    },
+  });
   return (
     <>
       <Box>
@@ -60,110 +83,141 @@ const AddArgument = () => {
             <ArgumentHeader state={stateInt} />
             <TableBody>
               {stateInt == 0 &&
-                arguements.map((arguement, index) => (
-                  <TableRow
-                    key={index}
-                    sx={{
-                      background:
-                        index % 2 == 0
-                          ? primaryGreyLightTransparent
-                          : primaryLightTransparent,
-                      borderBottom: `1px solid ${primaryGreyTransparent}`,
-                      transition: "all 0.2s ease-in-out",
-                      "&:hover": {
-                        background: primaryGreyTransparent,
-                        cursor: "pointer",
-                      },
-                    }}
-                    onClick={() => {
-                      setSelectedArgument(arguement);
-                      setAddModal({
-                        ...addModal,
-                        open: true,
-                      });
-                    }}
-                  >
-                    <TableCell>{index + 1}</TableCell>
-                    <TableCell
+                data?.complaintArgument_getComplaintArguments
+                  ?.result &&
+                data?.complaintArgument_getComplaintArguments?.result?.items?.map(
+                  (arguement, index) => (
+                    <TableRow
+                      key={index}
                       sx={{
-                        borderInline:
+                        background:
                           index % 2 == 0
-                            ? `1px solid ${primaryGreyTransparent}`
-                            : `1px solid ${primaryLightTransparent}`,
+                            ? primaryGreyLightTransparent
+                            : primaryLightTransparent,
+                        borderBottom: `1px solid ${primaryGreyTransparent}`,
+                        transition: "all 0.2s ease-in-out",
+                        "&:hover": {
+                          background: primaryGreyTransparent,
+                          cursor: "pointer",
+                        },
+                      }}
+                      onClick={() => {
+                        setSelectedArgument(arguement);
+                        setAddModal({
+                          ...addModal,
+                          open: true,
+                        });
                       }}
                     >
-                      {arguement.Summary}
-                    </TableCell>
-                    <TableCell
-                      sx={{
-                        borderInline:
-                          index % 2 == 0
-                            ? `1px solid ${primaryGreyTransparent}`
-                            : `1px solid ${primaryLightTransparent}`,
-                      }}
-                    >
-                      {arguement.Description}
-                    </TableCell>
-                    <TableCell
-                      sx={{
-                        borderInline:
-                          index % 2 == 0
-                            ? `1px solid ${primaryGreyTransparent}`
-                            : `1px solid ${primaryLightTransparent}`,
-                      }}
-                    >
-                      {arguement.SuggestedAmount
-                        ? arguement.SuggestedAmount?.toString().replace(
-                            /\B(?=(\d{3})+(?!\d))/g,
-                            ","
-                          ) || ""
-                        : "ندارد"}
-                    </TableCell>
-                    <TableCell
-                      sx={{
-                        borderLeft: `1px solid ${primaryGreyTransparent}`,
-                      }}
-                    >
-                      {arguement.FileName}
-                    </TableCell>
-                  </TableRow>
-                ))}
+                      <TableCell>{index + 1}</TableCell>
+                      <TableCell
+                        sx={{
+                          borderInline:
+                            index % 2 == 0
+                              ? `1px solid ${primaryGreyTransparent}`
+                              : `1px solid ${primaryLightTransparent}`,
+                        }}
+                      >
+                        {arguement.summary}
+                      </TableCell>
+                      <TableCell
+                        sx={{
+                          borderInline:
+                            index % 2 == 0
+                              ? `1px solid ${primaryGreyTransparent}`
+                              : `1px solid ${primaryLightTransparent}`,
+                        }}
+                      >
+                        {arguement.description}
+                      </TableCell>
+                      <TableCell
+                        sx={{
+                          borderInline:
+                            index % 2 == 0
+                              ? `1px solid ${primaryGreyTransparent}`
+                              : `1px solid ${primaryLightTransparent}`,
+                        }}
+                      >
+                        {arguement.suggestedAmount
+                          ? arguement.suggestedAmount
+                              ?.toString()
+                              .replace(
+                                /\B(?=(\d{3})+(?!\d))/g,
+                                ","
+                              ) || ""
+                          : "ندارد"}
+                      </TableCell>
+                      <TableCell
+                        sx={{
+                          borderLeft: `1px solid ${primaryGreyTransparent}`,
+                        }}
+                      >
+                        {arguement.fileName}
+                      </TableCell>
+                    </TableRow>
+                  )
+                )}
               {stateInt == 1 &&
-                arguements.map((arguement, index) => (
-                  <TableRow key={index}>
-                    <TableCell>{index + 1}</TableCell>
-                    <TableCell
+                data?.complaintArgument_getComplaintArguments
+                  ?.result &&
+                data?.complaintArgument_getComplaintArguments?.result?.items?.map(
+                  (arguement, index) => (
+                    <TableRow
+                      key={index}
                       sx={{
-                        borderInline:
+                        background:
                           index % 2 == 0
-                            ? `1px solid ${primaryGreyTransparent}`
-                            : `1px solid ${primaryLightTransparent}`,
+                            ? primaryGreyLightTransparent
+                            : primaryLightTransparent,
+                        borderBottom: `1px solid ${primaryGreyTransparent}`,
+                        transition: "all 0.2s ease-in-out",
+                        "&:hover": {
+                          background: primaryGreyTransparent,
+                          cursor: "pointer",
+                        },
+                      }}
+                      onClick={() => {
+                        setSelectedArgument(arguement);
+                        setAddModal({
+                          ...addModal,
+                          open: true,
+                        });
                       }}
                     >
-                      {arguement.Summary}
-                    </TableCell>
-                    <TableCell
-                      sx={{
-                        borderInline:
-                          index % 2 == 0
-                            ? `1px solid ${primaryGreyTransparent}`
-                            : `1px solid ${primaryLightTransparent}`,
-                      }}
-                    >
-                      {arguement.AccuserResponse}
-                    </TableCell>
-                    <TableCell
-                      sx={{
-                        borderLeft:
-                          index % 2 == 0
-                            ? `1px solid ${primaryGreyTransparent}`
-                            : `1px solid ${primaryLightTransparent}`,
-                      }}
-                    >
-                      {arguement.AccuserResponseFileName}
-                    </TableCell>
-                  </TableRow>
-                ))}
+                      <TableCell>{index + 1}</TableCell>
+                      <TableCell
+                        sx={{
+                          borderInline:
+                            index % 2 == 0
+                              ? `1px solid ${primaryGreyTransparent}`
+                              : `1px solid ${primaryLightTransparent}`,
+                        }}
+                      >
+                        {arguement.summary}
+                      </TableCell>
+                      <TableCell
+                        sx={{
+                          borderInline:
+                            index % 2 == 0
+                              ? `1px solid ${primaryGreyTransparent}`
+                              : `1px solid ${primaryLightTransparent}`,
+                        }}
+                      >
+                        {arguement.accuserResponse}
+                      </TableCell>
+                      <TableCell
+                        sx={{
+                          borderLeft:
+                            index % 2 == 0
+                              ? `1px solid ${primaryGreyTransparent}`
+                              : `1px solid ${primaryLightTransparent}`,
+                        }}
+                      >
+                        {arguement.accuserResponseFileName}
+                      </TableCell>
+                    </TableRow>
+                  )
+                )}
             </TableBody>
           </Table>
           <IconButton
@@ -184,6 +238,10 @@ const AddArgument = () => {
         </Box>
       </Box>
       <ArgumentModal
+        argumentId={
+          selectedArgument.id ? parseInt(selectedArgument.id) : 0
+        }
+        complaintId={contractIdInt || 0}
         state={stateInt}
         open={addModal.open}
         onClose={() => {

@@ -16,6 +16,10 @@ export const UserLogin = gql`
           phoneNumber
           nationalCode
           personnelCode
+          userRoles{
+            roleType
+            id
+          }
         }
         token
         expireDate

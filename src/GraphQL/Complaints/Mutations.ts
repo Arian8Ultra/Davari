@@ -89,22 +89,22 @@ export const CREATE_ARBITRATION_TERMS_FORM = gql`
 
 export const ADD_ARGUMENT_TO_COMPLAINT = gql`
   mutation AddArgumentToComplaint(
-    $accuserResponse: String!
-    $accuserResponseFileName: String!
-    $approvedAmount: Decimal!
-    $complaintId: Int!
-    $councilApprovedAmount: Decimal!
-    $description: String!
-    $expertId: String!
-    $expertOpinion: String!
-    $expertOpinionFileName: String!
-    $expertVerdict: String!
-    $fileName: String!
-    $filledBy: RegistrarType!
-    $mailRoomChiefSuggestedAmount: Decimal!
-    $mailRoomExpertApprovedAmount: Decimal!
-    $suggestedAmount: Decimal!
-    $summary: String!
+    $accuserResponse: String
+    $accuserResponseFileName: String
+    $approvedAmount: Decimal
+    $complaintId: Int
+    $councilApprovedAmount: Decimal
+    $description: String
+    $expertId: String
+    $expertOpinion: String
+    $expertOpinionFileName: String
+    $expertVerdict: String
+    $fileName: String
+    $filledBy: RegistrarType
+    $mailRoomChiefSuggestedAmount: Decimal
+    $mailRoomExpertApprovedAmount: Decimal
+    $suggestedAmount: Decimal
+    $summary: String
     $userId: String!
   ) {
     complaintArgument_addComplaintArgument(
@@ -147,11 +147,14 @@ export const ADD_ARGUMENT_TO_COMPLAINT = gql`
         suggestedAmount
         summary
         userId
+        __typename
       }
       status {
         code
         value
+        __typename
       }
+      __typename
     }
   }
 `;
@@ -159,23 +162,23 @@ export const ADD_ARGUMENT_TO_COMPLAINT = gql`
 export const UPDATE_ARGUMENT = gql`
   mutation UpdateArgument(
     $id: Int!
-    $accuserResponse: String!
-    $accuserResponseFileName: String!
-    $approvedAmount: Decimal!
-    $complaintId: Int!
-    $councilApprovedAmount: Decimal!
-    $description: String!
-    $expertId: String!
-    $expertOpinion: String!
-    $expertOpinionFileName: String!
-    $expertVerdict: String!
-    $fileName: String!
-    $filledBy: RegistrarType!
-    $mailRoomChiefSuggestedAmount: Decimal!
-    $mailRoomExpertApprovedAmount: Decimal!
-    $suggestedAmount: Decimal!
-    $summary: String!
-    $userId: String!
+    $accuserResponse: String
+    $accuserResponseFileName: String
+    $approvedAmount: Decimal
+    $complaintId: Int
+    $councilApprovedAmount: Decimal
+    $description: String
+    $expertId: String
+    $expertOpinion: String
+    $expertOpinionFileName: String
+    $expertVerdict: String
+    $fileName: String
+    $filledBy: RegistrarType
+    $mailRoomChiefSuggestedAmount: Decimal
+    $mailRoomExpertApprovedAmount: Decimal
+    $suggestedAmount: Decimal
+    $summary: String
+    $userId: String
   ) {
     complaintArgument_updateComplaintArgument(
       input: {

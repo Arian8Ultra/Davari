@@ -141,9 +141,9 @@ export const GET_ACCUSER_COMPLAINTS = gql`
 `;
 
 export const GET_COMPLAINT_ARGUMENTS = gql`
-  query GetComplaintArguments($complaintId: Int!) {
+  query GetComplaintArguments($id: Int!) {
     complaintArgument_getComplaintArguments {
-      result(where: { complaintId: { eq: $complaintId } }) {
+      result(where: { complaintId: { eq: $id } }) {
         items {
           id
           accuserResponse
@@ -217,4 +217,46 @@ export type ArbitrationTermsForms = {
   thirdConditionFileName: string;
   fourthCondition: string;
   fourthConditionFileName: string;
+};
+
+export type ComplaintArgument = {
+  id: number;
+  accuserResponse: string;
+  accuserResponseFileName: string;
+  approvedAmount: number;
+  complaintId: number;
+  councilApprovedAmount: number;
+  description: string;
+  expertId: number;
+  expertOpinion: string;
+  expertOpinionFileName: string;
+  expertVerdict: string;
+  fileName: string;
+  filledBy: string;
+  mailRoomChiefSuggestedAmount: number;
+  mailRoomExpertApprovedAmount: number;
+  suggestedAmount: number;
+  summary: string;
+  userId: number;
+};
+
+export type ComplaintArgumentOptional = {
+  id?: number;
+  accuserResponse?: string;
+  accuserResponseFileName?: string;
+  approvedAmount?: number;
+  complaintId?: number;
+  councilApprovedAmount?: number;
+  description?: string;
+  expertId?: number;
+  expertOpinion?: string;
+  expertOpinionFileName?: string;
+  expertVerdict?: string;
+  fileName?: string;
+  filledBy?: string;
+  mailRoomChiefSuggestedAmount?: number;
+  mailRoomExpertApprovedAmount?: number;
+  suggestedAmount?: number;
+  summary?: string;
+  userId?: number;
 };
