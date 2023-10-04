@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { useState } from "react";
 import ComplaintsList from "../../components/Complaints/ComplaintsList";
 import NewModal from "../../components/Modals";
@@ -13,12 +14,14 @@ import { AiFillFileAdd } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import { useUserStore } from "../../Context/UserStore";
 import { GET_CONTRACT } from "../../GraphQL/Contracts/Queries";
-import { useLazyQuery, useQuery } from "@apollo/client";
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
+import { CREATE_COMPLAINT } from "../../GraphQL/Complaints/Mutations";
+import FaTextField from "../../components/FaComponents/FaTextField";
 
 const Complaints = () => {
   const [addModal, setAddModal] = useState({
-    open: false,
-    contractId: 0,
+    open: false as boolean,
+    contractId: '' as string,
   });
   const navigate = useNavigate();
 
@@ -26,7 +29,13 @@ const Complaints = () => {
 
   const [getContract] = useLazyQuery(GET_CONTRACT, {
     variables: {
-      id: addModal.contractId,
+      id: parseFloat(addModal.contractId),
+    },
+  });
+
+  const [addComplaint] = useMutation(CREATE_COMPLAINT, {
+    onCompleted(data, clientOptions) {
+      console.log(data);
     },
   });
   return (
@@ -51,7 +60,13 @@ const Complaints = () => {
             "&:hover": {
               backgroundColor: GreenLight,
             },
+            display:
+              user?.userRoles?.some(
+                (role) => role.roleType === "SENIOR_USER"
+              ) ? "flex" : "none"
+            
           }}
+
         >
           افزودن شکایت
         </Button>
@@ -63,14 +78,33 @@ const Complaints = () => {
           gap: 1,
         }}
       >
-        <ComplaintsList
-          type="accuser"
-          departmentId={user.departmentId}
-        />
-        <ComplaintsList
-          type="accused"
-          departmentId={user.departmentId}
-        />
+        {user?.userRoles?.some(
+          (role) => role.roleType === "SENIOR_USER"
+        ) && (
+          <ComplaintsList
+            type="accuser"
+            departmentId={user.departmentId}
+          />
+        )}
+
+        {user?.userRoles?.some(
+          (role) => role.roleType === "SENIOR_USER"
+        ) && (
+          <ComplaintsList
+            type="accused"
+            departmentId={user.departmentId}
+          />
+        )}
+
+        {user?.userRoles?.some(
+          (role) => role.roleType === "EXPERT"
+        ) && (
+          <ComplaintsList
+            type="assigned"
+            departmentId={user.departmentId}
+            userId={user.id}
+          />
+        )}
       </Box>
 
       <NewModal
@@ -98,14 +132,14 @@ const Complaints = () => {
             gap: 2,
           }}
         >
-          <TextField
+          <FaTextField
             label="شماره قرارداد"
             variant="outlined"
             value={addModal.contractId}
             onChange={(e) =>
               setAddModal({
                 ...addModal,
-                contractId: parseInt(e.target.value),
+                contractId: e.target.value,
               })
             }
           />
@@ -161,17 +195,29 @@ const Complaints = () => {
                 }) {
                   console.log(data);
 
-                  if (data.contract_getContract.status.code == 1) {
-                    setAddModal({
-                      ...addModal,
-                      open: false,
-                    });
-                    navigate(
-                      `/complaints/${addModal.contractId}/addComplaint/`
-                    );
-                  } else {
-                    alert("قراردادی با این شماره وجود ندارد");
-                  }
+                  void addComplaint({
+                    variables: {
+                      contractId: parseInt(addModal.contractId),
+                      userId: user.id,
+                    },
+                    onCompleted(data) {
+                      console.log(data);
+                      
+                      if (
+                        data.complaint_addComplaint.status.code === 1
+                      ) {
+                        setAddModal({
+                          ...addModal,
+                          open: false,
+                        });
+                        navigate(
+                          `/complaints/${addModal.contractId}/addComplaint/`
+                        );
+                      } else {
+                        alert("قراردادی با این شماره وجود ندارد");
+                      }
+                    },
+                  });
                 },
               });
             }}

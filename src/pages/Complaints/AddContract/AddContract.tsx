@@ -24,7 +24,6 @@ import {
   Radio,
   RadioGroup,
   TextField,
-  Typography,
 } from "@mui/material";
 import React from "react";
 import { CREATE_CONTRACT } from "../../../GraphQL/Contracts/Mutations";
@@ -36,6 +35,8 @@ import {
   Department,
   GET_DEPARTMENTS,
 } from "../../../GraphQL/Departments/Queries";
+import FaTypography from "../../../components/FaComponents/FaTypography";
+import FaTextField from "../../../components/FaComponents/FaTextField";
 
 const AddContract = () => {
   const navigate = useNavigate();
@@ -508,7 +509,9 @@ const AddContract = () => {
       },
       onCompleted(data) {
         console.log(data);
-        navigate(`/complaints/${data.contract_addContract.result.id}/addComplaint`);
+        navigate(
+          `/complaints/${data.contract_addContract.result.id}/addComplaint`
+        );
       },
     }
   );
@@ -552,7 +555,7 @@ const AddContract = () => {
         border={`2px solid ${primary}`}
         borderRadius={"1rem"}
       >
-        <Typography
+        <FaTypography
           variant="h4"
           gridColumn={"span 12"}
           textAlign={"center"}
@@ -563,7 +566,7 @@ const AddContract = () => {
           }
         >
           فرم اطلاعات قرارداد
-        </Typography>
+        </FaTypography>
 
         {/* 
 
@@ -573,15 +576,15 @@ const AddContract = () => {
 
       
       */}
-        <Typography variant="h5" gridColumn={"span 12"}>
+        <FaTypography variant="h5" gridColumn={"span 12"}>
           1- طرفین قرارداد:
-        </Typography>
+        </FaTypography>
         <Autocomplete
           disablePortal
           options={departments}
           sx={{ width: "100%", gridColumn: "span 4" }}
           renderInput={(params) => (
-            <TextField
+            <FaTextField
               {...params}
               label="نام بخش خوانده"
               error={AccusedDepartmentIdError.error}
@@ -602,7 +605,7 @@ const AddContract = () => {
           options={departments}
           sx={{ width: "100%", gridColumn: "9/span 4" }}
           renderInput={(params) => (
-            <TextField
+            <FaTextField
               {...params}
               label="نام بخش خواهان"
               error={AccuserDepartmentIdError.error}
@@ -626,32 +629,32 @@ const AddContract = () => {
 
       
       */}
-        <Typography variant="h5" gridColumn={"span 12"}>
+        <FaTypography variant="h5" gridColumn={"span 12"}>
           {"1-4- نمايندگان (وكلا): "}
-        </Typography>
+        </FaTypography>
 
-        <Typography variant="body1" gridColumn={"span 12"}>
+        <FaTypography variant="body1" gridColumn={"span 12"}>
           {
             "حداکثر دو نفر نماینده معرفی شده صرفا دارای سمت در شرکت/دستگاه اجرایی یا در پروژه محل اختلاف (که یک نفر از آنها می تواند وکیل دادگستری (با وکالتنامه رسمی) باشد."
           }
-        </Typography>
+        </FaTypography>
 
         <List sx={{ gridColumn: "span 12" }}>
-          <Typography variant="body1">
+          <FaTypography variant="body1">
             {"	الف) شركت در جلسه و امضاي قرارنامه داوري"}
-          </Typography>
-          <Typography variant="body1">
+          </FaTypography>
+          <FaTypography variant="body1">
             {"ب) شركت در جلسات كارشناسي"}
-          </Typography>
-          <Typography variant="body1">
+          </FaTypography>
+          <FaTypography variant="body1">
             {"پ) شركت در جلسه استماع"}
-          </Typography>
-          <Typography variant="body1">
+          </FaTypography>
+          <FaTypography variant="body1">
             {"ت) دریافت رای داوری "}
-          </Typography>
-          <Typography variant="body1">
+          </FaTypography>
+          <FaTypography variant="body1">
             {"ث) ساير همكاري‌هاي لازم و مرتبط با موضوع اختلاف"}
-          </Typography>
+          </FaTypography>
         </List>
 
         <Divider
@@ -667,10 +670,10 @@ const AddContract = () => {
 
       
       */}
-        <Typography variant="h5" gridColumn={"span 12"}>
+        <FaTypography variant="h5" gridColumn={"span 12"}>
           {"2- تابعيت: "}
-        </Typography>
-        <TextField
+        </FaTypography>
+        <FaTextField
           label="تابعيت خواهان: "
           variant="outlined"
           sx={{ gridColumn: "span 4" }}
@@ -687,8 +690,8 @@ const AddContract = () => {
               {item.name_fa}
             </MenuItem>
           ))}
-        </TextField>
-        <TextField
+        </FaTextField>
+        <FaTextField
           label="تابعيت خوانده: "
           variant="outlined"
           sx={{ gridColumn: "8 /span 4" }}
@@ -705,7 +708,7 @@ const AddContract = () => {
               {item.name_fa}
             </MenuItem>
           ))}
-        </TextField>
+        </FaTextField>
 
         <Divider
           sx={{
@@ -721,12 +724,12 @@ const AddContract = () => {
       
       */}
 
-        <Typography variant="h5" gridColumn={"span 12"}>
+        <FaTypography variant="h5" gridColumn={"span 12"}>
           {"3- مشخصات خوانده (امضاکننده قرارداد): "}
-        </Typography>
-        <Typography variant="body1" gridColumn={"span 12"}>
+        </FaTypography>
+        <FaTypography variant="body1" gridColumn={"span 12"}>
           اسامی و تلفن (ثابت و همراه) افراد مطلع و مرتبط با پروژه:
-        </Typography>
+        </FaTypography>
 
         {RelatedPeople.map((item, index) => (
           <Box
@@ -748,7 +751,7 @@ const AddContract = () => {
               columnGap={"2rem"}
               padding={"0rem 2rem"}
             >
-              <TextField
+              <FaTextField
                 label="نام و نام خانوادگی"
                 variant="outlined"
                 autoComplete="name"
@@ -761,8 +764,8 @@ const AddContract = () => {
                   setRelatedPeople(newPeoples);
                   console.log(RelatedPeople);
                 }}
-              ></TextField>
-              <TextField
+              ></FaTextField>
+              <FaTextField
                 label="تلفن"
                 variant="outlined"
                 type="number"
@@ -775,7 +778,7 @@ const AddContract = () => {
                   setRelatedPeople(newPeoples);
                   console.log(RelatedPeople);
                 }}
-              ></TextField>
+              ></FaTextField>
             </Box>
           </Box>
         ))}
@@ -810,14 +813,14 @@ const AddContract = () => {
 
       
       */}
-        <Typography variant="h5" gridColumn={"span 12"}>
+        <FaTypography variant="h5" gridColumn={"span 12"}>
           {"4- مشخصات قرارداد: "}
-        </Typography>
-        <Typography variant="h6" gridColumn={"span 12"}>
+        </FaTypography>
+        <FaTypography variant="h6" gridColumn={"span 12"}>
           {
             "در این قسمت لازم است نوع قرارداد همسان سازمان برنامه و بودجه کشور که مورد استفاده قرار گرفته علامت زده شود:"
           }
-        </Typography>
+        </FaTypography>
 
         <FormGroup
           sx={{
@@ -826,7 +829,13 @@ const AddContract = () => {
         >
           <FormControlLabel
             control={<Checkbox />}
-            label="•	موافقتنامه و شرایط عمومی و شرایط خصوصی پیمان‌ها- نشریه شماره ۴۳۱۱ – بخشنامه شماره 842/54-1088/102 مورخ ۱۳۷۸/۰۳/۰۳ "
+            label={
+              <FaTypography>
+                • موافقتنامه و شرایط عمومی و شرایط خصوصی پیمان‌ها-
+                نشریه شماره ۴۳۱۱ – بخشنامه شماره 842/54-1088/102 مورخ
+                ۱۳۷۸/۰۳/۰۳
+              </FaTypography>
+            }
             onChange={(e) => {
               setContratDetails({
                 ...contratDetails,
@@ -843,7 +852,12 @@ const AddContract = () => {
           />
           <FormControlLabel
             control={<Checkbox />}
-            label="•	انعقاد پیمان اجرای کارهای ساختمانی به صورت سرجمع- بخشنامه شماره ۹۶/۱۲۹۹۱۸۸ مورخ 1396/05/04 "
+            label={
+              <FaTypography>
+                • انعقاد پیمان اجرای کارهای ساختمانی به صورت سرجمع-
+                بخشنامه شماره ۹۶/۱۲۹۹۱۸۸ مورخ 1396/05/04
+              </FaTypography>
+            }
             onChange={(e) => {
               setContratDetails({
                 ...contratDetails,
@@ -860,7 +874,12 @@ const AddContract = () => {
           />
           <FormControlLabel
             control={<Checkbox />}
-            label="•	انعقاد پیمان اجرای کارهای ساختمانی به صورت سرجمع- بخشنامه شماره 100/6405  مورخ 1389/02/04 "
+            label={
+              <FaTypography>
+                • انعقاد پیمان اجرای کارهای ساختمانی به صورت سرجمع-
+                بخشنامه شماره 100/6405 مورخ 1389/02/04
+              </FaTypography>
+            }
             onChange={(e) => {
               setContratDetails({
                 ...contratDetails,
@@ -877,7 +896,13 @@ const AddContract = () => {
           />
           <FormControlLabel
             control={<Checkbox />}
-            label="•	انعقاد پیمان بر اساس فهرست بهای تجمیع شده راه، باند فرودگاه و زیرسازی راه آهن – شماره 65637/100 مورخ 1391/08/14 "
+            label={
+              <FaTypography>
+                • انعقاد پیمان بر اساس فهرست بهای تجمیع شده راه، باند
+                فرودگاه و زیرسازی راه آهن – شماره 65637/100 مورخ
+                1391/08/14
+              </FaTypography>
+            }
             onChange={(e) => {
               setContratDetails({
                 ...contratDetails,
@@ -1040,7 +1065,7 @@ const AddContract = () => {
             }}
           />
         </FormGroup>
-        <TextField
+        <FaTextField
           label={"شماره بخشنامه"}
           variant={"outlined"}
           sx={{
@@ -1085,11 +1110,11 @@ const AddContract = () => {
 
       
       */}
-        <Typography variant="h5" gridColumn={"span 1"}>
+        <FaTypography variant="h5" gridColumn={"span 1"}>
           4-1-
-        </Typography>
+        </FaTypography>
 
-        <TextField
+        <FaTextField
           label="موضوع قرارداد: "
           variant="outlined"
           sx={{ gridColumn: "span 3" }}
@@ -1120,10 +1145,10 @@ const AddContract = () => {
 
       
       */}
-        <Typography variant="h6" gridColumn={"span 12"}>
-          4-2- قرارداد شماره و تاريخ:{" "}
-        </Typography>
-        <TextField
+        <FaTypography variant="h6" gridColumn={"span 12"}>
+          4-2- قرارداد شماره و تاريخ:
+        </FaTypography>
+        <FaTextField
           label="شماره: "
           variant="outlined"
           sx={{ gridColumn: "span 3" }}
@@ -1167,10 +1192,10 @@ const AddContract = () => {
 
       
       */}
-        <Typography variant="h6" gridColumn={"span 1"}>
+        <FaTypography variant="h6" gridColumn={"span 1"}>
           4-3-
-        </Typography>
-        <TextField
+        </FaTypography>
+        <FaTextField
           label="مبلغ اوليه/ حق‌الزحمه: "
           variant="outlined"
           type="number"
@@ -1204,10 +1229,10 @@ const AddContract = () => {
 
       
       */}
-        <Typography variant="h6" gridColumn={"span 1"}>
+        <FaTypography variant="h6" gridColumn={"span 1"}>
           4-4-
-        </Typography>
-        <TextField
+        </FaTypography>
+        <FaTextField
           label="مدت اوليه: "
           variant="outlined"
           type="text"
@@ -1241,9 +1266,9 @@ const AddContract = () => {
 
       
       */}
-        <Typography variant="h6" gridColumn={"span 12"}>
-          4-5- فهرست‌هاي پايه منضم به پيمان و سال انتشار{" "}
-        </Typography>
+        <FaTypography variant="h6" gridColumn={"span 12"}>
+          4-5- فهرست‌هاي پايه منضم به پيمان و سال انتشار
+        </FaTypography>
 
         {/* 
 
@@ -1273,7 +1298,7 @@ const AddContract = () => {
               columnGap={"2rem"}
               padding={"0rem 2rem"}
             >
-              <TextField
+              <FaTextField
                 label="سال"
                 variant="outlined"
                 autoComplete="name"
@@ -1286,8 +1311,8 @@ const AddContract = () => {
                   setPriceListOfBasicUnitOfField(newPeoples);
                   console.log(PriceListOfBasicUnitOfField);
                 }}
-              ></TextField>
-              <TextField
+              ></FaTextField>
+              <FaTextField
                 label="فهرست بهاي واحد پايه رشته"
                 variant="outlined"
                 type="number"
@@ -1300,7 +1325,7 @@ const AddContract = () => {
                   setPriceListOfBasicUnitOfField(newPeoples);
                   console.log(PriceListOfBasicUnitOfField);
                 }}
-              ></TextField>
+              ></FaTextField>
             </Box>
           </Box>
         ))}
@@ -1327,16 +1352,6 @@ const AddContract = () => {
           <Add />
         </IconButton>
 
-        {/* <Typography variant="body1" gridColumn={"span 1"}>
-          4-5-1-
-        </Typography>
-        <TextField
-          label="فهرست بهاي واحد پايه رشته :"
-          InputProps={{
-            endAdornment: "سال",
-          }}
-          sx={{ gridColumn: "span 3" }}
-        /> */}
         <div
           style={{
             gridColumn: "span 12",
@@ -1356,9 +1371,9 @@ const AddContract = () => {
 
       
       */}
-        <Typography variant="h6" gridColumn={"span 12"}>
+        <FaTypography variant="h6" gridColumn={"span 12"}>
           4-6- فهرست بهاي خاص (غيرپايه) منضم به پيمان:
-        </Typography>
+        </FaTypography>
 
         <RadioGroup
           defaultValue={IsSpecialPriceListAttachedToContract}
@@ -1410,11 +1425,11 @@ const AddContract = () => {
 
       
       */}
-        <Typography variant="h6" gridColumn={"span 1"}>
-          4-7-{" "}
-        </Typography>
+        <FaTypography variant="h6" gridColumn={"span 1"}>
+          4-7-
+        </FaTypography>
 
-        <TextField
+        <FaTextField
           label="ضريب پيشنهادي: "
           sx={{ gridColumn: "span 3" }}
           value={RecommendedCoefficient}
@@ -1465,9 +1480,9 @@ const AddContract = () => {
 
       
       */}
-        <Typography variant="h6" gridColumn={"span 1"}>
+        <FaTypography variant="h6" gridColumn={"span 1"}>
           4-8-
-        </Typography>
+        </FaTypography>
 
         <FormControl
           sx={{
@@ -1503,7 +1518,7 @@ const AddContract = () => {
               }}
             />
             <FormControlLabel
-              control={<TextField />}
+              control={<FaTextField />}
               label=""
               value={
                 AssigningType !== "مناقصه " &&
@@ -1538,16 +1553,16 @@ const AddContract = () => {
 
       
       */}
-        <Typography variant="h6" gridColumn={"span 1"}>
+        <FaTypography variant="h6" gridColumn={"span 1"}>
           4-9-
-        </Typography>
+        </FaTypography>
         <FormControl
           sx={{
             gridColumn: "span 6",
           }}
         >
           <FormLabel id="demo-row-radio-buttons-group-label">
-            پيمان مشمول تعديل{" "}
+            پيمان مشمول تعديل
           </FormLabel>
           <RadioGroup row>
             <FormControlLabel
@@ -1592,10 +1607,10 @@ const AddContract = () => {
 
       
       */}
-        <Typography variant="h6" gridColumn={"span 2"}>
+        <FaTypography variant="h6" gridColumn={"span 2"}>
           4-10- دوره شاخص مبنا
-        </Typography>
-        <TextField
+        </FaTypography>
+        <FaTextField
           label="ماه"
           type="number"
           sx={{
@@ -1611,7 +1626,7 @@ const AddContract = () => {
           error={BaseIndexPeriodError.error}
           helperText={BaseIndexPeriodError.text}
         />
-        <TextField
+        <FaTextField
           label="سال"
           type="number"
           sx={{
@@ -1647,9 +1662,9 @@ const AddContract = () => {
 
       
       */}
-        <Typography variant="h6" gridColumn={"span 2"}>
+        <FaTypography variant="h6" gridColumn={"span 2"}>
           4-11- تاريخ شروع كار:
-        </Typography>
+        </FaTypography>
         <TextField
           label="تاريخ شروع كار خواهان"
           type="date"
@@ -1696,11 +1711,11 @@ const AddContract = () => {
 
       
       */}
-        <Typography variant="h6" gridColumn={"span 5"}>
-          4-12- پيشرفت فيزيكي كار در تاريخ درخواست داوري:{" "}
-        </Typography>
+        <FaTypography variant="h6" gridColumn={"span 5"}>
+          4-12- پيشرفت فيزيكي كار در تاريخ درخواست داوري:
+        </FaTypography>
 
-        <TextField
+        <FaTextField
           label="خواهان"
           type="number"
           InputProps={{
@@ -1720,7 +1735,7 @@ const AddContract = () => {
             PhysicalProgressInArbitrationDateAccuserError.text
           }
         />
-        <TextField
+        <FaTextField
           label="خوانده"
           type="number"
           InputProps={{
@@ -1747,11 +1762,11 @@ const AddContract = () => {
 
       
       */}
-        <Typography variant="h6" gridColumn={"span 5"}>
-          4-13- پيشرفت ریالی كار در تاريخ درخواست داوري:{" "}
-        </Typography>
+        <FaTypography variant="h6" gridColumn={"span 5"}>
+          4-13- پيشرفت ریالی كار در تاريخ درخواست داوري:
+        </FaTypography>
 
-        <TextField
+        <FaTextField
           label="خواهان"
           type="number"
           InputProps={{
@@ -1771,7 +1786,7 @@ const AddContract = () => {
             FinancialProgressInArbitrationDateAccuserError.text
           }
         />
-        <TextField
+        <FaTextField
           label="خوانده"
           type="number"
           InputProps={{
@@ -1811,9 +1826,9 @@ const AddContract = () => {
 
       
       */}
-        <Typography variant="h6" gridColumn={"span 4"}>
+        <FaTypography variant="h6" gridColumn={"span 4"}>
           4-14- وضعیت قرارداد در تاریخ درخواست داوری:
-        </Typography>
+        </FaTypography>
 
         <FormControl
           sx={{
@@ -1877,7 +1892,7 @@ const AddContract = () => {
             />
             <FormControlLabel
               control={
-                <TextField label={"تاریخ"} type="date" focused />
+                <FaTextField label={"تاریخ"} type="date" focused />
               }
               label=""
               value={ContractStatusInArbitrationDate}
@@ -1908,10 +1923,10 @@ const AddContract = () => {
 
       
       */}
-        <Typography variant="h6" gridColumn={"span 1"}>
+        <FaTypography variant="h6" gridColumn={"span 1"}>
           4-15-
-        </Typography>
-        <TextField
+        </FaTypography>
+        <FaTextField
           label={"دستگاه نظارت (مهندس مشاور) :"}
           sx={{
             gridColumn: "span 4",
@@ -1941,13 +1956,13 @@ const AddContract = () => {
 
       
       */}
-        <Typography variant="h6" gridColumn={"span 12"}>
+        <FaTypography variant="h6" gridColumn={"span 12"}>
           4-16- تاخیرات
-        </Typography>
-        <Typography variant="body1" gridColumn={"span 2"}>
+        </FaTypography>
+        <FaTypography variant="body1" gridColumn={"span 2"}>
           4-16-1- مجاز
-        </Typography>
-        <TextField
+        </FaTypography>
+        <FaTextField
           label={"از نظر خواهان:"}
           sx={{
             gridColumn: "span 3",
@@ -1962,7 +1977,7 @@ const AddContract = () => {
           error={AuthorizedDelaysAccuserError.error}
           helperText={AuthorizedDelaysAccuserError.text}
         />
-        <TextField
+        <FaTextField
           label={"از نظر خوانده:"}
           sx={{
             gridColumn: "span 3",
@@ -1988,10 +2003,10 @@ const AddContract = () => {
             gridColumn: "span 12",
           }}
         />
-        <Typography variant="body1" gridColumn={"span 2"}>
+        <FaTypography variant="body1" gridColumn={"span 2"}>
           4-16-2- غیر مجاز
-        </Typography>
-        <TextField
+        </FaTypography>
+        <FaTextField
           label={"از نظر خواهان:"}
           sx={{
             gridColumn: "span 3",
@@ -2006,7 +2021,7 @@ const AddContract = () => {
           error={UnauthorizedDelaysAccuserError.error}
           helperText={UnauthorizedDelaysAccuserError.text}
         />
-        <TextField
+        <FaTextField
           label={"از نظر خوانده:"}
           sx={{
             gridColumn: "span 3",
@@ -2029,36 +2044,36 @@ const AddContract = () => {
 
       
       */}
-        <Typography
+        <FaTypography
           variant="h5"
           fontWeight={800}
           gridColumn={"span 12"}
         >
           توجه مهم: چنانچه در خصوص تاخیرات و یا تبعات ناشی از آن
           اختلافی وجود دارد، لازم است موارد زیر ارسال شوند:
-        </Typography>
-        <Typography
+        </FaTypography>
+        <FaTypography
           variant="h6"
           fontWeight={800}
           gridColumn={"span 12"}
         >
           • گزارش توجیهی تاخیرات قرارداد شامل:
-        </Typography>
+        </FaTypography>
         <List sx={{ gridColumn: "span 12" }}>
-          <Typography variant="body1">
+          <FaTypography variant="body1">
             • برنامه های زمان‏بندی اولیه و اصلاحی ابلاغ شده
-          </Typography>
-          <Typography variant="body1">
+          </FaTypography>
+          <FaTypography variant="body1">
             • گزارش تهیه شده توسط پیمانکار (به همراه کلیه مستندات و
             پیوست‏ها)
-          </Typography>
-          <Typography variant="body1">
+          </FaTypography>
+          <FaTypography variant="body1">
             • گزارش رسیدگی به تاخیرات توسط مهندس مشاور
-          </Typography>
-          <Typography variant="body1">
+          </FaTypography>
+          <FaTypography variant="body1">
             • مستندات ابلاغ نتایج رسیدگی به تاخیرات به پیمانکار توسط
             کارفرما
-          </Typography>
+          </FaTypography>
         </List>
 
         <Button
@@ -2077,7 +2092,6 @@ const AddContract = () => {
           onClick={() => {
             if (handleErrors()) {
               void createContractMutation();
-              
             } else {
               void createContractMutation();
               // navigate("/complaints/addComplaint");

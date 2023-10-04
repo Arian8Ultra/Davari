@@ -269,6 +269,7 @@ const ArgumentModal = (props: Props) => {
               fullWidth
               multiline
               rows={4}
+              value={Argument?.accuserResponse}
               onChange={(e) => {
                 setArgument({
                   ...Argument,
@@ -311,7 +312,7 @@ const ArgumentModal = (props: Props) => {
                       variables: {
                         id: props.argumentId,
                         accuserResponse: Argument?.accuserResponse,
-                        accuserResponseFileName: Argument?.accuserResponseFileName,
+                        accuserResponseFileName: res.result[0].newFileName,
                       },
                     });
                   },

@@ -9,6 +9,7 @@ import {
   Divider,
   FormControlLabel,
   FormGroup,
+  TextField,
   Typography,
 } from "@mui/material";
 import React from "react";
@@ -23,22 +24,31 @@ import {
   secondaryLight,
 } from "../../../theme/color";
 import { useNavigate, useParams } from "react-router-dom";
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { GET_CONTRACT } from "../../../GraphQL/Contracts/Queries";
+import { CREATE_ARBITRATION_TERMS_FORM } from "../../../GraphQL/Complaints/Mutations";
+import { useUserStore } from "../../../Context/UserStore";
 
 const AddComplaint = () => {
   const navigate = useNavigate();
+  const user = useUserStore((state) => state.user);
+  const [ProjectName, setProjectName] = React.useState("");
+  const [ProjectNumber, setProjectNumber] = React.useState("");
   const [FisrtCondition, setFisrtCondition] = React.useState({
     checked: [] as boolean[],
+    fileName: "",
   });
   const [SecondCondition, setSecondCondition] = React.useState({
     checked: [] as boolean[],
+    fileName: "",
   });
   const [ThirdCondition, setThirdCondition] = React.useState({
     checked: [] as boolean[],
+    fileName: "",
   });
   const [FourthCondition, setFourthCondition] = React.useState({
     checked: [] as boolean[],
+    fileName: "",
   });
   const [AgreeWithTerms, setAgreeWithTerms] = React.useState(false);
 
@@ -46,16 +56,35 @@ const AddComplaint = () => {
     localStorage.getItem("complaints") || "{}"
   );
 
-  const {contractId} = useParams();
+  const { contractId } = useParams();
 
-  const {data} = useQuery(GET_CONTRACT,{
-    variables:{
-      id:contractId && parseInt(contractId)
+  const { data } = useQuery(GET_CONTRACT, {
+    variables: {
+      id: contractId && parseInt(contractId),
     },
     onCompleted(data) {
       console.log(data);
     },
-  })
+  });
+
+  const [createForm] = useMutation(CREATE_ARBITRATION_TERMS_FORM, {
+    variables: {
+      complaintId: contractId && parseInt(contractId),
+      userId: user.id,
+      filledBy: "ACCUSER",
+      firstCondition: FisrtCondition.checked.indexOf(true) !== -1,
+      firstConditionFileName: FisrtCondition.fileName,
+      secondCondition: SecondCondition.checked.indexOf(true) !== -1,
+      secondConditionFileName: SecondCondition.fileName,
+      thirdCondition: ThirdCondition.checked.indexOf(true) !== -1,
+      thirdConditionFileName: ThirdCondition.fileName,
+      fourthCondition: FourthCondition.checked.indexOf(true) !== -1,
+      fourthConditionFileName: FourthCondition.fileName,
+      projectName: ProjectName,
+      projectNumber: ProjectNumber,
+      hasReadAgreement: AgreeWithTerms,
+    },
+  });
 
   React.useEffect(() => {
     if (complaints?.FisrtCondition) {
@@ -91,6 +120,38 @@ const AddComplaint = () => {
         >
           فرم احراز شرایط داوری
         </Typography>
+
+        <TextField
+          label="نام پروژه"
+          variant="outlined"
+          sx={{ gridColumn: "span 6" }}
+          value={ProjectName}
+          onChange={(e) => {
+            setProjectName(e.target.value);
+          }}
+        />
+
+        <TextField
+          label="شماره پروژه"
+          variant="outlined"
+          sx={{ gridColumn: "span 6" }}
+          value={ProjectNumber}
+          onChange={(e) => {
+            setProjectNumber(e.target.value);
+          }}
+        />
+
+        <div
+          style={{
+            gridColumn: "span 12",
+          }}
+        />
+        <Divider sx={{ gridColumn: "span 12" }} />
+        <div
+          style={{
+            gridColumn: "span 12",
+          }}
+        />
 
         <FormControlLabel
           label="شرط اول (عمرانی بودن محل اعتبار طرح)"
@@ -139,6 +200,7 @@ const AddComplaint = () => {
                 checked={FisrtCondition.checked[0] || false}
                 onChange={(e) => {
                   setFisrtCondition({
+                    ...FisrtCondition,
                     checked: [e.target.checked, false, false],
                   });
                 }}
@@ -152,6 +214,7 @@ const AddComplaint = () => {
                 checked={FisrtCondition.checked[1] || false}
                 onChange={(e) => {
                   setFisrtCondition({
+                    ...FisrtCondition,
                     checked: [false, e.target.checked, false],
                   });
                 }}
@@ -225,6 +288,7 @@ const AddComplaint = () => {
                 checked={SecondCondition.checked[0] || false}
                 onChange={(e) => {
                   setSecondCondition({
+                    ...SecondCondition,
                     checked: [e.target.checked, false, false],
                   });
                 }}
@@ -240,6 +304,7 @@ const AddComplaint = () => {
                 checked={SecondCondition.checked[1] || false}
                 onChange={(e) => {
                   setSecondCondition({
+                    ...SecondCondition,
                     checked: [false, e.target.checked, false],
                   });
                 }}
@@ -255,6 +320,7 @@ const AddComplaint = () => {
                 checked={SecondCondition.checked[2] || false}
                 onChange={(e) => {
                   setSecondCondition({
+                    ...SecondCondition,
                     checked: [false, false, e.target.checked],
                   });
                 }}
@@ -327,6 +393,7 @@ const AddComplaint = () => {
                 checked={ThirdCondition.checked[0] || false}
                 onChange={(e) => {
                   setThirdCondition({
+                    ...ThirdCondition,
                     checked: [e.target.checked, false, false, false],
                   });
                 }}
@@ -342,6 +409,7 @@ const AddComplaint = () => {
                 checked={ThirdCondition.checked[1] || false}
                 onChange={(e) => {
                   setThirdCondition({
+                    ...ThirdCondition,
                     checked: [false, e.target.checked, false, false],
                   });
                 }}
@@ -357,6 +425,7 @@ const AddComplaint = () => {
                 checked={ThirdCondition.checked[2] || false}
                 onChange={(e) => {
                   setThirdCondition({
+                    ...ThirdCondition,
                     checked: [false, false, e.target.checked, false],
                   });
                 }}
@@ -370,6 +439,7 @@ const AddComplaint = () => {
                 checked={ThirdCondition.checked[3] || false}
                 onChange={(e) => {
                   setThirdCondition({
+                    ...ThirdCondition,
                     checked: [false, false, false, e.target.checked],
                   });
                 }}
@@ -443,6 +513,7 @@ const AddComplaint = () => {
                 checked={FourthCondition.checked[0] || false}
                 onChange={(e) => {
                   setFourthCondition({
+                    ...FourthCondition,
                     checked: [e.target.checked, false],
                   });
                 }}
@@ -458,6 +529,7 @@ const AddComplaint = () => {
                 checked={FourthCondition.checked[1] || false}
                 onChange={(e) => {
                   setFourthCondition({
+                    ...FourthCondition,
                     checked: [false, e.target.checked],
                   });
                 }}
@@ -473,6 +545,7 @@ const AddComplaint = () => {
                 checked={FourthCondition.checked[2] || false}
                 onChange={(e) => {
                   setFourthCondition({
+                    ...FourthCondition,
                     checked: [false, false, e.target.checked],
                   });
                 }}
@@ -576,9 +649,8 @@ const AddComplaint = () => {
                 AgreeWithTerms,
               })
             );
-            navigate("/complaints/a");
-          }
-          }
+            contractId && navigate(`/complaints/${contractId}/addArguements/0`);
+          }}
         >
           ادامه
         </Button>

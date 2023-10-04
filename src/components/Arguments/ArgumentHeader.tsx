@@ -56,6 +56,14 @@ const ArgumentHeader = (props: Props) => {
             >
               مستندات و نامه ادعا
             </TableCell>
+            <TableCell
+              sx={{
+                fontWeight: "bold",
+                color: "white",
+              }}
+            >
+              عملیات ها
+            </TableCell>
           </TableRow>
         </TableHead>
       );
@@ -100,6 +108,14 @@ const ArgumentHeader = (props: Props) => {
               }}
             >
               مستندات و نامه خوانده
+            </TableCell>
+            <TableCell
+              sx={{
+                fontWeight: "bold",
+                color: "white",
+              }}
+            >
+              عملیات ها
             </TableCell>
           </TableRow>
         </TableHead>
@@ -161,6 +177,14 @@ const ArgumentHeader = (props: Props) => {
               }}
             >
               مبلغ مورد تایید کارشناس
+            </TableCell>
+            <TableCell
+              sx={{
+                fontWeight: "bold",
+                color: "white",
+              }}
+            >
+              عملیات ها
             </TableCell>
           </TableRow>
         </TableHead>

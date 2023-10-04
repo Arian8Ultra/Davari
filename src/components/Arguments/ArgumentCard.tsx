@@ -1,136 +1,380 @@
-import { TableCell, TableRow } from "@mui/material";
-import { Argument } from "../../static/Types";
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+import {
+  Box,
+  Button,
+  IconButton,
+  TableCell,
+  TableRow,
+} from "@mui/material";
+import {
+  Argument,
+  OptionalArgument,
+  OptionalArgumentSamll,
+} from "../../static/Types";
+import { AiFillFileAdd } from "react-icons/ai";
+import {
+  Green,
+  GreenLight,
+  Red,
+  RedLight,
+  onPrimary,
+  primary,
+  primaryGrey,
+  primaryGreyLightTransparent,
+  primaryGreyTransparent,
+  primaryLightTransparent,
+  primaryLighter,
+} from "../../theme/color";
+import {
+  DeleteOutlineTwoTone,
+  EditRounded,
+} from "@mui/icons-material";
+import { convertToPersianDigits } from "../../functions/Functions";
+import { BsPaperclip } from "react-icons/bs";
+import { grey } from "@mui/material/colors";
 
-interface Props extends Argument {
-  id: number;
+interface Props {
   state: number;
+  id: number;
+  arguement: OptionalArgumentSamll;
+  setSelectedArgument: React.Dispatch<
+    React.SetStateAction<OptionalArgument>
+  >;
+  setAddModal: React.Dispatch<
+    React.SetStateAction<{ open: boolean; Argument: Argument }>
+  >;
+  addModal: { open: boolean; Argument: Argument };
 }
-const ArgumentCard = (props: Props) => {
-  switch (props.state) {
+const ArgumentCard = ({
+  state,
+  id,
+  arguement,
+  setSelectedArgument,
+  setAddModal,
+  addModal,
+}: Props) => {
+  switch (state) {
     case 0:
       return (
-        <TableRow>
-          <TableCell>{props.id}</TableCell>
+        <TableRow
+          key={id}
+          sx={{
+            background:
+              id % 2 == 0
+                ? primaryGreyLightTransparent
+                : primaryLightTransparent,
+            borderBottom: `1px solid ${primaryGreyTransparent}`,
+            transition: "all 0.2s ease-in-out",
+          }}
+        >
+          <TableCell>{convertToPersianDigits(id + 1)}</TableCell>
           <TableCell
             sx={{
-              wordWrap: "break-word",
-              textOverflow: "ellipsis",
-              overflow: "hidden",
+              borderInline:
+                id % 2 == 0
+                  ? `1px solid ${primaryGreyTransparent}`
+                  : `1px solid ${primaryLightTransparent}`,
             }}
           >
-            {props.Summary}
+            {arguement.summary}
           </TableCell>
           <TableCell
             sx={{
-              wordWrap: "break-word",
-              textOverflow: "ellipsis",
-              overflow: "hidden",
+              borderInline:
+                id % 2 == 0
+                  ? `1px solid ${primaryGreyTransparent}`
+                  : `1px solid ${primaryLightTransparent}`,
             }}
           >
-            {props.Description}
+            {arguement.description}
           </TableCell>
           <TableCell
             sx={{
-              wordWrap: "break-word",
-              textOverflow: "ellipsis",
-              overflow: "hidden",
+              borderInline:
+                id % 2 == 0
+                  ? `1px solid ${primaryGreyTransparent}`
+                  : `1px solid ${primaryLightTransparent}`,
             }}
           >
-            {props.SuggestedAmount}
+            {arguement.suggestedAmount
+              ? convertToPersianDigits(
+                  arguement.suggestedAmount
+                    ?.toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                ) || ""
+              : "ندارد"}
           </TableCell>
           <TableCell
             sx={{
-              wordWrap: "break-word",
-              textOverflow: "ellipsis",
-              overflow: "hidden",
+              borderLeft: `1px solid ${primaryGreyTransparent}`,
             }}
           >
-            {props.FileName}
+            <Button
+              variant="contained"
+              endIcon={<AiFillFileAdd />}
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+              onClick={() => {
+                // download file with url in fileName
+                window.open(
+                  "http://172.16.23.50:7030/files/" +
+                    arguement.fileName
+                );
+              }}
+              sx={{
+                borderRadius: 2,
+                backgroundColor: Green,
+                fontWeight: 700,
+                fontStyle: "normal",
+                fontSize: "0.7rem",
+                boxShadow: "none",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                "&:hover": {
+                  backgroundColor: GreenLight,
+                  color: Green,
+                },
+              }}
+            >
+              {arguement.fileName}
+            </Button>
+          </TableCell>
+          <TableCell
+            width={"250px"}
+            sx={{
+              borderLeft: `1px solid ${primaryGreyTransparent}`,
+              padding: 1,
+            }}
+          >
+            <Box
+              width={"100%"}
+              display={"grid"}
+              sx={{
+                gridTemplateColumns: "repeat(4, 50px)",
+                gap: 1,
+              }}
+            >
+              <IconButton
+                onClick={() => {
+                  setSelectedArgument(arguement);
+                  setAddModal({
+                    ...addModal,
+                    open: true,
+                  });
+                }}
+                sx={{
+                  backgroundColor: Green,
+                  color: "white",
+                  aspectRatio: "1/1",
+                  width: "40px",
+                  justifySelf: "center",
+                  "&:hover": {
+                    backgroundColor: GreenLight,
+                    color: Green,
+                  },
+                }}
+              >
+                <BsPaperclip />
+              </IconButton>
+              <IconButton
+                onClick={() => {
+                  setSelectedArgument(arguement);
+                  setAddModal({
+                    ...addModal,
+                    open: true,
+                  });
+                }}
+                sx={{
+                  backgroundColor: primaryGrey,
+                  color: onPrimary,
+                  aspectRatio: "1/1",
+                  width: "40px",
+                  justifySelf: "center",
+                  "&:hover": {
+                    backgroundColor: primaryLighter,
+                    color: primary,
+                  },
+                }}
+              >
+                <EditRounded />
+              </IconButton>
+              <IconButton
+                onClick={() => {
+                  setSelectedArgument(arguement);
+                  setAddModal({
+                    ...addModal,
+                    open: true,
+                  });
+                }}
+                sx={{
+                  backgroundColor: Red,
+                  color: "white",
+                  aspectRatio: "1/1",
+                  width: "40px",
+                  justifySelf: "center",
+                  "&:hover": {
+                    backgroundColor: RedLight,
+                    color: Red,
+                  },
+                }}
+              >
+                <DeleteOutlineTwoTone />
+              </IconButton>
+            </Box>
           </TableCell>
         </TableRow>
       );
 
     case 1:
       return (
-        <TableRow>
-          <TableCell>{props.id}</TableCell>
+        <TableRow
+          key={id}
+          sx={{
+            background:
+              id % 2 == 0
+                ? grey[300]
+                : primaryLightTransparent,
+            borderBottom: `1px solid ${primaryGreyTransparent}`,
+            transition: "all 0.2s ease-in-out",
+          }}
+        >
+          <TableCell>{id + 1}</TableCell>
           <TableCell
             sx={{
-              wordWrap: "break-word",
-              textOverflow: "ellipsis",
-              overflow: "hidden",
+              borderInline:
+                id % 2 == 0
+                  ? `1px solid ${primaryGreyTransparent}`
+                  : `1px solid ${primaryLightTransparent}`,
             }}
           >
-            {props.Summary}
+            {arguement.summary}
           </TableCell>
           <TableCell
             sx={{
-              wordWrap: "break-word",
-              textOverflow: "ellipsis",
-              overflow: "hidden",
+              borderInline:
+                id % 2 == 0
+                  ? `1px solid ${primaryGreyTransparent}`
+                  : `1px solid ${primaryLightTransparent}`,
             }}
           >
-            {props.AccuserResponse}
+            {arguement.accuserResponse}
           </TableCell>
           <TableCell
             sx={{
-              wordWrap: "break-word",
-              textOverflow: "ellipsis",
-              overflow: "hidden",
+              borderLeft:
+                id % 2 == 0
+                  ? `1px solid ${primaryGreyTransparent}`
+                  : `1px solid ${primaryLightTransparent}`,
             }}
           >
-            {props.AccuserResponseFileName}
-          </TableCell>
-        </TableRow>
-      );
-    case 2:
-      return (
-        <TableRow>
-          <TableCell>{props.id}</TableCell>
-          <TableCell
+            {arguement.accuserResponseFileName && (
+            <Button
+            variant="contained"
+            endIcon={<AiFillFileAdd />}
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+            onClick={() => {
+              // download file with url in fileName
+              window.open(
+                "http://172.16.23.50:7030/files/" +
+                  arguement.accuserResponseFileName
+              );
+            }}
             sx={{
-              wordWrap: "break-word",
-              textOverflow: "ellipsis",
-              overflow: "hidden",
+              borderRadius: 2,
+              backgroundColor: Green,
+              fontWeight: 700,
+              fontStyle: "normal",
+              fontSize: "0.7rem",
+              boxShadow: "none",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              "&:hover": {
+                backgroundColor: GreenLight,
+                color: Green,
+              },
             }}
           >
-            {props.Summary}
-          </TableCell>
-          <TableCell
-            sx={{
-              wordWrap: "break-word",
-              textOverflow: "ellipsis",
-              overflow: "hidden",
-            }}
-          >
-            {props.ExpertOpinion}
-          </TableCell>
-          <TableCell
-            sx={{
-              wordWrap: "break-word",
-              textOverflow: "ellipsis",
-              overflow: "hidden",
-            }}
-          >
-            {props.ExpertOpinionFileName}
+                {arguement.accuserResponseFileName}
+              </Button>
+            )}
           </TableCell>
           <TableCell
+            width={"250px"}
             sx={{
-              wordWrap: "break-word",
-              textOverflow: "ellipsis",
-              overflow: "hidden",
+              borderLeft: `1px solid ${primaryGreyTransparent}`,
+              padding: 1,
             }}
           >
-            {props.ExpertVerdict}
-          </TableCell>
-          <TableCell
-            sx={{
-              wordWrap: "break-word",
-              textOverflow: "ellipsis",
-              overflow: "hidden",
-            }}
-          >
-            {props.ApprovedAmount}
+            <Box
+              width={"100%"}
+              display={"grid"}
+              sx={{
+                gridTemplateColumns: "repeat(4, 50px)",
+                gap: 1,
+              }}
+            >
+              <IconButton
+                onClick={() => {
+                  setSelectedArgument(arguement);
+                  setAddModal({
+                    ...addModal,
+                    open: true,
+                  });
+                }}
+                sx={{
+                  backgroundColor: Green,
+                  color: "white",
+                  aspectRatio: "1/1",
+                  width: "40px",
+                  justifySelf: "center",
+                  "&:hover": {
+                    backgroundColor: GreenLight,
+                    color: Green,
+                  },
+                }}
+              >
+                <BsPaperclip />
+              </IconButton>
+              <IconButton
+                onClick={() => {
+                  setSelectedArgument(arguement);
+                  setAddModal({
+                    ...addModal,
+                    open: true,
+                  });
+                }}
+                sx={{
+                  backgroundColor: primaryGrey,
+                  color: onPrimary,
+                  aspectRatio: "1/1",
+                  width: "40px",
+                  justifySelf: "center",
+                  "&:hover": {
+                    backgroundColor: primaryLighter,
+                    color: primary,
+                  },
+                }}
+              >
+                <EditRounded />
+              </IconButton>
+              {/* <IconButton
+                sx={{
+                  backgroundColor: Red,
+                  color: "white",
+                  aspectRatio: "1/1",
+                  width: "40px",
+                  justifySelf: "center",
+                  "&:hover": {
+                    backgroundColor: RedLight,
+                    color: Red,
+                  },
+                }}
+              >
+                <DeleteOutlineTwoTone />
+              </IconButton> */}
+            </Box>
           </TableCell>
         </TableRow>
       );

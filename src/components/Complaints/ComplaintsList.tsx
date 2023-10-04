@@ -13,13 +13,22 @@ import {
   Complaint,
   GET_ACCUSED_COMPLAINTS,
   GET_ACCUSER_COMPLAINTS,
+  GET_COMPLAINT_ASSIGNED,
 } from "../../GraphQL/Complaints/Queries";
 interface Props {
   userId?: string;
   departmentId?: number;
-  type?: "accused" | "accuser";
+  type?: "accused" | "accuser" | "assigned";
 }
-const ComplaintsList = ({ departmentId, type }: Props) => {
+const ComplaintsList = ({ departmentId, type, userId }: Props) => {
+  const { data: assignedData, loading } = useQuery(
+    GET_COMPLAINT_ASSIGNED,
+    {
+      variables: {
+        id: userId,
+      },
+    }
+  );
   const { data: accuserData, loading: accuserLoading } = useQuery(
     GET_ACCUSER_COMPLAINTS,
     {
@@ -69,7 +78,21 @@ const ComplaintsList = ({ departmentId, type }: Props) => {
             textAlign: "center",
           }}
         >
-          {accuserLoading ? "در حال دریافت اطلاعات" : "شکایات علیه شما"}
+          {accuserLoading
+            ? "در حال دریافت اطلاعات"
+            : "شکایات علیه شما"}
+        </Typography>
+      ) : type === "accuser" ? (
+        <Typography
+          sx={{
+            color: "white",
+            backgroundColor: primary,
+            padding: "1rem",
+            borderRadius: 2,
+            textAlign: "center",
+          }}
+        >
+          {accusedLoading ? "در حال دریافت اطلاعات" : "شکایات شما"}
         </Typography>
       ) : (
         <Typography
@@ -81,9 +104,9 @@ const ComplaintsList = ({ departmentId, type }: Props) => {
             textAlign: "center",
           }}
         >
-          {accusedLoading
+          {loading
             ? "در حال دریافت اطلاعات"
-            : "شکایات شما"}
+            : "شکایات تعیین شده برای شما"}
         </Typography>
       )}
 
@@ -102,7 +125,8 @@ const ComplaintsList = ({ departmentId, type }: Props) => {
                 />
               )
             )
-          : accuserData?.complaint_getComplaints?.result.items.map(
+          : type === "accuser"
+          ? accuserData?.complaint_getComplaints?.result.items.map(
               (complaint: Complaint) => (
                 <ComplaintCardNew
                   key={complaint.id}
@@ -113,6 +137,20 @@ const ComplaintsList = ({ departmentId, type }: Props) => {
                   acussedId={complaint?.contract?.accusedDepartmentId}
                   acusserId={complaint?.contract?.accuserDepartmentId}
                   type="accuser"
+                />
+              )
+            )
+          : assignedData?.complaint_getComplaints?.result.items.map(
+              (complaint: Complaint) => (
+                <ComplaintCardNew
+                  key={complaint.id}
+                  id={complaint.id}
+                  acussed={complaint?.assignedUser?.userName}
+                  date={complaint?.createdDate}
+                  contractId={complaint?.contractId}
+                  acussedId={complaint?.contract?.accusedDepartmentId}
+                  acusserId={complaint?.contract?.accuserDepartmentId}
+                  type="assigned"
                 />
               )
             )}
