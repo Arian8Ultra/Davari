@@ -51,6 +51,7 @@ export const GET_ACCUSED_COMPLAINTS = gql`
           userId
           id
           contractId
+          createdDate
           arbitrationTermsForms {
             firstCondition
             firstConditionFileName
@@ -166,6 +167,53 @@ export const GET_COMPLAINT_ARGUMENTS = gql`
         }
       }
       status
+    }
+  }
+`;
+
+export const GET_COMPLAINT_ASSIGNED = gql`
+  query GetComplaints($id: String!) {
+    complaint_getComplaints {
+      result(where: { assignedUserId: { eq: $id } }) {
+        items {
+          userId
+          id
+          contractId
+          createdDate
+          arbitrationTermsForms {
+            firstCondition
+            firstConditionFileName
+            secondCondition
+            secondConditionFileName
+            thirdCondition
+            thirdConditionFileName
+            fourthCondition
+            fourthConditionFileName
+          }
+          complaintState
+          complaintCode
+          assignedUser {
+            userName
+            firstName
+            lastName
+            departmentId
+            phoneNumber
+          }
+          contract {
+            contractNumber
+            contractDate
+            initialBudget
+            accusedDepartmentId
+            accuserDepartmentId
+            department {
+              id
+              users {
+                id
+              }
+            }
+          }
+        }
+      }
     }
   }
 `;

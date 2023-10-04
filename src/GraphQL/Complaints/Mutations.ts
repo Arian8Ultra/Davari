@@ -7,6 +7,46 @@ export const CREATE_COMPLAINT = gql`
     ) {
       result {
         id
+        assignedUserId
+        arbitrationTermsForms {
+          userId
+          firstCondition
+          firstConditionFileName
+          secondCondition
+          secondConditionFileName
+          thirdCondition
+          thirdConditionFileName
+          fourthCondition
+          fourthConditionFileName
+        }
+      }
+      status {
+        code
+        value
+      }
+    }
+  }
+`;
+
+
+export const UPDATE_COMPLAINT = gql`
+  mutation UpdateComplaint(
+    $id: Int!
+    $assignedUserId: String
+    $contractId: Int
+    $userId: String
+  ) {
+    complaint_updateComplaint(
+      input: {
+        id: $id
+        assignedUserId: $assignedUserId
+        contractId: $contractId
+        userId: $userId
+      }
+    ) {
+      result {
+        id
+        assignedUserId
         arbitrationTermsForms {
           userId
           firstCondition
