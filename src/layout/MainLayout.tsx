@@ -744,7 +744,14 @@ export default function MainLayout() {
                 hasLink={item.hasLink}
                 hasCollapse={item.hasCollapse}
                 open={open}
-                display={user.userRoles && user.userRoles.some((role) => item.accessNeeded?.includes(role.roleType)) ? "block" : "none"}
+                display={
+                  user.userRoles &&
+                  user.userRoles.some((role) =>
+                    item.accessNeeded?.includes(role.roleType)
+                  )
+                    ? "block"
+                    : "none"
+                }
               >
                 {item.children?.map(
                   (child: SideBarLinkType, index) => (
@@ -819,6 +826,14 @@ export default function MainLayout() {
                 hasLink={item.hasLink}
                 hasCollapse={item.hasCollapse}
                 open={open}
+                display={
+                  user.userRoles &&
+                  user.userRoles.some((role) =>
+                    item.accessNeeded?.includes(role.roleType)
+                  )
+                    ? "block"
+                    : "none"
+                }
               >
                 {item.children?.map(
                   (child: SideBarLinkType, index) => (

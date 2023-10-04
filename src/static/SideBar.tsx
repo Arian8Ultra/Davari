@@ -32,7 +32,7 @@ export const SideBarMenu = [
     hasLink: true,
     hasCollapse: false,
     children: [],
-    accessNeeded: ["SENIOR_USER","SUPER_ADMIN"],
+    accessNeeded: ["SENIOR_USER","SUPER_ADMIN","EXPERT"],
   },
   // {
   //   primary: Titles.contracts,
