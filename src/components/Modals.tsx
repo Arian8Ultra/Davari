@@ -8,7 +8,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { onPrimary, primaryLightTransparent } from "../theme/color";
+import { Red, RedLight, onPrimary, primaryLightTransparent } from "../theme/color";
 import { CancelOutlined } from "@mui/icons-material";
 
 interface NewModalProps {
@@ -92,14 +92,18 @@ export default function NewModal(props: NewModalProps) {
               {props.title != null ? props.title : name}
             </Typography>
             {isCloseable && (
-              <IconButton onClick={handleClose} sx={{
-                color: color != null ? color : onPrimary,
-                transition: "all 0.3s ease",
-                "&:hover": {
-                  background: color != null ? color : onPrimary,
-                  color: 'white',
-                },
-              }}>
+              <IconButton
+                onClick={handleClose}
+                sx={{
+                  color: color != null ? color : Red,
+                  transition: "all 0.3s ease",
+                  padding: 0,
+                  "&:hover": {
+                    background: color != null ? color : Red,
+                    color: RedLight,
+                  },
+                }}
+              >
                 <CancelOutlined />
               </IconButton>
             )}

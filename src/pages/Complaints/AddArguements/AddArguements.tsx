@@ -103,7 +103,11 @@ const AddArgument = () => {
             sx={{
               background: Green,
               margin: "1rem",
-              display: stateInt != 0 ? "none" : "block",
+              display: stateInt != 0 ? "none" : "flex",
+              width: "50px",
+              aspectRatio: "1/1",
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
             <BsPlusCircleDotted />

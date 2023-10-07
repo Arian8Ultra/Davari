@@ -4,7 +4,11 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect } from "react";
-import { Argument, OptionalArgument, OptionalArgumentSamll } from "../../static/Types";
+import {
+  Argument,
+  OptionalArgument,
+  OptionalArgumentSamll,
+} from "../../static/Types";
 import NewModal from "../Modals";
 import { Green, background } from "../../theme/color";
 import { Box, Button, TextField } from "@mui/material";
@@ -17,6 +21,7 @@ import {
 } from "../../GraphQL/Complaints/Mutations";
 import { UPLOAD_FILE } from "../../api/upload";
 import { useUserStore } from "../../Context/UserStore";
+import FileBox from "../FileBox";
 
 interface Props {
   state?: number;
@@ -36,9 +41,10 @@ interface Props {
   complaintId?: number;
 }
 const ArgumentModal = (props: Props) => {
-  const [Argument, setArgument] = React.useState<OptionalArgumentSamll>(
-    {} as OptionalArgumentSamll
-  );
+  const [Argument, setArgument] =
+    React.useState<OptionalArgumentSamll>(
+      {} as OptionalArgumentSamll
+    );
   //   set argument from parent if exists
   React.useEffect(() => {
     if (props.ArgumentFromParent) {
@@ -50,10 +56,9 @@ const ArgumentModal = (props: Props) => {
     onCompleted(data) {
       console.log(data);
       props.onClose();
-
     },
   });
-  const [UpdateArgument] = useMutation(UPDATE_ARGUMENT,{
+  const [UpdateArgument] = useMutation(UPDATE_ARGUMENT, {
     onCompleted(data) {
       console.log(data);
       props.onClose();
@@ -114,6 +119,7 @@ const ArgumentModal = (props: Props) => {
             <TextField
               label={"خلاصه ادعا"}
               variant={"outlined"}
+              focused={Argument?.summary != ""}
               sx={{
                 borderRadius: "1rem",
                 "& .MuiOutlinedInput-root": {
@@ -133,6 +139,7 @@ const ArgumentModal = (props: Props) => {
             <TextField
               label={"مشروح ادعا"}
               variant={"outlined"}
+              focused={Argument?.description != ""}
               sx={{
                 borderRadius: "1rem",
                 "& .MuiOutlinedInput-root": {
@@ -155,6 +162,7 @@ const ArgumentModal = (props: Props) => {
             <TextField
               label={"مبلغ پیشنهادی ادعا"}
               variant={"outlined"}
+              focused={Argument?.suggestedAmount != 0}
               sx={{
                 borderRadius: "1rem",
                 "& .MuiOutlinedInput-root": {
@@ -178,57 +186,70 @@ const ArgumentModal = (props: Props) => {
                 });
               }}
             />
-            <FileButton
-              width={"100%"}
-              multiple
-              height={"100%"}
+
+            <FileBox
+              sx={{
+                height:"100%",
+                gridRow:'span 2',
+                gridColumn: "span 1",
+              }}
               setFiles={(files: File[]) => {
                 setArgument({
                   ...Argument,
                   Files: files,
                 });
               }}
+              files={Argument?.Files}
             >
-              مستندات و نامه خوانده
-              <BsCloudUploadFill
-                style={{
-                  marginRight: "0.5rem",
-                }}
-              />
-            </FileButton>
-
+              آپلود مستندات
+            </FileBox>
             <Button
               onClick={() => {
-                void UPLOAD_FILE({
-                  file: Argument?.Files
-                    ? Argument?.Files[0]
-                    : undefined,
-                  // @ts-ignore
-                  token: localStorage.getItem("token")
-                    ? localStorage.getItem("token")
-                    : undefined,
-                  onSuccess(res) {
-                    console.log(res);
-                    void AddArgument({
-                      variables: {
-                        complaintId: props.complaintId,
-                        summary: Argument?.summary,
-                        description: Argument?.description,
-                        suggestedAmount: Argument.suggestedAmount,
-                        // @ts-ignore
-                        fileName: res.result[0].newFileName,
-                        userId: user.id,
-                        filledBy: "ACCUSER",
-                      },
-                    });
-                  },
-                });
+                if (
+                  Argument?.Files?.length &&
+                  Argument?.Files?.length > 0
+                )
+                  void UPLOAD_FILE({
+                    file: Argument?.Files
+                      ? Argument?.Files[0]
+                      : undefined,
+                    // @ts-ignore
+                    token: localStorage.getItem("token")
+                      ? localStorage.getItem("token")
+                      : undefined,
+                    onSuccess(res) {
+                      console.log(res);
+                      void AddArgument({
+                        variables: {
+                          complaintId: props.complaintId,
+                          summary: Argument?.summary,
+                          description: Argument?.description,
+                          suggestedAmount: Argument.suggestedAmount,
+                          // @ts-ignore
+                          fileName: res.result[0].newFileName,
+                          userId: user.id,
+                          filledBy: "ACCUSER",
+                        },
+                      });
+                    },
+                  });
+                else {
+                  void AddArgument({
+                    variables: {
+                      complaintId: props.complaintId,
+                      summary: Argument?.summary,
+                      description: Argument?.description,
+                      suggestedAmount: Argument.suggestedAmount,
+                      userId: user.id,
+                      filledBy: "ACCUSER",
+                    },
+                  });
+                }
               }}
               sx={{
                 background: Green,
                 color: "white",
                 borderRadius: "0.5rem",
-                gridColumn: "1/3",
                 // width: "50%",
               }}
               variant={"contained"}
@@ -250,8 +271,8 @@ const ArgumentModal = (props: Props) => {
           backgroundColor={background}
         >
           <Box
-            display={"flex"}
-            flexDirection={"column"}
+            display={"grid"}
+            gridTemplateColumns={'1fr 1fr'}
             gap={"1rem"}
             width={"100%"}
             justifyContent={"center"}
@@ -260,6 +281,7 @@ const ArgumentModal = (props: Props) => {
             <TextField
               label={"پاسخ"}
               variant={"outlined"}
+              focused={Argument?.accuserResponse != ""}
               sx={{
                 borderRadius: "1rem",
                 "& .MuiOutlinedInput-root": {
@@ -277,52 +299,63 @@ const ArgumentModal = (props: Props) => {
                 });
               }}
             />
-            <FileButton
-              width={"100%"}
-              multiple
-              height={"100%"}
+            <FileBox
+              sx={{
+                height:"100%",
+                gridRow:'span 2',
+                gridColumn: "span 1",
+              }}
               setFiles={(files: File[]) => {
                 setArgument({
                   ...Argument,
                   Files: files,
                 });
               }}
+              files={Argument?.Files}
             >
-              مستندات و نامه خوانده
-              <BsCloudUploadFill
-                style={{
-                  marginRight: "0.5rem",
-                }}
-              />
-            </FileButton>
+              آپلود مستندات
+            </FileBox>
 
             <Button
               onClick={() => {
-                void UPLOAD_FILE({
-                  file: Argument?.Files
-                    ? Argument?.Files[0]
-                    : undefined,
-                  // @ts-ignore
-                  token: localStorage.getItem("token")
-                    ? localStorage.getItem("token")
-                    : undefined,
-                  onSuccess(res) {
-                    console.log(res);
-                    void UpdateArgument({
-                      variables: {
-                        id: props.argumentId,
-                        accuserResponse: Argument?.accuserResponse,
-                        accuserResponseFileName: res.result[0].newFileName,
-                      },
-                    });
-                  },
-                });
+                if (
+                  Argument?.Files?.length &&
+                  Argument?.Files?.length > 0
+                )
+                  void UPLOAD_FILE({
+                    file: Argument?.Files
+                      ? Argument?.Files[0]
+                      : undefined,
+                    // @ts-ignore
+                    token: localStorage.getItem("token")
+                      ? localStorage.getItem("token")
+                      : undefined,
+                    onSuccess(res) {
+                      console.log(res);
+                      void UpdateArgument({
+                        variables: {
+                          id: props.argumentId,
+                          accuserResponse: Argument?.accuserResponse,
+                          accuserResponseFileName:
+                            res.result[0].newFileName,
+                        },
+                      });
+                    },
+                  });
+                else {
+                  void UpdateArgument({
+                    variables: {
+                      id: props.argumentId,
+                      accuserResponse: Argument?.accuserResponse,
+                    },
+                  });
+                }
               }}
               sx={{
                 background: Green,
                 color: "white",
                 borderRadius: "0.5rem",
-                width: "50%",
+                width: "100%",
               }}
               variant={"contained"}
             >
