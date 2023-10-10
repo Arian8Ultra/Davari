@@ -19,7 +19,7 @@ import {
 import { grey } from "@mui/material/colors";
 import { useState } from "react";
 import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
-import { BsKey } from "react-icons/bs";
+import { BsFillCaretDownFill, BsKey } from "react-icons/bs";
 import { VscPreview } from "react-icons/vsc";
 import {
   ADD_USER_TO_ROLE,
@@ -80,7 +80,6 @@ const UserCard = (props: Props) => {
     open: false,
     roleType: "",
   });
-  const [collapse, setCollapse] = useState(false);
 
   const [editUser] = useMutation(UserUpdate, {
     variables: {
@@ -245,7 +244,7 @@ const UserCard = (props: Props) => {
           onClick={handleClickAnchor}
           fullWidth
         >
-          ...
+          <BsFillCaretDownFill/>
         </Button>
         <Menu
           id="user-menu"

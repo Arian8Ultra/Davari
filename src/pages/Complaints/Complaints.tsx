@@ -21,7 +21,7 @@ import FaTextField from "../../components/FaComponents/FaTextField";
 const Complaints = () => {
   const [addModal, setAddModal] = useState({
     open: false as boolean,
-    contractId: '' as string,
+    contractId: "" as string,
   });
   const navigate = useNavigate();
 
@@ -59,14 +59,14 @@ const Complaints = () => {
             boxShadow: "none",
             "&:hover": {
               backgroundColor: GreenLight,
+              color: Green,
             },
-            display:
-              user?.userRoles?.some(
-                (role) => role.roleType === "SENIOR_USER"
-              ) ? "flex" : "none"
-            
+            display: user?.userRoles?.some(
+              (role) => role.roleType === "SENIOR_USER"
+            )
+              ? "flex"
+              : "none",
           }}
-
         >
           افزودن شکایت
         </Button>
@@ -74,7 +74,10 @@ const Complaints = () => {
       <Box
         sx={{
           display: "grid",
-          gridTemplateColumns: "1fr 1fr",
+          gridTemplateColumns: {
+            xs: "1fr",
+            lg: "1fr 1fr",
+          },
           gap: 1,
         }}
       >
@@ -180,6 +183,7 @@ const Complaints = () => {
               height: "max-content",
               "&:hover": {
                 backgroundColor: GreenLight,
+                color: Green,
               },
             }}
             onClick={() => {
@@ -202,7 +206,7 @@ const Complaints = () => {
                     },
                     onCompleted(data) {
                       console.log(data);
-                      
+
                       if (
                         data.complaint_addComplaint.status.code === 1
                       ) {

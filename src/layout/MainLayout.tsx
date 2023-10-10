@@ -61,7 +61,11 @@ import Title from "../components/Title";
 import { SideBarLinkType, SideBarMenu } from "../static/SideBar";
 import { Titles } from "../static/Titles";
 import { User } from "../static/Types";
-import { Green, background, primary } from "../theme/color";
+import {
+  Green,
+  background,
+  primary
+} from "../theme/color";
 
 const drawerWidth = 240;
 
@@ -309,7 +313,7 @@ export default function MainLayout() {
           backgroundColor={background}
           open={!signedIn}
           isCloseable={false}
-          // background={`linear-gradient(45deg, ${primary} -10%, ${primaryLighter}, ${primaryLighter})`}
+          // background={sazmanImage}
           color={primary}
           width={{
             xs: "100%",
@@ -380,6 +384,11 @@ export default function MainLayout() {
                 helperText={error?.message}
                 error={error?.message ? true : false}
                 value={signInModal.userName}
+                InputProps={{
+                  sx: {
+                    borderRadius: "15px",
+                  },
+                }}
                 sx={{
                   width: "80%",
                   "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
@@ -404,7 +413,7 @@ export default function MainLayout() {
                           })
                         }
                       >
-                        {signInModal.showPassword ? (
+                        {!signInModal.showPassword ? (
                           <BsEye />
                         ) : (
                           <BsEyeSlash />
@@ -412,6 +421,9 @@ export default function MainLayout() {
                       </IconButton>
                     </InputAdornment>
                   ),
+                  sx: {
+                    borderRadius: "15px",
+                  },
                 }}
                 onChange={(e) =>
                   setSignInModal({

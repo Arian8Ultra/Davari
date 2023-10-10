@@ -5,7 +5,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Stack, Typography } from "@mui/material";
-import { primary, primaryTransparent } from "../../theme/color";
+import { primary, primaryGrey, primaryTransparent } from "../../theme/color";
 import theme from "../../theme/theme";
 import ComplaintCardNew from "./ComplaintCardNew";
 import { useQuery } from "@apollo/client";
@@ -72,10 +72,11 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
         <Typography
           sx={{
             color: "white",
-            backgroundColor: primary,
+            backgroundColor: primaryGrey,
             padding: "1rem",
             borderRadius: 2,
             textAlign: "center",
+            position:'sticky'
           }}
         >
           {accuserLoading
@@ -86,10 +87,11 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
         <Typography
           sx={{
             color: "white",
-            backgroundColor: primary,
+            backgroundColor: primaryGrey,
             padding: "1rem",
             borderRadius: 2,
             textAlign: "center",
+            position:'sticky'
           }}
         >
           {accusedLoading ? "در حال دریافت اطلاعات" : "شکایات شما"}
@@ -98,10 +100,11 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
         <Typography
           sx={{
             color: "white",
-            backgroundColor: primary,
+            backgroundColor: primaryGrey,
             padding: "1rem",
             borderRadius: 2,
             textAlign: "center",
+            position:'sticky'
           }}
         >
           {loading
