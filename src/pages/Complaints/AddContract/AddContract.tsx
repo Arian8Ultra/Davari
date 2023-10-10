@@ -25,7 +25,7 @@ import {
   RadioGroup,
   TextField,
 } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import { CREATE_CONTRACT } from "../../../GraphQL/Contracts/Mutations";
 import BackButton from "../../../components/BackButton";
 import countries from "../../../static/Countries";
@@ -37,6 +37,7 @@ import {
 } from "../../../GraphQL/Departments/Queries";
 import FaTypography from "../../../components/FaComponents/FaTypography";
 import FaTextField from "../../../components/FaComponents/FaTextField";
+import FileBox from "../../../components/FileBox";
 
 const AddContract = () => {
   const navigate = useNavigate();
@@ -58,6 +59,7 @@ const AddContract = () => {
   const [contratDetails, setContratDetails] = React.useState({
     contratTypes: [] as string[],
     other: false as boolean,
+    CircularTitle: "" as string,
     CircularNumber: "" as string,
     CircularDate: "" as string,
   });
@@ -121,7 +123,17 @@ const AddContract = () => {
     error: false as boolean,
     text: "" as string,
   });
+  const [Adjustment, setAdjustment] = useState({
+    number: 0 as number,
+    date: "" as string,
+  });
+  const [AdjustmentError, setAdjustmentError] = useState({
+    error: false as boolean,
+    text: "" as string,
+  });
   const [BaseIndexPeriod, setBaseIndexPeriod] = React.useState({
+    isQuarter: false as boolean,
+    quarter: 0 as number,
     month: "",
     year: "",
   });
@@ -1066,6 +1078,23 @@ const AddContract = () => {
           />
         </FormGroup>
         <FaTextField
+          label={"عنوان بخشنامه"}
+          variant={"outlined"}
+          sx={{
+            gridColumn: "span 2",
+            display: contratDetails.other ? "block" : "none",
+          }}
+          value={contratDetails.CircularTitle}
+          onChange={(e) => {
+            setContratDetails({
+              ...contratDetails,
+              CircularTitle: e.target.value,
+            });
+          }}
+          error={contratDetailsError.error}
+          helperText={contratDetailsError.text}
+        />
+        <FaTextField
           label={"شماره بخشنامه"}
           variant={"outlined"}
           sx={{
@@ -1411,6 +1440,86 @@ const AddContract = () => {
             gridColumn: "span 12",
           }}
         />
+
+        {/* 
+
+              TODO :
+              add use state to this shit
+
+
+*/}
+        <FaTextField
+          label={"عنوان بخشنامه"}
+          variant={"outlined"}
+          sx={{
+            gridColumn: "span 2",
+            display: IsSpecialPriceListAttachedToContract
+              ? "block"
+              : "none",
+          }}
+          value={contratDetails.CircularTitle}
+          onChange={(e) => {
+            setContratDetails({
+              ...contratDetails,
+              CircularTitle: e.target.value,
+            });
+          }}
+          error={contratDetailsError.error}
+          helperText={contratDetailsError.text}
+        />
+        <FaTextField
+          label={"شماره بخشنامه"}
+          variant={"outlined"}
+          sx={{
+            gridColumn: "span 2",
+            display: IsSpecialPriceListAttachedToContract
+              ? "block"
+              : "none",
+          }}
+          value={contratDetails.CircularNumber}
+          onChange={(e) => {
+            setContratDetails({
+              ...contratDetails,
+              CircularNumber: e.target.value,
+            });
+          }}
+          error={contratDetailsError.error}
+          helperText={contratDetailsError.text}
+        />
+        <TextField
+          label={"تاریخ بخشنامه"}
+          variant={"outlined"}
+          type={"date"}
+          focused
+          sx={{
+            gridColumn: "span 2",
+            display: IsSpecialPriceListAttachedToContract
+              ? "block"
+              : "none",
+          }}
+          value={contratDetails.CircularDate}
+          onChange={(e) => {
+            setContratDetails({
+              ...contratDetails,
+              CircularDate: e.target.value,
+            });
+          }}
+          error={contratDetailsError.error}
+          helperText={contratDetailsError.text}
+        />
+
+        {/* 
+
+              TODO :
+              add use state to this shit
+
+        */}
+
+        <div
+          style={{
+            gridColumn: "span 12",
+          }}
+        />
         <Divider sx={{ gridColumn: "span 6" }} />
         <div
           style={{
@@ -1429,15 +1538,30 @@ const AddContract = () => {
           4-7-
         </FaTypography>
 
-        <FaTextField
+        <TextField
           label="ضريب پيشنهادي: "
           sx={{ gridColumn: "span 3" }}
+          type="number"
           value={RecommendedCoefficient}
           onChange={(e) => {
             setRecommendedCoefficient(e.target.value);
           }}
         />
-        <RadioGroup defaultValue={CoefficientType} row>
+
+        <FaTypography variant="h6" gridColumn={"span 1"}>
+          {RecommendedCoefficient != ""
+            ? parseFloat(RecommendedCoefficient) > 1
+              ? (
+                  parseFloat(RecommendedCoefficient) * 100 -
+                  100
+                ).toPrecision(2) + "% پلوس"
+              : (
+                  100 -
+                  parseFloat(RecommendedCoefficient) * 100
+                ).toPrecision(2) + "% مینوس"
+            : ""}
+        </FaTypography>
+        {/* <RadioGroup defaultValue={CoefficientType} row>
           <FormControlLabel
             value="درصدپلوس"
             control={<Radio />}
@@ -1459,7 +1583,7 @@ const AddContract = () => {
               setCoefficientType(e.target.value);
             }}
           />
-        </RadioGroup>
+        </RadioGroup> */}
 
         <div
           style={{
@@ -1498,10 +1622,20 @@ const AddContract = () => {
             name="row-radio-buttons-group"
           >
             <FormControlLabel
-              value="مناقصه "
-              checked={AssigningType === "مناقصه "}
+              value="مناقصه عمومی"
+              checked={AssigningType === "مناقصه عمومی"}
               control={<Radio />}
-              label="مناقصه "
+              label="مناقصه عمومی"
+              onChange={(e) => {
+                // @ts-ignore
+                setAssigningType(e.target.value);
+              }}
+            />
+            <FormControlLabel
+              value="مناقصه محدود"
+              checked={AssigningType === "مناقصه محدود"}
+              control={<Radio />}
+              label="مناقصه محدود"
               onChange={(e) => {
                 // @ts-ignore
                 setAssigningType(e.target.value);
@@ -1518,7 +1652,7 @@ const AddContract = () => {
               }}
             />
             <FormControlLabel
-              control={<FaTextField />}
+              control={<FaTextField label="سایر" />}
               label=""
               value={
                 AssigningType !== "مناقصه " &&
@@ -1593,6 +1727,50 @@ const AddContract = () => {
             gridColumn: "span 12",
           }}
         />
+
+        <FaTextField
+          label="شماره"
+          type="number"
+          sx={{
+            gridColumn: "span 3",
+            display: DoesContainAdjustment ? "block" : "none",
+          }}
+          value={BaseIndexPeriod.month}
+          onChange={(e) => {
+            setAdjustment({
+              ...Adjustment,
+              number: parseInt(e.target.value),
+            });
+          }}
+          fullWidth
+          error={AdjustmentError.error}
+          helperText={AdjustmentError.text}
+        />
+        <FaTextField
+          label="تاریخ"
+          type="date"
+          focused
+          sx={{
+            gridColumn: "span 3",
+            display: DoesContainAdjustment ? "block" : "none",
+          }}
+          value={BaseIndexPeriod.month}
+          onChange={(e) => {
+            setAdjustment({
+              ...Adjustment,
+              date: e.target.value,
+            });
+          }}
+          fullWidth
+          error={AdjustmentError.error}
+          helperText={AdjustmentError.text}
+        />
+
+        <div
+          style={{
+            gridColumn: "span 12",
+          }}
+        />
         <Divider sx={{ gridColumn: "span 6" }} />
         <div
           style={{
@@ -1610,11 +1788,49 @@ const AddContract = () => {
         <FaTypography variant="h6" gridColumn={"span 2"}>
           4-10- دوره شاخص مبنا
         </FaTypography>
+
+        <FormControl
+          sx={{
+            gridColumn: "span 12",
+          }}
+        >
+          <FormLabel id="demo-row-radio-buttons-group-label">
+            نوع دوره شاخص مبنا
+          </FormLabel>
+          <RadioGroup row>
+            <FormControlLabel
+              value={true}
+              control={<Radio />}
+              label="سه ماهه"
+              checked={BaseIndexPeriod.isQuarter}
+              onChange={(e) => {
+                setBaseIndexPeriod({
+                  ...BaseIndexPeriod,
+                  isQuarter: true,
+                });
+              }}
+            />
+            <FormControlLabel
+              value={false}
+              control={<Radio />}
+              label="ماهانه"
+              checked={!BaseIndexPeriod.isQuarter}
+              onChange={(e) => {
+                setBaseIndexPeriod({
+                  ...BaseIndexPeriod,
+                  isQuarter: false,
+                });
+              }}
+            />
+          </RadioGroup>
+        </FormControl>
+
         <FaTextField
           label="ماه"
           type="number"
           sx={{
             gridColumn: "span 2",
+            display: !BaseIndexPeriod.isQuarter ? "block" : "none",
           }}
           value={BaseIndexPeriod.month}
           onChange={(e) => {
@@ -1625,7 +1841,49 @@ const AddContract = () => {
           }}
           error={BaseIndexPeriodError.error}
           helperText={BaseIndexPeriodError.text}
-        />
+          select
+          fullWidth
+        >
+          {[
+            "فروردین",
+            "اردیبهشت",
+            "خرداد",
+            "تیر",
+            "مرداد",
+            "شهریور",
+            "مهر",
+            "آبان",
+            "آذر",
+            "دی",
+            "بهمن",
+            "اسفند",
+          ].map((m) => (
+            <MenuItem value={m}>{m}</MenuItem>
+          ))}
+        </FaTextField>
+        <FaTextField
+          label="سه ماهه"
+          sx={{
+            gridColumn: "span 2",
+            display: BaseIndexPeriod.isQuarter ? "block" : "none",
+          }}
+          value={BaseIndexPeriod.quarter}
+          onChange={(e) => {
+            setBaseIndexPeriod({
+              ...BaseIndexPeriod,
+              quarter: parseInt(e.target.value),
+            });
+          }}
+          fullWidth
+          error={BaseIndexPeriodError.error}
+          helperText={BaseIndexPeriodError.text}
+          select
+        >
+          <MenuItem value={1}>اول</MenuItem>
+          <MenuItem value={2}>دوم</MenuItem>
+          <MenuItem value={3}>سوم</MenuItem>
+          <MenuItem value={4}>چهارم</MenuItem>
+        </FaTextField>
         <FaTextField
           label="سال"
           type="number"
@@ -2059,21 +2317,49 @@ const AddContract = () => {
         >
           • گزارش توجیهی تاخیرات قرارداد شامل:
         </FaTypography>
-        <List sx={{ gridColumn: "span 12" }}>
-          <FaTypography variant="body1">
-            • برنامه های زمان‏بندی اولیه و اصلاحی ابلاغ شده
-          </FaTypography>
-          <FaTypography variant="body1">
-            • گزارش تهیه شده توسط پیمانکار (به همراه کلیه مستندات و
-            پیوست‏ها)
-          </FaTypography>
-          <FaTypography variant="body1">
-            • گزارش رسیدگی به تاخیرات توسط مهندس مشاور
-          </FaTypography>
-          <FaTypography variant="body1">
-            • مستندات ابلاغ نتایج رسیدگی به تاخیرات به پیمانکار توسط
-            کارفرما
-          </FaTypography>
+        <List sx={{ gridColumn: "span 6" }}>
+          <Box
+            display={"flex"}
+            justifyContent={"space-between"}
+            paddingY={"1rem"}
+          >
+            <FaTypography variant="body1">
+              • برنامه های زمان‏بندی اولیه و اصلاحی ابلاغ شده
+            </FaTypography>
+            <FileBox />
+          </Box>
+          <Box
+            display={"flex"}
+            justifyContent={"space-between"}
+            paddingY={"1rem"}
+          >
+            <FaTypography variant="body1">
+              • گزارش تهیه شده توسط پیمانکار (به همراه کلیه مستندات و
+              پیوست‏ها)
+            </FaTypography>
+            <FileBox />
+          </Box>
+          <Box
+            display={"flex"}
+            justifyContent={"space-between"}
+            paddingY={"1rem"}
+          >
+            <FaTypography variant="body1">
+              • گزارش رسیدگی به تاخیرات توسط مهندس مشاور
+            </FaTypography>
+            <FileBox />
+          </Box>
+          <Box
+            display={"flex"}
+            justifyContent={"space-between"}
+            paddingY={"1rem"}
+          >
+            <FaTypography variant="body1">
+              • مستندات ابلاغ نتایج رسیدگی به تاخیرات به پیمانکار توسط
+              کارفرما
+            </FaTypography>
+            <FileBox />
+          </Box>
         </List>
 
         <Button
