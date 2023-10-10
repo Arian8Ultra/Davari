@@ -57,14 +57,13 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
       spacing={1}
       width={"100%"}
       maxHeight={`calc(100vh - ${theme.spacing(25)})`}
+      height={'max-content'}
       sx={{
         backgroundColor: primaryTransparent,
         borderRadius: 2,
         padding: 0,
         paddingTop: 0,
         overflow: "auto",
-        scrollPadding: theme.spacing(2),
-        scrollSnapType: "y mandatory",
         // scrollbarGutter: "stable",
       }}
     >
@@ -113,7 +112,7 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
         </Typography>
       )}
 
-      <Stack padding={"0.5rem"} spacing={1}>
+      <Stack padding={"2px"} spacing={0.5}>
         {type === "accused"
           ? accusedData?.complaint_getComplaints?.result.items.map(
               (complaint: Complaint) => (

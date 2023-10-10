@@ -106,13 +106,14 @@ const ComplaintCardNew = (props: Props) => {
     <Box
       sx={{
         width: "100%",
-        pt: "0.5rem",
+        // pt: "0.5rem",
         backgroundColor: "white",
         display: "grid",
         gridTemplateColumns: "repeat(5,auto)",
         alignItems: "center",
-        borderRadius: "5px",
+        // borderRadius: "5px",
         gap: "0.5rem",
+        rowGap: 0,
       }}
     >
       <Typography
@@ -123,7 +124,7 @@ const ComplaintCardNew = (props: Props) => {
           md: "0.8rem",
           lg: "0.9rem",
         }}
-        sx={{ userSelect: "none" }}
+        sx={{ userSelect: "none", paddingBlock: "0.5rem" }}
       >
         شماره قرارداد:
         {convertToPersianDigits(props.contractId)}
@@ -174,7 +175,8 @@ const ComplaintCardNew = (props: Props) => {
       <Button
         onClick={handleOpen}
         sx={{
-          borderRadius: "0px",
+          borderRadius: "0 0 0 0",
+          height:'100%',
           "&:hover": {
             backgroundColor: primaryLightTransparent,
           },
@@ -189,8 +191,8 @@ const ComplaintCardNew = (props: Props) => {
         sx={{
           gridColumn: "span 5",
           height: 10,
-          borderBottomLeftRadius: 5,
-          borderBottomRightRadius: 5,
+          // borderBottomLeftRadius: 5,
+          // borderBottomRightRadius: 5,
         }}
       />
       <NewModal
