@@ -16,7 +16,7 @@ import {
 import { Box, Button, ButtonProps, Typography } from "@mui/material";
 import React, { useEffect } from "react";
 interface Props extends ButtonProps {
-  setFiles: (files: File[]) => void;
+  setFiles?: (files: File[]) => void;
   files?: File[];
   multiple?: boolean;
 }

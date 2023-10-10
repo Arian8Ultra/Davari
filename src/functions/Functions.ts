@@ -9,10 +9,14 @@ export const convertRoleToPersian = (role: string) => {
       return "مدیر";
     case "EDITOR":
       return "ویرایشگر";
+    case "SENIOR_USER":
+      return "کربر ارشد";
+    case "EXPERT":
+      return "کارشناس";
     case "NORMAL":
       return "کاربر";
     default:
-      return "نامشخص";
+      return role;
   }
 };
 
