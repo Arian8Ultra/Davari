@@ -6,8 +6,7 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import { Box, Button } from "@mui/material";
 import * as React from "react";
-import { onPrimary, primary, secondaryLight } from "../theme/color";
-import { UPLOAD_FILE } from "../api/upload";
+import { primary, secondaryLight } from "../theme/color";
 
 interface FileButtonProps {
   text?: string;
@@ -61,8 +60,6 @@ function FileButton(props: FileButtonProps) {
   const width = props.width != null ? props.width : "max-content";
   const minWidth =
     props.minWidth != null ? props.minWidth : "max-content";
-  const textColor =
-    props.textColor != null ? props.textColor : secondaryLight;
   const backgroundColor =
     props.backgroundColor != null ? props.backgroundColor : primary;
   const hoverColor =

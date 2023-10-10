@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable prefer-const */
-import CancelRoundedIcon from "@mui/icons-material/CancelRounded";
+import { CancelOutlined } from "@mui/icons-material";
 import {
   Box,
   IconButton,
@@ -8,8 +8,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { Red, RedLight, onPrimary, primaryLightTransparent } from "../theme/color";
-import { CancelOutlined } from "@mui/icons-material";
+import { Red, RedLight, primaryLightTransparent } from "../theme/color";
 
 interface NewModalProps {
   width?: string | number | object;

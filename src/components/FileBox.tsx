@@ -18,15 +18,15 @@ import React, { useEffect } from "react";
 interface Props extends ButtonProps {
   setFiles?: (files: File[]) => void;
   files?: File[];
-  multiple?: boolean;
+  // multiple?: boolean;
 }
 const FileBox = ({
   setFiles,
   files,
-  multiple = false,
+  // multiple = false,
   ...props
 }: Props) => {
-  const [file, setFile] = React.useState(files);
+  const [, setFile] = React.useState(files);
   const [fileName, setFileName] = React.useState<string>("");
 
   useEffect(() => {
