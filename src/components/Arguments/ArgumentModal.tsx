@@ -3,25 +3,22 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useEffect } from "react";
-import {
-  Argument,
-  OptionalArgument,
-  OptionalArgumentSamll,
-} from "../../static/Types";
-import NewModal from "../Modals";
-import { Green, background } from "../../theme/color";
-import { Box, Button, TextField } from "@mui/material";
-import FileButton from "../FileButton";
-import { BsCloudUploadFill } from "react-icons/bs";
 import { gql, useMutation, useQuery } from "@apollo/client";
+import { Box, Button, TextField } from "@mui/material";
+import React, { useEffect } from "react";
+import { useUserStore } from "../../Context/UserStore";
 import {
   ADD_ARGUMENT_TO_COMPLAINT,
   UPDATE_ARGUMENT,
 } from "../../GraphQL/Complaints/Mutations";
 import { UPLOAD_FILE } from "../../api/upload";
-import { useUserStore } from "../../Context/UserStore";
+import {
+  OptionalArgument,
+  OptionalArgumentSamll
+} from "../../static/Types";
+import { Green, background } from "../../theme/color";
 import FileBox from "../FileBox";
+import NewModal from "../Modals";
 
 interface Props {
   state?: number;
@@ -39,6 +36,7 @@ interface Props {
 
   argumentId?: number;
   complaintId?: number;
+  editMode?: boolean;
 }
 const ArgumentModal = (props: Props) => {
   const [Argument, setArgument] =
@@ -205,7 +203,17 @@ const ArgumentModal = (props: Props) => {
             </FileBox>
             <Button
               onClick={() => {
-                if (
+                if(props.editMode){
+                  void UpdateArgument({
+                    variables: {
+                      id: props.argumentId,
+                      summary: Argument?.summary,
+                      description: Argument?.description,
+                      suggestedAmount: Argument.suggestedAmount,
+                    },
+                  });
+                }
+                else if (
                   Argument?.Files?.length &&
                   Argument?.Files?.length > 0
                 )

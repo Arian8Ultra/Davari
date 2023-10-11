@@ -5,7 +5,14 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Stack, Typography } from "@mui/material";
-import { primary, primaryGrey, primaryTransparent } from "../../theme/color";
+import {
+  primary,
+  primaryGrey,
+  primaryTransparent,
+  secondary,
+  secondaryLight,
+  secondaryLighter,
+} from "../../theme/color";
 import theme from "../../theme/theme";
 import ComplaintCardNew from "./ComplaintCardNew";
 import { useQuery } from "@apollo/client";
@@ -57,9 +64,9 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
       spacing={1}
       width={"100%"}
       maxHeight={`calc(100vh - ${theme.spacing(25)})`}
-      height={'max-content'}
+      height={"max-content"}
       sx={{
-        backgroundColor: primaryTransparent,
+        backgroundColor: secondaryLighter,
         borderRadius: 2,
         padding: 0,
         paddingTop: 0,
@@ -71,11 +78,12 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
         <Typography
           sx={{
             color: "white",
-            backgroundColor: primaryGrey,
+            // backgroundColor: primaryGrey,
+            backgroundColor: secondary,
             padding: "1rem",
             borderRadius: 2,
             textAlign: "center",
-            position:'sticky'
+            position: "sticky",
           }}
         >
           {accuserLoading
@@ -86,11 +94,12 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
         <Typography
           sx={{
             color: "white",
-            backgroundColor: primaryGrey,
+            // backgroundColor: primaryGrey,
+            backgroundColor: secondary,
             padding: "1rem",
             borderRadius: 2,
             textAlign: "center",
-            position:'sticky'
+            position: "sticky",
           }}
         >
           {accusedLoading ? "در حال دریافت اطلاعات" : "شکایات شما"}
@@ -99,11 +108,12 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
         <Typography
           sx={{
             color: "white",
-            backgroundColor: primaryGrey,
+            // backgroundColor: primaryGrey,
+            backgroundColor: secondary,
             padding: "1rem",
             borderRadius: 2,
             textAlign: "center",
-            position:'sticky'
+            position: "sticky",
           }}
         >
           {loading

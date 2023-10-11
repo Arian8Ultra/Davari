@@ -6,7 +6,8 @@ import {
   primaryLight,
   secondary,
   secondaryDark,
-  secondaryLight
+  secondaryLight,
+  textPrimary
 } from "./color";
 
 const theme = createTheme({
@@ -42,11 +43,14 @@ const theme = createTheme({
   palette: {
     mode: "light",
     primary: {
-      main: primary,
-      light: primaryLight,
-      dark: primaryDark,
+      main: secondary,
+      light: secondaryLight,
+      dark: secondaryDark,
     },
-    divider: primaryGrey,
+    text:{
+      primary:textPrimary
+    },
+    divider: secondary,
     contrastThreshold: 3,
     secondary: {
       main: secondary,

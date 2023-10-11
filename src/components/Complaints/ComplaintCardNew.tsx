@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
@@ -33,8 +34,12 @@ import {
   Red,
   background,
   primary,
+  primaryDark,
   primaryLight,
   primaryLightTransparent,
+  secondary,
+  secondaryDark,
+  textSecondary,
 } from "../../theme/color";
 import NewModal from "../Modals";
 import { User } from "../../static/Types";
@@ -47,9 +52,9 @@ interface Props {
   contractId?: number;
   date?: string;
   acussed?: string;
-  acussedId?: string;
+  acussedId?: number;
   acusser?: string;
-  acusserId?: string;
+  acusserId?: number;
   state?: string;
   summary?: string;
   projectId?: number;
@@ -66,7 +71,7 @@ const ComplaintCardNew = (props: Props) => {
 
   const style = {
     width: "100%",
-    border: `1px solid ${primary}`,
+    border: `1px solid ${secondary}`,
     borderRadius: "0.5rem",
   };
 
@@ -168,7 +173,7 @@ const ComplaintCardNew = (props: Props) => {
         خوانده:
         {
           departmentData?.department_getDepartments?.result.items.find(
-            (item: Department) => item.id === props.acussedId
+            (item: Department) => parseInt(item.id) === props.acussedId
           ).title
         }
       </Typography>
@@ -177,6 +182,7 @@ const ComplaintCardNew = (props: Props) => {
         sx={{
           borderRadius: "0 0 0 0",
           height:'100%',
+          color:secondary,
           "&:hover": {
             backgroundColor: primaryLightTransparent,
           },
@@ -190,7 +196,15 @@ const ComplaintCardNew = (props: Props) => {
         value={25}
         sx={{
           gridColumn: "span 5",
-          height: 10,
+          height: 5,
+          background:primaryLightTransparent,
+          "& .MuiLinearProgress-bar": {
+            background:secondary,
+            borderRadius:2
+          },
+          "& .MuiLinearProgress-root": {
+            background:primaryLight
+          }
           // borderBottomLeftRadius: 5,
           // borderBottomRightRadius: 5,
         }}
@@ -216,7 +230,7 @@ const ComplaintCardNew = (props: Props) => {
                 <TableHead
                   sx={{
                     backgroundColor: primaryLightTransparent,
-                    borderBottom: `1px solid ${primary}`,
+                    borderBottom: `1px solid ${secondary}`,
                   }}
                 ></TableHead>
                 <TableBody>
@@ -227,14 +241,14 @@ const ComplaintCardNew = (props: Props) => {
                   >
                     <TableCell
                       sx={{
-                        color: primary,
+                        color: secondaryDark,
                       }}
                     >
                       شماره شکایت:
                     </TableCell>
                     <TableCell
                       sx={{
-                        color: primary,
+                        color: secondaryDark,
                       }}
                     >
                       {convertToPersianDigits(props.id)}
@@ -247,20 +261,20 @@ const ComplaintCardNew = (props: Props) => {
                   >
                     <TableCell
                       sx={{
-                        color: primary,
+                        color: secondaryDark,
                       }}
                     >
                       خوانده:
                     </TableCell>
                     <TableCell
                       sx={{
-                        color: primary,
+                        color: secondaryDark,
                       }}
                     >
                       {
                         departmentData?.department_getDepartments?.result.items.find(
                           (item: Department) =>
-                            item.id === props.acussedId
+                          parseInt(item.id) === props.acussedId
                         ).title
                       }
                     </TableCell>
@@ -273,20 +287,20 @@ const ComplaintCardNew = (props: Props) => {
                   >
                     <TableCell
                       sx={{
-                        color: primary,
+                        color: secondaryDark,
                       }}
                     >
                       خواهان:
                     </TableCell>
                     <TableCell
                       sx={{
-                        color: primary,
+                        color: secondaryDark,
                       }}
                     >
                       {
                         departmentData?.department_getDepartments?.result.items.find(
                           (item: Department) =>
-                            item.id === props.acusserId
+                            parseInt(item.id) === props.acusserId
                         ).title
                       }
                     </TableCell>
@@ -299,14 +313,14 @@ const ComplaintCardNew = (props: Props) => {
                   >
                     <TableCell
                       sx={{
-                        color: primary,
+                        color: secondaryDark,
                       }}
                     >
                       وضعیت:
                     </TableCell>
                     <TableCell
                       sx={{
-                        color: primary,
+                        color: secondaryDark,
                       }}
                     >
                       {props.state}
@@ -320,14 +334,14 @@ const ComplaintCardNew = (props: Props) => {
                   >
                     <TableCell
                       sx={{
-                        color: primary,
+                        color: secondaryDark,
                       }}
                     >
                       شماره قرارداد:
                     </TableCell>
                     <TableCell
                       sx={{
-                        color: primary,
+                        color: secondaryDark,
                       }}
                     >
                       {convertToPersianDigits(props.contractId)}
@@ -340,14 +354,14 @@ const ComplaintCardNew = (props: Props) => {
                   >
                     <TableCell
                       sx={{
-                        color: primary,
+                        color: secondaryDark,
                       }}
                     >
                       شماره طرح:
                     </TableCell>
                     <TableCell
                       sx={{
-                        color: primary,
+                        color: secondaryDark,
                       }}
                     >
                       {props.projectId}
@@ -356,14 +370,14 @@ const ComplaintCardNew = (props: Props) => {
                   <TableRow>
                     <TableCell
                       sx={{
-                        color: primary,
+                        color: secondaryDark,
                       }}
                     >
                       تاریخ ثبت:
                     </TableCell>
                     <TableCell
                       sx={{
-                        color: primary,
+                        color: secondaryDark,
                       }}
                     >
                       {new Date(props.date!).toLocaleDateString(
@@ -556,10 +570,10 @@ const ComplaintCardNew = (props: Props) => {
             <Button
               sx={{
                 borderRadius: "0.5rem",
-                backgroundColor: primary,
+                backgroundColor: primaryDark,
                 color: "white",
                 "&:hover": {
-                  backgroundColor: primaryLight,
+                  backgroundColor: primary,
                   color: "white",
                 },
               }}

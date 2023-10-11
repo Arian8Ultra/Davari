@@ -1,6 +1,6 @@
 import { TableCell, TableHead, TableRow } from "@mui/material";
 import { grey } from "@mui/material/colors";
-import { primaryGrey } from "../../theme/color";
+import { primaryGrey, secondary } from "../../theme/color";
 interface Props {
   state?: number;
 }
@@ -10,7 +10,7 @@ const ArgumentHeader = (props: Props) => {
       return (
         <TableHead
           sx={{
-            background: primaryGrey,
+            background: secondary,
             borderRadius: "0.5rem",
             color: "white",
           }}
@@ -71,7 +71,7 @@ const ArgumentHeader = (props: Props) => {
       return (
         <TableHead
           sx={{
-            background: primaryGrey,
+            background: secondary,
             borderRadius: "0.5rem",
             color: "white",
           }}
@@ -124,7 +124,7 @@ const ArgumentHeader = (props: Props) => {
       return (
         <TableHead
           sx={{
-            background: primaryGrey,
+            background: secondary,
             borderRadius: "0.5rem",
             color: "white",
           }}

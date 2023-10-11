@@ -51,12 +51,15 @@ const Complaints = () => {
           endIcon={<AiFillFileAdd />}
           onClick={() => [setAddModal({ ...addModal, open: true })]}
           sx={{
-            borderRadius: 2,
+            borderRadius: 5,
             backgroundColor: Green,
-            fontWeight: 700,
+            fontWeight: 400,
             fontStyle: "normal",
-            fontSize: "1rem",
+            fontSize: "1.2rem",
             boxShadow: "none",
+            position: "fixed",
+            bottom: 20,
+            right: 20,
             "&:hover": {
               backgroundColor: GreenLight,
               color: Green,
@@ -151,7 +154,7 @@ const Complaints = () => {
             sx={{
               borderRadius: 2,
               backgroundColor: Yellow,
-              fontWeight: 700,
+              fontWeight: 400,
               fontStyle: "normal",
               fontSize: "1rem",
               boxShadow: "none",
@@ -172,7 +175,7 @@ const Complaints = () => {
             sx={{
               borderRadius: 2,
               backgroundColor: Green,
-              fontWeight: 700,
+              fontWeight: 400,
               fontStyle: "normal",
               fontSize: "1rem",
               boxShadow: "none",

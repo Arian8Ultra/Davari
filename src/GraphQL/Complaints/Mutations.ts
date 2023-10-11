@@ -28,7 +28,6 @@ export const CREATE_COMPLAINT = gql`
   }
 `;
 
-
 export const UPDATE_COMPLAINT = gql`
   mutation UpdateComplaint(
     $id: Int!
@@ -261,6 +260,20 @@ export const UPDATE_ARGUMENT = gql`
         suggestedAmount
         summary
         userId
+      }
+      status {
+        code
+        value
+      }
+    }
+  }
+`;
+
+export const DELETE_ARGUMENT = gql`
+  mutation DeleteArgument($id: Int!) {
+    complaintArgument_deleteComplaintArgument(entityId: $id) {
+      result {
+        id
       }
       status {
         code

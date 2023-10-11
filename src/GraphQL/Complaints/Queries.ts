@@ -38,6 +38,43 @@ export const GET_COMPLAINTS = gql`
     }
   }
 `;
+export const GET_COMPLAINT = gql`
+  query GetComplaint($id: Int!){
+    complaint_getComplaint(entityId: $id) {
+      result {
+          userId
+          id
+          contractId
+          arbitrationTermsForms {
+            firstCondition
+            firstConditionFileName
+            secondCondition
+            secondConditionFileName
+            thirdCondition
+            thirdConditionFileName
+            fourthCondition
+            fourthConditionFileName
+          }
+          complaintState
+          complaintCode
+          assignedUser {
+            userName
+            firstName
+            lastName
+            departmentId
+            phoneNumber
+          }
+          contract {
+            contractNumber
+            contractDate
+            initialBudget
+            accuserDepartmentId
+            accusedDepartmentId
+          }
+      }
+    }
+  }
+`;
 
 export const GET_ACCUSED_COMPLAINTS = gql`
   query GetComplaints($departmentId: Int!) {

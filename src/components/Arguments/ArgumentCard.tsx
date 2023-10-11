@@ -1,5 +1,10 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
+import {
+  DeleteOutlineTwoTone,
+  EditRounded,
+} from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -7,32 +12,28 @@ import {
   TableCell,
   TableRow,
 } from "@mui/material";
+import { grey } from "@mui/material/colors";
+import { AiFillFileAdd } from "react-icons/ai";
+import { BsPaperclip } from "react-icons/bs";
+import { convertToPersianDigits } from "../../functions/Functions";
 import {
   Argument,
   OptionalArgument,
   OptionalArgumentSamll,
 } from "../../static/Types";
-import { AiFillFileAdd } from "react-icons/ai";
 import {
   Green,
   GreenLight,
   Red,
   RedLight,
   onPrimary,
-  primary,
-  primaryGrey,
-  primaryGreyLightTransparent,
   primaryGreyTransparent,
   primaryLightTransparent,
-  primaryLighter,
+  secondary,
+  secondaryDark,
+  secondaryLight,
+  secondaryLighter,
 } from "../../theme/color";
-import {
-  DeleteOutlineTwoTone,
-  EditRounded,
-} from "@mui/icons-material";
-import { convertToPersianDigits } from "../../functions/Functions";
-import { BsPaperclip } from "react-icons/bs";
-import { grey } from "@mui/material/colors";
 
 interface Props {
   state: number;
@@ -42,9 +43,20 @@ interface Props {
     React.SetStateAction<OptionalArgument>
   >;
   setAddModal: React.Dispatch<
-    React.SetStateAction<{ open: boolean; Argument: Argument }>
+    React.SetStateAction<{
+      open: boolean;
+      Argument: Argument;
+      editMode: boolean;
+    }>
+  >;
+  setVewMoreModal?: React.Dispatch<
+    React.SetStateAction<{
+      open: boolean;
+      argument: OptionalArgument;
+    }>
   >;
   addModal: { open: boolean; Argument: Argument };
+  deleteArgument?: (id: number) => void;
 }
 const ArgumentCard = ({
   state,
@@ -53,6 +65,8 @@ const ArgumentCard = ({
   setSelectedArgument,
   setAddModal,
   addModal,
+  deleteArgument,
+  setVewMoreModal,
 }: Props) => {
   switch (state) {
     case 0:
@@ -62,8 +76,8 @@ const ArgumentCard = ({
           sx={{
             background:
               id % 2 == 0
-                ? primaryGreyLightTransparent
-                : primaryLightTransparent,
+                ? "rgba(35,35,35,0.3)"
+                : "rgba(35,35,35,0.2)",
             borderBottom: `1px solid ${primaryGreyTransparent}`,
             transition: "all 0.2s ease-in-out",
           }}
@@ -73,8 +87,8 @@ const ArgumentCard = ({
             sx={{
               borderInline:
                 id % 2 == 0
-                  ? `1px solid ${primaryGreyTransparent}`
-                  : `1px solid ${primaryLightTransparent}`,
+                  ? `1px solid ${secondary}`
+                  : `1px solid ${secondary}`,
             }}
           >
             {arguement.summary}
@@ -83,18 +97,21 @@ const ArgumentCard = ({
             sx={{
               borderInline:
                 id % 2 == 0
-                  ? `1px solid ${primaryGreyTransparent}`
-                  : `1px solid ${primaryLightTransparent}`,
+                  ? `1px solid ${secondary}`
+                  : `1px solid ${secondary}`,
             }}
           >
-            {arguement.description}
+            {arguement.description?.length &&
+            arguement.description?.length > 80
+              ? arguement.description?.slice(0,80) + "..."
+              : arguement.description}
           </TableCell>
           <TableCell
             sx={{
               borderInline:
                 id % 2 == 0
-                  ? `1px solid ${primaryGreyTransparent}`
-                  : `1px solid ${primaryLightTransparent}`,
+                  ? `1px solid ${secondary}`
+                  : `1px solid ${secondary}`,
             }}
           >
             {arguement.suggestedAmount
@@ -107,7 +124,7 @@ const ArgumentCard = ({
           </TableCell>
           <TableCell
             sx={{
-              borderLeft: `1px solid ${primaryGreyTransparent}`,
+              borderLeft: `1px solid ${secondary}`,
             }}
           >
             <Button
@@ -143,7 +160,7 @@ const ArgumentCard = ({
           <TableCell
             width={"250px"}
             sx={{
-              borderLeft: `1px solid ${primaryGreyTransparent}`,
+              borderLeft: `1px solid ${secondary}`,
               padding: 1,
             }}
           >
@@ -155,14 +172,14 @@ const ArgumentCard = ({
                 gap: 1,
               }}
             >
-              <IconButton
-                onClick={() => {
-                  setSelectedArgument(arguement);
-                  setAddModal({
-                    ...addModal,
-                    open: true,
-                  });
-                }}
+              {/* <IconButton
+                // onClick={() => {
+                //   setSelectedArgument(arguement);
+                //   setAddModal({
+                //     ...addModal,
+                //     open: true,
+                //   });
+                // }}
                 sx={{
                   backgroundColor: Green,
                   color: "white",
@@ -176,24 +193,25 @@ const ArgumentCard = ({
                 }}
               >
                 <BsPaperclip />
-              </IconButton>
+              </IconButton> */}
               <IconButton
                 onClick={() => {
                   setSelectedArgument(arguement);
                   setAddModal({
                     ...addModal,
                     open: true,
+                    editMode: true,
                   });
                 }}
                 sx={{
-                  backgroundColor: primaryGrey,
+                  backgroundColor: secondaryLight,
                   color: onPrimary,
                   aspectRatio: "1/1",
                   width: "40px",
                   justifySelf: "center",
                   "&:hover": {
-                    backgroundColor: primaryLighter,
-                    color: primary,
+                    backgroundColor: secondaryLighter,
+                    color: secondaryDark,
                   },
                 }}
               >
@@ -201,11 +219,10 @@ const ArgumentCard = ({
               </IconButton>
               <IconButton
                 onClick={() => {
-                  setSelectedArgument(arguement);
-                  setAddModal({
-                    ...addModal,
-                    open: true,
-                  });
+                  deleteArgument &&
+                    deleteArgument(
+                      parseInt(arguement.id ? arguement.id : "")
+                    );
                 }}
                 sx={{
                   backgroundColor: Red,
@@ -233,9 +250,9 @@ const ArgumentCard = ({
           sx={{
             background:
               id % 2 == 0
-                ? grey[300]
-                : primaryLightTransparent,
-            borderBottom: `1px solid ${primaryGreyTransparent}`,
+                ? "rgba(35,35,35,0.3)"
+                : "rgba(35,35,35,0.2)",
+            borderBottom: `1px solid ${secondary}`,
             transition: "all 0.2s ease-in-out",
           }}
         >
@@ -244,8 +261,8 @@ const ArgumentCard = ({
             sx={{
               borderInline:
                 id % 2 == 0
-                  ? `1px solid ${primaryGreyTransparent}`
-                  : `1px solid ${primaryLightTransparent}`,
+                  ? `1px solid ${secondary}`
+                  : `1px solid ${secondary}`,
             }}
           >
             {arguement.summary}
@@ -254,8 +271,8 @@ const ArgumentCard = ({
             sx={{
               borderInline:
                 id % 2 == 0
-                  ? `1px solid ${primaryGreyTransparent}`
-                  : `1px solid ${primaryLightTransparent}`,
+                  ? `1px solid ${secondary}`
+                  : `1px solid ${secondary}`,
             }}
           >
             {arguement.accuserResponse}
@@ -264,38 +281,38 @@ const ArgumentCard = ({
             sx={{
               borderLeft:
                 id % 2 == 0
-                  ? `1px solid ${primaryGreyTransparent}`
-                  : `1px solid ${primaryLightTransparent}`,
+                  ? `1px solid ${secondary}`
+                  : `1px solid ${secondary}`,
             }}
           >
             {arguement.accuserResponseFileName && (
-            <Button
-            variant="contained"
-            endIcon={<AiFillFileAdd />}
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-            onClick={() => {
-              // download file with url in fileName
-              window.open(
-                "http://172.16.23.50:7030/files/" +
-                  arguement.accuserResponseFileName
-              );
-            }}
-            sx={{
-              borderRadius: 2,
-              backgroundColor: Green,
-              fontWeight: 700,
-              fontStyle: "normal",
-              fontSize: "0.7rem",
-              boxShadow: "none",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              "&:hover": {
-                backgroundColor: GreenLight,
-                color: Green,
-              },
-            }}
-          >
+              <Button
+                variant="contained"
+                endIcon={<AiFillFileAdd />}
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+                onClick={() => {
+                  // download file with url in fileName
+                  window.open(
+                    "http://172.16.23.50:7030/files/" +
+                      arguement.accuserResponseFileName
+                  );
+                }}
+                sx={{
+                  borderRadius: 2,
+                  backgroundColor: Green,
+                  fontWeight: 700,
+                  fontStyle: "normal",
+                  fontSize: "0.7rem",
+                  boxShadow: "none",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  "&:hover": {
+                    backgroundColor: GreenLight,
+                    color: Green,
+                  },
+                }}
+              >
                 {arguement.accuserResponseFileName}
               </Button>
             )}
@@ -317,11 +334,13 @@ const ArgumentCard = ({
             >
               <IconButton
                 onClick={() => {
-                  setSelectedArgument(arguement);
-                  setAddModal({
-                    ...addModal,
-                    open: true,
-                  });
+                  console.log(arguement);
+
+                  setVewMoreModal &&
+                    setVewMoreModal({
+                      argument: arguement,
+                      open: true,
+                    });
                 }}
                 sx={{
                   backgroundColor: Green,
@@ -343,17 +362,18 @@ const ArgumentCard = ({
                   setAddModal({
                     ...addModal,
                     open: true,
+                    editMode: true,
                   });
                 }}
                 sx={{
-                  backgroundColor: primaryGrey,
-                  color: onPrimary,
+                  backgroundColor: secondaryLight,
+                  color: secondaryLighter,
                   aspectRatio: "1/1",
                   width: "40px",
                   justifySelf: "center",
                   "&:hover": {
-                    backgroundColor: primaryLighter,
-                    color: primary,
+                    backgroundColor: secondaryLighter,
+                    color: secondaryDark,
                   },
                 }}
               >

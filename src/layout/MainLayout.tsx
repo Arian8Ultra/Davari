@@ -64,8 +64,14 @@ import { User } from "../static/Types";
 import {
   Green,
   background,
-  primary
+  primary,
+  primaryGrey,
+  primaryLight,
+  secondary,
+  secondaryDark,
+  secondaryGreen,
 } from "../theme/color";
+import Pattern from "../assets/Pattern.svg";
 
 const drawerWidth = 240;
 
@@ -185,6 +191,7 @@ export default function MainLayout() {
     } else {
       setSignedIn(false);
       setSignInModal({ ...signInModal, open: false });
+      navigate("/");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
@@ -340,7 +347,7 @@ export default function MainLayout() {
                 borderRadius={"100%"}
                 marginBottom={"2rem"}
                 sx={{
-                  backgroundColor: primary,
+                  backgroundColor: secondary,
                   color: "white",
                   fontSize: "2rem",
                 }}
@@ -499,16 +506,27 @@ export default function MainLayout() {
           position="fixed"
           open={open}
           sx={{
-            // backgroundColor: primaryLight,
-            background: primary,
+            backgroundColor: secondaryGreen,
+            // background: 'rgb(200,200,200)',
             justifyContent: "center",
             alignItems: "space-between",
             boxShadow: "none",
             // backgroundImage: `url(${Pattern})`,
-            // backgroundPosition: "right center",
+            // backgroundPosition: "left center",
             // backgroundRepeat: "repeat-y",
+            // backgroundSize:'20%'
           }}
         >
+          {/* <Box
+            position={"absolute"}
+            top={0}
+            left={0}
+            bottom={0}
+            width={"100%"}
+            sx={{
+              background: " linear-gradient(45deg,green, transparent, red)",
+            }}
+          /> */}
           <Toolbar
             sx={{
               position: "relative",
@@ -521,6 +539,7 @@ export default function MainLayout() {
               edge="start"
               sx={{
                 marginRight: 5,
+                color: secondaryDark,
                 ...(open && { display: "none" }),
               }}
             >
@@ -532,6 +551,7 @@ export default function MainLayout() {
               component="div"
               sx={{
                 flexGrow: 1,
+                color: secondaryDark,
               }}
             >
               {Titles.mainTitle}
@@ -557,7 +577,7 @@ export default function MainLayout() {
                 component="div"
                 sx={{
                   flexGrow: 1,
-                  color: "white",
+                  color: secondary,
                   marginRight: 2,
                 }}
               >
@@ -566,7 +586,7 @@ export default function MainLayout() {
 
               <IconButton
                 sx={{
-                  color: "white",
+                  color: secondary,
                 }}
               >
                 <VscAccount />
@@ -677,12 +697,14 @@ export default function MainLayout() {
           variant="permanent"
           open={open}
           sx={{
-            backgroundColor: primary,
+            backgroundColor: secondary,
+            // backgroundColor: primary,
             position: "relative",
           }}
           PaperProps={{
             sx: {
-              backgroundColor: primary,
+              backgroundColor: secondary,
+              // backgroundColor: primary,
             },
           }}
         >
@@ -933,7 +955,7 @@ export default function MainLayout() {
               "& .MuiOutlinedInput-root": {
                 borderRadius: "0.5rem",
               },
-              gridColumn: "1/3",
+              // gridColumn: "1/3",
             }}
             fullWidth
             type={"password"}
@@ -945,6 +967,7 @@ export default function MainLayout() {
               });
             }}
           />
+          <div />
           <TextField
             label={"رمز عبور جدید"}
             variant={"outlined"}
@@ -953,7 +976,7 @@ export default function MainLayout() {
               "& .MuiOutlinedInput-root": {
                 borderRadius: "0.5rem",
               },
-              gridColumn: "1/3",
+              // gridColumn: "1/3",
             }}
             fullWidth
             type={"password"}
@@ -973,7 +996,7 @@ export default function MainLayout() {
               "& .MuiOutlinedInput-root": {
                 borderRadius: "0.5rem",
               },
-              gridColumn: "1/3",
+              // gridColumn: "1/3",
             }}
             fullWidth
             type={"password"}
@@ -985,11 +1008,13 @@ export default function MainLayout() {
               });
             }}
           />
+          <div />
+
           <Button
             variant={"contained"}
             sx={{
-              gridColumn: "1/3",
-              backgroundColor: primary,
+              // gridColumn: "1/3",
+              backgroundColor: primaryGrey,
               color: "white",
               "&:hover": {
                 backgroundColor: Green,

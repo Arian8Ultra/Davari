@@ -9,6 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Red, RedLight, primaryLightTransparent } from "../theme/color";
+import FaTypography from "./FaComponents/FaTypography";
 
 interface NewModalProps {
   width?: string | number | object;
@@ -82,14 +83,14 @@ export default function NewModal(props: NewModalProps) {
             alignItems="center"
             width={isCloseable ? "100%" : "max-content"}
           >
-            <Typography
+            <FaTypography
               fontSize="25px"
               fontWeight="bold"
               color={color}
               textAlign={"center"}
             >
               {props.title != null ? props.title : name}
-            </Typography>
+            </FaTypography>
             {isCloseable && (
               <IconButton
                 onClick={handleClose}
