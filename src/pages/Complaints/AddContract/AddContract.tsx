@@ -29,7 +29,12 @@ import React, { useState } from "react";
 import { CREATE_CONTRACT } from "../../../GraphQL/Contracts/Mutations";
 import BackButton from "../../../components/BackButton";
 import countries from "../../../static/Countries";
-import { Green, GreenLight, primary } from "../../../theme/color";
+import {
+  Green,
+  GreenLight,
+  primary,
+  secondary,
+} from "../../../theme/color";
 import { useNavigate } from "react-router-dom";
 import {
   Department,
@@ -564,21 +569,28 @@ const AddContract = () => {
         justifyContent={"center"}
         gap={2}
         padding={"2rem"}
-        border={`2px solid ${primary}`}
+        // paddingTop={0}
+        border={`2px solid ${secondary}`}
         borderRadius={"1rem"}
+        position={"relative"}
       >
-        <FaTypography
-          variant="h4"
+        <Box
           gridColumn={"span 12"}
-          textAlign={"center"}
-          sx={
-            {
-              // borderBottom: `2px solid ${primary}`,
-            }
-          }
+          borderRadius={"1rem"}
+          sx={{
+            position: "absolute",
+            top: 0,
+            left: "50%",
+            transform: "translateY(-50%) translateX(-50%)",
+            background: primary,
+            padding: "0.5rem 1rem",
+            userSelect: "none",
+          }}
         >
-          فرم اطلاعات قرارداد
-        </FaTypography>
+          <FaTypography variant="h4" textAlign={"center"}>
+            فرم اطلاعات قرارداد
+          </FaTypography>
+        </Box>
 
         {/* 
 
@@ -2128,27 +2140,8 @@ const AddContract = () => {
                 setContractStatusInArbitration(e.target.value);
               }}
             />
-            <FormControlLabel
-              value="تحویل موقت"
-              control={<Radio />}
-              label="تحویل موقت"
-              checked={ContractStatusInArbitration === "تحویل موقت"}
-              onChange={(e) => {
-                // @ts-ignore
-                setContractStatusInArbitration(e.target.value);
-              }}
-            />
-            <FormControlLabel
-              value="تحویل قطعی"
-              control={<Radio />}
-              label="تحویل قطعی"
-              checked={ContractStatusInArbitration === "تحویل قطعی"}
-              onChange={(e) => {
-                // @ts-ignore
-                setContractStatusInArbitration(e.target.value);
-              }}
-            />
-            <FormControlLabel
+
+            {/* <FormControlLabel
               control={
                 <FaTextField label={"تاریخ"} type="date" focused />
               }
@@ -2158,9 +2151,29 @@ const AddContract = () => {
                 // @ts-ignore
                 setContractStatusInArbitrationDate(e.target.value);
               }}
-            />
+            /> */}
           </RadioGroup>
         </FormControl>
+
+        <FormGroup
+          sx={{
+            display:
+              ContractStatusInArbitration === "ابلاغ فسخ" ||
+              ContractStatusInArbitration === "ابلاغ خاتمه"
+                ? "block"
+                : "none",
+            gridColumn: "span 4",
+          }}
+        >
+          <FormControlLabel
+            control={<Checkbox />}
+            label="تحویل موقت"
+          />
+          <FormControlLabel
+            control={<Checkbox />}
+            label="تحویل قطعی"
+          />
+        </FormGroup>
 
         <div
           style={{
@@ -2362,14 +2375,25 @@ const AddContract = () => {
           </Box>
         </List>
 
+        <div
+          style={{
+            gridColumn: "span 12",
+          }}
+        />
+        <div
+          style={{
+            gridColumn: "span 6",
+          }}
+        />
         <Button
           variant="contained"
           disabled={loading}
           sx={{
-            gridColumn: "span 12",
-            // justifySelf: "center",
-            backgroundColor: Green,
-            color: "white",
+            gridColumn: "span 6",
+            fontSize: "1.1rem",
+            width: "max-content",
+            padding: "0.5rem 2rem",
+            justifySelf:'flex-end',
             "&:hover": {
               backgroundColor: GreenLight,
               color: Green,

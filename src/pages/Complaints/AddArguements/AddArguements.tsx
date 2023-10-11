@@ -15,14 +15,16 @@ import {
 import React, { useState } from "react";
 import { BsCheck, BsPlusCircleDotted } from "react-icons/bs";
 import { useParams } from "react-router-dom";
+import { useUserStore } from "../../../Context/UserStore";
 import {
   GET_COMPLAINT,
-  GET_COMPLAINTS,
-  GET_COMPLAINT_ARGUMENTS,
+  GET_COMPLAINT_ARGUMENTS
 } from "../../../GraphQL/Complaints/Queries";
 import ArgumentCard from "../../../components/Arguments/ArgumentCard";
 import ArgumentHeader from "../../../components/Arguments/ArgumentHeader";
+import ArgumentInfoModal from "../../../components/Arguments/ArgumentInfoModal";
 import ArgumentModal from "../../../components/Arguments/ArgumentModal";
+import NoAccess from "../../../layout/NoAccess";
 import {
   Argument,
   OptionalArgument,
@@ -33,12 +35,8 @@ import {
   GreenLight,
   onSecondary,
   primary,
-  primaryGrey,
-  secondary,
+  secondary
 } from "../../../theme/color";
-import { useUserStore } from "../../../Context/UserStore";
-import NoAccess from "../../../layout/NoAccess";
-import ArgumentInfoModal from "../../../components/Arguments/ArgumentInfoModal";
 
 const AddArgument = () => {
   const { contractId, state } = useParams();
@@ -80,7 +78,7 @@ const AddArgument = () => {
     }
   );
 
-  const { data: compaint, loading: compaintLoading } = useQuery(
+  const { loading: compaintLoading } = useQuery(
     GET_COMPLAINT,
     {
       variables: {

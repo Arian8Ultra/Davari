@@ -10,11 +10,19 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @typescript-eslint/ban-types */
 import {
+  CancelOutlined,
   FileCopyOutlined,
   UploadFileOutlined,
 } from "@mui/icons-material";
-import { Box, Button, ButtonProps, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  ButtonProps,
+  IconButton,
+  Typography,
+} from "@mui/material";
 import React, { useEffect } from "react";
+import { Red } from "../theme/color";
 interface Props extends ButtonProps {
   setFiles?: (files: File[]) => void;
   files?: File[];
@@ -95,6 +103,28 @@ const FileBox = ({
             {fileName}
             <Typography>برای ویرایش کلیک کنید</Typography>
             {props.children}
+
+            <IconButton
+            sx={{
+              position:'absolute',
+              zIndex:1000,
+              top:-20,
+              left:-20,
+              padding:'3px',
+              background:'white',
+              color:Red,
+              "&:hover": {
+                background: Red,
+                color: "white",
+              }
+            }}
+              onClick={() => {
+                setFile(undefined);
+                setFileName("");
+              }}
+            >
+              <CancelOutlined />
+            </IconButton>
           </Box>
         )}
       </Box>

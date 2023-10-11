@@ -28,6 +28,8 @@ import { useMutation, useQuery } from "@apollo/client";
 import { GET_CONTRACT } from "../../../GraphQL/Contracts/Queries";
 import { CREATE_ARBITRATION_TERMS_FORM } from "../../../GraphQL/Complaints/Mutations";
 import { useUserStore } from "../../../Context/UserStore";
+import FaTypography from "../../../components/FaComponents/FaTypography";
+import FileBox from "../../../components/FileBox";
 
 const AddComplaint = () => {
   const navigate = useNavigate();
@@ -104,22 +106,28 @@ const AddComplaint = () => {
         alignItems={"center"}
         justifyContent={"center"}
         gap={2}
-        padding={"2rem"}
-        border={`2px solid ${primary}`}
+        padding={"3rem"}
+        border={`2px solid ${secondary}`}
         borderRadius={"1rem"}
+        position={"relative"}
       >
-        <Typography
-          variant="h4"
+        <Box
           gridColumn={"span 12"}
-          textAlign={"center"}
-          sx={
-            {
-              // borderBottom: `2px solid ${primary}`,
-            }
-          }
+          borderRadius={"1rem"}
+          sx={{
+            position: "absolute",
+            top: 0,
+            left: "50%",
+            transform: "translateY(-50%) translateX(-50%)",
+            background: primary,
+            padding: "0.5rem 1rem",
+            userSelect: "none",
+          }}
         >
-          فرم احراز شرایط داوری
-        </Typography>
+          <FaTypography variant="h4" textAlign={"center"}>
+            فرم احراز شرایط داوری
+          </FaTypography>
+        </Box>
 
         <TextField
           label="نام پروژه"
@@ -470,7 +478,7 @@ const AddComplaint = () => {
             <Checkbox
               checked={
                 FourthCondition.checked[0] ||
-                FourthCondition.checked[1] ||
+                FourthCondition.checked[3] ||
                 false
               }
               onChange={(e) => {
@@ -501,12 +509,12 @@ const AddComplaint = () => {
         </Box>
         <FormGroup
           sx={{
-            gridColumn: "2/span 11",
+            gridColumn: "2/span 7",
           }}
         >
           <FormControlLabel
             label={
-              "رای قطعی در خصوص دعاوی مورد درخواست توسط مراجع قضایی صادر نشده است."
+              "رای قطعی در خصوص دعاوی مورد درخواست توسط مراجع قضایی و شورا صادر نشده است."
             }
             control={
               <Checkbox
@@ -522,7 +530,7 @@ const AddComplaint = () => {
           />
           <FormControlLabel
             label={
-              "قرار عدم صلاحیت (استماع) توسط مراجع قضایی صادر شده است."
+              "رای قطعی در خصوص دعاوی مورد درخواست توسط مراجع قضایی صادر شده است"
             }
             control={
               <Checkbox
@@ -538,7 +546,7 @@ const AddComplaint = () => {
           />
           <FormControlLabel
             label={
-              "رای قطعی در خصوص دعاوی مورد درخواست توسط شورای عالی فنی صادر نشده است. "
+              "رای قطعی در خصوص دعاوی مورد درخواست توسط شورا صادر شده است"
             }
             control={
               <Checkbox
@@ -552,7 +560,33 @@ const AddComplaint = () => {
               />
             }
           />
+          <FormControlLabel
+            label={
+              "قرار عدم صلاحیت (استماع) توسط مراجع قضایی صادر شده است."
+            }
+            control={
+              <Checkbox
+                checked={FourthCondition.checked[3] || false}
+                onChange={(e) => {
+                  setFourthCondition({
+                    ...FourthCondition,
+                    checked: [false, false, false, e.target.checked],
+                  });
+                }}
+              />
+            }
+          />
         </FormGroup>
+
+        <Box
+          gridColumn={"span 2"}
+          display={"flex"}
+          flexDirection={"column"}
+          gap={2}
+        >
+          <FileBox disabled={!FourthCondition.checked[1]}/>
+          <FileBox disabled={!FourthCondition.checked[2]}/>
+        </Box>
 
         <div
           style={{
@@ -649,7 +683,8 @@ const AddComplaint = () => {
                 AgreeWithTerms,
               })
             );
-            contractId && navigate(`/complaints/${contractId}/addArguements/0`);
+            contractId &&
+              navigate(`/complaints/${contractId}/addArguements/0`);
           }}
         >
           ادامه
