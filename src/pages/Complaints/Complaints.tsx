@@ -71,7 +71,7 @@ const Complaints = () => {
               : "none",
           }}
         >
-          افزودن شکایت
+          افزودن درخواست داوری
         </Button>
       </Box>
       <Box
@@ -114,7 +114,7 @@ const Complaints = () => {
       </Box>
 
       <NewModal
-        name="ثبت شکایت"
+        name="ثبت درخواست داوری"
         width={{
           xs: "90%",
           sm: "60%",
@@ -165,7 +165,7 @@ const Complaints = () => {
               },
             }}
             onClick={() => {
-              navigate("addContract");
+              navigate("createContractPage");
             }}
           >
             نداشتن کد قرارداد و ادامه
@@ -224,7 +224,13 @@ const Complaints = () => {
                         alert("قراردادی با این شماره وجود ندارد");
                       }
                     },
+                    onError(error) {
+                      console.error(error);
+                    },
                   });
+                },
+                onError(error) {
+                  console.error(error);
                 },
               });
             }}

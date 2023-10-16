@@ -37,6 +37,7 @@ interface Props {
   argumentId?: number;
   complaintId?: number;
   editMode?: boolean;
+  refetch?: () => void;
 }
 const ArgumentModal = (props: Props) => {
   const [Argument, setArgument] =
@@ -54,12 +55,14 @@ const ArgumentModal = (props: Props) => {
     onCompleted(data) {
       console.log(data);
       props.onClose();
+      props.refetch && props.refetch();
     },
   });
   const [UpdateArgument] = useMutation(UPDATE_ARGUMENT, {
     onCompleted(data) {
       console.log(data);
       props.onClose();
+      props.refetch && props.refetch();
     },
   });
   const user = useUserStore((state) => state.user);
@@ -73,7 +76,7 @@ const ArgumentModal = (props: Props) => {
             summary
             description
             suggestedAmount
-            accuserResponse
+            accusedResponse
             complaintId
           }
         }
@@ -289,7 +292,7 @@ const ArgumentModal = (props: Props) => {
             <TextField
               label={"پاسخ"}
               variant={"outlined"}
-              focused={Argument?.accuserResponse != ""}
+              focused={Argument?.accusedResponse != ""}
               sx={{
                 borderRadius: "1rem",
                 "& .MuiOutlinedInput-root": {
@@ -299,11 +302,11 @@ const ArgumentModal = (props: Props) => {
               fullWidth
               multiline
               rows={4}
-              value={Argument?.accuserResponse}
+              value={Argument?.accusedResponse}
               onChange={(e) => {
                 setArgument({
                   ...Argument,
-                  accuserResponse: e.target.value,
+                  accusedResponse: e.target.value,
                 });
               }}
             />
@@ -343,7 +346,7 @@ const ArgumentModal = (props: Props) => {
                       void UpdateArgument({
                         variables: {
                           id: props.argumentId,
-                          accuserResponse: Argument?.accuserResponse,
+                          accuserResponse: Argument?.accusedResponse,
                           accuserResponseFileName:
                             res.result[0].newFileName,
                         },
@@ -354,7 +357,7 @@ const ArgumentModal = (props: Props) => {
                   void UpdateArgument({
                     variables: {
                       id: props.argumentId,
-                      accuserResponse: Argument?.accuserResponse,
+                      accuserResponse: Argument?.accusedResponse,
                     },
                   });
                 }

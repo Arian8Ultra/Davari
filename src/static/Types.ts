@@ -18,8 +18,8 @@ export type Argument = {
   Description: string;
   FileName: string;
   SuggestedAmount: number;
-  AccuserResponse: string;
-  AccuserResponseFileName: string;
+  AccusedResponse: string;
+  AccusedResponseFileName: string;
   ExpertOpinion: string;
   ExpertVerdict: string;
   ExpertOpinionFileName: string;
@@ -36,8 +36,8 @@ export type OptionalArgument = {
   Description?: string;
   FileName?: string;
   SuggestedAmount?: number;
-  AccuserResponse?: string;
-  AccuserResponseFileName?: string;
+  AccusedResponse?: string;
+  AccusedResponseFileName?: string;
   ExpertOpinion?: string;
   ExpertVerdict?: string;
   ExpertOpinionFileName?: string;
@@ -55,8 +55,8 @@ export type OptionalArgumentSamll = {
   description?: string;
   fileName?: string;
   suggestedAmount?: number;
-  accuserResponse?: string;
-  accuserResponseFileName?: string;
+  accusedResponse?: string;
+  accusedResponseFileName?: string;
   expertOpinion?: string;
   expertVerdict?: string;
   expertOpinionFileName?: string;
@@ -67,3 +67,42 @@ export type OptionalArgumentSamll = {
   contractId?: number;
   Files?: File[];
 };
+
+
+
+
+export enum ComplaintStatus {
+  ComplaintRegistered,
+  ComplaintIsCanceledByAccuser,
+  WaitingForAccusedToFillForms,
+  CheckingForBeingConstructive,
+  NotAcceptedForBeingConstructive,
+  AddingToComplaintList,
+  WaitingForLetterResponseFromMinistersCouncil,
+  WaitingForFirstPayment,
+  DidNotFulfillFirstPayment,
+  WaitingForAccuserAndAccusedToSignDecree,
+  WaitingForAccuserToSignDecree,
+  WaitingForAccusedToSignDecree,
+  CheckingAndUploadingTheSignedDecree,
+  DeterminingCaseExpert,
+  WaitingForExpertsCouncilPayment,
+  WaitingForCaseExpertRegistry,
+  UploadingDocumentsAndReviewingComplaint,
+  RedeterminingCaseExpert,
+  WaitingForFinalReportRegistration,
+  MailRoomExpertReviewingTheFinalReport,
+  MailRoomChiefReviewingTheFinalReport,
+  WaitingForCouncilResult,
+  WaitingForFinalResultUpload,
+  WaitingForSecondPayment,
+  ResultNotifiedAbilityToViewScannedPhysicalResult,
+  ComplaintDetermined,
+  WaitingForNewOfferorsInfo,
+  NewOfferorNotified,
+  WaitingForRelatedFormsCompletionAndCommentingOnOfferorChanging,
+  WaitingToDetermineIfTheOldOrTheNewOfferorIsTheAccused,
+  ReviewingExpertOpinionOnOfferorChanging,
+  AccusedNotifiedOfOfferorChangingResult,
+  AccuserNotifiedOfSuccessfulChangingOfTheOfferor,
+}

@@ -169,8 +169,8 @@ const FormManager = () => {
               setAddModal({ ...addModal, type: e.target.value })
             }
           >
-            <MenuItem value={"complaint"}>شکایت</MenuItem>
-            <MenuItem value={"response"}>پاسخ به شکایت</MenuItem>
+            <MenuItem value={"complaint"}>درخواست داوری</MenuItem>
+            <MenuItem value={"response"}>پاسخ به درخواست داوری</MenuItem>
           </TextField>
           <TextField
             fullWidth

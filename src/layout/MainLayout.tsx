@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
@@ -5,7 +7,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { useLazyQuery, useMutation } from "@apollo/client";
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -70,10 +72,17 @@ import {
   secondary,
   secondaryDark,
   secondaryGreen,
+  secondaryLight,
+  secondaryLighter,
 } from "../theme/color";
-import Pattern from "../assets/Pattern.svg";
+import {
+  Department,
+  GET_DEPARTMENTS,
+} from "../GraphQL/Departments/Queries";
+import { convertRoleToPersian } from "../functions/Functions";
+import Pattern from "../assets/pattern_hexagon-7_1_3_0-0_0_2__a8575700_787878.png";
 
-const drawerWidth = 240;
+const drawerWidth = 230;
 
 const openedMixin = (theme: Theme): CSSObject => ({
   width: drawerWidth,
@@ -101,6 +110,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   alignItems: "center",
   justifyContent: "flex-end",
   padding: theme.spacing(0, 1),
+  // background:'red',
   // necessary for content to be below app bar
   ...theme.mixins.toolbar,
 }));
@@ -203,6 +213,28 @@ export default function MainLayout() {
     // fetchPolicy: "network-only",
     nextFetchPolicy: "network-only",
     pollInterval: 1000,
+  });
+
+  const [departments, setDepartments] = React.useState<
+    { label: string; id: number }[]
+  >([]);
+  const { data: departmentsData } = useQuery(GET_DEPARTMENTS, {
+    onCompleted(data) {
+      console.log(data);
+      data.department_getDepartments.result.items.forEach(
+        (item: Department) => {
+          // @ts-ignore
+          setDepartments((prev: Department) => [
+            // @ts-ignore
+            ...prev,
+            {
+              label: item.title,
+              id: item.id,
+            },
+          ]);
+        }
+      );
+    },
   });
 
   useEffect(() => {
@@ -506,27 +538,11 @@ export default function MainLayout() {
           position="fixed"
           open={open}
           sx={{
-            backgroundColor: secondaryGreen,
-            // background: 'rgb(200,200,200)',
+            backgroundColor: theme.palette.background.default,
             justifyContent: "center",
             alignItems: "space-between",
-            boxShadow: "none",
-            // backgroundImage: `url(${Pattern})`,
-            // backgroundPosition: "left center",
-            // backgroundRepeat: "repeat-y",
-            // backgroundSize:'20%'
           }}
         >
-          {/* <Box
-            position={"absolute"}
-            top={0}
-            left={0}
-            bottom={0}
-            width={"100%"}
-            sx={{
-              background: " linear-gradient(45deg,green, transparent, red)",
-            }}
-          /> */}
           <Toolbar
             sx={{
               position: "relative",
@@ -539,8 +555,14 @@ export default function MainLayout() {
               edge="start"
               sx={{
                 marginRight: 5,
-                color: secondaryDark,
+                color: primary,
+                background: secondary,
+                borderRadius: "0.5rem",
                 ...(open && { display: "none" }),
+                "&:hover": {
+                  backgroundColor: primaryLight,
+                  color: secondary,
+                },
               }}
             >
               <MenuIcon />
@@ -563,26 +585,53 @@ export default function MainLayout() {
               ref={ref}
               sx={{
                 borderRadius: "10px",
-                padding: "0.5rem",
+                padding: "0.1rem 0.7rem",
+                background: "rgba(190,190,190,0.5)",
                 "&:hover": {
                   cursor: "pointer",
-                  backgroundColor: "rgba(255,255,255,0.2)",
+                  backgroundColor: primaryLight,
                 },
               }}
               onClick={() => setMenuOpen(!menuOpen)}
             >
-              <Typography
-                variant="body1"
-                noWrap
-                component="div"
-                sx={{
-                  flexGrow: 1,
-                  color: secondary,
-                  marginRight: 2,
-                }}
+              <Box
+                display={"flex"}
+                flexDirection={"column"}
+                justifyContent={"center"}
+                alignItems={"center"}
               >
-                {firstName + " " + lastName}
-              </Typography>
+                <Typography
+                  variant="body1"
+                  noWrap
+                  component="div"
+                  sx={{
+                    flexGrow: 1,
+                    color: secondary,
+                    marginRight: 2,
+                  }}
+                >
+                  {firstName + " " + lastName}
+                </Typography>
+                <Typography
+                  variant="subtitle2"
+                  noWrap
+                  component="div"
+                  fontSize={"10px"}
+                  sx={{
+                    flexGrow: 1,
+                    color: secondary,
+                    marginRight: 2,
+                  }}
+                >
+                  {user.userRoles &&
+                    convertRoleToPersian(user.userRoles[0].roleType) +
+                      "  "}
+                  {
+                    departments.find((d) => d.id == user.departmentId)
+                      ?.label
+                  }
+                </Typography>
+              </Box>
 
               <IconButton
                 sx={{
@@ -597,6 +646,16 @@ export default function MainLayout() {
             anchorEl={ref.current}
             open={menuOpen}
             onClose={() => setMenuOpen(false)}
+            sx={{
+              "& .MuiPaper-root": {
+                backgroundColor: secondary,
+                color: "white",
+                borderRadius: "0.5rem",
+                marginTop: "0.5rem",
+                // @ts-ignore
+                width: ref.current?.clientWidth || undefined,
+              },
+            }}
           >
             <MenuItem>
               <Button
@@ -608,7 +667,9 @@ export default function MainLayout() {
                   });
                 }}
                 sx={{
-                  color: "black",
+                  color: primary,
+                  textAlign: "center",
+                  width: "100%",
                 }}
               >
                 تغییر رمز عبور
@@ -621,7 +682,9 @@ export default function MainLayout() {
                   logout();
                 }}
                 sx={{
-                  color: "red",
+                  color: primary,
+                  textAlign: "center",
+                  width: "100%",
                 }}
               >
                 خروج
@@ -639,27 +702,39 @@ export default function MainLayout() {
             alignItems: "space-between",
             boxShadow: "none",
             zIndex: theme.zIndex.drawer + 1,
-            // backgroundImage: `url(${Pattern})`,
-            // backgroundPosition: "right center",
-            // backgroundRepeat: "repeat-y",
           }}
         >
+          <Box
+            width={"100%"}
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            sx={{
+              top: 0,
+              left: 0,
+              bottom: 0,
+              background:'red'
+              // backgroundImage: `url(${Pattern})`,
+              // backgroundRepeat: "repeat-y repeat-x",
+            }}
+          >
+            <Box
+              position={"absolute"}
+              sx={{
+                background: `linear-gradient(0deg, rgba(76, 87, 96,0.4), ${secondary})`,
+                top: 0,
+                left: 0,
+                bottom: 0,
+                width: "100%",
+              }}
+            />
+          </Box>
+
           <Toolbar
             sx={{
               position: "relative",
             }}
           >
-            {/* <img src={Pattern} style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            // width: "100%",
-            height: "100%",
-
-            outline: "2px solid red",
-            objectPosition: "center",
-            // rotate: "90deg",
-          }}/> */}
             <IconButton
               color="inherit"
               aria-label="open drawer"
@@ -715,18 +790,21 @@ export default function MainLayout() {
             alignItems="center"
             position={"absolute"}
             sx={{
-              top: 0,
+              top: "70%",
               left: 0,
               bottom: 0,
+              backgroundImage: `url(${Pattern})`,
+              backgroundRepeat: "repeat-y repeat-x",
             }}
           >
-            <img
-              src={sazmanImage}
-              height={"100%"}
-              style={{
-                objectPosition: "center",
-                filter: "brightness(0.5) contrast(1.2)",
-                opacity: 0.7,
+            <Box
+              position={"absolute"}
+              sx={{
+                background: `linear-gradient(0deg, rgba(76, 87, 96,0.4), ${secondary})`,
+                top: 0,
+                left: 0,
+                bottom: 0,
+                width: "100%",
               }}
             />
           </Box>
@@ -768,7 +846,13 @@ export default function MainLayout() {
             </Box>
           </DrawerHeader>
           <Divider />
-          <List>
+          <List
+            sx={{
+              justifyContent: "center",
+              alignItems: "center",
+              gap: "1rem",
+            }}
+          >
             {SideBarMenu.map((item, index) => (
               <ListItemLink
                 key={index}

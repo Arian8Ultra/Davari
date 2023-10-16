@@ -46,8 +46,12 @@ import FileBox from "../../../components/FileBox";
 
 const AddContract = () => {
   const navigate = useNavigate();
+  const [mode,setMode]= useState<"accusser"|"accussed">()
   const [RelatedPeople, setRelatedPeople] = React.useState([
-    { name: "" as string, phone: "" as string },
+    {
+      name: "" as string,
+      phone: "" as string,
+    },
   ]);
   const [RelatedPeopleError, setRelatedPeopleError] = React.useState({
     error: false as boolean,
@@ -56,11 +60,17 @@ const AddContract = () => {
   const [AccuserNationality, setAccuserNationality] =
     React.useState("");
   const [AccuserNationalityError, setAccuserNationalityError] =
-    React.useState({ error: false as boolean, text: "" as string });
+    React.useState({
+      error: false as boolean,
+      text: "" as string,
+    });
   const [AccusedNationality, setAccusedNationality] =
     React.useState("");
   const [AccusedNationalityError, setAccusedNationalityError] =
-    React.useState({ error: false as boolean, text: "" as string });
+    React.useState({
+      error: false as boolean,
+      text: "" as string,
+    });
   const [contratDetails, setContratDetails] = React.useState({
     contratTypes: [] as string[],
     other: false as boolean,
@@ -69,13 +79,22 @@ const AddContract = () => {
     CircularDate: "" as string,
   });
   const [contratDetailsError, setContratDetailsError] =
-    React.useState({ error: false as boolean, text: "" as string });
+    React.useState({
+      error: false as boolean,
+      text: "" as string,
+    });
   const [ContractSubject, setContractSubject] = React.useState("");
   const [ContractSubjectError, setContractSubjectError] =
-    React.useState({ error: false as boolean, text: "" as string });
+    React.useState({
+      error: false as boolean,
+      text: "" as string,
+    });
   const [ContractNumber, setContractNumber] = React.useState("");
   const [ContractNumberError, setContractNumberError] =
-    React.useState({ error: false as boolean, text: "" as string });
+    React.useState({
+      error: false as boolean,
+      text: "" as string,
+    });
   const [ContractDate, setContractDate] = React.useState("");
   const [ContractDateError, setContractDateError] = React.useState({
     error: false as boolean,
@@ -89,16 +108,27 @@ const AddContract = () => {
   const [InitialTimePeriod, setInitialTimePeriod] =
     React.useState("");
   const [InitialTimePeriodError, setInitialTimePeriodError] =
-    React.useState({ error: false as boolean, text: "" as string });
+    React.useState({
+      error: false as boolean,
+      text: "" as string,
+    });
   const [
     PriceListOfBasicUnitOfField,
     setPriceListOfBasicUnitOfField,
-  ] = React.useState([{ year: "" as string, price: "" as string }]);
+  ] = React.useState([
+    {
+      year: "" as string,
+      price: "" as string,
+    },
+  ]);
   const [
     PriceListOfBasicUnitOfFieldError,
     setPriceListOfBasicUnitOfFieldError,
   ] = React.useState([
-    { error: false as boolean, text: "" as string },
+    {
+      error: false as boolean,
+      text: "" as string,
+    },
   ]);
 
   const [
@@ -112,15 +142,24 @@ const AddContract = () => {
     RecommendedCoefficientError,
     setRecommendedCoefficientError,
   ] = React.useState([
-    { error: false as boolean, text: "" as string },
+    {
+      error: false as boolean,
+      text: "" as string,
+    },
   ]);
 
   const [CoefficientType, setCoefficientType] = React.useState("");
   const [CoefficientTypeError, setCoefficientTypeError] =
-    React.useState({ error: false as boolean, text: "" as string });
+    React.useState({
+      error: false as boolean,
+      text: "" as string,
+    });
   const [AssigningType, setAssigningType] = React.useState("");
   const [AssigningTypeError, setAssigningTypeError] = React.useState([
-    { error: false as boolean, text: "" as string },
+    {
+      error: false as boolean,
+      text: "" as string,
+    },
   ]);
   const [DoesContainAdjustment, setDoesContainAdjustment] =
     React.useState(true);
@@ -234,17 +273,17 @@ const AddContract = () => {
     UnauthorizedDelaysAccusedError,
     setUnauthorizedDelaysAccusedError,
   ] = React.useState({ error: false as boolean, text: "" as string });
-
   const [AccusedDepartmentId, setAccusedDepartmentId] =
     React.useState("");
   const [AccusedDepartmentIdError, setAccusedDepartmentIdError] =
     React.useState({ error: false as boolean, text: "" as string });
-
   const [AccuserDepartmentId, setAccuserDepartmentId] =
     React.useState("");
-
   const [AccuserDepartmentIdError, setAccuserDepartmentIdError] =
-    React.useState({ error: false as boolean, text: "" as string });
+    React.useState({
+      error: false as boolean,
+      text: "" as string,
+    });
 
   const handleErrors = () => {
     if (RelatedPeople.length <= 0) {
@@ -321,7 +360,10 @@ const AddContract = () => {
 
     if (RecommendedCoefficient.length <= 0) {
       setRecommendedCoefficientError([
-        { error: true, text: "مقدار فیلد نباید خالی باشد" },
+        {
+          error: true,
+          text: "مقدار فیلد نباید خالی باشد",
+        },
       ]);
     }
 
@@ -334,7 +376,10 @@ const AddContract = () => {
 
     if (AssigningType.length <= 0) {
       setAssigningTypeError([
-        { error: true, text: "مقدار فیلد نباید خالی باشد" },
+        {
+          error: true,
+          text: "مقدار فیلد نباید خالی باشد",
+        },
       ]);
     }
 
@@ -396,7 +441,10 @@ const AddContract = () => {
 
     if (ContractStatusInArbitration.length <= 0) {
       setContractStatusInArbitrationError([
-        { error: true, text: "مقدار فیلد نباید خالی باشد" },
+        {
+          error: true,
+          text: "مقدار فیلد نباید خالی باشد",
+        },
       ]);
     }
 
@@ -543,7 +591,10 @@ const AddContract = () => {
           setDepartments((prev: Department) => [
             // @ts-ignore
             ...prev,
-            { label: item.title, id: item.id },
+            {
+              label: item.title,
+              id: item.id,
+            },
           ]);
         }
       );
@@ -606,7 +657,10 @@ const AddContract = () => {
         <Autocomplete
           disablePortal
           options={departments}
-          sx={{ width: "100%", gridColumn: "span 4" }}
+          sx={{
+            width: "100%",
+            gridColumn: "span 4",
+          }}
           renderInput={(params) => (
             <FaTextField
               {...params}
@@ -621,13 +675,16 @@ const AddContract = () => {
             setAccusedDepartmentId(value.id);
           }}
           value={departments.find(
-            (item: Department) => item.id === AccusedDepartmentId
+            (item: Department) => item.id === parseInt(AccusedDepartmentId)
           )}
         />
         <Autocomplete
           disablePortal
           options={departments}
-          sx={{ width: "100%", gridColumn: "9/span 4" }}
+          sx={{
+            width: "100%",
+            gridColumn: "9/span 4",
+          }}
           renderInput={(params) => (
             <FaTextField
               {...params}
@@ -642,7 +699,7 @@ const AddContract = () => {
             setAccuserDepartmentId(value.id);
           }}
           value={departments.find(
-            (item: Department) => item.id === AccuserDepartmentId
+            (item: Department) => item.id === parseInt(AccuserDepartmentId)
           )}
         />
         {/* 
@@ -663,7 +720,11 @@ const AddContract = () => {
           }
         </FaTypography>
 
-        <List sx={{ gridColumn: "span 12" }}>
+        <List
+          sx={{
+            gridColumn: "span 12",
+          }}
+        >
           <FaTypography variant="body1">
             {"	الف) شركت در جلسه و امضاي قرارنامه داوري"}
           </FaTypography>
@@ -700,7 +761,9 @@ const AddContract = () => {
         <FaTextField
           label="تابعيت خواهان: "
           variant="outlined"
-          sx={{ gridColumn: "span 4" }}
+          sx={{
+            gridColumn: "span 4",
+          }}
           select
           value={AccuserNationality}
           onChange={(e) => {
@@ -718,7 +781,9 @@ const AddContract = () => {
         <FaTextField
           label="تابعيت خوانده: "
           variant="outlined"
-          sx={{ gridColumn: "8 /span 4" }}
+          sx={{
+            gridColumn: "8 /span 4",
+          }}
           select
           value={AccusedNationality}
           onChange={(e) => {
@@ -780,7 +845,9 @@ const AddContract = () => {
                 variant="outlined"
                 autoComplete="name"
                 type="text"
-                sx={{ gridColumn: "span 1" }}
+                sx={{
+                  gridColumn: "span 1",
+                }}
                 value={item.name}
                 onChange={(e) => {
                   const newPeoples = [...RelatedPeople];
@@ -794,7 +861,9 @@ const AddContract = () => {
                 variant="outlined"
                 type="number"
                 autoComplete="phone"
-                sx={{ gridColumn: "span 1" }}
+                sx={{
+                  gridColumn: "span 1",
+                }}
                 value={item.phone}
                 onChange={(e) => {
                   const newPeoples = [...RelatedPeople];
@@ -821,14 +890,21 @@ const AddContract = () => {
           onClick={() => {
             setRelatedPeople([
               ...RelatedPeople,
-              { name: "", phone: "" },
+              {
+                name: "",
+                phone: "",
+              },
             ]);
           }}
         >
           <Add />
         </IconButton>
 
-        <Divider sx={{ gridColumn: "span 12" }} />
+        <Divider
+          sx={{
+            gridColumn: "span 12",
+          }}
+        />
 
         {/* 
 
@@ -1142,7 +1218,11 @@ const AddContract = () => {
           error={contratDetailsError.error}
           helperText={contratDetailsError.text}
         />
-        <Divider sx={{ gridColumn: "span 12" }} />
+        <Divider
+          sx={{
+            gridColumn: "span 12",
+          }}
+        />
 
         {/* 
 
@@ -1158,7 +1238,9 @@ const AddContract = () => {
         <FaTextField
           label="موضوع قرارداد: "
           variant="outlined"
-          sx={{ gridColumn: "span 3" }}
+          sx={{
+            gridColumn: "span 3",
+          }}
           value={ContractSubject}
           onChange={(e) => {
             setContractSubject(e.target.value);
@@ -1172,7 +1254,11 @@ const AddContract = () => {
             gridColumn: "span 12",
           }}
         />
-        <Divider sx={{ gridColumn: "span 6" }} />
+        <Divider
+          sx={{
+            gridColumn: "span 6",
+          }}
+        />
         <div
           style={{
             gridColumn: "span 12",
@@ -1192,7 +1278,9 @@ const AddContract = () => {
         <FaTextField
           label="شماره: "
           variant="outlined"
-          sx={{ gridColumn: "span 3" }}
+          sx={{
+            gridColumn: "span 3",
+          }}
           value={ContractNumber}
           onChange={(e) => {
             setContractNumber(e.target.value);
@@ -1205,7 +1293,9 @@ const AddContract = () => {
           variant="outlined"
           type="date"
           focused
-          sx={{ gridColumn: "span 3" }}
+          sx={{
+            gridColumn: "span 3",
+          }}
           value={ContractDate}
           onChange={(e) => {
             setContractDate(e.target.value);
@@ -1220,7 +1310,11 @@ const AddContract = () => {
             gridColumn: "span 12",
           }}
         />
-        <Divider sx={{ gridColumn: "span 6" }} />
+        <Divider
+          sx={{
+            gridColumn: "span 6",
+          }}
+        />
         <div
           style={{
             gridColumn: "span 12",
@@ -1243,7 +1337,9 @@ const AddContract = () => {
           InputProps={{
             endAdornment: "ریال",
           }}
-          sx={{ gridColumn: "span 3" }}
+          sx={{
+            gridColumn: "span 3",
+          }}
           value={InitialBudget}
           onChange={(e) => {
             setInitialBudget(e.target.value);
@@ -1256,7 +1352,11 @@ const AddContract = () => {
             gridColumn: "span 12",
           }}
         />
-        <Divider sx={{ gridColumn: "span 6" }} />
+        <Divider
+          sx={{
+            gridColumn: "span 6",
+          }}
+        />
         <div
           style={{
             gridColumn: "span 12",
@@ -1280,7 +1380,9 @@ const AddContract = () => {
           InputProps={{
             endAdornment: "ماه",
           }}
-          sx={{ gridColumn: "span 3" }}
+          sx={{
+            gridColumn: "span 3",
+          }}
           value={InitialTimePeriod}
           onChange={(e) => {
             setInitialTimePeriod(e.target.value);
@@ -1293,7 +1395,11 @@ const AddContract = () => {
             gridColumn: "span 12",
           }}
         />
-        <Divider sx={{ gridColumn: "span 6" }} />
+        <Divider
+          sx={{
+            gridColumn: "span 6",
+          }}
+        />
         <div
           style={{
             gridColumn: "span 12",
@@ -1344,7 +1450,9 @@ const AddContract = () => {
                 variant="outlined"
                 autoComplete="name"
                 type="text"
-                sx={{ gridColumn: "span 1" }}
+                sx={{
+                  gridColumn: "span 1",
+                }}
                 value={item.year}
                 onChange={(e) => {
                   const newPeoples = [...PriceListOfBasicUnitOfField];
@@ -1358,7 +1466,9 @@ const AddContract = () => {
                 variant="outlined"
                 type="number"
                 autoComplete="phone"
-                sx={{ gridColumn: "span 1" }}
+                sx={{
+                  gridColumn: "span 1",
+                }}
                 value={item.price}
                 onChange={(e) => {
                   const newPeoples = [...PriceListOfBasicUnitOfField];
@@ -1386,7 +1496,10 @@ const AddContract = () => {
           onClick={() => {
             setPriceListOfBasicUnitOfField([
               ...PriceListOfBasicUnitOfField,
-              { year: "", price: "" },
+              {
+                year: "",
+                price: "",
+              },
             ]);
           }}
         >
@@ -1398,7 +1511,11 @@ const AddContract = () => {
             gridColumn: "span 12",
           }}
         />
-        <Divider sx={{ gridColumn: "span 6" }} />
+        <Divider
+          sx={{
+            gridColumn: "span 6",
+          }}
+        />
         <div
           style={{
             gridColumn: "span 12",
@@ -1532,7 +1649,11 @@ const AddContract = () => {
             gridColumn: "span 12",
           }}
         />
-        <Divider sx={{ gridColumn: "span 6" }} />
+        <Divider
+          sx={{
+            gridColumn: "span 6",
+          }}
+        />
         <div
           style={{
             gridColumn: "span 12",
@@ -1552,7 +1673,9 @@ const AddContract = () => {
 
         <TextField
           label="ضريب پيشنهادي: "
-          sx={{ gridColumn: "span 3" }}
+          sx={{
+            gridColumn: "span 3",
+          }}
           type="number"
           value={RecommendedCoefficient}
           onChange={(e) => {
@@ -1602,7 +1725,11 @@ const AddContract = () => {
             gridColumn: "span 12",
           }}
         />
-        <Divider sx={{ gridColumn: "span 6" }} />
+        <Divider
+          sx={{
+            gridColumn: "span 6",
+          }}
+        />
         <div
           style={{
             gridColumn: "span 12",
@@ -1685,7 +1812,11 @@ const AddContract = () => {
             gridColumn: "span 12",
           }}
         />
-        <Divider sx={{ gridColumn: "span 6" }} />
+        <Divider
+          sx={{
+            gridColumn: "span 6",
+          }}
+        />
         <div
           style={{
             gridColumn: "span 12",
@@ -1783,7 +1914,11 @@ const AddContract = () => {
             gridColumn: "span 12",
           }}
         />
-        <Divider sx={{ gridColumn: "span 6" }} />
+        <Divider
+          sx={{
+            gridColumn: "span 6",
+          }}
+        />
         <div
           style={{
             gridColumn: "span 12",
@@ -1918,7 +2053,11 @@ const AddContract = () => {
             gridColumn: "span 12",
           }}
         />
-        <Divider sx={{ gridColumn: "span 6" }} />
+        <Divider
+          sx={{
+            gridColumn: "span 6",
+          }}
+        />
         <div
           style={{
             gridColumn: "span 12",
@@ -1968,7 +2107,11 @@ const AddContract = () => {
             gridColumn: "span 12",
           }}
         />
-        <Divider sx={{ gridColumn: "span 6" }} />
+        <Divider
+          sx={{
+            gridColumn: "span 6",
+          }}
+        />
         <div
           style={{
             gridColumn: "span 12",
@@ -2082,7 +2225,11 @@ const AddContract = () => {
             gridColumn: "span 12",
           }}
         />
-        <Divider sx={{ gridColumn: "span 6" }} />
+        <Divider
+          sx={{
+            gridColumn: "span 6",
+          }}
+        />
         <div
           style={{
             gridColumn: "span 12",
@@ -2180,7 +2327,11 @@ const AddContract = () => {
             gridColumn: "span 12",
           }}
         />
-        <Divider sx={{ gridColumn: "span 6" }} />
+        <Divider
+          sx={{
+            gridColumn: "span 6",
+          }}
+        />
         <div
           style={{
             gridColumn: "span 12",
@@ -2214,7 +2365,11 @@ const AddContract = () => {
             gridColumn: "span 12",
           }}
         />
-        <Divider sx={{ gridColumn: "span 6" }} />
+        <Divider
+          sx={{
+            gridColumn: "span 6",
+          }}
+        />
         <div
           style={{
             gridColumn: "span 12",
@@ -2268,7 +2423,11 @@ const AddContract = () => {
             gridColumn: "span 12",
           }}
         />
-        <Divider sx={{ gridColumn: "span 2" }} />
+        <Divider
+          sx={{
+            gridColumn: "span 2",
+          }}
+        />
         <div
           style={{
             gridColumn: "span 12",
@@ -2307,7 +2466,11 @@ const AddContract = () => {
           error={UnauthorizedDelaysAccusedError.error}
           helperText={UnauthorizedDelaysAccusedError.text}
         />
-        <Divider sx={{ gridColumn: "span 12" }} />
+        <Divider
+          sx={{
+            gridColumn: "span 12",
+          }}
+        />
         {/* 
 
 
@@ -2330,7 +2493,11 @@ const AddContract = () => {
         >
           • گزارش توجیهی تاخیرات قرارداد شامل:
         </FaTypography>
-        <List sx={{ gridColumn: "span 6" }}>
+        <List
+          sx={{
+            gridColumn: "span 6",
+          }}
+        >
           <Box
             display={"flex"}
             justifyContent={"space-between"}
@@ -2393,7 +2560,7 @@ const AddContract = () => {
             fontSize: "1.1rem",
             width: "max-content",
             padding: "0.5rem 2rem",
-            justifySelf:'flex-end',
+            justifySelf: "flex-end",
             "&:hover": {
               backgroundColor: GreenLight,
               color: Green,

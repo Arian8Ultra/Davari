@@ -3,11 +3,12 @@ import { gql } from "@apollo/client";
 export const CREATE_COMPLAINT = gql`
   mutation CreateComplaint($contractId: Int!, $userId: String!) {
     complaint_addComplaint(
-      input: { contractId: $contractId, userId: $userId }
+      input: { contractId: $contractId, userId: $userId,complaintState:WAITING_FOR_ACCUSED_TO_FILL_FORMS }
     ) {
       result {
         id
         assignedUserId
+        complaintState
         arbitrationTermsForms {
           userId
           firstCondition
@@ -30,40 +31,48 @@ export const CREATE_COMPLAINT = gql`
 
 export const UPDATE_COMPLAINT = gql`
   mutation UpdateComplaint(
-    $id: Int!
-    $assignedUserId: String
-    $contractId: Int
-    $userId: String
-  ) {
-    complaint_updateComplaint(
-      input: {
-        id: $id
-        assignedUserId: $assignedUserId
-        contractId: $contractId
-        userId: $userId
-      }
-    ) {
-      result {
-        id
-        assignedUserId
-        arbitrationTermsForms {
-          userId
-          firstCondition
-          firstConditionFileName
-          secondCondition
-          secondConditionFileName
-          thirdCondition
-          thirdConditionFileName
-          fourthCondition
-          fourthConditionFileName
-        }
-      }
-      status {
-        code
-        value
-      }
+  $id: Int!
+  $assignedUserId: String
+  $contractId: Int
+  $userId: String
+  $complaintState: ComplaintState
+) {
+  complaint_updateComplaint(
+    input: {
+      id: $id
+      assignedUserId: $assignedUserId
+      contractId: $contractId
+      userId: $userId
+      complaintState: $complaintState
     }
+  ) {
+    result {
+      id
+      assignedUserId
+      complaintState
+      arbitrationTermsForms {
+        userId
+        firstCondition
+        firstConditionFileName
+        secondCondition
+        secondConditionFileName
+        thirdCondition
+        thirdConditionFileName
+        fourthCondition
+        fourthConditionFileName
+        __typename
+      }
+      __typename
+    }
+    status {
+      code
+      value
+      __typename
+    }
+    __typename
   }
+}
+
 `;
 
 export const CREATE_ARBITRATION_TERMS_FORM = gql`
@@ -148,8 +157,8 @@ export const ADD_ARGUMENT_TO_COMPLAINT = gql`
   ) {
     complaintArgument_addComplaintArgument(
       input: {
-        accuserResponse: $accuserResponse
-        accuserResponseFileName: $accuserResponseFileName
+        accusedResponse: $accuserResponse
+        accusedResponseFileName: $accuserResponseFileName
         approvedAmount: $approvedAmount
         complaintId: $complaintId
         councilApprovedAmount: $councilApprovedAmount
@@ -169,8 +178,8 @@ export const ADD_ARGUMENT_TO_COMPLAINT = gql`
     ) {
       result {
         id
-        accuserResponse
-        accuserResponseFileName
+        accusedResponse
+        accusedResponseFileName
         approvedAmount
         complaintId
         councilApprovedAmount
@@ -221,8 +230,8 @@ export const UPDATE_ARGUMENT = gql`
   ) {
     complaintArgument_updateComplaintArgument(
       input: {
-        accuserResponse: $accuserResponse
-        accuserResponseFileName: $accuserResponseFileName
+        accusedResponse: $accuserResponse
+        accusedResponseFileName: $accuserResponseFileName
         approvedAmount: $approvedAmount
         complaintId: $complaintId
         councilApprovedAmount: $councilApprovedAmount
@@ -243,8 +252,8 @@ export const UPDATE_ARGUMENT = gql`
     ) {
       result {
         id
-        accuserResponse
-        accuserResponseFileName
+        accusedResponse
+        accusedResponseFileName
         approvedAmount
         complaintId
         councilApprovedAmount
@@ -283,6 +292,16 @@ export const DELETE_ARGUMENT = gql`
   }
 `;
 
+export const DELETE_COMPLAINT = gql`
+  mutation deleteCompain($id: Int!) {
+    complaint_deleteComplaint(entityId: $id) {
+      status {
+        code
+        value
+      }
+    }
+  }
+`;
 export type CreateComplaintInput = {
   accusedDepartmentId: number;
   accuserDepartmentId: number;

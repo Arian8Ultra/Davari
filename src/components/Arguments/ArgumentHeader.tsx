@@ -1,6 +1,5 @@
 import { TableCell, TableHead, TableRow } from "@mui/material";
-import { grey } from "@mui/material/colors";
-import { primaryGrey, secondary } from "../../theme/color";
+import { secondary, secondaryLighter } from "../../theme/color";
 interface Props {
   state?: number;
 }

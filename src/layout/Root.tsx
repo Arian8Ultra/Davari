@@ -1,9 +1,13 @@
+import { Skeleton } from "@mui/material";
+import { Suspense } from "react";
 import { Outlet } from "react-router-dom";
 
 const Root = () => {
   return (
     <>
-      <Outlet />
+      <Suspense fallback={<Skeleton />}>
+        <Outlet />
+      </Suspense>
     </>
   );
 };

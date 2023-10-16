@@ -12,7 +12,6 @@ import {
   TableCell,
   TableRow,
 } from "@mui/material";
-import { grey } from "@mui/material/colors";
 import { AiFillFileAdd } from "react-icons/ai";
 import { BsPaperclip } from "react-icons/bs";
 import { convertToPersianDigits } from "../../functions/Functions";
@@ -28,11 +27,10 @@ import {
   RedLight,
   onPrimary,
   primaryGreyTransparent,
-  primaryLightTransparent,
   secondary,
   secondaryDark,
   secondaryLight,
-  secondaryLighter,
+  secondaryLighter
 } from "../../theme/color";
 
 interface Props {
@@ -76,8 +74,8 @@ const ArgumentCard = ({
           sx={{
             background:
               id % 2 == 0
-                ? "rgba(35,35,35,0.3)"
-                : "rgba(35,35,35,0.2)",
+                ? "rgba(230,230,230)"
+                : "rgba(200,200,200)",
             borderBottom: `1px solid ${primaryGreyTransparent}`,
             transition: "all 0.2s ease-in-out",
           }}
@@ -250,8 +248,8 @@ const ArgumentCard = ({
           sx={{
             background:
               id % 2 == 0
-                ? "rgba(35,35,35,0.3)"
-                : "rgba(35,35,35,0.2)",
+                ? "rgba(230,230,230)"
+                : "rgba(200,200,200)",
             borderBottom: `1px solid ${secondary}`,
             transition: "all 0.2s ease-in-out",
           }}
@@ -275,7 +273,7 @@ const ArgumentCard = ({
                   : `1px solid ${secondary}`,
             }}
           >
-            {arguement.accuserResponse}
+            {arguement.accusedResponse}
           </TableCell>
           <TableCell
             sx={{
@@ -285,7 +283,7 @@ const ArgumentCard = ({
                   : `1px solid ${secondary}`,
             }}
           >
-            {arguement.accuserResponseFileName && (
+            {arguement.accusedResponseFileName && (
               <Button
                 variant="contained"
                 endIcon={<AiFillFileAdd />}
@@ -294,7 +292,7 @@ const ArgumentCard = ({
                   // download file with url in fileName
                   window.open(
                     "http://172.16.23.50:7030/files/" +
-                      arguement.accuserResponseFileName
+                      arguement.accusedResponseFileName
                   );
                 }}
                 sx={{
@@ -313,7 +311,7 @@ const ArgumentCard = ({
                   },
                 }}
               >
-                {arguement.accuserResponseFileName}
+                {arguement.accusedResponseFileName}
               </Button>
             )}
           </TableCell>

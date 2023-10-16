@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
@@ -25,9 +26,17 @@ import { useState } from "react";
 import { FiMoreHorizontal } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import {
+  DELETE_COMPLAINT,
+  UPDATE_COMPLAINT,
+} from "../../GraphQL/Complaints/Mutations";
+import {
   Department,
   GET_DEPARTMENTS,
 } from "../../GraphQL/Departments/Queries";
+import { GET_DEPARTMENTS_USERS } from "../../GraphQL/Users/Queries";
+import { convertToPersianDigits } from "../../functions/Functions";
+import { ComplaintStatus, User } from "../../static/Types";
+import states from "../../static/states.json";
 import {
   Green,
   GreenLight,
@@ -39,13 +48,8 @@ import {
   primaryLightTransparent,
   secondary,
   secondaryDark,
-  textSecondary,
 } from "../../theme/color";
 import NewModal from "../Modals";
-import { User } from "../../static/Types";
-import { GET_DEPARTMENTS_USERS } from "../../GraphQL/Users/Queries";
-import { UPDATE_COMPLAINT } from "../../GraphQL/Complaints/Mutations";
-import { convertToPersianDigits } from "../../functions/Functions";
 interface Props {
   id: number;
   complaintId?: number;
@@ -55,10 +59,11 @@ interface Props {
   acussedId?: number;
   acusser?: string;
   acusserId?: number;
-  state?: string;
+  state?: number;
   summary?: string;
   projectId?: number;
   type?: "accused" | "accuser" | "assigned";
+  refetch?: ()=>void 
 }
 const ComplaintCardNew = (props: Props) => {
   const [open, setOpen] = useState(false);
@@ -84,29 +89,34 @@ const ComplaintCardNew = (props: Props) => {
     []
   );
   const [updateComplaint] = useMutation(UPDATE_COMPLAINT);
-  const { data: departmentsUsersData } = useQuery(
-    GET_DEPARTMENTS_USERS,
-    {
-      variables: {
-        departmentId: props.acussedId,
-      },
-      onCompleted(data) {
-        console.log("departmentsUsersData", data);
+  const [deleteComplaint] = useMutation(DELETE_COMPLAINT, {
+    variables: {
+      id: props.id,
+    },
+    onCompleted(data, clientOptions) {
+      props.refetch && props.refetch()
+    },
+  });
+  useQuery(GET_DEPARTMENTS_USERS, {
+    variables: {
+      departmentId: props.acussedId,
+    },
+    onCompleted(data) {
+      console.log("departmentsUsersData", data);
 
-        data.user_getUsers.result.items.forEach((item: User) => {
+      data.user_getUsers.result.items.forEach((item: User) => {
+        // @ts-ignore
+        setDepartmentsUsers((prev: User) => [
           // @ts-ignore
-          setDepartmentsUsers((prev: User) => [
-            // @ts-ignore
-            ...prev,
-            {
-              label: item.firstName + " " + item.lastName,
-              id: item.id,
-            },
-          ]);
-        });
-      },
-    }
-  );
+          ...prev,
+          {
+            label: item.firstName + " " + item.lastName,
+            id: item.id,
+          },
+        ]);
+      });
+    },
+  });
   return (
     <Box
       sx={{
@@ -114,7 +124,7 @@ const ComplaintCardNew = (props: Props) => {
         // pt: "0.5rem",
         backgroundColor: "white",
         display: "grid",
-        gridTemplateColumns: "repeat(5,auto)",
+        gridTemplateColumns: "repeat(5,1fr)",
         alignItems: "center",
         // borderRadius: "5px",
         gap: "0.5rem",
@@ -144,7 +154,7 @@ const ComplaintCardNew = (props: Props) => {
         }}
         sx={{ userSelect: "none" }}
       >
-        شماره شکایت:
+        شماره درخواست داوری:
         {convertToPersianDigits(props.id)}
       </Typography>
       <Typography
@@ -173,7 +183,8 @@ const ComplaintCardNew = (props: Props) => {
         خوانده:
         {
           departmentData?.department_getDepartments?.result.items.find(
-            (item: Department) => parseInt(item.id) === props.acussedId
+            (item: Department) =>
+              item.id === props.acussedId
           ).title
         }
       </Typography>
@@ -181,8 +192,8 @@ const ComplaintCardNew = (props: Props) => {
         onClick={handleOpen}
         sx={{
           borderRadius: "0 0 0 0",
-          height:'100%',
-          color:secondary,
+          height: "100%",
+          color: secondary,
           "&:hover": {
             backgroundColor: primaryLightTransparent,
           },
@@ -193,18 +204,21 @@ const ComplaintCardNew = (props: Props) => {
       <LinearProgress
         variant={"determinate"}
         // change color of progress bar based on status
-        value={25}
+        value={
+          // @ts-ignore
+          ((states[ComplaintStatus[props.state!]].id - 2) / 33) * 100
+        }
         sx={{
           gridColumn: "span 5",
           height: 5,
-          background:primaryLightTransparent,
+          background: primaryLightTransparent,
           "& .MuiLinearProgress-bar": {
-            background:secondary,
-            borderRadius:2
+            background: secondary,
+            borderRadius: 2,
           },
           "& .MuiLinearProgress-root": {
-            background:primaryLight
-          }
+            background: primaryLight,
+          },
           // borderBottomLeftRadius: 5,
           // borderBottomRightRadius: 5,
         }}
@@ -215,7 +229,7 @@ const ComplaintCardNew = (props: Props) => {
         height={"70dvh"}
         isCloseable={true}
         background={background}
-        name={"شکایت"}
+        name={"درخواست داوری"}
         width={{
           xs: "90vw",
           sm: "80vw",
@@ -244,7 +258,7 @@ const ComplaintCardNew = (props: Props) => {
                         color: secondaryDark,
                       }}
                     >
-                      شماره شکایت:
+                      شماره درخواست داوری:
                     </TableCell>
                     <TableCell
                       sx={{
@@ -274,7 +288,7 @@ const ComplaintCardNew = (props: Props) => {
                       {
                         departmentData?.department_getDepartments?.result.items.find(
                           (item: Department) =>
-                          parseInt(item.id) === props.acussedId
+                            item.id=== props.acussedId
                         ).title
                       }
                     </TableCell>
@@ -300,7 +314,7 @@ const ComplaintCardNew = (props: Props) => {
                       {
                         departmentData?.department_getDepartments?.result.items.find(
                           (item: Department) =>
-                            parseInt(item.id) === props.acusserId
+                            item.id === props.acusserId
                         ).title
                       }
                     </TableCell>
@@ -323,7 +337,8 @@ const ComplaintCardNew = (props: Props) => {
                         color: secondaryDark,
                       }}
                     >
-                      {props.state}
+                      {/* @ts-ignore */}
+                      {states[ComplaintStatus[props.state!-1]].fa}
                     </TableCell>
                   </TableRow>
 
@@ -425,7 +440,7 @@ const ComplaintCardNew = (props: Props) => {
                 });
               }}
             >
-              ارسال شکایت به کارشناس
+              ارسال درخواست داوری به کارشناس
             </Button>
           </Box>
           <Box
@@ -459,10 +474,15 @@ const ComplaintCardNew = (props: Props) => {
                 },
               }}
               onClick={() => {
-                navigate(`${props.id}/addArguements/1`);
+                
+                if(states[ComplaintStatus[props.state!-1] as keyof typeof states]?.id == 3){
+                  navigate(`/complaints/${props.contractId}/${props.id}/UpdateContractPage`);
+                }else{
+                  navigate(`${props.contractId}/${props.id}/addArguements/1`);
+                }
               }}
             >
-              پاسخ به شکایت
+              پاسخ به درخواست داوری
             </Button>
           </Box>
           <NewModal
@@ -543,7 +563,7 @@ const ComplaintCardNew = (props: Props) => {
                   });
                 }}
               >
-                ارسال شکایت به کارشناس
+                ارسال درخواست داوری به کارشناس
               </Button>
             </Box>
           </NewModal>
@@ -563,9 +583,16 @@ const ComplaintCardNew = (props: Props) => {
                   color: Red,
                 },
               }}
-              onClick={handleClose}
+              onClick={() => {
+                const agree = confirm(
+                  "آیا از انصراف از این درخواست داوری مطمئن هستید؟"
+                );
+                if (agree) {
+                  void deleteComplaint();
+                }
+              }}
             >
-              انصراف
+              انصراف از درخواست داوری
             </Button>
             <Button
               sx={{
@@ -578,10 +605,10 @@ const ComplaintCardNew = (props: Props) => {
                 },
               }}
               onClick={() => {
-                navigate(`${props.id}/addArguements/0`);
+                navigate(`${props.contractId}/${props.id}/addArguements/0`);
               }}
             >
-              ادامه شکایت
+              ادامه درخواست داوری
             </Button>
           </Box>
         </Box>

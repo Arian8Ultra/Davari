@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable no-case-declarations */
@@ -28,37 +29,43 @@ interface Props {
   type?: "accused" | "accuser" | "assigned";
 }
 const ComplaintsList = ({ departmentId, type, userId }: Props) => {
-  const { data: assignedData, loading } = useQuery(
-    GET_COMPLAINT_ASSIGNED,
-    {
-      variables: {
-        id: userId,
-      },
-    }
-  );
-  const { data: accuserData, loading: accuserLoading } = useQuery(
-    GET_ACCUSER_COMPLAINTS,
-    {
-      variables: {
-        departmentId: departmentId,
-      },
-      onCompleted(data) {
-        console.log("accuser data", data);
-      },
-    }
-  );
+  const {
+    data: assignedData,
+    loading,
+    refetch: assignedRefetch,
+  } = useQuery(GET_COMPLAINT_ASSIGNED, {
+    variables: {
+      id: userId,
+    },
+  });
+  const {
+    data: accuserData,
+    loading: accuserLoading,
+    refetch: accuserRefetch,
+  } = useQuery(GET_ACCUSER_COMPLAINTS, {
+    variables: {
+      departmentId: departmentId,
+    },
+    onCompleted(data) {
+      console.log("departmentId", departmentId);
 
-  const { data: accusedData, loading: accusedLoading } = useQuery(
-    GET_ACCUSED_COMPLAINTS,
-    {
-      variables: {
-        departmentId: departmentId,
-      },
-      onCompleted(data) {
-        console.log("accused data", data);
-      },
-    }
-  );
+      console.log("accuser data", data);
+    },
+  });
+
+  const {
+    data: accusedData,
+    loading: accusedLoading,
+    refetch: accusedRefetch,
+  } = useQuery(GET_ACCUSED_COMPLAINTS, {
+    variables: {
+      departmentId: departmentId,
+    },
+    onCompleted(data) {
+      console.log("departmentId", departmentId);
+      console.log("accused data", data);
+    },
+  });
   return (
     <Stack
       spacing={1}
@@ -88,7 +95,7 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
         >
           {accuserLoading
             ? "در حال دریافت اطلاعات"
-            : "شکایات علیه شما"}
+            : "درخواست های داوری علیه شما"}
         </Typography>
       ) : type === "accuser" ? (
         <Typography
@@ -102,7 +109,7 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
             position: "sticky",
           }}
         >
-          {accusedLoading ? "در حال دریافت اطلاعات" : "شکایات شما"}
+          {accusedLoading ? "در حال دریافت اطلاعات" : "درخواست های داوری شما"}
         </Typography>
       ) : (
         <Typography
@@ -118,11 +125,11 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
         >
           {loading
             ? "در حال دریافت اطلاعات"
-            : "شکایات تعیین شده برای شما"}
+            : "درخواست های داوری تعیین شده برای شما"}
         </Typography>
       )}
 
-      <Stack padding={"2px"} spacing={0.5}>
+      <Stack padding={"4px"} spacing={0.5}>
         {type === "accused"
           ? accusedData?.complaint_getComplaints?.result.items.map(
               (complaint: Complaint) => (
@@ -133,7 +140,9 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
                   acusserId={complaint?.contract?.accuserDepartmentId}
                   date={complaint?.createdDate}
                   contractId={complaint?.contractId}
+                  state={1}
                   type="accused"
+                  refetch={accusedRefetch}
                 />
               )
             )
@@ -149,6 +158,8 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
                   acussedId={complaint?.contract?.accusedDepartmentId}
                   acusserId={complaint?.contract?.accuserDepartmentId}
                   type="accuser"
+                  state={1}
+                  refetch={accuserRefetch}
                 />
               )
             )
@@ -163,6 +174,8 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
                   acussedId={complaint?.contract?.accusedDepartmentId}
                   acusserId={complaint?.contract?.accuserDepartmentId}
                   type="assigned"
+                  state={1}
+                  refetch={assignedRefetch}
                 />
               )
             )}

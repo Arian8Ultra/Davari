@@ -29,9 +29,9 @@ export const GET_COMPLAINTS = gql`
             phoneNumber
           }
           contract {
-            contractNumber
-            contractDate
-            initialBudget
+            contractNumberByAccuser
+            contractDateByAccuser
+            initialBudgetByAccuser
           }
         }
       }
@@ -65,9 +65,9 @@ export const GET_COMPLAINT = gql`
             phoneNumber
           }
           contract {
-            contractNumber
-            contractDate
-            initialBudget
+            contractNumberByAccuser
+            contractDateByAccuser
+            initialBudgetByAccuser
             accuserDepartmentId
             accusedDepartmentId
           }
@@ -81,7 +81,7 @@ export const GET_ACCUSED_COMPLAINTS = gql`
     complaint_getComplaints {
       result(
         where: {
-          contract: { accusedDepartmentId: { eq: $departmentId } }
+          contract: { accusedDepartmentId: { eq: $departmentId } } and: { complaintState: { eq: COMPLAINT_REGISTERED } }
         }
       ) {
         items {
@@ -109,9 +109,9 @@ export const GET_ACCUSED_COMPLAINTS = gql`
             phoneNumber
           }
           contract {
-            contractNumber
-            contractDate
-            initialBudget
+            contractNumberByAccuser
+            contractDateByAccuser
+            initialBudgetByAccuser
             accusedDepartmentId
             accuserDepartmentId
             department {
@@ -160,9 +160,9 @@ export const GET_ACCUSER_COMPLAINTS = gql`
             phoneNumber
           }
           contract {
-            contractNumber
-            contractDate
-            initialBudget
+            contractNumberByAccuser
+            contractDateByAccuser
+            initialBudgetByAccuser
             accusedDepartmentId
             accuserDepartmentId
             department {
@@ -184,8 +184,8 @@ export const GET_COMPLAINT_ARGUMENTS = gql`
       result(where: { complaintId: { eq: $id } }) {
         items {
           id
-          accuserResponse
-          accuserResponseFileName
+          accusedResponse
+          accusedResponseFileName
           approvedAmount
           complaintId
           councilApprovedAmount
@@ -211,7 +211,7 @@ export const GET_COMPLAINT_ARGUMENTS = gql`
 export const GET_COMPLAINT_ASSIGNED = gql`
   query GetComplaints($id: String!) {
     complaint_getComplaints {
-      result(where: { assignedUserId: { eq: $id } }) {
+      result(where: { assignedUserId: { eq: $id } and: { complaintState: { eq: COMPLAINT_REGISTERED }} }  ) {
         items {
           userId
           id
@@ -237,9 +237,9 @@ export const GET_COMPLAINT_ASSIGNED = gql`
             phoneNumber
           }
           contract {
-            contractNumber
-            contractDate
-            initialBudget
+            contractNumberByAccuser
+            contractDateByAccuser
+            initialBudgetByAccuser
             accusedDepartmentId
             accuserDepartmentId
             department {

@@ -1,3 +1,4 @@
+import { lazy } from "react";
 import {
   Route,
   createBrowserRouter,
@@ -7,23 +8,53 @@ import Error from "../layout/Error";
 import MainLayout from "../layout/MainLayout";
 import Root from "../layout/Root";
 import UserManagement from "../pages/Admin/UserManager/UserManagement";
-import Complaints from "../pages/Complaints/Complaints";
-import Home from "../pages/Home/Home";
-import Protal from "../pages/Portal/Protal";
-import Messages from "../pages/Portal/Messages/Messages";
-import ComplainAnswers from "../pages/Portal/ComplainAnswers/ComplainAnswers";
-import FormManager from "../pages/Admin/FormManager/FormManager";
-import AddForm from "../pages/Admin/FormManager/AddForm/AddForm";
-import ViewForm from "../pages/Admin/FormManager/ViewForm/ViewForm";
-import Test from "../pages/Admin/Test/Test";
-import EditForm from "../pages/Admin/FormManager/EditForm/EditForm";
-import NewAddForm from "../pages/Admin/FormManager/AddForm/NewAddForm";
-import Contracts from "../pages/Contracts/Contracts";
-import ViewFormAll from "../pages/Contracts/ViewForm/ViewForm";
-import AddContract from "../pages/Complaints/AddContract/AddContract";
+const Complaints = lazy(
+  () => import("../pages/Complaints/Complaints")
+);
+const Home = lazy(() => import("../pages/Home/Home"));
+const Protal = lazy(() => import("../pages/Portal/Protal"));
+const Messages = lazy(
+  () => import("../pages/Portal/Messages/Messages")
+);
+const ComplainAnswers = lazy(
+  () => import("../pages/Portal/ComplainAnswers/ComplainAnswers")
+);
+const FormManager = lazy(
+  () => import("../pages/Admin/FormManager/FormManager")
+);
+const AddForm = lazy(
+  () => import("../pages/Admin/FormManager/AddForm/AddForm")
+);
+const ViewForm = lazy(
+  () => import("../pages/Admin/FormManager/ViewForm/ViewForm")
+);
+const Test = lazy(() => import("../pages/Admin/Test/Test"));
+const EditForm = lazy(
+  () => import("../pages/Admin/FormManager/EditForm/EditForm")
+);
+const NewAddForm = lazy(
+  () => import("../pages/Admin/FormManager/AddForm/NewAddForm")
+);
+const Contracts = lazy(() => import("../pages/Contracts/Contracts"));
+const ViewFormAll = lazy(
+  () => import("../pages/Contracts/ViewForm/ViewForm")
+);
+const AddContract = lazy(
+  () => import("../pages/Complaints/AddContract/AddContract")
+);
+const CreateContractPage = lazy(
+  () => import("../pages/Complaints/AddContract/CreateContractPage")
+);
+const AddComplaint = lazy(
+  () => import("../pages/Complaints/AddComplaints/AddComplaints")
+);
+const AddArgument = lazy(
+  () => import("../pages/Complaints/AddArguements/AddArguements")
+);
 import "../index.css";
-import AddComplaint from "../pages/Complaints/AddComplaints/AddComplaints";
-import AddArgument from "../pages/Complaints/AddArguements/AddArguements";
+const UpdateContractPage = lazy(
+  () => import("../pages/Complaints/AddContract/UpdateContractPage")
+);
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Root />}>
@@ -36,12 +67,20 @@ const router = createBrowserRouter(
           element={<AddContract />}
         />
         <Route
+          path="complaints/createContractPage"
+          element={<CreateContractPage />}
+        />
+        <Route
+          path="complaints/:contractId/:complaintId/UpdateContractPage"
+          element={<UpdateContractPage />}
+        />
+        <Route
           path="complaints/:contractId/addComplaint"
           element={<AddComplaint />}
         />
         <Route
-          path="complaints/:contractId/addArguements/:state"
-          element={<AddArgument/>}
+          path="complaints/:contractId/:complaintId/addArguements/:state"
+          element={<AddArgument />}
         />
 
         <Route path="contracts" element={<Contracts />} />

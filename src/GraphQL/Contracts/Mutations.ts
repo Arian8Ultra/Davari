@@ -2,75 +2,132 @@ import { gql } from "@apollo/client";
 
 export const CREATE_CONTRACT = gql`
   mutation contract_addContract(
-    $RelatedPeople: [String!]
+    $AccuserRelatedPeople: String
+    $AccusedRelatedPeople: String
     $AccuserNationality: String!
-    $AccusedNationality: String!
     $ContractType: [String!]
-    $CircularNumber: String!
-    $CircularDate: Date!
-    $ContractSubject: String!
-    $ContractNumber: String!
-    $ContractDate: Date!
-    $InitialBudget: Decimal!
-    $InitialTimePeriod: Int!
-    $PriceListOfBasicUnitOfField: [String!]
-    $IsSpecialPriceListAttachedToContract: Boolean!
-    $RecommendedCoefficient: Int!
-    $CoefficientType: String!
-    $AssigningType: String!
-    $DoesContainAdjustment: Boolean!
-    $BaseIndexPeriod: Int!
-    $OperationStartDateAccuser: Date!
-    $OperationStartDateAccused: Date!
-    $PhysicalProgressInArbitrationDateAccuser: Int!
-    $PhysicalProgressInArbitrationDateAccused: Int!
-    $FinancialProgressInArbitrationDateAccuser: Int!
-    $FinancialProgressInArbitrationDateAccused: Int!
-    $ContractStatusInArbitration: String!
-    $ContractStatusInArbitrationDate: Date!
-    $SupervisionDepartment: String!
-    $AuthorizedDelaysAccuser: Int!
-    $AuthorizedDelaysAccused: Int!
-    $UnauthorizedDelaysAccuser: Int!
-    $UnauthorizedDelaysAccused: Int!
-    $AccusedDepartmentId: Int!
-    $AccuserDepartmentId: Int!
+    $CircularNumber: String
+    $CircularDate: Date
+    $ContractSubject: String
+    $ContractNumber: String
+    $ContractDate: Date
+    $InitialBudget: Decimal
+    $InitialTimePeriod: Int
+    $PriceListOfBasicUnitOfField:String
+    $IsSpecialPriceListAttachedToContract: String
+    $RecommendedCoefficient: Int
+    $CoefficientType: String
+    $AssigningType: String
+    $DoesContainAdjustment: String
+    $BaseIndexPeriod: String
+    $OperationStartDateAccuser: Date
+    $PhysicalProgressInArbitrationDateAccuser: Int
+    $FinancialProgressInArbitrationDateAccuser: Int
+    $ContractStatusInArbitration: [String!]
+    $SupervisionDepartment: String
+    $AuthorizedDelaysAccuser: Int
+    $UnauthorizedDelaysAccuser: Int
+    $AccusedDepartmentId: Int
+    $AccuserDepartmentId: Int
   ) {
     contract_addContract(
       input: {
-        relatedPeople: $RelatedPeople
+        accuserRelatedPeopleByAccused: $AccuserRelatedPeople
+        accusedRelatedPeopleByAccused: $AccusedRelatedPeople
         accuserNationality: $AccuserNationality
-        accusedNationality: $AccusedNationality
-        contractType: $ContractType
-        circularNumber: $CircularNumber
-        circularDate: $CircularDate
-        contractSubject: $ContractSubject
-        contractNumber: $ContractNumber
-        contractDate: $ContractDate
-        initialBudget: $InitialBudget
-        initialTimePeriod: $InitialTimePeriod
-        priceListOfBasicUnitOfField: $PriceListOfBasicUnitOfField
-        isSpecialPriceListAttachedToContract: $IsSpecialPriceListAttachedToContract
-        recommendedCoefficient: $RecommendedCoefficient
-        coefficientType: $CoefficientType
-        assigningType: $AssigningType
-        doesContainAdjustment: $DoesContainAdjustment
-        baseIndexPeriod: $BaseIndexPeriod
-        operationStartDateAccuser: $OperationStartDateAccuser
-        operationStartDateAccused: $OperationStartDateAccused
-        physicalProgressInArbitrationDateAccuser: $PhysicalProgressInArbitrationDateAccuser
-        physicalProgressInArbitrationDateAccused: $PhysicalProgressInArbitrationDateAccused
-        financialProgressInArbitrationDateAccuser: $FinancialProgressInArbitrationDateAccuser
-        financialProgressInArbitrationDateAccused: $FinancialProgressInArbitrationDateAccused
-        contractStatusInArbitration: $ContractStatusInArbitration
-        contractStatusInArbitrationDate: $ContractStatusInArbitrationDate
-        supervisionDepartment: $SupervisionDepartment
-        authorizedDelaysAccuser: $AuthorizedDelaysAccuser
-        authorizedDelaysAccused: $AuthorizedDelaysAccused
-        unauthorizedDelaysAccuser: $UnauthorizedDelaysAccuser
-        unauthorizedDelaysAccused: $UnauthorizedDelaysAccused
-        accusedDepartmentId:$AccusedDepartmentId
-        accuserDepartmentId:$AccuserDepartmentId
+        contractTypeByAccuser: $ContractType
+        circularNumberByAccuser: $CircularNumber
+        circularDateByAccuser: $CircularDate
+        contractSubjectByAccuser: $ContractSubject
+        contractNumberByAccuser: $ContractNumber
+        contractDateByAccuser: $ContractDate
+        initialBudgetByAccuser: $InitialBudget
+        initialTimePeriodByAccuser: $InitialTimePeriod
+        priceListOfBasicUnitOfFieldByAccuser: $PriceListOfBasicUnitOfField
+        isSpecialPriceListAttachedToContractByAccuser: $IsSpecialPriceListAttachedToContract
+        recommendedCoefficientByAccuser: $RecommendedCoefficient
+        coefficientTypeByAccuser: $CoefficientType
+        assigningTypeByAccuser: $AssigningType
+        doesContainAdjustmentByAccuser: $DoesContainAdjustment
+        baseIndexPeriodByAccuser: $BaseIndexPeriod
+        operationStartDateByAccuser: $OperationStartDateAccuser
+        physicalProgressInArbitrationDateByAccuser: $PhysicalProgressInArbitrationDateAccuser
+        financialProgressInArbitrationDateByAccuser: $FinancialProgressInArbitrationDateAccuser
+        contractStatusAndDateInArbitrationByAccuser: $ContractStatusInArbitration
+        supervisionDepartmentByAccuser: $SupervisionDepartment
+        authorizedDelaysByAccuser: $AuthorizedDelaysAccuser
+        unauthorizedDelaysByAccuser: $UnauthorizedDelaysAccuser
+        accusedDepartmentId: $AccusedDepartmentId
+        accuserDepartmentId: $AccuserDepartmentId
+      }
+    ) {
+      result {
+        id
+      }
+      status {
+        code
+        value
+      }
+    }
+  }
+`;
+export const UPDATE_CONTRACT_BY_ACCUSED = gql`
+  mutation contract_addContract(
+    $AccuserRelatedPeople: String
+    $AccusedRelatedPeople: String
+    $AccuserNationality: String!
+    $ContractType: [String!]
+    $CircularNumber: String
+    $CircularDate: Date
+    $ContractSubject: String
+    $ContractNumber: String
+    $ContractDate: Date
+    $InitialBudget: Decimal
+    $InitialTimePeriod: Int
+    $PriceListOfBasicUnitOfField:String
+    $IsSpecialPriceListAttachedToContract: String
+    $RecommendedCoefficient: Int
+    $CoefficientType: String
+    $AssigningType: String
+    $DoesContainAdjustment: String
+    $BaseIndexPeriod: String
+    $OperationStartDateAccuser: Date
+    $PhysicalProgressInArbitrationDateAccuser: Int
+    $FinancialProgressInArbitrationDateAccuser: Int
+    $ContractStatusInArbitration: [String!]
+    $SupervisionDepartment: String
+    $AuthorizedDelaysAccuser: Int
+    $UnauthorizedDelaysAccuser: Int
+    $id: Int!
+  ) {
+    contract_updateContract(
+      input: {
+        id: $id
+        accuserRelatedPeopleByAccused: $AccuserRelatedPeople
+        accusedRelatedPeopleByAccused: $AccusedRelatedPeople
+        accusedNationality: $AccuserNationality
+        contractTypeByAccused: $ContractType
+        circularNumberByAccused: $CircularNumber
+        circularDateByAccused: $CircularDate
+        contractSubjectByAccused: $ContractSubject
+        contractNumberByAccused: $ContractNumber
+        contractDateByAccused: $ContractDate
+        initialBudgetByAccused: $InitialBudget
+        initialTimePeriodByAccused: $InitialTimePeriod
+        priceListOfBasicUnitOfFieldByAccused: $PriceListOfBasicUnitOfField
+        isSpecialPriceListAttachedToContractByAccused: $IsSpecialPriceListAttachedToContract
+        recommendedCoefficientByAccused: $RecommendedCoefficient
+        coefficientTypeByAccused: $CoefficientType
+        assigningTypeByAccused: $AssigningType
+        doesContainAdjustmentByAccused: $DoesContainAdjustment
+        baseIndexPeriodByAccused: $BaseIndexPeriod
+        operationStartDateByAccused: $OperationStartDateAccuser
+        physicalProgressInArbitrationDateByAccused: $PhysicalProgressInArbitrationDateAccuser
+        financialProgressInArbitrationDateByAccused: $FinancialProgressInArbitrationDateAccuser
+        contractStatusAndDateInArbitrationByAccused: $ContractStatusInArbitration
+        supervisionDepartmentByAccused: $SupervisionDepartment
+        authorizedDelaysByAccused: $AuthorizedDelaysAccuser
+        unauthorizedDelaysByAccused: $UnauthorizedDelaysAccuser
       }
     ) {
       result {
@@ -97,3 +154,125 @@ export const DELETE_CONTRACT = gql`
     }
   }
 `;
+
+export type Contract = {
+  AccuserDepartmentId: number;
+  AccusedDepartmentId: number;
+  AccuserNationality?: string;
+  AccusedNationality?: string;
+  AccuserRelatedPeopleByAccuser?: string[];
+  AccuserRelatedPeopleByAccused?: string[];
+  AccusedRelatedPeopleByAccuser?: string[];
+  AccusedRelatedPeopleByAccused?: string[];
+  ContractTypeByAccused?: string[];
+  ContractTypeByAccuser?: string[];
+  OtherContractTypeByAccused?: string;
+  OtherContractTypeByAccuser?: string;
+  CircularNumberByAccused?: string;
+  CircularNumberByAccuser?: string;
+  CircularDateByAccused?: Date;
+  CircularDateByAccuser?: Date;
+  ContractSubjectByAccused?: string;
+  ContractSubjectByAccuser?: string;
+  ContractNumberByAccused?: string;
+  ContractNumberByAccuser?: string;
+  ContractDateByAccused?: Date;
+  ContractDateByAccuser?: Date;
+  InitialBudgetByAccused?: number;
+  InitialBudgetByAccuser?: number;
+  InitialTimePeriodByAccused?: number;
+  InitialTimePeriodByAccuser?: number;
+  PriceListOfBasicUnitOfFieldByAccused?: string[];
+  PriceListOfBasicUnitOfFieldByAccuser?: string[];
+  IsSpecialPriceListAttachedToContractByAccused?: string;
+  IsSpecialPriceListAttachedToContractByAccuser?: string;
+  RecommendedCoefficientByAccused?: number;
+  RecommendedCoefficientByAccuser?: number;
+  CoefficientTypeByAccused?: string;
+  CoefficientTypeByAccuser?: string;
+  AssigningTypeByAccused?: string;
+  AssigningTypeByAccuser?: string;
+  DoesContainAdjustmentByAccused?: string;
+  DoesContainAdjustmentByAccuser?: string;
+  BaseIndexPeriodByAccused?: string;
+  BaseIndexPeriodByAccuser?: string;
+  OperationStartDateByAccused?: Date;
+  OperationStartDateByAccuser?: Date;
+  PhysicalProgressInArbitrationDateByAccused?: number;
+  PhysicalProgressInArbitrationDateByAccuser?: number;
+  FinancialProgressInArbitrationDateByAccused?: number;
+  FinancialProgressInArbitrationDateByAccuser?: number;
+  ContractStatusAndDateInArbitrationByAccused?: string[];
+  ContractStatusAndDateInArbitrationByAccuser?: string[];
+  SupervisionDepartmentByAccused?: string;
+  SupervisionDepartmentByAccuser?: string;
+  AuthorizedDelaysByAccused?: number;
+  AuthorizedDelaysByAccuser?: number;
+  UnauthorizedDelaysByAccused?: number;
+  UnauthorizedDelaysByAccuser?: number;
+  IsExecutiveByAccused?: boolean;
+  IsExecutiveByAccuser?: boolean;
+  FileNamesByAccused?: string[];
+  FileNamesByAccuser?: string[];
+};
+
+export type ContractSmall = {
+  accuserDepartmentId: number;
+  accusedDepartmentId: number;
+  accuserNationality?: string;
+  accusedNationality?: string;
+  accuserRelatedPeopleByAccuser?: string;
+  accuserRelatedPeopleByAccused?: string;
+  accusedRelatedPeopleByAccuser?: string;
+  accusedRelatedPeopleByAccused?: string;
+  contractTypeByAccused?: string[];
+  contractTypeByAccuser?: string[];
+  otherContractTypeByAccused?: string;
+  otherContractTypeByAccuser?: string;
+  circularNumberByAccused?: string;
+  circularNumberByAccuser?: string;
+  circularDateByAccused?: Date;
+  circularDateByAccuser?: Date;
+  contractSubjectByAccused?: string;
+  contractSubjectByAccuser?: string;
+  contractNumberByAccused?: string;
+  contractNumberByAccuser?: string;
+  contractDateByAccused?: Date;
+  contractDateByAccuser?: Date;
+  initialBudgetByAccused?: number;
+  initialBudgetByAccuser?: number;
+  initialTimePeriodByAccused?: number;
+  initialTimePeriodByAccuser?: number;
+  priceListOfBasicUnitOfFieldByAccused?: string[];
+  priceListOfBasicUnitOfFieldByAccuser?: string[];
+  isSpecialPriceListAttachedToContractByAccused?: string;
+  isSpecialPriceListAttachedToContractByAccuser?: string;
+  recommendedCoefficientByAccused?: number;
+  recommendedCoefficientByAccuser?: number;
+  coefficientTypeByAccused?: string;
+  coefficientTypeByAccuser?: string;
+  assigningTypeByAccused?: string;
+  assigningTypeByAccuser?: string;
+  doesContainAdjustmentByAccused?: string;
+  doesContainAdjustmentByAccuser?: string;
+  baseIndexPeriodByAccused?: string;
+  baseIndexPeriodByAccuser?: string;
+  operationStartDateByAccused?: Date;
+  operationStartDateByAccuser?: Date;
+  physicalProgressInArbitrationDateByAccused?: number;
+  physicalProgressInArbitrationDateByAccuser?: number;
+  financialProgressInArbitrationDateByAccused?: number;
+  financialProgressInArbitrationDateByAccuser?: number;
+  contractStatusAndDateInArbitrationByAccused?: string[];
+  contractStatusAndDateInArbitrationByAccuser?: string[];
+  supervisionDepartmentByAccused?: string;
+  supervisionDepartmentByAccuser?: string;
+  authorizedDelaysByAccused?: number;
+  authorizedDelaysByAccuser?: number;
+  unauthorizedDelaysByAccused?: number;
+  unauthorizedDelaysByAccuser?: number;
+  isExecutiveByAccused?: boolean;
+  isExecutiveByAccuser?: boolean;
+  fileNamesByAccused?: string[];
+  fileNamesByAccuser?: string[];
+};

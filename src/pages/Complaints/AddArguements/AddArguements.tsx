@@ -14,11 +14,11 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 import { BsCheck, BsPlusCircleDotted } from "react-icons/bs";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useUserStore } from "../../../Context/UserStore";
 import {
   GET_COMPLAINT,
-  GET_COMPLAINT_ARGUMENTS
+  GET_COMPLAINT_ARGUMENTS,
 } from "../../../GraphQL/Complaints/Queries";
 import ArgumentCard from "../../../components/Arguments/ArgumentCard";
 import ArgumentHeader from "../../../components/Arguments/ArgumentHeader";
@@ -35,12 +35,16 @@ import {
   GreenLight,
   onSecondary,
   primary,
-  secondary
+  primaryGreyLightTransparent,
+  secondary,
 } from "../../../theme/color";
+import { UPDATE_COMPLAINT } from "../../../GraphQL/Complaints/Mutations";
+import states from "../../../static/states.json";
 
 const AddArgument = () => {
-  const { contractId, state } = useParams();
-  const contractIdInt = contractId && parseInt(contractId);
+  const { contractId, complaintId, state } = useParams();
+  const navigate = useNavigate( )
+  const complaintIdInt = complaintId && parseInt(complaintId);
   const user = useUserStore((state) => state.user);
   const stateInt = state ? parseInt(state) : 0;
   const [arguements, setArguements] = React.useState<
@@ -60,11 +64,24 @@ const AddArgument = () => {
     argument: {} as OptionalArgument,
   });
 
+  const [updateCompaint] = useMutation(UPDATE_COMPLAINT, {
+    variables: {
+      id: complaintIdInt,
+      complaintState: states.ComplaintRegistered.cap,
+    },
+    onCompleted(data) {
+      console.log('state',states.ComplaintRegistered.cap);
+      console.log(data);
+      alert("ثبت شد");
+      // navigate("/complaints");
+    },
+  });
+
   const { data, loading, refetch } = useQuery(
     GET_COMPLAINT_ARGUMENTS,
     {
       variables: {
-        id: contractIdInt,
+        id: complaintIdInt,
       },
       onCompleted(data: {
         complaintArgument_getComplaintArguments: {
@@ -78,66 +95,76 @@ const AddArgument = () => {
     }
   );
 
-  const { loading: compaintLoading } = useQuery(
-    GET_COMPLAINT,
-    {
-      variables: {
-        id: contractId && parseInt(contractId),
-      },
-      onCompleted(data) {
-        console.log("compaint", data);
-        if (
-          state &&
-          parseInt(state) == 1 &&
-          user.departmentId ==
-            data?.complaint_getComplaint?.result?.contract
-              ?.accuserDepartmentId
-        ) {
-          console.log(
-            "accuserDepartmentId",
-            data?.complaint_getComplaint.result.contract
-              ?.accuserDepartmentId
-          );
-          setNoAccess(true);
-          return <NoAccess />;
-        } else {
-          setNoAccess(false);
+  const { loading: compaintLoading } = useQuery(GET_COMPLAINT, {
+    variables: {
+      id: complaintId && parseInt(complaintId),
+    },
+    onCompleted(data) {
+      console.log("compaint", data);
+      if (
+        state &&
+        parseInt(state) == 1 &&
+        user.departmentId ==
+          data?.complaint_getComplaint?.result?.contract
+            ?.accuserDepartmentId
+      ) {
+        console.log(
+          "accuserDepartmentId",
+          data?.complaint_getComplaint.result.contract
+            ?.accuserDepartmentId
+        );
+        setNoAccess(true);
+        return <NoAccess />;
+      } else if (
+        state &&
+        parseInt(state) == 0 &&
+        user.departmentId !=
+          data?.complaint_getComplaint?.result?.contract
+            ?.accuserDepartmentId
+      ) {
+        setNoAccess(true);
+        console.log(
+          "accuserDepartmentId",
+          data?.complaint_getComplaint.result.contract
+            ?.accuserDepartmentId
+        );
+      } else {
+        setNoAccess(false);
 
-          console.log(
-            "accuserDepartmentId",
-            data?.complaint_getComplaint.result.contract
-              ?.accuserDepartmentId
-          );
-        }
-        if (
-          state &&
-          parseInt(state) == 0 &&
-          user.departmentId ==
-            data?.complaint_getComplaint?.result?.contract
-              ?.accusedDepartmentId
-        ) {
-          console.log(
-            "accusedDepartmentId",
-            data?.complaint_getComplaint.result.contract
-              ?.accusedDepartmentId
-          );
-          setNoAccess(true);
-          return <NoAccess />;
-        } else {
-          setNoAccess(false);
+        console.log(
+          "accuserDepartmentId",
+          data?.complaint_getComplaint.result.contract
+            ?.accuserDepartmentId
+        );
+      }
+      if (
+        state &&
+        parseInt(state) == 0 &&
+        user.departmentId ==
+          data?.complaint_getComplaint?.result?.contract
+            ?.accusedDepartmentId
+      ) {
+        console.log(
+          "accusedDepartmentId",
+          data?.complaint_getComplaint.result.contract
+            ?.accusedDepartmentId
+        );
+        setNoAccess(true);
+        return <NoAccess />;
+      } else {
+        setNoAccess(false);
 
-          console.log(
-            "accusedDepartmentId",
-            data?.complaint_getComplaint.result.contract
-              ?.accusedDepartmentId
-          );
-        }
-      },
-      onError(error) {
-        console.log("compaint", error);
-      },
-    }
-  );
+        console.log(
+          "accusedDepartmentId",
+          data?.complaint_getComplaint.result.contract
+            ?.accusedDepartmentId
+        );
+      }
+    },
+    onError(error) {
+      console.log("compaint", error);
+    },
+  });
 
   const [DeleteArgument] = useMutation(
     gql`
@@ -168,6 +195,7 @@ const AddArgument = () => {
           sx={{
             borderRadius: "0.5rem",
             outline: `2px solid ${primary}`,
+            backgroundColor: "rgb(220,220,220)",
             // padding: "0.1rem",
             display: "flex",
             flexDirection: "column",
@@ -247,6 +275,11 @@ const AddArgument = () => {
               color: Green,
             },
           }}
+          onClick={() => {
+            if (stateInt == 0) {
+              void updateCompaint();
+            }
+          }}
         >
           <BsCheck />
           <Typography
@@ -260,7 +293,7 @@ const AddArgument = () => {
         </IconButton>
       </Box>
       <Box display={!compaintLoading && noAccess ? "block" : "none"}>
-        <NoAccess/>
+        <NoAccess />
       </Box>
       <ArgumentInfoModal
         open={viewMoreModal.open}
@@ -277,7 +310,7 @@ const AddArgument = () => {
         argumentId={
           selectedArgument.id ? parseInt(selectedArgument.id) : 0
         }
-        complaintId={contractIdInt || 0}
+        complaintId={complaintIdInt || 0}
         state={stateInt}
         open={addModal.open}
         onClose={() => {
@@ -298,6 +331,9 @@ const AddArgument = () => {
         }}
         editMode={addModal.editMode}
         ArgumentFromParent={selectedArgument}
+        refetch={() => {
+          void refetch();
+        }}
       />
     </>
   );

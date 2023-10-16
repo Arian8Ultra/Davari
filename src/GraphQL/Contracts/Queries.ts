@@ -6,8 +6,8 @@ export const GET_CONTRACTS = gql`
       result {
         items {
           id
-          contractNumber
-          contractDate
+          contractNumberByAccuser
+          contractDateByAccuser
         }
       }
     }
@@ -16,44 +16,75 @@ export const GET_CONTRACTS = gql`
 
 export const GET_CONTRACT = gql`
   query GetContract($id: Int!) {
-    contract_getContract(entityId:$id) {
-      result {
-        id
-        contractNumber
-        contractDate
-        accuserDepartmentId
-        initialBudget
-        initialTimePeriod
-        priceListOfBasicUnitOfField
-        isSpecialPriceListAttachedToContract
-        recommendedCoefficient
-        coefficientType
-        assigningType
-        doesContainAdjustment
-        baseIndexPeriod
-        accusedDepartmentId
-        operationStartDateAccuser
-        operationStartDateAccused
-        physicalProgressInArbitrationDateAccuser
-        physicalProgressInArbitrationDateAccused
-        financialProgressInArbitrationDateAccused
-        financialProgressInArbitrationDateAccuser
-        supervisionDepartment
-        accuserNationality
-        authorizedDelaysAccuser
-        authorizedDelaysAccused
-        unauthorizedDelaysAccuser
-        unauthorizedDelaysAccused
-        isExecutive
-        department{
-          title
+    contract_getContracts {
+      result(where: { id: { eq: $id } }) {
+        items {
           id
+          accuserDepartmentId
+          accusedDepartmentId
+          accuserNationality
+          accusedNationality
+          accuserRelatedPeopleByAccuser
+          accuserRelatedPeopleByAccused
+          accusedRelatedPeopleByAccuser
+          accusedRelatedPeopleByAccused
+          contractTypeByAccused
+          contractTypeByAccuser
+          otherContractTypeByAccused
+          otherContractTypeByAccuser
+          circularNumberByAccused
+          circularNumberByAccuser
+          circularDateByAccused
+          circularDateByAccuser
+          contractSubjectByAccused
+          contractSubjectByAccuser
+          contractNumberByAccused
+          contractNumberByAccuser
+          contractDateByAccused
+          contractDateByAccuser
+          initialBudgetByAccused
+          initialBudgetByAccuser
+          initialTimePeriodByAccused
+          initialTimePeriodByAccuser
+          priceListOfBasicUnitOfFieldByAccused
+          priceListOfBasicUnitOfFieldByAccuser
+          isSpecialPriceListAttachedToContractByAccused
+          isSpecialPriceListAttachedToContractByAccuser
+          recommendedCoefficientByAccused
+          recommendedCoefficientByAccuser
+          coefficientTypeByAccused
+          coefficientTypeByAccuser
+          assigningTypeByAccused
+          assigningTypeByAccuser
+          doesContainAdjustmentByAccused
+          doesContainAdjustmentByAccuser
+          baseIndexPeriodByAccused
+          baseIndexPeriodByAccuser
+          operationStartDateByAccused
+          operationStartDateByAccuser
+          physicalProgressInArbitrationDateByAccused
+          physicalProgressInArbitrationDateByAccuser
+          financialProgressInArbitrationDateByAccused
+          financialProgressInArbitrationDateByAccuser
+          contractStatusAndDateInArbitrationByAccused
+          contractStatusAndDateInArbitrationByAccuser
+          supervisionDepartmentByAccused
+          supervisionDepartmentByAccuser
+          authorizedDelaysByAccused
+          authorizedDelaysByAccuser
+          unauthorizedDelaysByAccused
+          unauthorizedDelaysByAccuser
+          isExecutiveByAccused
+          isExecutiveByAccuser
+          fileNamesByAccused
+          fileNamesByAccuser
+          department {
+            title
+            id
+          }
         }
       }
-      status{
-        code
-        value
-      }
+      status
     }
   }
 `;

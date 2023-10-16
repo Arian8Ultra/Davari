@@ -16,6 +16,7 @@ import {
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import useLayoutStore from "../Context/LayoutStore";
+import { secondaryDark } from "../theme/color";
 
 interface ListItemLinkProps extends ListItemButtonProps {
   to: string;
@@ -31,34 +32,48 @@ interface ListItemLinkProps extends ListItemButtonProps {
 }
 
 function ListItemLink(props: ListItemLinkProps) {
-  const { to, open, primary,display, ...other } = props;
+  const { to, open, primary, display, ...other } = props;
   const [collapseOpen, setCollapseOpen] = React.useState(
-    props.collapseOpen || false,
-  )
+    props.collapseOpen || false
+  );
   const setPageTitle = useLayoutStore((state) => state.setPageTitle);
+  const PageTitle = useLayoutStore((state) => state.pageTitle);
   useEffect(() => {
     // collapseOpen && !open && setCollapseOpen(false);
   }, [collapseOpen, open]);
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
   return (
-    <ListItem key={primary} disablePadding sx={{ display: display || "block",
-    backgroundColor: collapseOpen ? "rgba(255,255,255,0.1)" : "transparent"
-     }}>
+    <ListItem
+      key={primary}
+      disablePadding
+      sx={{
+        display: display || "block",
+        width: "90%",
+        margin: "1rem auto",
+        borderRadius:'1rem',
+        backgroundColor:
+          primary == PageTitle
+            ? "rgb(136, 212, 152)"
+            : collapseOpen
+            ? "rgba(255,255,255,0.1)"
+            : "transparent",
+      }}
+    >
       <Box sx={{ flexGrow: 1 }} display={"flex"}>
         <ListItemButton
           sx={{
             minHeight: 48,
             justifyContent: open ? "initial" : "center",
             px: 2.5,
-            color: "white",
+            color: primary == PageTitle ? secondaryDark : 'white',
           }}
           onClick={() => {
             // console.log("to", to);\
             if (props.hasLink) {
               setPageTitle(primary);
               navigate(to);
-            }else{
+            } else {
               if (props.setCollapseOpen) {
                 props.setCollapseOpen(!props.collapseOpen);
               }
@@ -72,17 +87,18 @@ function ListItemLink(props: ListItemLinkProps) {
               minWidth: 0,
               mr: open ? 3 : "auto",
               justifyContent: "center",
-              color: "white",
+              color: primary == PageTitle ? secondaryDark : 'white',
             }}
           >
             {props.icon}
           </ListItemIcon>
           <ListItemText
             primary={primary}
-            sx={{ opacity: open ? 1 : 0,
-            display : open ? "block" : "none",
-            transition: "opacity 0.5s ease-in-out"
-           }}
+            sx={{
+              opacity: open ? 1 : 0,
+              display: open ? "block" : "none",
+              transition: "opacity 0.5s ease-in-out",
+            }}
           />
         </ListItemButton>
         {props.hasCollapse && props.open && (
@@ -98,7 +114,7 @@ function ListItemLink(props: ListItemLinkProps) {
               "&:hover": {
                 backgroundColor: "rgba(255,255,255,0.1)",
                 borderRadius: "0",
-                },
+              },
             }}
           >
             {props.collapseOpen || collapseOpen ? (
@@ -109,7 +125,7 @@ function ListItemLink(props: ListItemLinkProps) {
           </IconButton>
         )}
       </Box>
-      <Collapse in={collapseOpen} timeout={'auto'} unmountOnExit>
+      <Collapse in={collapseOpen} timeout={"auto"} unmountOnExit>
         <List
           sx={{
             width: "100%",

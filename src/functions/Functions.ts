@@ -10,7 +10,7 @@ export const convertRoleToPersian = (role: string) => {
     case "EDITOR":
       return "ویرایشگر";
     case "SENIOR_USER":
-      return "کربر ارشد";
+      return "کاربر ارشد";
     case "EXPERT":
       return "کارشناس";
     case "NORMAL":

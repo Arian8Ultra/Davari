@@ -6,6 +6,7 @@ import { Box, Stack, Typography } from "@mui/material";
 import {
   primaryGrey,
   primaryTransparent,
+  secondary,
 } from "../../../theme/color";
 import theme from "../../../theme/theme";
 import UserCard from "./UserCard";
@@ -36,7 +37,7 @@ const UserList = () => {
     >
       <Box
         sx={{
-          backgroundColor: primaryGrey,
+          backgroundColor: secondary,
           color: "white",
           width: "100%",
           height: "100%",

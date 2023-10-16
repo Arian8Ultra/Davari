@@ -62,7 +62,7 @@ const FormList = (props: FormListProps) => {
               borderRadius: "5px 5px 0 0",
             }}
           >
-            فرم های شکایات
+            فرم های درخواست های داوری
           </Box>
           <Box
             display={"grid"}
@@ -175,7 +175,7 @@ const FormList = (props: FormListProps) => {
               borderRadius: "5px 5px 0 0",
             }}
           >
-            فرم های پاسخ شکایات
+            فرم های پاسخ درخواست های داوری
           </Box>
           <Box
             display={"grid"}

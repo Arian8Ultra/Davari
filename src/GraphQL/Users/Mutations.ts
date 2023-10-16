@@ -178,9 +178,10 @@ export const ADD_USER_TO_ROLE = gql`
 export const RoleType = new GraphQLEnumType({
   name: "RoleType",
   values: {
-    ADMIN: { value: "ADMIN" },
+    SENIOR_USER: { value: "SENIOR_USER" },
     NORMAL: { value: "NORMAL" },
     EDITOR: { value: "EDITOR" },
+    EXPERT: { value: "EXPERT" },
     SUPERADMIN: { value: "SUPERADMIN" },
   },
 });

@@ -1,25 +1,17 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { AiFillMessage, AiOutlineMessage } from "react-icons/ai";
 import {
   BsInputCursorText,
   BsPeopleFill,
-  BsPersonCircle,
-  BsViewStacked,
+  BsPersonCircle
 } from "react-icons/bs";
-import {
-  VscDebug,
-  VscFile,
-  VscHome,
-  VscWarning,
-} from "react-icons/vsc";
+import { FaBalanceScale, FaHome } from "react-icons/fa";
 import { Titles } from "./Titles";
-import { UserRole } from "../GraphQL/Users/Queries";
 
 export const SideBarMenu = [
   {
     primary: Titles.home,
     to: "/home",
-    icon: <VscHome />,
+    icon: <FaHome />,
     hasLink: true,
     hasCollapse: false,
     children: [],
@@ -28,7 +20,7 @@ export const SideBarMenu = [
   {
     primary: Titles.complaints,
     to: "/complaints",
-    icon: <VscWarning />,
+    icon: <FaBalanceScale />,
     hasLink: true,
     hasCollapse: false,
     children: [],

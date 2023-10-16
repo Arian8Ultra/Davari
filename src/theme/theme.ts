@@ -57,6 +57,9 @@ const theme = createTheme({
       light: secondaryLight,
       dark: secondaryDark,
     },
+    background:{
+      default:'rgba(230,230,230)'
+    }
   },
 });
 

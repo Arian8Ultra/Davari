@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { Person2Outlined } from "@mui/icons-material";
 import {
   Box,
@@ -41,6 +41,7 @@ import {
   primaryTransparent
 } from "../../../theme/color";
 import NewModal from "../../Modals";
+import { GET_DEPARTMENTS } from "../../../GraphQL/Departments/Queries";
 interface Props {
   firstName?: string;
   lastName?: string;
@@ -67,6 +68,9 @@ const UserCard = (props: Props) => {
   const handleCloseAnchor = () => {
     setAnchorEl(null);
   };
+
+  const { data: departmentData } = useQuery(GET_DEPARTMENTS);
+
 
   const [editModal, setEditModal] = useState({
     open: false,

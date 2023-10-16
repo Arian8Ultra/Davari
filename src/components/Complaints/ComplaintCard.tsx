@@ -55,7 +55,7 @@ const ComplaintCard = (props: Props) => {
           }
         </Typography>
         <Typography textAlign={"center"} gridArea={"number"}>
-          شماره شکایت:
+          شماره درخواست داوری:
           {
             // if number is not provided, use id + "number"
             props.number ? props.number : props.id + " number "
