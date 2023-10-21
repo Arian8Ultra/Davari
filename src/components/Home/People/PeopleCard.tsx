@@ -19,14 +19,14 @@ const PeopleCard = ({ people, columns, rows }: PeopleCardProps) => {
     <Card
       sx={{
         width: "100%",
-        height: "40dvh",
+        height: "100%",
         gridColumn: columns,
         gridRow: rows,
         display: "flex",
         flexDirection: "column",
         justifyContent: "start",
         alignItems: "center",
-        background: "rgba(200,200,200,0.7)",
+        background: "rgba(220,220,220,0.7)",
         borderRadius: "1rem",
       }}
     >
@@ -60,7 +60,7 @@ const PeopleCard = ({ people, columns, rows }: PeopleCardProps) => {
               flexDirection: "row",
               justifyContent: "space-between",
               alignItems: "center",
-              background: "rgba(255,255,255,0.2)",
+              background: "rgba(255,255,255,0.5)",
               boxShadow:"0",
               borderRadius: "0.5rem",
               padding: "1.5rem",

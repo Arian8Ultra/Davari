@@ -8,7 +8,11 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { Red, RedLight, primaryLightTransparent } from "../theme/color";
+import {
+  Red,
+  RedLight,
+  primaryLightTransparent,
+} from "../theme/color";
 import FaTypography from "./FaComponents/FaTypography";
 
 interface NewModalProps {
@@ -25,6 +29,23 @@ interface NewModalProps {
   background?: string;
   isCloseable?: boolean;
   dividerColor?: string;
+  backgroundBlendMode?:
+    | "normal"
+    | "multiply"
+    | "screen"
+    | "overlay"
+    | "darken"
+    | "lighten"
+    | "color-dodge"
+    | "color-burn"
+    | "hard-light"
+    | "soft-light"
+    | "difference"
+    | "exclusion"
+    | "hue"
+    | "saturation"
+    | "color"
+    | "luminosity";
 }
 
 export default function NewModal(props: NewModalProps) {
@@ -65,6 +86,7 @@ export default function NewModal(props: NewModalProps) {
           overflow: "auto",
           bgcolor: backgroundColor,
           background: background,
+          backgroundBlendMode: props.backgroundBlendMode,
           boxShadow: 24,
           borderRadius: "15px",
           backdropFilter: "blur(5px)",

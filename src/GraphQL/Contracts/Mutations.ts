@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const CREATE_CONTRACT = gql`
-  mutation contract_addContract(
+  mutation CREATE_CONTRACT(
     $AccuserRelatedPeople: String
     $AccusedRelatedPeople: String
     $AccuserNationality: String!
@@ -13,7 +13,7 @@ export const CREATE_CONTRACT = gql`
     $ContractDate: Date
     $InitialBudget: Decimal
     $InitialTimePeriod: Int
-    $PriceListOfBasicUnitOfField:String
+    $PriceListOfBasicUnitOfField: String
     $IsSpecialPriceListAttachedToContract: String
     $RecommendedCoefficient: Int
     $CoefficientType: String
@@ -27,8 +27,8 @@ export const CREATE_CONTRACT = gql`
     $SupervisionDepartment: String
     $AuthorizedDelaysAccuser: Int
     $UnauthorizedDelaysAccuser: Int
-    $AccusedDepartmentId: Int
-    $AccuserDepartmentId: Int
+    $AccusedDepartmentId: String
+    $AccuserDepartmentId: String
   ) {
     contract_addContract(
       input: {
@@ -57,8 +57,8 @@ export const CREATE_CONTRACT = gql`
         supervisionDepartmentByAccuser: $SupervisionDepartment
         authorizedDelaysByAccuser: $AuthorizedDelaysAccuser
         unauthorizedDelaysByAccuser: $UnauthorizedDelaysAccuser
-        accusedDepartmentId: $AccusedDepartmentId
-        accuserDepartmentId: $AccuserDepartmentId
+        accusedDepartmentUserId: $AccusedDepartmentId
+        accuserDepartmentUserId: $AccuserDepartmentId
       }
     ) {
       result {
@@ -72,7 +72,7 @@ export const CREATE_CONTRACT = gql`
   }
 `;
 export const UPDATE_CONTRACT_BY_ACCUSED = gql`
-  mutation contract_addContract(
+  mutation UPDATE_CONTRACT_BY_ACCUSED(
     $AccuserRelatedPeople: String
     $AccusedRelatedPeople: String
     $AccuserNationality: String!
@@ -84,7 +84,7 @@ export const UPDATE_CONTRACT_BY_ACCUSED = gql`
     $ContractDate: Date
     $InitialBudget: Decimal
     $InitialTimePeriod: Int
-    $PriceListOfBasicUnitOfField:String
+    $PriceListOfBasicUnitOfField: String
     $IsSpecialPriceListAttachedToContract: String
     $RecommendedCoefficient: Int
     $CoefficientType: String
@@ -217,8 +217,8 @@ export type Contract = {
 };
 
 export type ContractSmall = {
-  accuserDepartmentId: number;
-  accusedDepartmentId: number;
+  accuserDepartmentUserId: string;
+  accusedDepartmentUserId: string;
   accuserNationality?: string;
   accusedNationality?: string;
   accuserRelatedPeopleByAccuser?: string;

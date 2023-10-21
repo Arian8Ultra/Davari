@@ -6,10 +6,10 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
+import { useMutation, useQuery } from "@apollo/client";
 import { Add } from "@mui/icons-material";
 import {
   Alert,
-  Autocomplete,
   Box,
   Button,
   Checkbox,
@@ -26,29 +26,27 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import React, { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useUserStore } from "../../../Context/UserStore";
+import { UPDATE_COMPLAINT } from "../../../GraphQL/Complaints/Mutations";
 import {
-  Department,
-  GET_DEPARTMENTS,
-} from "../../../GraphQL/Departments/Queries";
+  ContractSmall,
+  UPDATE_CONTRACT_BY_ACCUSED,
+} from "../../../GraphQL/Contracts/Mutations";
+import { GET_CONTRACT } from "../../../GraphQL/Contracts/Queries";
 import BackButton from "../../../components/BackButton";
 import FaTextField from "../../../components/FaComponents/FaTextField";
 import FaTypography from "../../../components/FaComponents/FaTypography";
 import FileBox from "../../../components/FileBox";
 import countries from "../../../static/Countries";
+import states from "../../../static/states.json";
 import {
   Green,
   GreenLight,
   primary,
   secondary,
 } from "../../../theme/color";
-import React, { useState } from "react";
-import { useMutation, useQuery } from "@apollo/client";
-import { useUserStore } from "../../../Context/UserStore";
-import { Contract, ContractSmall, UPDATE_CONTRACT_BY_ACCUSED } from "../../../GraphQL/Contracts/Mutations";
-import { useNavigate, useParams } from "react-router-dom";
-import { GET_CONTRACT } from "../../../GraphQL/Contracts/Queries";
-import { UPDATE_COMPLAINT } from "../../../GraphQL/Complaints/Mutations";
-import states from "../../../static/states.json";
 
 const UpdateContractPage = () => {
   const user = useUserStore((state) => state.user);
@@ -277,36 +275,18 @@ const UpdateContractPage = () => {
   const [UnauthorizedDelaysError, setUnauthorizedDelaysError] =
     React.useState({ error: false as boolean, text: "" as string });
   const [AccusedDepartmentId, setAccusedDepartmentId] =
-    React.useState<number>();
+    React.useState<string>();
   React.useState({ error: false as boolean, text: "" as string });
   const [AccuserDepartmentId, setAccuserDepartmentId] =
-    React.useState<number>();
+    React.useState<string>();
   const [AccusedDepartmentIdError, setAccusedDepartmentIdError] =
     React.useState<{ error: boolean; text: string }>();
   const [FileNames, setFileNames] = useState<string[]>();
   const [Files, SetFiles] = useState<File[]>();
 
   const [departments, setDepartments] = React.useState<
-    { label: string; id: number }[]
+    { label: string; id: string }[]
   >([]);
-  const { data: departmentsData } = useQuery(GET_DEPARTMENTS, {
-    onCompleted(data) {
-      console.log(data);
-      data.department_getDepartments.result.items.forEach(
-        (item: Department) => {
-          // @ts-ignore
-          setDepartments((prev: Department) => [
-            // @ts-ignore
-            ...prev,
-            {
-              label: item.title,
-              id: item.id,
-            },
-          ]);
-        }
-      );
-    },
-  });
 
   //
   //
@@ -639,7 +619,8 @@ const UpdateContractPage = () => {
     },
     onCompleted(data) {
       console.log(data);
-      const contract = data.contract_getContracts.result.items[0] as ContractSmall;
+      const contract = data.contract_getContracts.result
+        .items[0] as ContractSmall;
       console.log(contract);
       contract.accuserRelatedPeopleByAccuser &&
         setRelatedPeopleByAccusser(
@@ -649,12 +630,22 @@ const UpdateContractPage = () => {
         setRelatedPeopleByAccussed(
           JSON.parse(contract.accusedRelatedPeopleByAccuser)
         );
-      setAccusedDepartmentId(contract.accusedDepartmentId);
-      setAccuserDepartmentId(contract.accuserDepartmentId);
-      setContractNumber(contract.contractNumberByAccuser ? parseInt(contract.contractNumberByAccuser) : 0);
-      setAssigningType(contract.assigningTypeByAccuser)
-      setAuthorizedDelays(contract.authorizedDelaysByAccuser? String(contract.authorizedDelaysByAccuser) : undefined)
-      setUnauthorizedDelays(String(contract.unauthorizedDelaysByAccuser))
+      setAccusedDepartmentId(contract.accusedDepartmentUserId);
+      setAccuserDepartmentId(contract.accuserDepartmentUserId);
+      setContractNumber(
+        contract.contractNumberByAccuser
+          ? parseInt(contract.contractNumberByAccuser)
+          : 0
+      );
+      setAssigningType(contract.assigningTypeByAccuser);
+      setAuthorizedDelays(
+        contract.authorizedDelaysByAccuser
+          ? String(contract.authorizedDelaysByAccuser)
+          : undefined
+      );
+      setUnauthorizedDelays(
+        String(contract.unauthorizedDelaysByAccuser)
+      );
     },
   });
 
@@ -666,7 +657,7 @@ const UpdateContractPage = () => {
   //
   //
 
-  const navigate= useNavigate()
+  const navigate = useNavigate();
   const [updateCompaint] = useMutation(UPDATE_COMPLAINT, {
     variables: {
       id: complaintId ? parseInt(complaintId) : 0,

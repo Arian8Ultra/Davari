@@ -7,11 +7,8 @@ interface UserStore {
   user: {
     userName: string;
     id: string;
-    firstName: string;
-    lastName: string;
+    fullName: string;
     nationalCode: string;
-    personnelCode: string;
-    departmentId: number;
     phoneNumber: string;
     userRoles?: UserRole[];
   };
@@ -26,11 +23,8 @@ export const useUserStore = create<UserStore>()(
     (set) => ({
       user: {
         userName: "",
-        firstName: "",
-        lastName: "",
+        fullName: "",
         nationalCode: "",
-        personnelCode: "",
-        departmentId: 0,
         phoneNumber: "",
         id: "",
         userRole: "",
@@ -45,11 +39,8 @@ export const useUserStore = create<UserStore>()(
           user: {
             userName: "",
             id: "",
-            firstName: "",
-            lastName: "",
+            fullName: "",
             nationalCode: "",
-            personnelCode: "",
-            departmentId: 0,
             phoneNumber: "",
           },
           token: "",

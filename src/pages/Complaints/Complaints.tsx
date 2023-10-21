@@ -17,6 +17,7 @@ import { GET_CONTRACT } from "../../GraphQL/Contracts/Queries";
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import { CREATE_COMPLAINT } from "../../GraphQL/Complaints/Mutations";
 import FaTextField from "../../components/FaComponents/FaTextField";
+import theme from "../../theme/theme";
 
 const Complaints = () => {
   const [addModal, setAddModal] = useState({
@@ -45,6 +46,7 @@ const Complaints = () => {
         justifyContent={"flex-start"}
         alignItems={"center"}
         paddingY={1}
+        position={'relative'}
       >
         <Button
           variant="contained"
@@ -58,7 +60,7 @@ const Complaints = () => {
             fontSize: "1.2rem",
             boxShadow: "none",
             position: "fixed",
-            bottom: 20,
+            top: theme.spacing(10),
             right: 20,
             "&:hover": {
               backgroundColor: GreenLight,
@@ -89,7 +91,7 @@ const Complaints = () => {
         ) && (
           <ComplaintsList
             type="accuser"
-            departmentId={user.departmentId}
+            departmentId={user.id}
           />
         )}
 
@@ -98,7 +100,7 @@ const Complaints = () => {
         ) && (
           <ComplaintsList
             type="accused"
-            departmentId={user.departmentId}
+            departmentId={user.id}
           />
         )}
 
@@ -107,7 +109,7 @@ const Complaints = () => {
         ) && (
           <ComplaintsList
             type="assigned"
-            departmentId={user.departmentId}
+            departmentId={user.id}
             userId={user.id}
           />
         )}

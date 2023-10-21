@@ -6,14 +6,16 @@ export const GET_ALL_USERS = gql`
       result(take: 2000) {
         items {
           id
-          departmentId
           userName
           email
-          firstName
-          lastName
+          fullName
           phoneNumber
           nationalCode
-          personnelCode
+          childUsers{
+            parentId
+            fullName
+            id
+          }
           userRoles {
             id
             roleType
@@ -34,39 +36,6 @@ export const TOKEN_CHECK = gql`
   }
 `;
 
-export const GET_DEPARTMENTS_USERS = gql`
-  query GetDepartmentsUsers($departmentId: Int!) {
-    user_getUsers {
-      result(
-        where: { departmentId: { eq: $departmentId } }
-        take: 2000
-      ) {
-        items {
-          id
-          departmentId
-          userName
-          email
-          firstName
-          lastName
-          phoneNumber
-          nationalCode
-          personnelCode
-          userRoles {
-            id
-            roleType
-            userId
-            isDeleted
-            createdDate
-            __typename
-          }
-          __typename
-        }
-        __typename
-      }
-      __typename
-    }
-  }
-`;
 
 export type UserRole = {
   id: string;

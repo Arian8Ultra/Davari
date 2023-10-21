@@ -1,0 +1,104 @@
+{
+  "AccusedAnsweredArguments": { "cap": "ACCUSED_ANSWERED_ARGUMENTS" },
+  "AccusedApprovedArgumentsAnswers": {
+    "cap": "ACCUSED_APPROVED_ARGUMENTS_ANSWERS"
+  },
+  "AccusedCompletedArbitrationTerms": {
+    "cap": "ACCUSED_COMPLETED_ARBITRATION_TERMS"
+  },
+  "AccusedCompletedContract": { "cap": "ACCUSED_COMPLETED_CONTRACT" },
+  "AccusedNotifiedOfOfferorChangingResult": {
+    "cap": "ACCUSED_NOTIFIED_OF_OFFEROR_CHANGING_RESULT"
+  },
+  "AccuserAcceptedAccusedAnswers": {
+    "cap": "ACCUSER_ACCEPTED_ACCUSED_ANSWERS"
+  },
+  "AccuserAddedAnswer": { "cap": "ACCUSER_ADDED_ANSWER" },
+  "AccuserAddedArbitrationTerms": {
+    "cap": "ACCUSER_ADDED_ARBITRATION_TERMS"
+  },
+  "AccuserAddedComplaint": { "cap": "ACCUSER_ADDED_COMPLAINT" },
+  "AccuserAddedContract": { "cap": "ACCUSER_ADDED_CONTRACT" },
+  "AccuserApprovedArguments": { "cap": "ACCUSER_APPROVED_ARGUMENTS" },
+  "AccuserNotifiedOfSuccessfulChangingOfTheOfferor": {
+    "cap": "ACCUSER_NOTIFIED_OF_SUCCESSFUL_CHANGING_OF_THE_OFFEROR"
+  },
+  "AccuserRegisteredArguments": {
+    "cap": "ACCUSER_REGISTERED_ARGUMENTS"
+  },
+  "AccuserViewedArguments": { "cap": "ACCUSER_VIEWED_ARGUMENTS" },
+  "AddingToComplaintList": { "cap": "ADDING_TO_COMPLAINT_LIST" },
+  "CheckingAndUploadingTheSignedDecree": {
+    "cap": "CHECKING_AND_UPLOADING_THE_SIGNED_DECREE"
+  },
+  "CheckingForBeingConstructive": {
+    "cap": "CHECKING_FOR_BEING_CONSTRUCTIVE"
+  },
+  "ComplaintDetermined": { "cap": "COMPLAINT_DETERMINED" },
+  "ComplaintIsCanceledByAccuser": {
+    "cap": "COMPLAINT_IS_CANCELED_BY_ACCUSER"
+  },
+  "DeterminingCaseExpert": { "cap": "DETERMINING_CASE_EXPERT" },
+  "DidNotFulfillFirstPayment": {
+    "cap": "DID_NOT_FULFILL_FIRST_PAYMENT"
+  },
+  "MailRoomChiefReviewingTheFinalReport": {
+    "cap": "MAIL_ROOM_CHIEF_REVIEWING_THE_FINAL_REPORT"
+  },
+  "MailRoomExpertReviewingTheFinalReport": {
+    "cap": "MAIL_ROOM_EXPERT_REVIEWING_THE_FINAL_REPORT"
+  },
+  "NewOfferorNotified": { "cap": "NEW_OFFEROR_NOTIFIED" },
+  "NotAcceptedForBeingConstructive": {
+    "cap": "NOT_ACCEPTED_FOR_BEING_CONSTRUCTIVE"
+  },
+  "RedeterminingCaseExpert": { "cap": "REDETERMINING_CASE_EXPERT" },
+  "ResultNotifiedAbilityToViewScannedPhysicalResult": {
+    "cap": "RESULT_NOTIFIED_ABILITY_TO_VIEW_SCANNED_PHYSICAL_RESULT"
+  },
+  "ReviewingExpertOpinionOnOfferorChanging": {
+    "cap": "REVIEWING_EXPERT_OPINION_ON_OFFEROR_CHANGING"
+  },
+  "UploadingDocumentsAndReviewingComplaint": {
+    "cap": "UPLOADING_DOCUMENTS_AND_REVIEWING_COMPLAINT"
+  },
+  "WaitingForAccusedToFillForms": {
+    "cap": "WAITING_FOR_ACCUSED_TO_FILL_FORMS"
+  },
+  "WaitingForAccusedToSignDecree": {
+    "cap": "WAITING_FOR_ACCUSED_TO_SIGN_DECREE"
+  },
+  "WaitingForAccuserAndAccusedToSignDecree": {
+    "cap": "WAITING_FOR_ACCUSER_AND_ACCUSED_TO_SIGN_DECREE"
+  },
+  "WaitingForAccuserToSignDecree": {
+    "cap": "WAITING_FOR_ACCUSER_TO_SIGN_DECREE"
+  },
+  "WaitingForCaseExpertRegistry": {
+    "cap": "WAITING_FOR_CASE_EXPERT_REGISTRY"
+  },
+  "WaitingForCouncilResult": { "cap": "WAITING_FOR_COUNCIL_RESULT" },
+  "WaitingForExpertsCouncilPayment": {
+    "cap": "WAITING_FOR_EXPERTS_COUNCIL_PAYMENT"
+  },
+  "WaitingForFinalReportRegistration": {
+    "cap": "WAITING_FOR_FINAL_REPORT_REGISTRATION"
+  },
+  "WaitingForFinalResultUpload": {
+    "cap": "WAITING_FOR_FINAL_RESULT_UPLOAD"
+  },
+  "WaitingForFirstPayment": { "cap": "WAITING_FOR_FIRST_PAYMENT" },
+  "WaitingForLetterResponseFromMinistersCouncil": {
+    "cap": "WAITING_FOR_LETTER_RESPONSE_FROM_MINISTERS_COUNCIL"
+  },
+  "WaitingForNewOfferorsInfo": {
+    "cap": "WAITING_FOR_NEW_OFFERORS_INFO"
+  },
+  "WaitingForRelatedFormsCompletionAndCommentingOnOfferorChanging": {
+    "cap": "WAITING_FOR_RELATED_FORMS_COMPLETION_AND_COMMENTING_ON_OFFEROR_CHANGING"
+  },
+  "WaitingForSecondPayment": { "cap": "WAITING_FOR_SECOND_PAYMENT" },
+  "WaitingToDetermineIfTheOldOrTheNewOfferorIsTheAccused": {
+    "cap": "WAITING_TO_DETERMINE_IF_THE_OLD_OR_THE_NEW_OFFEROR_IS_THE_ACCUSER"
+  }
+}

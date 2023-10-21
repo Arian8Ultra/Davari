@@ -7,7 +7,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
+import { useLazyQuery, useMutation } from "@apollo/client";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -18,6 +18,7 @@ import {
   LinearProgress,
   Menu,
   MenuItem,
+  Modal,
   TextField,
 } from "@mui/material";
 import MuiAppBar, {
@@ -39,7 +40,7 @@ import {
 } from "@mui/material/styles";
 import React, { useEffect, useRef, useState } from "react";
 import { BsEye, BsEyeSlash } from "react-icons/bs";
-import { VscAccount, VscLock } from "react-icons/vsc";
+import { VscAccount } from "react-icons/vsc";
 import {
   Outlet,
   ScrollRestoration,
@@ -55,11 +56,14 @@ import {
 // @ts-ignore
 import pboLogo from "../assets/PboLogo.png";
 // @ts-ignore
+import { FaBalanceScale } from "react-icons/fa";
 import { TOKEN_CHECK } from "../GraphQL/Users/Queries";
 import sazmanImage from "../assets/Sazman.jpeg";
+import Pattern from "../assets/pattern_hexagon-7_1_3_0-0_0_2__a8575700_787878.png";
 import ListItemLink from "../components/ListItemLink";
 import NewModal from "../components/Modals";
 import Title from "../components/Title";
+import { convertRoleToPersian } from "../functions/Functions";
 import { SideBarLinkType, SideBarMenu } from "../static/SideBar";
 import { Titles } from "../static/Titles";
 import { User } from "../static/Types";
@@ -70,17 +74,8 @@ import {
   primaryGrey,
   primaryLight,
   secondary,
-  secondaryDark,
-  secondaryGreen,
-  secondaryLight,
-  secondaryLighter,
+  secondaryDark
 } from "../theme/color";
-import {
-  Department,
-  GET_DEPARTMENTS,
-} from "../GraphQL/Departments/Queries";
-import { convertRoleToPersian } from "../functions/Functions";
-import Pattern from "../assets/pattern_hexagon-7_1_3_0-0_0_2__a8575700_787878.png";
 
 const drawerWidth = 230;
 
@@ -163,8 +158,7 @@ export default function MainLayout() {
   const navigate = useNavigate();
   const setUser = useUserStore((state) => state.setUser);
   const token = useUserStore((state) => state.token);
-  const firstName = useUserStore((state) => state.user.firstName);
-  const lastName = useUserStore((state) => state.user.lastName);
+  const fullName = useUserStore((state) => state.user.fullName);
   const user = useUserStore((state) => state.user);
   const logout = useUserStore((state) => state.logout);
   const [changePasswordModal, setChangePasswordModal] = useState({
@@ -215,27 +209,6 @@ export default function MainLayout() {
     pollInterval: 1000,
   });
 
-  const [departments, setDepartments] = React.useState<
-    { label: string; id: number }[]
-  >([]);
-  const { data: departmentsData } = useQuery(GET_DEPARTMENTS, {
-    onCompleted(data) {
-      console.log(data);
-      data.department_getDepartments.result.items.forEach(
-        (item: Department) => {
-          // @ts-ignore
-          setDepartments((prev: Department) => [
-            // @ts-ignore
-            ...prev,
-            {
-              label: item.title,
-              id: item.id,
-            },
-          ]);
-        }
-      );
-    },
-  });
 
   useEffect(() => {
     if (token && token !== "") {
@@ -347,187 +320,261 @@ export default function MainLayout() {
   return (
     <Box sx={{ display: "flex" }}>
       {!signedIn ? (
-        <NewModal
-          name="ورود به سامانه"
-          backgroundColor={background}
-          open={!signedIn}
-          isCloseable={false}
-          // background={sazmanImage}
-          color={primary}
-          width={{
-            xs: "100%",
-            sm: "100%",
-            md: "50%",
-            lg: "40%",
-            xl: "30%",
-          }}
-        >
+        // <NewModal
+        //   name="ورود به سامانه هوشمند داوری"
+        //   backgroundColor={background}
+        //   open={!signedIn}
+        //   isCloseable={false}
+        //   background={`url(${Pattern})`}
+        //   color={primary}
+        //   width={{
+        //     xs: "100%",
+        //     sm: "100%",
+        //     md: "50%",
+        //     lg: "40%",
+        //     xl: "30%",
+        //   }}
+        // >
+        <Modal open={!signedIn}>
           <Box
-            display={"flex"}
-            flexDirection={"column"}
-            justifyContent={"center"}
-            alignItems={"center"}
             width={"100%"}
             height={"100%"}
+            sx={{
+              background: `url(${sazmanImage})`,
+              backgroundRepeat: "no-repeat",
+              backgroundSize: "cover",
+              backgroundPositionX: "center",
+            }}
           >
-            <Box display={"flex"} justifyContent={"center"}>
+            <Box width={"100%"} height={"100%"} sx={{
+              backdropFilter: "blur(5px) brightness(0.8)",
+            }}>
+              <img
+                src={pboLogo}
+                alt="logo"
+                style={{
+                  position: "absolute",
+                  top: "10%",
+                  left: "50%",
+                  width: "10%",
+                  transform: "translate(-50%, -50%)",
+                  filter:
+                    "drop-shadow(0px 0px 5px rgba(0,0,0,0.5)) contrast(1.5) saturate(0) brightness(10)",
+                }}
+              />
               <Box
                 display={"flex"}
+                flexDirection={"column"}
                 justifyContent={"center"}
                 alignItems={"center"}
-                padding={1}
-                borderRadius={"100%"}
-                marginBottom={"2rem"}
                 sx={{
-                  backgroundColor: secondary,
-                  color: "white",
-                  fontSize: "2rem",
+                  backgroundColor: background,
+                  transform: "translate(-50%, -50%)",
+                  top: "50%",
+                  left: "50%",
+                  position: "absolute",
+                  borderRadius: "15px",
                 }}
+                width={{
+                  xs: "100%",
+                  sm: "100%",
+                  md: "50%",
+                  lg: "40%",
+                  xl: "30%",
+                }}
+                height={"max-content"}
+                padding={4}
               >
-                <VscLock />
+                  <Box
+                    display={"flex"}
+                    justifyContent={"center"}
+                    alignItems={"center"}
+                    flexDirection={'column'}
+                    padding={1}
+                    borderRadius={"1rem"}
+                    marginBottom={"1rem"}
+                    width={'100%'}
+                    gap={2}
+                    sx={{
+                      // backgroundColor: secondary,
+                      color: secondary,
+                      fontSize: "2rem",
+                    }}
+                  >
+                    <FaBalanceScale />
+                    سامانه هوشمند داوری
+                  </Box>
+                <Typography
+                  variant="body1"
+                  sx={{
+                    marginTop: "1rem",
+                    paddingBottom: "1rem",
+                  }}
+                >
+                  برای ورود نام کاربری و رمز عبور خود را وارد کنید 
+                </Typography>
+
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    void userLogin();
+                  }}
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    width: "100%",
+                  }}
+                >
+                  <TextField
+                    label="نام کاربری"
+                    variant="outlined"
+                    autoComplete="username"
+                    onChange={(e) =>
+                      setSignInModal({
+                        ...signInModal,
+                        userName: e.target.value,
+                      })
+                    }
+                    helperText={error?.message}
+                    error={error?.message ? true : false}
+                    value={signInModal.userName}
+                    InputProps={{
+                      sx: {
+                        borderRadius: "15px",
+                      },
+                    }}
+                    sx={{
+                      width: "80%",
+                      "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
+                        {
+                          borderRadius: "15px",
+                        },
+                    }}
+                  />
+                  <TextField
+                    label="رمز عبور"
+                    variant="outlined"
+                    autoComplete="password"
+                    type={
+                      signInModal.showPassword ? "text" : "password"
+                    }
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            onClick={() =>
+                              setSignInModal({
+                                ...signInModal,
+                                showPassword:
+                                  !signInModal.showPassword,
+                              })
+                            }
+                          >
+                            {!signInModal.showPassword ? (
+                              <BsEye />
+                            ) : (
+                              <BsEyeSlash />
+                            )}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                      sx: {
+                        borderRadius: "15px",
+                      },
+                    }}
+                    onChange={(e) =>
+                      setSignInModal({
+                        ...signInModal,
+                        password: e.target.value,
+                      })
+                    }
+                    helperText={error?.message}
+                    error={error?.message ? true : false}
+                    value={signInModal.password}
+                    sx={{
+                      width: "80%",
+                      marginTop: "1rem",
+                      "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
+                        {
+                          borderRadius: "15px",
+                        },
+                    }}
+                  />
+
+                  <Button
+                    variant="contained"
+                    sx={{
+                      marginTop: "1rem",
+                      backgroundColor: error?.message
+                        ? red[500]
+                        : primary,
+                      color: "white",
+                      width: "80%",
+                      borderRadius: "10px",
+                      boxShadow:'none',
+                      padding: "0.5rem",
+                      "&:hover": {
+                        backgroundColor: Green,
+                      },
+                    }}
+                    type="submit"
+                    onClick={() => {
+                      void userLogin();
+                    }}
+                  >
+                    {loading ? (
+                      <LinearProgress
+                        variant="indeterminate"
+                        color="secondary"
+                      />
+                    ) : (
+                      ""
+                    )}
+                    ورود
+                  </Button>
+                  <Button
+                    variant="text"
+                    sx={{
+                      marginTop: "1rem",
+                      color:primary,
+                      width: "80%",
+                      borderRadius: "15px",
+                      padding: "0.5rem",
+                    }}
+                    type="submit"
+                    // onClick={() => {
+                    //   void userLogin();
+                    // }}
+                  >
+                    {/* {loading ? (
+                      <LinearProgress
+                        variant="indeterminate"
+                        color="secondary"
+                      />
+                    ) : (
+                      ""
+                    )} */}
+                    فراموشی رمز عبور
+                  </Button>
+                </form>
+                {error?.message && (
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      marginTop: "1rem",
+                      paddingBottom: "1rem",
+                      color: red[500],
+                    }}
+                  >
+                    {error?.message}
+                  </Typography>
+                )}
               </Box>
             </Box>
-            <Typography
-              variant="body1"
-              sx={{
-                marginTop: "1rem",
-                paddingBottom: "1rem",
-              }}
-            >
-              نام کاربری و رمز عبور خود را وارد کنید
-            </Typography>
-
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                void userLogin();
-              }}
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                width: "100%",
-              }}
-            >
-              <TextField
-                label="نام کاربری"
-                variant="outlined"
-                autoComplete="username"
-                onChange={(e) =>
-                  setSignInModal({
-                    ...signInModal,
-                    userName: e.target.value,
-                  })
-                }
-                helperText={error?.message}
-                error={error?.message ? true : false}
-                value={signInModal.userName}
-                InputProps={{
-                  sx: {
-                    borderRadius: "15px",
-                  },
-                }}
-                sx={{
-                  width: "80%",
-                  "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
-                    {
-                      borderRadius: "15px",
-                    },
-                }}
-              />
-              <TextField
-                label="رمز عبور"
-                variant="outlined"
-                autoComplete="password"
-                type={signInModal.showPassword ? "text" : "password"}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        onClick={() =>
-                          setSignInModal({
-                            ...signInModal,
-                            showPassword: !signInModal.showPassword,
-                          })
-                        }
-                      >
-                        {!signInModal.showPassword ? (
-                          <BsEye />
-                        ) : (
-                          <BsEyeSlash />
-                        )}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                  sx: {
-                    borderRadius: "15px",
-                  },
-                }}
-                onChange={(e) =>
-                  setSignInModal({
-                    ...signInModal,
-                    password: e.target.value,
-                  })
-                }
-                helperText={error?.message}
-                error={error?.message ? true : false}
-                value={signInModal.password}
-                sx={{
-                  width: "80%",
-                  marginTop: "1rem",
-                  "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
-                    {
-                      borderRadius: "15px",
-                    },
-                }}
-              />
-
-              <Button
-                variant="contained"
-                sx={{
-                  marginTop: "1rem",
-                  backgroundColor: error?.message
-                    ? red[500]
-                    : primary,
-                  color: "white",
-                  width: "80%",
-                  borderRadius: "15px",
-                  padding: "0.5rem",
-                  "&:hover": {
-                    backgroundColor: Green,
-                  },
-                }}
-                type="submit"
-                onClick={() => {
-                  void userLogin();
-                }}
-              >
-                {loading ? (
-                  <LinearProgress
-                    variant="indeterminate"
-                    color="secondary"
-                  />
-                ) : (
-                  ""
-                )}
-                ورود
-              </Button>
-            </form>
-            {error?.message && (
-              <Typography
-                variant="body1"
-                sx={{
-                  marginTop: "1rem",
-                  paddingBottom: "1rem",
-                  color: red[500],
-                }}
-              >
-                {error?.message}
-              </Typography>
-            )}
           </Box>
-        </NewModal>
+        </Modal>
       ) : (
         ""
       )}
@@ -548,6 +595,32 @@ export default function MainLayout() {
               position: "relative",
             }}
           >
+            {/* <Box
+              width={"50%"}
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              position={"absolute"}
+              sx={{
+                top: 0,
+                right: 0,
+                bottom: 0,
+                backgroundImage: `url(${Pattern})`,
+                backgroundRepeat: "repeat-y repeat-x",
+                // outline: "2px solid red",
+              }}
+            >
+              <Box
+                position={"absolute"}
+                sx={{
+                  background: `linear-gradient(90deg, rgba(255, 255, 255,0.6), ${theme.palette.background.default})`,
+                  top: 0,
+                  left: 0,
+                  bottom: 0,
+                  width: "100%",
+                }}
+              />
+            </Box> */}
             <IconButton
               color="inherit"
               aria-label="open drawer"
@@ -586,7 +659,9 @@ export default function MainLayout() {
               sx={{
                 borderRadius: "10px",
                 padding: "0.1rem 0.7rem",
-                background: "rgba(190,190,190,0.5)",
+                background: "rgba(190,190,190,0.4)",
+                zIndex: 100,
+                backdropFilter: "blur(2px)",
                 "&:hover": {
                   cursor: "pointer",
                   backgroundColor: primaryLight,
@@ -610,26 +685,24 @@ export default function MainLayout() {
                     marginRight: 2,
                   }}
                 >
-                  {firstName + " " + lastName}
+                  {fullName}
                 </Typography>
                 <Typography
                   variant="subtitle2"
                   noWrap
                   component="div"
-                  fontSize={"10px"}
-                  sx={{
-                    flexGrow: 1,
-                    color: secondary,
-                    marginRight: 2,
-                  }}
-                >
-                  {user.userRoles &&
-                    convertRoleToPersian(user.userRoles[0].roleType) +
-                      "  "}
-                  {
-                    departments.find((d) => d.id == user.departmentId)
-                      ?.label
-                  }
+                    fontSize={"10px"}
+                    sx={{
+                      flexGrow: 1,
+                      color: secondary,
+                      marginRight: 2,
+                    }}
+                  >
+                    {user.userRoles && user.userRoles.map((role,index) => (
+                      <span key={role.id}>
+                        {convertRoleToPersian(role.roleType)}{user.userRoles && index !== user.userRoles.length-1 ? " - " : ""}
+                      </span>
+                    ))}
                 </Typography>
               </Box>
 
@@ -704,37 +777,7 @@ export default function MainLayout() {
             zIndex: theme.zIndex.drawer + 1,
           }}
         >
-          <Box
-            width={"100%"}
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            sx={{
-              top: 0,
-              left: 0,
-              bottom: 0,
-              background:'red'
-              // backgroundImage: `url(${Pattern})`,
-              // backgroundRepeat: "repeat-y repeat-x",
-            }}
-          >
-            <Box
-              position={"absolute"}
-              sx={{
-                background: `linear-gradient(0deg, rgba(76, 87, 96,0.4), ${secondary})`,
-                top: 0,
-                left: 0,
-                bottom: 0,
-                width: "100%",
-              }}
-            />
-          </Box>
-
-          <Toolbar
-            sx={{
-              position: "relative",
-            }}
-          >
+          <Toolbar>
             <IconButton
               color="inherit"
               aria-label="open drawer"
@@ -821,14 +864,16 @@ export default function MainLayout() {
             >
               <img
                 src={pboLogo}
-                height={theme.spacing(5)}
+                height={theme.spacing(6)}
                 style={{
                   filter: "brightness(0) invert(1)",
                   justifySelf: "center",
                   alignSelf: "center",
                   position: "absolute",
                   left: "50%",
+                  top: "10%",
                   transform: "translateX(-50%)",
+                  display: !open ? "none" : "block",
                 }}
               />
               <IconButton
@@ -911,16 +956,16 @@ export default function MainLayout() {
             keepMounted: true, // Better open performance on mobile.
           }}
           sx={{
-            backgroundColor: primary,
+            backgroundColor: secondary,
             position: "relative",
           }}
           PaperProps={{
             sx: {
-              backgroundColor: primary,
+              backgroundColor: secondary,
             },
           }}
         >
-          <img
+          {/* <img
             src={sazmanImage}
             height={"100%"}
             style={{
@@ -932,7 +977,7 @@ export default function MainLayout() {
               left: 0,
               objectFit: "cover",
             }}
-          />
+          /> */}
           <DrawerHeader />
           <List>
             {SideBarMenu.map((item, index) => (

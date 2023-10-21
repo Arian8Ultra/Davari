@@ -1,0 +1,168 @@
+{
+    "COMPLAINT_REGISTERED": {
+      "fa": " درخواست داوری ثبت شد",
+      "cap": "COMPLAINT_REGISTERED",
+      "id": 1
+    },
+    "COMPLAINT_IS_CANCELED_BY_ACCUSER": {
+      "fa": " انصراف از درخواست داوری",
+      "cap": "COMPLAINT_IS_CANCELED_BY_ACCUSER",
+      "id": 2
+    },
+    "WAITING_FOR_ACCUSED_TO_FILL_FORMS": {
+      "fa": "تکمیل اطلاعات شرایط داوری و پاسخ به دعاوی و تکمیل فرم احراز شرایط داوری",
+      "cap": "WAITING_FOR_ACCUSED_TO_FILL_FORMS",
+      "id": 3
+    },
+    "CHECKING_FOR_BEING_CONSTRUCTIVE": {
+      "fa": " بررسی وضعیت عمرانی بودن و اعلام نتیجه",
+      "cap": "CHECKING_FOR_BEING_CONSTRUCTIVE",
+      "id": 4
+    },
+    "NOT_ACCEPTED_FOR_BEING_CONSTRUCTIVE": {
+      "fa": " عدم تایید عمرانی بودن",
+      "cap": "NOT_ACCEPTED_FOR_BEING_CONSTRUCTIVE",
+      "id": 5
+    },
+    "ADDING_TO_COMPLAINT_LIST": {
+      "fa": " تعیین لیست دولت",
+      "cap": "ADDING_TO_COMPLAINT_LIST",
+      "id": 6
+    },
+    "WAITING_FOR_LETTER_RESPONSE_FROM_MINISTERS_COUNCIL": {
+      "fa": " دریافت پاسخ نامه از هیات وزیران",
+      "cap": "WAITING_FOR_LETTER_RESPONSE_FROM_MINISTERS_COUNCIL",
+      "id": 7
+    },
+    "WAITING_FOR_FIRST_PAYMENT": {
+      "fa": " اطلاع رسانی به خواهان و تعیین مهلت پرداخت هزینه اول داوری",
+      "cap": "WAITING_FOR_FIRST_PAYMENT",
+      "id": 8
+    },
+    "DID_NOT_FULFILL_FIRST_PAYMENT": {
+      "fa": " عدم پرداخت هزینه اول داوری در مهلت مقرر",
+      "cap": "DID_NOT_FULFILL_FIRST_PAYMENT",
+      "id": 9
+    },
+    "WAITING_FOR_ACCUSER_AND_ACCUSED_TO_SIGN_DECREE": {
+      "fa": " امضای قرارنامه توسط خواهان + امضای الکترونیک قرارنامه توسط خوانده یا سپری شدن مهات مقرر جهت امضا",
+      "cap": "WAITING_FOR_ACCUSER_AND_ACCUSED_TO_SIGN_DECREE",
+      "id": 10
+    },
+    "WAITING_FOR_ACCUSER_TO_SIGN_DECREE": {
+      "fa": " امضای قرارنامه توسط خواهان",
+      "cap": "WAITING_FOR_ACCUSER_TO_SIGN_DECREE",
+      "id": 11
+    },
+    "WAITING_FOR_ACCUSED_TO_SIGN_DECREE": {
+      "fa": " امضای الکترونیک قرارنامه توسط خوانده یا سپری شدن مهات مقرر جهت امضا",
+      "cap": "WAITING_FOR_ACCUSED_TO_SIGN_DECREE",
+      "id": 12
+    },
+    "CHECKING_AND_UPLOADING_THE_SIGNED_DECREE": {
+      "fa": " بررسی و بارگزاری قرارنامه امضا شده",
+      "cap": "CHECKING_AND_UPLOADING_THE_SIGNED_DECREE",
+      "id": 13
+    },
+    "DETERMINING_CASE_EXPERT": {
+      "fa": " تعیین کارشناس پرونده",
+      "cap": "DETERMINING_CASE_EXPERT",
+      "id": 14
+    },
+    "WAITING_FOR_EXPERTS_COUNCIL_PAYMENT": {
+      "fa": " واریز هزینه مرتبط کانون کارشناسان",
+      "cap": "WAITING_FOR_EXPERTS_COUNCIL_PAYMENT",
+      "id": 15
+    },
+    "WAITING_FOR_CASE_EXPERT_REGISTRY": {
+      "fa": " ثبت نام کارشناس پرونده در سامانه",
+      "cap": "WAITING_FOR_CASE_EXPERT_REGISTRY",
+      "id": 16
+    },
+    "UPLOADING_DOCUMENTS_AND_REVIEWING_COMPLAINT": {
+      "fa": " ثبت مدارک و مستندات مورد نیاز و بررسی درخواست داوری ",
+      "cap": "UPLOADING_DOCUMENTS_AND_REVIEWING_COMPLAINT",
+      "id": 17
+    },
+    "REDETERMINING_CASE_EXPERT": {
+      "fa": " تعیین کارشناس پرونده پس از انصراف",
+      "cap": "REDETERMINING_CASE_EXPERT",
+      "id": 18
+    },
+    "WAITING_FOR_FINAL_REPORT_REGISTRATION": {
+      "fa": " ثبت نهایی گزارش و تنظیم خودکار پیش نویس رای داوری",
+      "cap": "WAITING_FOR_FINAL_REPORT_REGISTRATION",
+      "id": 19
+    },
+    "MAIL_ROOM_EXPERT_REVIEWING_THE_FINAL_REPORT": {
+      "fa": " بررسی گزارش دریافتی از کارشناس پرونده",
+      "cap": "MAIL_ROOM_EXPERT_REVIEWING_THE_FINAL_REPORT",
+      "id": 20
+    },
+    "MAIL_ROOM_CHIEF_REVIEWING_THE_FINAL_REPORT": {
+      "fa": " بررسی گزارش دریافتی از کارشناس پرونده",
+      "cap": "MAIL_ROOM_CHIEF_REVIEWING_THE_FINAL_REPORT",
+      "id": 21
+    },
+    "WAITING_FOR_COUNCIL_RESULT": {
+      "fa": " نتیجه بررسی توسط شورا",
+      "cap": "WAITING_FOR_COUNCIL_RESULT",
+      "id": 22
+    },
+    "WAITING_FOR_FINAL_RESULT_UPLOAD": {
+      "fa": " بارگزاری اسکن رای نهایی",
+      "cap": "WAITING_FOR_FINAL_RESULT_UPLOAD",
+      "id": 23
+    },
+    "WAITING_FOR_SECOND_PAYMENT": {
+      "fa": " اطلاع رسانی به خواهان و تعیین مهلت پرداخت هزینه دوم داوری",
+      "cap": "WAITING_FOR_SECOND_PAYMENT",
+      "id": 24
+    },
+    "RESULT_NOTIFIED_ABILITY_TO_VIEW_SCANNED_PHYSICAL_RESULT": {
+      "fa": " ابلاغ فیزیکی رای و امکان مشاهده رای اسکن شده در سامانه برای خواهان و خوانده",
+      "cap": "RESULT_NOTIFIED_ABILITY_TO_VIEW_SCANNED_PHYSICAL_RESULT",
+      "id": 25
+    },
+    "COMPLAINT_DETERMINED": {
+      "fa": " درخواست داوری تعیین تکلیف شده",
+      "cap": "COMPLAINT_DETERMINED",
+      "id": 26
+    },
+    "WAITING_FOR_NEW_OFFERORS_INFO": {
+      "fa": " ثبت اطلاعات مربوط به کارفرمای جدید قرارداد",
+      "cap": "WAITING_FOR_NEW_OFFERORS_INFO",
+      "id": 27
+    },
+    "NEW_OFFEROR_NOTIFIED": {
+      "fa": " اطلاع رسانی به کارفرمای جدید",
+      "cap": "NEW_OFFEROR_NOTIFIED",
+      "id": 28
+    },
+    "WAITING_FOR_RELATED_FORMS_COMPLETION_AND_COMMENTING_ON_OFFEROR_CHANGING": {
+      "fa": " تکمیل فرم های مربوطه و اظهار نظر در خصوص تغییر کارفرما",
+      "cap": "WAITING_FOR_RELATED_FORMS_COMPLETION_AND_COMMENTING_ON_OFFEROR_CHANGING",
+      "id": 29
+    },
+    "WAITING_TO_DETERMINE_IF_THE_OLD_OR_THE_NEW_OFFEROR_IS_THE_ACCUSED": {
+      "fa": " بررسی اینکه کدام یک از کارفرمایان قدیم یا جدید خوانده محسوب می شوند",
+      "cap": "WAITING_TO_DETERMINE_IF_THE_OLD_OR_THE_NEW_OFFEROR_IS_THE_ACCUSED",
+      "id": 30
+    },
+    "REVIEWING_EXPERT_OPINION_ON_OFFEROR_CHANGING": {
+      "fa": " بررسی اظهار نظر کارشناس",
+      "cap": "REVIEWING_EXPERT_OPINION_ON_OFFEROR_CHANGING",
+      "id": 31
+    },
+    "ACCUSED_NOTIFIED_OF_OFFEROR_CHANGING_RESULT": {
+      "fa": " اطلاع رسانی نتیجه به خوانده",
+      "cap": "ACCUSED_NOTIFIED_OF_OFFEROR_CHANGING_RESULT",
+      "id": 32
+    },
+    "ACCUSER_NOTIFIED_OF_SUCCESSFUL_CHANGING_OF_THE_OFFEROR": {
+      "fa": " اطلاع رسانی به کارفرمای مربوطه به عنوان خواهان در فرآیند داوری",
+      "cap": "ACCUSER_NOTIFIED_OF_SUCCESSFUL_CHANGING_OF_THE_OFFEROR",
+      "id": 33
+    }
+  }
+  

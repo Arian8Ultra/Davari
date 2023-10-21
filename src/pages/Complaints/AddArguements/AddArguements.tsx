@@ -104,7 +104,7 @@ const AddArgument = () => {
       if (
         state &&
         parseInt(state) == 1 &&
-        user.departmentId ==
+        user.id ==
           data?.complaint_getComplaint?.result?.contract
             ?.accuserDepartmentId
       ) {
@@ -118,7 +118,7 @@ const AddArgument = () => {
       } else if (
         state &&
         parseInt(state) == 0 &&
-        user.departmentId !=
+        user.id !=
           data?.complaint_getComplaint?.result?.contract
             ?.accuserDepartmentId
       ) {
@@ -140,7 +140,7 @@ const AddArgument = () => {
       if (
         state &&
         parseInt(state) == 0 &&
-        user.departmentId ==
+        user.id ==
           data?.complaint_getComplaint?.result?.contract
             ?.accusedDepartmentId
       ) {

@@ -6,6 +6,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
+import { useMutation } from "@apollo/client";
 import { Add } from "@mui/icons-material";
 import {
   Alert,
@@ -25,10 +26,11 @@ import {
   RadioGroup,
   TextField,
 } from "@mui/material";
-import {
-  Department,
-  GET_DEPARTMENTS,
-} from "../../../GraphQL/Departments/Queries";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useUserStore } from "../../../Context/UserStore";
+import { CREATE_COMPLAINT } from "../../../GraphQL/Complaints/Mutations";
+import { CREATE_CONTRACT } from "../../../GraphQL/Contracts/Mutations";
 import BackButton from "../../../components/BackButton";
 import FaTextField from "../../../components/FaComponents/FaTextField";
 import FaTypography from "../../../components/FaComponents/FaTypography";
@@ -40,12 +42,6 @@ import {
   primary,
   secondary,
 } from "../../../theme/color";
-import React, { useState } from "react";
-import { useMutation, useQuery } from "@apollo/client";
-import { useUserStore } from "../../../Context/UserStore";
-import { CREATE_CONTRACT } from "../../../GraphQL/Contracts/Mutations";
-import { CREATE_COMPLAINT } from "../../../GraphQL/Complaints/Mutations";
-import { useNavigate } from "react-router-dom";
 
 const CreateContractPage = () => {
   const user = useUserStore((state) => state.user);
@@ -283,24 +279,6 @@ const CreateContractPage = () => {
   const [departments, setDepartments] = React.useState<
     { label: string; id: number }[]
   >([]);
-  const { data: departmentsData } = useQuery(GET_DEPARTMENTS, {
-    onCompleted(data) {
-      console.log(data);
-      data.department_getDepartments.result.items.forEach(
-        (item: Department) => {
-          // @ts-ignore
-          setDepartments((prev: Department) => [
-            // @ts-ignore
-            ...prev,
-            {
-              label: item.title,
-              id: item.id,
-            },
-          ]);
-        }
-      );
-    },
-  });
 
   //
   //

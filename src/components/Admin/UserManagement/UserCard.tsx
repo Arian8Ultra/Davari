@@ -41,9 +41,8 @@ import {
   primaryTransparent
 } from "../../../theme/color";
 import NewModal from "../../Modals";
-import { GET_DEPARTMENTS } from "../../../GraphQL/Departments/Queries";
 interface Props {
-  firstName?: string;
+  fullName?: string;
   lastName?: string;
   personalCode?: string;
   department?: string;
@@ -69,13 +68,12 @@ const UserCard = (props: Props) => {
     setAnchorEl(null);
   };
 
-  const { data: departmentData } = useQuery(GET_DEPARTMENTS);
 
 
   const [editModal, setEditModal] = useState({
     open: false,
     username: "",
-    firstName: "",
+    fullName: "",
     lastName: "",
     nationalCode: "",
   });
@@ -87,7 +85,7 @@ const UserCard = (props: Props) => {
 
   const [editUser] = useMutation(UserUpdate, {
     variables: {
-      firstName: editModal.firstName,
+      fullName: editModal.fullName,
       lastName: editModal.lastName,
       userName: editModal.username,
       nationalCode: editModal.nationalCode,
@@ -145,10 +143,10 @@ const UserCard = (props: Props) => {
         alignItems: "center",
         gap: 1,
         gridTemplateAreas: {
-          xs: `"firstName lastName personalCode" "operation operation operation"`,
-          md: `"firstName lastName personalCode" "operation operation operation"`,
-          lg: `"firstName lastName personalCode department status operation"`,
-          xl: `"firstName lastName personalCode department status operation"`,
+          xs: `"fullName" "operation operation operation"`,
+          md: `"fullName" "operation operation operation"`,
+          lg: `"fullName  department status operation"`,
+          xl: `"fullName department status operation"`,
         },
         gridAutoColumns: "1fr",
         "&:hover": {
@@ -157,7 +155,7 @@ const UserCard = (props: Props) => {
       }}
     >
       <Typography
-        gridArea={"firstName"}
+        gridArea={"fullName"}
         textAlign={"center"}
         fontSize={{
           xs: 11,
@@ -166,33 +164,7 @@ const UserCard = (props: Props) => {
           lg: 16,
         }}
       >
-        {props.firstName && props.firstName}
-      </Typography>
-
-      <Typography
-        gridArea={"lastName"}
-        textAlign={"center"}
-        fontSize={{
-          xs: 11,
-          sm: 12,
-          md: 14,
-          lg: 16,
-        }}
-      >
-        {props.lastName && props.lastName}
-      </Typography>
-
-      <Typography
-        gridArea={"personalCode"}
-        textAlign={"center"}
-        fontSize={{
-          xs: 11,
-          sm: 12,
-          md: 14,
-          lg: 16,
-        }}
-      >
-        {props.personalCode ? props.personalCode : "ندارد"}
+        {props.fullName && props.fullName}
       </Typography>
 
       <Typography
@@ -209,7 +181,7 @@ const UserCard = (props: Props) => {
         //   outline:'2px solid red'
         // }}
       >
-        {props.department && props.department}
+        {props.department ? props.department : "ندارد"}
       </Typography>
 
       <Typography
@@ -273,7 +245,7 @@ const UserCard = (props: Props) => {
               setEditModal({
                 open: true,
                 username: props.userName ? props.userName : "",
-                firstName: props.firstName ? props.firstName : "",
+                fullName: props.fullName ? props.fullName : "",
                 lastName: props.lastName ? props.lastName : "",
                 nationalCode: props.personalCode
                   ? props.personalCode
@@ -343,7 +315,7 @@ const UserCard = (props: Props) => {
           <MenuItem
             onClick={() => {
               const agree = confirm(
-                `آیا از حذف کاربر '${props.firstName} ${props.lastName}' مطمئن هستید؟`
+                `آیا از حذف کاربر '${props.fullName} ${props.lastName}' مطمئن هستید؟`
               );
               if (agree) {
                 void deleteUser();
@@ -456,7 +428,7 @@ const UserCard = (props: Props) => {
           setEditModal({
             open: false,
             username: "",
-            firstName: "",
+            fullName: "",
             lastName: "",
             nationalCode: "",
           });
@@ -478,7 +450,7 @@ const UserCard = (props: Props) => {
             fullWidth
             label={"نام"}
             variant={"outlined"}
-            value={editModal.firstName}
+            value={editModal.fullName}
             sx={{
               "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
                 {
@@ -488,7 +460,7 @@ const UserCard = (props: Props) => {
             onChange={(e) =>
               setEditModal({
                 ...editModal,
-                firstName: e.target.value,
+                fullName: e.target.value,
               })
             }
           />

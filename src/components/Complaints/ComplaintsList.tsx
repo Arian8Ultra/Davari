@@ -5,7 +5,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import {
   primary,
   primaryGrey,
@@ -25,8 +25,8 @@ import {
 } from "../../GraphQL/Complaints/Queries";
 interface Props {
   userId?: string;
-  departmentId?: number;
-  type?: "accused" | "accuser" | "assigned";
+  departmentId?: string;
+  type?: "accused" | "accuser" | "assigned"
 }
 const ComplaintsList = ({ departmentId, type, userId }: Props) => {
   const {
@@ -36,6 +36,9 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
   } = useQuery(GET_COMPLAINT_ASSIGNED, {
     variables: {
       id: userId,
+    },
+    onCompleted(data) {
+      console.log("assigned data", data);
     },
   });
   const {
@@ -47,8 +50,6 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
       departmentId: departmentId,
     },
     onCompleted(data) {
-      console.log("departmentId", departmentId);
-
       console.log("accuser data", data);
     },
   });
@@ -62,7 +63,6 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
       departmentId: departmentId,
     },
     onCompleted(data) {
-      console.log("departmentId", departmentId);
       console.log("accused data", data);
     },
   });
@@ -73,7 +73,8 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
       maxHeight={`calc(100vh - ${theme.spacing(25)})`}
       height={"max-content"}
       sx={{
-        backgroundColor: secondaryLighter,
+        background: "rgba(200,200,200,0.7)",
+        // backgroundColor: secondaryLighter,
         borderRadius: 2,
         padding: 0,
         paddingTop: 0,
@@ -83,13 +84,16 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
     >
       {type === "accused" ? (
         <Typography
+          variant="h5"
+          component="h2"
           sx={{
             color: "white",
             // backgroundColor: primaryGrey,
             backgroundColor: secondary,
+            // background: "rgba(255,255,255,0.3)",
             padding: "1rem",
-            borderRadius: 2,
-            textAlign: "center",
+            // borderRadius: 2,
+            // textAlign: "center",
             position: "sticky",
           }}
         >
@@ -99,27 +103,35 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
         </Typography>
       ) : type === "accuser" ? (
         <Typography
+          variant="h5"
+          component="h2"
           sx={{
             color: "white",
             // backgroundColor: primaryGrey,
             backgroundColor: secondary,
+            // background: "rgba(255,255,255,0.3)",
             padding: "1rem",
-            borderRadius: 2,
-            textAlign: "center",
+            // borderRadius: 2,
+            // textAlign: "center",
             position: "sticky",
           }}
         >
-          {accusedLoading ? "در حال دریافت اطلاعات" : "درخواست های داوری شما"}
+          {accusedLoading
+            ? "در حال دریافت اطلاعات"
+            : "درخواست های داوری شما"}
         </Typography>
       ) : (
         <Typography
+          variant="h5"
+          component="h2"
           sx={{
             color: "white",
             // backgroundColor: primaryGrey,
             backgroundColor: secondary,
+            // background: "rgba(255,255,255,0.3)",
             padding: "1rem",
-            borderRadius: 2,
-            textAlign: "center",
+            // borderRadius: 2,
+            // textAlign: "center",
             position: "sticky",
           }}
         >
@@ -129,18 +141,23 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
         </Typography>
       )}
 
-      <Stack padding={"4px"} spacing={0.5}>
+      <Box
+        display={"grid"}
+        gap={2}
+        gridTemplateColumns={"1fr 1fr"}
+        padding={1}
+      >
         {type === "accused"
           ? accusedData?.complaint_getComplaints?.result.items.map(
               (complaint: Complaint) => (
                 <ComplaintCardNew
                   key={complaint.id}
                   id={complaint.id}
-                  acussedId={complaint?.contract?.accusedDepartmentId}
-                  acusserId={complaint?.contract?.accuserDepartmentId}
+                  acussedId={complaint?.contract?.accusedDepartmentUserId}
+                  acusserId={complaint?.contract?.accuserDepartmentUserId}
                   date={complaint?.createdDate}
                   contractId={complaint?.contractId}
-                  state={1}
+                  state={complaint?.complaintState}
                   type="accused"
                   refetch={accusedRefetch}
                 />
@@ -155,10 +172,10 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
                   acussed={complaint?.assignedUser?.userName}
                   date={complaint?.createdDate}
                   contractId={complaint?.contractId}
-                  acussedId={complaint?.contract?.accusedDepartmentId}
-                  acusserId={complaint?.contract?.accuserDepartmentId}
+                  acussedId={complaint?.contract?.accusedDepartmentUserId}
+                  acusserId={complaint?.contract?.accuserDepartmentUserId}
                   type="accuser"
-                  state={1}
+                  state={complaint?.complaintState}
                   refetch={accuserRefetch}
                 />
               )
@@ -171,15 +188,15 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
                   acussed={complaint?.assignedUser?.userName}
                   date={complaint?.createdDate}
                   contractId={complaint?.contractId}
-                  acussedId={complaint?.contract?.accusedDepartmentId}
-                  acusserId={complaint?.contract?.accuserDepartmentId}
+                  acussedId={complaint?.contract?.accusedDepartmentUserId}
+                  acusserId={complaint?.contract?.accuserDepartmentUserId}
                   type="assigned"
-                  state={1}
+                  state={complaint?.complaintState}
                   refetch={assignedRefetch}
                 />
               )
             )}
-      </Stack>
+      </Box>
     </Stack>
   );
 };

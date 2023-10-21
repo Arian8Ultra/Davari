@@ -8,14 +8,11 @@ export const UserLogin = gql`
       result {
         user {
           id
-          departmentId
           userName
           email
-          firstName
-          lastName
+          fullName
           phoneNumber
           nationalCode
-          personnelCode
           userRoles{
             roleType
             id
@@ -40,25 +37,23 @@ export type UserLoginInput = {
 export const UserSignUp = gql`
   mutation UserSignUp(
     $confirmPassword: String!
-    $departmentId: Int!
     $email: String!
-    $firstName: String!
-    $lastName: String!
+    $fullName: String!
     $nationalCode: String!
-    $personnelCode: String!
     $password: String!
     $phoneNumber: String!
     $userName: String!
+    $birthDate: Date!
+    $userType : UserType!
   ) {
     user_signUp(
       input: {
+        userType: $userType
+        birthDate: $birthDate,
         confirmPassword: $confirmPassword
-        departmentId: $departmentId
         email: $email
-        firstName: $firstName
-        lastName: $lastName
+        fullName: $fullName
         nationalCode: $nationalCode
-        personnelCode: $personnelCode
         password: $password
         phoneNumber: $phoneNumber
         userName: $userName
@@ -99,29 +94,28 @@ export type UserDeleteInput = {
 // UserUpdate
 export const UserUpdate = gql`
   mutation UserUpdate(
-    $firstName: String!
-    $lastName: String!
+    $fullName: String!
     $nationalCode: String!
-    $userName: String!
+    $userName: String
+    $birthDate: Date!
+    $userType : UserType!
   ) {
     user_updateProfile(
       input: {
-        firstName: $firstName
-        lastName: $lastName
+        fullName: $fullName
         nationalCode: $nationalCode
         userName: $userName
+        birthDate: $birthDate
+        userType: $userType
       }
     ) {
       result {
         id
-        departmentId
         userName
         email
-        firstName
-        lastName
+        fullName
         phoneNumber
         nationalCode
-        personnelCode
       }
       status {
         code

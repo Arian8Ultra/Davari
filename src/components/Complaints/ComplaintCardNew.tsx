@@ -6,12 +6,12 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import { useMutation, useQuery } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import {
   Autocomplete,
   Box,
   Button,
-  LinearProgress,
+  CircularProgress,
   Table,
   TableBody,
   TableCell,
@@ -19,24 +19,19 @@ import {
   TableHead,
   TableRow,
   TextField,
-  Typography,
+  Typography
 } from "@mui/material";
 import { grey, red } from "@mui/material/colors";
 import { useState } from "react";
-import { FiMoreHorizontal } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import {
   DELETE_COMPLAINT,
   UPDATE_COMPLAINT,
 } from "../../GraphQL/Complaints/Mutations";
-import {
-  Department,
-  GET_DEPARTMENTS,
-} from "../../GraphQL/Departments/Queries";
-import { GET_DEPARTMENTS_USERS } from "../../GraphQL/Users/Queries";
 import { convertToPersianDigits } from "../../functions/Functions";
-import { ComplaintStatus, User } from "../../static/Types";
-import states from "../../static/states.json";
+import { StatesCap, StatesFa } from "../../static/States";
+import { User } from "../../static/Types";
+import statesCap from "../../static/statesCap.json";
 import {
   Green,
   GreenLight,
@@ -44,10 +39,9 @@ import {
   background,
   primary,
   primaryDark,
-  primaryLight,
   primaryLightTransparent,
   secondary,
-  secondaryDark,
+  secondaryDark
 } from "../../theme/color";
 import NewModal from "../Modals";
 interface Props {
@@ -59,11 +53,11 @@ interface Props {
   acussedId?: number;
   acusser?: string;
   acusserId?: number;
-  state?: number;
+  state?: string;
   summary?: string;
   projectId?: number;
   type?: "accused" | "accuser" | "assigned";
-  refetch?: ()=>void 
+  refetch?: () => void;
 }
 const ComplaintCardNew = (props: Props) => {
   const [open, setOpen] = useState(false);
@@ -73,6 +67,8 @@ const ComplaintCardNew = (props: Props) => {
   const [addModal, setAddModal] = useState({
     open: false,
   });
+
+  
 
   const style = {
     width: "100%",
@@ -84,7 +80,6 @@ const ComplaintCardNew = (props: Props) => {
     fullName: string;
     id: string;
   }>();
-  const { data: departmentData } = useQuery(GET_DEPARTMENTS);
   const [departmentsUsers, setDepartmentsUsers] = useState<User[]>(
     []
   );
@@ -94,29 +89,10 @@ const ComplaintCardNew = (props: Props) => {
       id: props.id,
     },
     onCompleted(data, clientOptions) {
-      props.refetch && props.refetch()
+      props.refetch && props.refetch();
     },
   });
-  useQuery(GET_DEPARTMENTS_USERS, {
-    variables: {
-      departmentId: props.acussedId,
-    },
-    onCompleted(data) {
-      console.log("departmentsUsersData", data);
 
-      data.user_getUsers.result.items.forEach((item: User) => {
-        // @ts-ignore
-        setDepartmentsUsers((prev: User) => [
-          // @ts-ignore
-          ...prev,
-          {
-            label: item.firstName + " " + item.lastName,
-            id: item.id,
-          },
-        ]);
-      });
-    },
-  });
   return (
     <Box
       sx={{
@@ -124,105 +100,109 @@ const ComplaintCardNew = (props: Props) => {
         // pt: "0.5rem",
         backgroundColor: "white",
         display: "grid",
-        gridTemplateColumns: "repeat(5,1fr)",
+        gridTemplateColumns: "repeat(3,1fr)",
+        gridAutoColumns: "1fr",
         alignItems: "center",
-        // borderRadius: "5px",
+        borderRadius: "10px",
         gap: "0.5rem",
         rowGap: 0,
+        cursor: "pointer",
+        "&:hover": {
+          background: "rgba(240,240,240)",
+        },
       }}
     >
-      <Typography
-        textAlign={"center"}
-        fontSize={{
-          xs: "0.8rem",
-          sm: "0.6rem",
-          md: "0.8rem",
-          lg: "0.9rem",
-        }}
-        sx={{ userSelect: "none", paddingBlock: "0.5rem" }}
-      >
-        شماره قرارداد:
-        {convertToPersianDigits(props.contractId)}
-      </Typography>
-      <Typography
-        textAlign={"center"}
-        fontSize={{
-          xs: "0.8rem",
-          sm: "0.6rem",
-          md: "0.8rem",
-          lg: "0.9rem",
-        }}
-        sx={{ userSelect: "none" }}
-      >
-        شماره درخواست داوری:
-        {convertToPersianDigits(props.id)}
-      </Typography>
-      <Typography
-        textAlign={"center"}
-        fontSize={{
-          xs: "0.8rem",
-          sm: "0.6rem",
-          md: "0.8rem",
-          lg: "0.9rem",
-        }}
-        sx={{ userSelect: "none" }}
-      >
-        تاریخ ثبت:
-        {new Date(props.date!).toLocaleDateString("fa-IR")}
-      </Typography>
-      <Typography
-        textAlign={"center"}
-        fontSize={{
-          xs: "0.8rem",
-          sm: "0.6rem",
-          md: "0.8rem",
-          lg: "0.9rem",
-        }}
-        sx={{ userSelect: "none" }}
-      >
-        خوانده:
-        {
-          departmentData?.department_getDepartments?.result.items.find(
-            (item: Department) =>
-              item.id === props.acussedId
-          ).title
-        }
-      </Typography>
-      <Button
+      <Box
+        display={"flex"}
+        flexDirection={"column"}
+        gridColumn={"span 2"}
+        padding={"0.5rem"}
         onClick={handleOpen}
-        sx={{
-          borderRadius: "0 0 0 0",
-          height: "100%",
-          color: secondary,
-          "&:hover": {
-            backgroundColor: primaryLightTransparent,
-          },
-        }}
       >
-        <FiMoreHorizontal />
-      </Button>
-      <LinearProgress
-        variant={"determinate"}
-        // change color of progress bar based on status
-        value={
-          // @ts-ignore
-          ((states[ComplaintStatus[props.state!]].id - 2) / 33) * 100
-        }
-        sx={{
-          gridColumn: "span 5",
-          height: 5,
-          background: primaryLightTransparent,
-          "& .MuiLinearProgress-bar": {
-            background: secondary,
-            borderRadius: 2,
-          },
-          "& .MuiLinearProgress-root": {
-            background: primaryLight,
-          },
-          // borderBottomLeftRadius: 5,
-          // borderBottomRightRadius: 5,
-        }}
-      />
+        <Typography fontWeight={700}>
+          شماره درخواست :{convertToPersianDigits(props.id)}
+        </Typography>
+        <Typography>
+          شماره قرارداد :{convertToPersianDigits(props.contractId)}
+        </Typography>
+        <Typography>
+          خواهان : {props.acusser}
+        </Typography>
+        <Typography>
+          خوانده :
+          {
+            props.acussedId
+          }
+        </Typography>
+      </Box>
+      <Box
+        position={"relative"}
+        height={"100%"}
+        display={"flex"}
+        justifyContent={"center"}
+        alignItems={"center"}
+        onClick={handleOpen}
+      >
+        <CircularProgress
+          size={"88%"}
+          variant="determinate"
+          value={100}
+          thickness={2}
+          sx={{
+            gridColumn: "3",
+            padding: "1rem",
+            position: "absolute",
+            translate: "-50% -50%",
+            top: "50%",
+            right: "50%",
+            "& .MuiCircularProgress-circle": {
+              backgroundColor: "rgba(0,0,0,1)",
+              color: secondary,
+              borderRadius: "0.5rem",
+            },
+          }}
+        />
+        <CircularProgress
+          size={"90%"}
+          variant="determinate"
+          thickness={3}
+          value={
+            // @ts-ignore
+            (StatesCap.indexOf(props.state)/ 44).toFixed(
+              2
+            ) * 100
+          }
+          sx={{
+            gridColumn: "3",
+            padding: "1rem",
+            // gridRow: "1/3",
+            "& .MuiCircularProgress-circle": {
+              backgroundColor: "rgba(0,0,0,1)",
+              color: primary,
+              borderRadius: "1rem",
+            },
+          }}
+        />
+        <Typography
+          position={"absolute"}
+          textAlign={"center"}
+          fontSize={"1.4rem"}
+          sx={{
+            translate: "-50% -50%",
+            top: "50%",
+            right: "55%",
+          }}
+        >
+          {convertToPersianDigits(
+            // @ts-ignore
+            (StatesCap.indexOf(props.state)/ 44).toFixed(
+              2
+            ) * 100
+          )}
+          %
+        </Typography>
+      </Box>
+
       <NewModal
         open={open}
         onClose={handleClose}
@@ -286,10 +266,7 @@ const ComplaintCardNew = (props: Props) => {
                       }}
                     >
                       {
-                        departmentData?.department_getDepartments?.result.items.find(
-                          (item: Department) =>
-                            item.id=== props.acussedId
-                        ).title
+                        props.acussedId
                       }
                     </TableCell>
                   </TableRow>
@@ -312,10 +289,7 @@ const ComplaintCardNew = (props: Props) => {
                       }}
                     >
                       {
-                        departmentData?.department_getDepartments?.result.items.find(
-                          (item: Department) =>
-                            item.id === props.acusserId
-                        ).title
+                       props.acusserId
                       }
                     </TableCell>
                   </TableRow>
@@ -338,7 +312,7 @@ const ComplaintCardNew = (props: Props) => {
                       }}
                     >
                       {/* @ts-ignore */}
-                      {states[ComplaintStatus[props.state!-1]].fa}
+                      {StatesFa[StatesCap.indexOf(props.state)]}
                     </TableCell>
                   </TableRow>
 
@@ -474,11 +448,17 @@ const ComplaintCardNew = (props: Props) => {
                 },
               }}
               onClick={() => {
-                
-                if(states[ComplaintStatus[props.state!-1] as keyof typeof states]?.id == 3){
-                  navigate(`/complaints/${props.contractId}/${props.id}/UpdateContractPage`);
-                }else{
-                  navigate(`${props.contractId}/${props.id}/addArguements/1`);
+                if (
+                  statesCap[props.state! as keyof typeof statesCap]
+                    ?.id == 3
+                ) {
+                  navigate(
+                    `/complaints/${props.contractId}/${props.id}/UpdateContractPage`
+                  );
+                } else {
+                  navigate(
+                    `/complaints/${props.contractId}/${props.id}/addArguements/1`
+                  );
                 }
               }}
             >
@@ -605,7 +585,9 @@ const ComplaintCardNew = (props: Props) => {
                 },
               }}
               onClick={() => {
-                navigate(`${props.contractId}/${props.id}/addArguements/0`);
+                navigate(
+                  `/complaints/${props.contractId}/${props.id}/addArguements/0`
+                );
               }}
             >
               ادامه درخواست داوری

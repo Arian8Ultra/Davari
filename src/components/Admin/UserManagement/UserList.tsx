@@ -64,17 +64,17 @@ const UserList = () => {
           // },
           gap:1,
           gridTemplateAreas:{
-            xs: `"firstName lastName personalCode" "operation operation operation"`,
-            md: `"firstName lastName personalCode" "operation operation operation"`,
-            lg: `"firstName lastName personalCode department status operation"`,
-            xl: `"firstName lastName personalCode department status operation"`,
+            xs: `"fullName" "operation operation operation"`,
+            md: `"fullName" "operation operation operation"`,
+            lg: `"fullName  department status operation"`,
+            xl: `"fullName department status operation"`,
           },
           gridAutoColumns: "1fr",
 
         }}
       >
         <Typography
-        gridArea={"firstName"}
+        gridArea={"fullName"}
           textAlign={"center"}
           fontSize={{
             xs: 11,
@@ -85,33 +85,6 @@ const UserList = () => {
           
         >
           نام
-        </Typography>
-
-        <Typography
-        gridArea={"lastName"}
-          textAlign={"center"}
-          fontSize={{
-            xs: 11,
-            sm: 12,
-            md: 14,
-            lg: 16,
-          }}
-        >
-          نام خانوادگی
-        </Typography>
-
-        <Typography
-          textAlign={"center"}
-          gridArea={"personalCode"}
-          // display={{ xs: "none", md: "block" }}
-          fontSize={{
-            xs: 11,
-            sm: 12,
-            md: 14,
-            lg: 16,
-          }}
-        >
-          کد پرسنلی
         </Typography>
 
         <Typography
@@ -161,10 +134,8 @@ const UserList = () => {
       {data?.user_getUsers?.result?.items?.map((user:User) => (
         <UserCard
           key={user.id}
-          firstName={user.firstName}
-          lastName={user.lastName}
-          personalCode={user.personnelCode}
-          department={String(user.departmentId)}
+          fullName={user.fullName}
+          department={user.parent?.fullName}
           id={user.id}
           userName={user.userName}
           refetch={refetch}

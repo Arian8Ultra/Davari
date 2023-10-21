@@ -80,13 +80,13 @@ export const SideBarMenu = [
         hasLink: true,
         hasCollapse: false,
       },
-      {
-        primary: Titles.formManager,
-        to: "/admin/formanager",
-        icon: <BsInputCursorText />,
-        hasLink: true,
-        hasCollapse: false,
-      },
+      // {
+      //   primary: Titles.formManager,
+      //   to: "/admin/formanager",
+      //   icon: <BsInputCursorText />,
+      //   hasLink: true,
+      //   hasCollapse: false,
+      // },
     ],
   },
 ];

@@ -2,15 +2,14 @@ import { UserRole } from "../GraphQL/Users/Queries";
 
 export type User = {
   userRoles: UserRole[] | undefined;
-  firstName: string;
-  lastName: string;
+  fullName: string;
   nationalCode: string;
-  personnelCode: string;
-  departmentId: number;
   phoneNumber: string;
   userName: string;
   email: string;
   id: string;
+  users: User[];
+  parent: User | null;
 };
 
 export type Argument = {

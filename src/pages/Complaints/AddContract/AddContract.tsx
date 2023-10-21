@@ -38,7 +38,6 @@ import {
 import { useNavigate } from "react-router-dom";
 import {
   Department,
-  GET_DEPARTMENTS,
 } from "../../../GraphQL/Departments/Queries";
 import FaTypography from "../../../components/FaComponents/FaTypography";
 import FaTextField from "../../../components/FaComponents/FaTextField";
@@ -582,24 +581,6 @@ const AddContract = () => {
   );
 
   const [departments, setDepartments] = React.useState([]);
-  const { data: departmentsData } = useQuery(GET_DEPARTMENTS, {
-    onCompleted(data) {
-      console.log(data);
-      data.department_getDepartments.result.items.forEach(
-        (item: Department) => {
-          // @ts-ignore
-          setDepartments((prev: Department) => [
-            // @ts-ignore
-            ...prev,
-            {
-              label: item.title,
-              id: item.id,
-            },
-          ]);
-        }
-      );
-    },
-  });
 
   countries.sort((a, b) => {
     if (a.name_fa < b.name_fa) {

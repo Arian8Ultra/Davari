@@ -5,27 +5,22 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import { useMutation, useQuery } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import {
-  Autocomplete,
   Box,
   Button,
   IconButton,
   MenuItem,
-  TextField,
+  TextField
 } from "@mui/material";
 import { red } from "@mui/material/colors";
-import React, { useState } from "react";
+import { useState } from "react";
 import { BsEye, BsEyeSlash, BsPersonAdd } from "react-icons/bs";
 import { UserSignUp } from "../../../GraphQL/Users/Mutations";
-import { Titles } from "../../../static/Titles";
 import UserList from "../../../components/Admin/UserManagement/UserList";
 import NewModal from "../../../components/Modals";
+import { Titles } from "../../../static/Titles";
 import { Green, GreenLight, background } from "../../../theme/color";
-import {
-  Department,
-  GET_DEPARTMENTS,
-} from "../../../GraphQL/Departments/Queries";
 
 const UserManagement = () => {
   const [addModal, setAddModal] = useState({
@@ -66,22 +61,6 @@ const UserManagement = () => {
     },
   });
 
-  const [departments, setDepartments] = React.useState([]);
-  const { data: departmentsData } = useQuery(GET_DEPARTMENTS, {
-    onCompleted(data) {
-      console.log(data);
-      data.department_getDepartments.result.items.forEach(
-        (item: Department) => {
-          // @ts-ignore
-          setDepartments((prev: Department) => [
-            // @ts-ignore
-            ...prev,
-            { label: item.title, id: item.id },
-          ]);
-        }
-      );
-    },
-  });
   return (
     <>
       <Box
@@ -327,25 +306,6 @@ const UserManagement = () => {
             }
           />
 
-          {/* <TextField
-            fullWidth
-            label={"دپارتمان"}
-            variant={"outlined"}
-            value={addModal.departmentId}
-            sx={{
-              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
-                {
-                  borderRadius: "15px",
-                },
-            }}
-            onChange={(e) =>
-              setAddModal({
-                ...addModal,
-                departmentId: parseInt(e.target.value),
-              })
-            }
-          /> */}
-
           <TextField
             fullWidth
             label={"دپارتمان"}
@@ -365,13 +325,6 @@ const UserManagement = () => {
             }
             select
           >
-            {departments.map(
-              (option: { label: string; id: number }) => (
-                <MenuItem key={option.id} value={option.id}>
-                  {option.label}
-                </MenuItem>
-              )
-            )}
           </TextField>
 
           <Button

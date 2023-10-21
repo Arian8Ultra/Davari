@@ -1,8 +1,7 @@
 import { gql } from "@apollo/client";
-import { FormTitle } from "../Form/Titles/Queies";
 
 export const GET_COMPLAINTS = gql`
-  query GetComplaints {
+  query GET_COMPLAINTS {
     complaint_getComplaints {
       result {
         items {
@@ -23,9 +22,7 @@ export const GET_COMPLAINTS = gql`
           complaintCode
           assignedUser {
             userName
-            firstName
-            lastName
-            departmentId
+            fullName
             phoneNumber
           }
           contract {
@@ -39,49 +36,47 @@ export const GET_COMPLAINTS = gql`
   }
 `;
 export const GET_COMPLAINT = gql`
-  query GetComplaint($id: Int!){
+  query GetComplaint($id: Int!) {
     complaint_getComplaint(entityId: $id) {
       result {
-          userId
-          id
-          contractId
-          arbitrationTermsForms {
-            firstCondition
-            firstConditionFileName
-            secondCondition
-            secondConditionFileName
-            thirdCondition
-            thirdConditionFileName
-            fourthCondition
-            fourthConditionFileName
-          }
-          complaintState
-          complaintCode
-          assignedUser {
-            userName
-            firstName
-            lastName
-            departmentId
-            phoneNumber
-          }
-          contract {
-            contractNumberByAccuser
-            contractDateByAccuser
-            initialBudgetByAccuser
-            accuserDepartmentId
-            accusedDepartmentId
-          }
+        userId
+        id
+        contractId
+        arbitrationTermsForms {
+          firstCondition
+          firstConditionFileName
+          secondCondition
+          secondConditionFileName
+          thirdCondition
+          thirdConditionFileName
+          fourthCondition
+          fourthConditionFileName
+        }
+        complaintState
+        complaintCode
+        assignedUser {
+          userName
+          fullName
+          phoneNumber
+        }
+        contract {
+          contractNumberByAccuser
+          contractDateByAccuser
+          initialBudgetByAccuser
+          accuserDepartmentUserId
+          accusedDepartmentUserId
+        }
       }
     }
   }
 `;
 
 export const GET_ACCUSED_COMPLAINTS = gql`
-  query GetComplaints($departmentId: Int!) {
+  query GET_ACCUSED_COMPLAINTS($departmentId: String!) {
     complaint_getComplaints {
       result(
         where: {
-          contract: { accusedDepartmentId: { eq: $departmentId } } and: { complaintState: { eq: COMPLAINT_REGISTERED } }
+          contract: { accusedDepartmentUserId: { eq: $departmentId } }
         }
       ) {
         items {
@@ -103,23 +98,15 @@ export const GET_ACCUSED_COMPLAINTS = gql`
           complaintCode
           assignedUser {
             userName
-            firstName
-            lastName
-            departmentId
+            fullName
             phoneNumber
           }
           contract {
             contractNumberByAccuser
             contractDateByAccuser
             initialBudgetByAccuser
-            accusedDepartmentId
-            accuserDepartmentId
-            department {
-              id
-              users {
-                id
-              }
-            }
+            accusedDepartmentUserId
+            accuserDepartmentUserId
           }
         }
       }
@@ -128,11 +115,11 @@ export const GET_ACCUSED_COMPLAINTS = gql`
 `;
 
 export const GET_ACCUSER_COMPLAINTS = gql`
-  query GetComplaints($departmentId: Int!) {
+  query GET_ACCUSER_COMPLAINTS($departmentId: String!) {
     complaint_getComplaints {
       result(
         where: {
-          contract: { accuserDepartmentId: { eq: $departmentId } }
+          contract: { accuserDepartmentUserId: { eq: $departmentId } }
         }
       ) {
         items {
@@ -154,23 +141,15 @@ export const GET_ACCUSER_COMPLAINTS = gql`
           complaintCode
           assignedUser {
             userName
-            firstName
-            lastName
-            departmentId
+            fullName
             phoneNumber
           }
           contract {
             contractNumberByAccuser
             contractDateByAccuser
             initialBudgetByAccuser
-            accusedDepartmentId
-            accuserDepartmentId
-            department {
-              id
-              users {
-                id
-              }
-            }
+            accusedDepartmentUserId
+            accuserDepartmentUserId
           }
         }
       }
@@ -209,9 +188,13 @@ export const GET_COMPLAINT_ARGUMENTS = gql`
 `;
 
 export const GET_COMPLAINT_ASSIGNED = gql`
-  query GetComplaints($id: String!) {
+  query GET_COMPLAINT_ASSIGNED($id: String!) {
     complaint_getComplaints {
-      result(where: { assignedUserId: { eq: $id } and: { complaintState: { eq: COMPLAINT_REGISTERED }} }  ) {
+      result(
+        where: {
+          assignedUserId: { eq: $id }
+        }
+      ) {
         items {
           userId
           id
@@ -231,23 +214,15 @@ export const GET_COMPLAINT_ASSIGNED = gql`
           complaintCode
           assignedUser {
             userName
-            firstName
-            lastName
-            departmentId
+            fullName
             phoneNumber
           }
           contract {
             contractNumberByAccuser
             contractDateByAccuser
             initialBudgetByAccuser
-            accusedDepartmentId
-            accuserDepartmentId
-            department {
-              id
-              users {
-                id
-              }
-            }
+            accusedDepartmentUserId
+            accuserDepartmentUserId
           }
         }
       }
@@ -274,8 +249,8 @@ export type Complaint = {
     contractNumber: string;
     contractDate: string;
     initialBudget: number;
-    accusedDepartmentId: number;
-    accuserDepartmentId: number;
+    accusedDepartmentUserId: number;
+    accuserDepartmentUserId: number;
     department: Department;
   };
 };
@@ -290,7 +265,6 @@ export type ComplaintForm = {
   title: string;
   id: number;
   description: string;
-  formTitles: FormTitle[];
 };
 
 export type ArbitrationTermsForms = {

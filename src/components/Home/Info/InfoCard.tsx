@@ -20,7 +20,7 @@ const InfoCard = ({ data, columns, rows }: InfoCardProps) => {
     <Card
       sx={{
         width: "100%",
-        height: "40dvh",
+        height: "100%",
         gridColumn: columns,
         gridRow: rows,
         display: "flex",
@@ -29,6 +29,7 @@ const InfoCard = ({ data, columns, rows }: InfoCardProps) => {
         alignItems: "center",
         background: primary,
         borderRadius: "1rem",
+        
         // padding:'2rem',
         // paddingTop:'1rem'
       }}

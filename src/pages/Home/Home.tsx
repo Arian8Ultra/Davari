@@ -3,12 +3,20 @@ import useLayoutStore from "../../Context/LayoutStore";
 import InfoCard from "../../components/Home/Info/InfoCard";
 import { Titles } from "../../static/Titles";
 import PeopleCard from "../../components/Home/People/PeopleCard";
+import HomeComplaintsList from "../../components/Home/Complaints/HomeComplaintsList";
 
 const Home = () => {
   const setPageTitle = useLayoutStore((state) => state.setPageTitle);
   setPageTitle(Titles.home);
   return (
-    <Box display={"grid"} gridTemplateColumns={"repeat(12,1fr)"} gap={4}>
+    <Box
+      display={"grid"}
+      gridTemplateColumns={"repeat(12,1fr)"}
+      gridAutoRows={"35dvh 35dvh"}
+      gap={4}
+      height={'100%'}
+      overflow={'hidden'}
+    >
       <InfoCard
         columns="span 2"
         data={[
@@ -109,6 +117,7 @@ const Home = () => {
           },
         ]}
       />
+      <HomeComplaintsList columns="9/span 4" rows="span 2" />
     </Box>
   );
 };

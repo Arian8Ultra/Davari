@@ -20,8 +20,8 @@ export const GET_CONTRACT = gql`
       result(where: { id: { eq: $id } }) {
         items {
           id
-          accuserDepartmentId
-          accusedDepartmentId
+          accuserDepartmentUserId
+          accusedDepartmentUserId
           accuserNationality
           accusedNationality
           accuserRelatedPeopleByAccuser
@@ -78,10 +78,6 @@ export const GET_CONTRACT = gql`
           isExecutiveByAccuser
           fileNamesByAccused
           fileNamesByAccuser
-          department {
-            title
-            id
-          }
         }
       }
       status
