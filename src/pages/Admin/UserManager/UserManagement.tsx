@@ -5,24 +5,43 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import {
   Box,
   Button,
+  Divider,
   IconButton,
   MenuItem,
-  TextField
+  Modal,
+  TextField,
 } from "@mui/material";
 import { red } from "@mui/material/colors";
 import { useState } from "react";
 import { BsEye, BsEyeSlash, BsPersonAdd } from "react-icons/bs";
+import { Calendar, CalendarProvider } from "zaman";
+import { useUserStore } from "../../../Context/UserStore";
 import { UserSignUp } from "../../../GraphQL/Users/Mutations";
 import UserList from "../../../components/Admin/UserManagement/UserList";
+import FaTextField from "../../../components/FaComponents/FaTextField";
 import NewModal from "../../../components/Modals";
+import {
+  User,
+  UserType,
+  useGetAllOganizationUsersQuery,
+} from "../../../gql/graphql";
 import { Titles } from "../../../static/Titles";
-import { Green, GreenLight, background } from "../../../theme/color";
+import {
+  Green,
+  GreenLight,
+  background,
+  primary,
+  secondary,
+} from "../../../theme/color";
+import { GET_ALL_ORGANIZATION_USERS } from "../../../GraphQL/Users/Queries";
+import { VscOrganization } from "react-icons/vsc";
 
 const UserManagement = () => {
+  const user = useUserStore((state) => state.user);
   const [addModal, setAddModal] = useState({
     open: false,
     confirmPassword: "",
@@ -37,20 +56,46 @@ const UserManagement = () => {
     userName: "",
     showPassword: false,
   });
+  const [addPersonelToOrganzationModal, setAddPersonelToOrganzation] =
+    useState({
+      open: false,
+      confirmPassword: undefined as string | undefined,
+      parentID: null as string | null,
+      email: undefined as string | undefined,
+      firstName: undefined as string | undefined,
+      lastName: undefined as string | undefined,
+      nationalCode: undefined as string | undefined,
+      password: undefined as string | undefined,
+      phoneNumber: undefined as string | undefined,
+      userName: undefined as string | undefined,
+      birthDate: undefined as Date | undefined,
+      showPassword: false,
+      showCalendar: false,
+    });
+
+  const [addOrganizationModal, setAddOrganizationModal] = useState({
+    open: false,
+    confirmPassword: undefined as string | undefined,
+    password: undefined as string | undefined,
+    phoneNumber: undefined as string | undefined,
+    nationalCode: undefined as string | undefined,
+    email: undefined as string | undefined,
+    fullName: undefined as string | undefined,
+    showPassword: false,
+    userName: undefined as string | undefined,
+  });
 
   const [userSignUp, { loading, error }] = useMutation(UserSignUp, {
-    variables: {
-      firstName: addModal.firstName,
-      lastName: addModal.lastName,
-      userName: addModal.userName,
-      nationalCode: addModal.nationalCode,
-      personnelCode: addModal.personnelCode,
-      password: addModal.password,
-      confirmPassword: addModal.confirmPassword,
-      email: addModal.email,
-      departmentId: addModal.departmentId,
-      phoneNumber: addModal.phoneNumber,
-    },
+    // variables: {
+    //   fullName: addModal.firstName + " " + addModal.lastName,
+    //   nationalCode: addModal.nationalCode,
+    //   personnelCode: addModal.personnelCode,
+    //   password: addModal.password,
+    //   confirmPassword: addModal.confirmPassword,
+    //   email: addModal.email,
+    //   departmentId: addModal.departmentId,
+    //   phoneNumber: addModal.phoneNumber,
+    // },
     onCompleted(data) {
       console.log(data);
       alert("کاربر با موفقیت افزوده شد");
@@ -61,6 +106,15 @@ const UserManagement = () => {
     },
   });
 
+  const { data: OrganizationsUsers } = useQuery(
+    GET_ALL_ORGANIZATION_USERS,
+    {
+      onCompleted(data) {
+        console.log(data);
+      },
+    }
+  );
+
   return (
     <>
       <Box
@@ -68,6 +122,7 @@ const UserManagement = () => {
         justifyContent={"flex-start"}
         alignItems={"center"}
         paddingY={1}
+        gap={1}
       >
         <Button
           variant="contained"
@@ -80,6 +135,7 @@ const UserManagement = () => {
             fontStyle: "normal",
             fontSize: "1rem",
             boxShadow: "none",
+
             "&:hover": {
               backgroundColor: GreenLight,
               color: Green,
@@ -88,8 +144,742 @@ const UserManagement = () => {
         >
           افزودن کاربر
         </Button>
+        <Button
+          variant="contained"
+          endIcon={<BsPersonAdd />}
+          onClick={() => [setAddModal({ ...addModal, open: true })]}
+          sx={{
+            borderRadius: 2,
+            backgroundColor: Green,
+            fontWeight: 700,
+            fontStyle: "normal",
+            fontSize: "1rem",
+            boxShadow: "none",
+            display:
+              user.userType === "ORGANIZATION" ? "flex" : "none",
+            "&:hover": {
+              backgroundColor: GreenLight,
+              color: Green,
+            },
+          }}
+        >
+          افزودن کارشناس
+        </Button>
+        <Button
+          variant="contained"
+          endIcon={<BsPersonAdd />}
+          onClick={() => [
+            setAddPersonelToOrganzation({
+              ...addPersonelToOrganzationModal,
+              open: true,
+            }),
+          ]}
+          sx={{
+            borderRadius: 2,
+            backgroundColor: Green,
+            fontWeight: 700,
+            fontStyle: "normal",
+            fontSize: "1rem",
+            boxShadow: "none",
+            width: "max-content",
+            display: user.userRoles?.find(
+              (role) => role.roleType === "SUPER_ADMIN"
+            )
+              ? "flex"
+              : "none",
+            "&:hover": {
+              backgroundColor: GreenLight,
+              color: Green,
+            },
+          }}
+        >
+          افزودن کارشناس به دستگاه
+        </Button>
+        <Button
+          variant="contained"
+          endIcon={<VscOrganization />}
+          onClick={() => [
+            setAddOrganizationModal({
+              ...addOrganizationModal,
+              open: true,
+            }),
+          ]}
+          sx={{
+            borderRadius: 2,
+            backgroundColor: Green,
+            fontWeight: 700,
+            fontStyle: "normal",
+            fontSize: "1rem",
+            boxShadow: "none",
+            width: "max-content",
+            display: user.userRoles?.find(
+              (role) => role.roleType === "SUPER_ADMIN"
+            )
+              ? "flex"
+              : "none",
+            "&:hover": {
+              backgroundColor: GreenLight,
+              color: Green,
+            },
+          }}
+        >
+          افزودن دستگاه
+        </Button>
       </Box>
       <UserList />
+
+      <NewModal
+        open={addOrganizationModal.open}
+        onClose={() =>
+          setAddOrganizationModal({
+            ...addOrganizationModal,
+            open: false,
+          })
+        }
+        name={"افزودن دستگاه"}
+        width={{
+          xs: "90%",
+          sm: "60%",
+          md: "50%",
+          lg: "40%",
+        }}
+        isCloseable={true}
+        backgroundColor={background}
+      >
+        <Box
+          display={"grid"}
+          gridTemplateColumns={{
+            xs: "1fr",
+            lg: "repeat(2, 1fr)",
+          }}
+          gap={2}
+          width={"100%"}
+        >
+          <TextField
+            fullWidth
+            label={"نام کاربری"}
+            variant={"outlined"}
+            autoComplete="Name"
+            value={addOrganizationModal.userName}
+            sx={{
+              gridColumn: "span 2",
+              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
+                {
+                  borderRadius: "0.5rem",
+                },
+            }}
+            onChange={(e) =>
+              setAddOrganizationModal({
+                ...addOrganizationModal,
+                userName: e.target.value,
+              })
+            }
+          />
+          <TextField
+            fullWidth
+            label={"نام"}
+            variant={"outlined"}
+            autoComplete="Name"
+            value={addOrganizationModal.fullName}
+            sx={{
+              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
+                {
+                  borderRadius: "0.5rem",
+                },
+            }}
+            onChange={(e) =>
+              setAddOrganizationModal({
+                ...addOrganizationModal,
+                fullName: e.target.value,
+              })
+            }
+          />
+          <TextField
+            fullWidth
+            label={"کد ملی"}
+            variant={"outlined"}
+            autoComplete="Name"
+            value={addOrganizationModal.nationalCode}
+            sx={{
+              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
+                {
+                  borderRadius: "0.5rem",
+                },
+            }}
+            onChange={(e) =>
+              setAddOrganizationModal({
+                ...addOrganizationModal,
+                nationalCode: e.target.value,
+              })
+            }
+          />
+          <TextField
+            fullWidth
+            label={"شماره موبایل"}
+            variant={"outlined"}
+            autoComplete="phoneNumber"
+            value={addOrganizationModal.phoneNumber}
+            sx={{
+              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
+                {
+                  borderRadius: "0.5rem",
+                },
+            }}
+            type="number"
+            onChange={(e) =>
+              setAddOrganizationModal({
+                ...addOrganizationModal,
+                phoneNumber: e.target.value,
+              })
+            }
+          />
+
+          <TextField
+            fullWidth
+            label={"ایمیل"}
+            variant={"outlined"}
+            autoComplete="email"
+            value={addOrganizationModal.email}
+            sx={{
+              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
+                {
+                  borderRadius: "0.5rem",
+                },
+            }}
+            onChange={(e) =>
+              setAddOrganizationModal({
+                ...addOrganizationModal,
+                email: e.target.value,
+              })
+            }
+          />
+
+          <Divider sx={{ gridColumn: "span 2" }} />
+
+          <TextField
+            fullWidth
+            label={"رمز عبور"}
+            variant={"outlined"}
+            value={addOrganizationModal.password}
+            type={
+              addOrganizationModal.showPassword ? "text" : "password"
+            }
+            InputProps={{
+              endAdornment: (
+                <IconButton
+                  onClick={() =>
+                    setAddOrganizationModal({
+                      ...addOrganizationModal,
+                      showPassword:
+                        !addOrganizationModal.showPassword,
+                    })
+                  }
+                >
+                  {addOrganizationModal.showPassword ? (
+                    <BsEye />
+                  ) : (
+                    <BsEyeSlash />
+                  )}
+                </IconButton>
+              ),
+            }}
+            sx={{
+              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
+                {
+                  borderRadius: "0.5rem",
+                },
+            }}
+            onChange={(e) =>
+              setAddOrganizationModal({
+                ...addOrganizationModal,
+                password: e.target.value,
+              })
+            }
+          />
+          <TextField
+            fullWidth
+            label={"تکرار رمز عبور"}
+            variant={"outlined"}
+            value={addOrganizationModal.confirmPassword}
+            type={
+              addOrganizationModal.showPassword ? "text" : "password"
+            }
+            InputProps={{
+              endAdornment: (
+                <IconButton
+                  onClick={() =>
+                    setAddOrganizationModal({
+                      ...addOrganizationModal,
+                      showPassword:
+                        !addOrganizationModal.showPassword,
+                    })
+                  }
+                >
+                  {addOrganizationModal.showPassword ? (
+                    <BsEye />
+                  ) : (
+                    <BsEyeSlash />
+                  )}
+                </IconButton>
+              ),
+            }}
+            sx={{
+              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
+                {
+                  borderRadius: "0.5rem",
+                },
+            }}
+            onChange={(e) =>
+              setAddOrganizationModal({
+                ...addOrganizationModal,
+                confirmPassword: e.target.value,
+              })
+            }
+          />
+
+          <Button
+            variant="contained"
+            sx={{
+              borderRadius: 2,
+              backgroundColor: error ? red[500] : Green,
+              fontWeight: 700,
+              fontStyle: "normal",
+              fontSize: "1rem",
+              boxShadow: "none",
+              gridColumn: "span 2",
+              "&:hover": {
+                backgroundColor: GreenLight,
+              },
+            }}
+            type="submit"
+            onClick={() =>
+              userSignUp({
+                variables: {
+                  fullName: addOrganizationModal.fullName
+                    ? addOrganizationModal.fullName
+                    : "",
+                  nationalCode: addOrganizationModal.nationalCode
+                    ? addOrganizationModal.nationalCode
+                    : "",
+                  password: addOrganizationModal.password
+                    ? addOrganizationModal.password
+                    : "",
+                  confirmPassword:
+                    addOrganizationModal.confirmPassword
+                      ? addOrganizationModal.confirmPassword
+                      : "",
+                  phoneNumber: addOrganizationModal.phoneNumber
+                    ? addOrganizationModal.phoneNumber
+                    : "",
+                  email: addOrganizationModal.email
+                    ? addOrganizationModal.email
+                    : "",
+                  userType: "ORGANIZATION",
+                  userName: addOrganizationModal.userName
+                    ? addOrganizationModal.userName
+                    : "",
+                  birthDate: new Date(),
+                },
+              })
+            }
+          >
+            {loading && "در حال افزودن..."}
+            افزودن
+          </Button>
+        </Box>
+      </NewModal>
+
+      {/* 
+
+
+
+
+
+
+
+
+
+
+
+
+       */}
+
+      <NewModal
+        open={addPersonelToOrganzationModal.open}
+        onClose={() =>
+          setAddPersonelToOrganzation({
+            ...addPersonelToOrganzationModal,
+            open: false,
+          })
+        }
+        name={"افزودن کارشناس به دستگاه"}
+        width={{
+          xs: "90%",
+          sm: "60%",
+          md: "50%",
+          lg: "40%",
+        }}
+        isCloseable={true}
+        backgroundColor={background}
+      >
+        <Box
+          display={"grid"}
+          gridTemplateColumns={{
+            xs: "1fr",
+            lg: "repeat(2, 1fr)",
+          }}
+          gap={2}
+          width={"100%"}
+        >
+          <TextField
+            fullWidth
+            label={"نام دستگاه"}
+            variant={"outlined"}
+            autoComplete="firstName"
+            value={addPersonelToOrganzationModal.parentID}
+            sx={{
+              gridColumn: "span 2",
+              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
+                {
+                  borderRadius: "0.5rem",
+                },
+            }}
+            onChange={(e) => {
+              console.log(e.target.value);
+
+              setAddPersonelToOrganzation({
+                ...addPersonelToOrganzationModal,
+                parentID:
+                  OrganizationsUsers?.user_getUsers?.result?.items.find(
+                    (item: User) => item.id === e.target.value
+                  )?.fullName,
+              });
+            }}
+            select
+          >
+            {OrganizationsUsers?.user_getUsers?.result?.items.map(
+              (item: User) => (
+                <MenuItem key={item.id} value={item.id ?? undefined}>
+                  {item.fullName}
+                </MenuItem>
+              )
+            )}
+          </TextField>
+          <TextField
+            fullWidth
+            label={"نام"}
+            variant={"outlined"}
+            autoComplete="firstName"
+            value={addPersonelToOrganzationModal.firstName}
+            sx={{
+              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
+                {
+                  borderRadius: "0.5rem",
+                },
+            }}
+            onChange={(e) =>
+              setAddPersonelToOrganzation({
+                ...addPersonelToOrganzationModal,
+                firstName: e.target.value,
+              })
+            }
+          />
+          <TextField
+            fullWidth
+            label={"نام خانوادگی"}
+            variant={"outlined"}
+            autoComplete="lastName"
+            value={addPersonelToOrganzationModal.lastName}
+            sx={{
+              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
+                {
+                  borderRadius: "0.5rem",
+                },
+            }}
+            onChange={(e) =>
+              setAddPersonelToOrganzation({
+                ...addPersonelToOrganzationModal,
+                lastName: e.target.value,
+              })
+            }
+          />
+          <Button
+            variant="outlined"
+            sx={{
+              borderRadius: 2,
+              fontWeight: 700,
+              fontStyle: "normal",
+              fontSize: "1rem",
+              boxShadow: "none",
+              color: secondary,
+              // change color of outline
+              "& .MuiButton-outlined .MuiButton-outlined": {
+                borderRadius: "0.5rem",
+                borderColor: primary,
+              },
+            }}
+            onClick={() =>
+              setAddPersonelToOrganzation({
+                ...addPersonelToOrganzationModal,
+                showCalendar: true,
+              })
+            }
+          >
+            تاریخ تولد
+            {addPersonelToOrganzationModal.birthDate && (
+              <Box
+                component={"span"}
+                sx={{
+                  color: secondary,
+                  fontSize: "0.8rem",
+                  marginInline: 1,
+                }}
+              >
+                {addPersonelToOrganzationModal.birthDate.toLocaleDateString(
+                  "fa-IR"
+                )}
+              </Box>
+            )}
+          </Button>
+          <Modal
+            open={addPersonelToOrganzationModal.showCalendar}
+            onClose={() =>
+              setAddPersonelToOrganzation({
+                ...addPersonelToOrganzationModal,
+                showCalendar: false,
+              })
+            }
+          >
+            <Box
+              position={"absolute"}
+              top={"50%"}
+              left={"50%"}
+              width={"max-content"}
+              height={"max-content"}
+              display={"flex"}
+              sx={{
+                justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: background,
+                transform: "translate(-50%, -50%)",
+                flexDirection: "column",
+                borderRadius: "0.5rem",
+              }}
+            >
+              <CalendarProvider
+                locale={"fa"}
+                direction="rtl"
+                accentColor={"#4c5760"}
+              >
+                <Calendar
+                  defaultValue={
+                    addPersonelToOrganzationModal.birthDate
+                  }
+                  onChange={(day) =>
+                    setAddPersonelToOrganzation({
+                      ...addPersonelToOrganzationModal,
+                      birthDate: day,
+                    })
+                  }
+                />
+              </CalendarProvider>
+              <Button
+                variant="contained"
+                sx={{
+                  borderRadius: 2,
+                  backgroundColor: primary,
+                  fontWeight: 700,
+                  fontStyle: "normal",
+                  fontSize: "1rem",
+                  boxShadow: "none",
+                  margin: 2,
+                  "&:hover": {
+                    backgroundColor: GreenLight,
+                    color: Green,
+                  },
+                }}
+                onClick={() =>
+                  setAddPersonelToOrganzation({
+                    ...addPersonelToOrganzationModal,
+                    showCalendar: false,
+                  })
+                }
+              >
+                تایید
+              </Button>
+            </Box>
+          </Modal>
+          <FaTextField
+            fullWidth
+            label={"کد ملی"}
+            variant={"outlined"}
+            autoComplete="lastName"
+            value={addPersonelToOrganzationModal.nationalCode}
+            sx={{
+              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
+                {
+                  borderRadius: "0.5rem",
+                },
+            }}
+            onChange={(e) =>
+              setAddPersonelToOrganzation({
+                ...addPersonelToOrganzationModal,
+                nationalCode: e.target.value,
+              })
+            }
+          />
+
+          <TextField
+            fullWidth
+            label={"شماره موبایل"}
+            variant={"outlined"}
+            autoComplete="phoneNumber"
+            value={addPersonelToOrganzationModal.phoneNumber}
+            sx={{
+              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
+                {
+                  borderRadius: "0.5rem",
+                },
+            }}
+            type="number"
+            onChange={(e) =>
+              setAddPersonelToOrganzation({
+                ...addPersonelToOrganzationModal,
+                phoneNumber: e.target.value,
+              })
+            }
+          />
+          <TextField
+            fullWidth
+            label={"ایمیل"}
+            variant={"outlined"}
+            autoComplete="email"
+            value={addPersonelToOrganzationModal.email}
+            sx={{
+              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
+                {
+                  borderRadius: "0.5rem",
+                },
+            }}
+            onChange={(e) =>
+              setAddPersonelToOrganzation({
+                ...addPersonelToOrganzationModal,
+                email: e.target.value,
+              })
+            }
+          />
+          <Divider
+            sx={{
+              gridColumn: "span 2",
+            }}
+          />
+
+          <TextField
+            fullWidth
+            label={"رمز عبور"}
+            variant={"outlined"}
+            value={addPersonelToOrganzationModal.password}
+            type={
+              addPersonelToOrganzationModal.showPassword
+                ? "text"
+                : "password"
+            }
+            InputProps={{
+              endAdornment: (
+                <IconButton
+                  onClick={() =>
+                    setAddPersonelToOrganzation({
+                      ...addPersonelToOrganzationModal,
+                      showPassword:
+                        !addPersonelToOrganzationModal.showPassword,
+                    })
+                  }
+                >
+                  {addPersonelToOrganzationModal.showPassword ? (
+                    <BsEye />
+                  ) : (
+                    <BsEyeSlash />
+                  )}
+                </IconButton>
+              ),
+            }}
+            sx={{
+              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
+                {
+                  borderRadius: "0.5rem",
+                },
+            }}
+            onChange={(e) =>
+              setAddPersonelToOrganzation({
+                ...addPersonelToOrganzationModal,
+                password: e.target.value,
+              })
+            }
+          />
+          <TextField
+            fullWidth
+            label={"تکرار رمز عبور"}
+            variant={"outlined"}
+            value={addPersonelToOrganzationModal.confirmPassword}
+            type={
+              addPersonelToOrganzationModal.showPassword
+                ? "text"
+                : "password"
+            }
+            InputProps={{
+              endAdornment: (
+                <IconButton
+                  onClick={() =>
+                    setAddPersonelToOrganzation({
+                      ...addPersonelToOrganzationModal,
+                      showPassword:
+                        !addPersonelToOrganzationModal.showPassword,
+                    })
+                  }
+                >
+                  {addPersonelToOrganzationModal.showPassword ? (
+                    <BsEye />
+                  ) : (
+                    <BsEyeSlash />
+                  )}
+                </IconButton>
+              ),
+            }}
+            sx={{
+              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
+                {
+                  borderRadius: "0.5rem",
+                },
+            }}
+            onChange={(e) =>
+              setAddPersonelToOrganzation({
+                ...addPersonelToOrganzationModal,
+                confirmPassword: e.target.value,
+              })
+            }
+          />
+          <Button
+            variant="contained"
+            sx={{
+              borderRadius: 2,
+              backgroundColor: error ? red[500] : Green,
+              fontWeight: 700,
+              fontStyle: "normal",
+              fontSize: "1rem",
+              boxShadow: "none",
+              gridColumn: "span 2",
+              "&:hover": {
+                backgroundColor: GreenLight,
+              },
+            }}
+            type="submit"
+            onClick={() => userSignUp()}
+          >
+            {loading && "در حال افزودن..."}
+            افزودن
+          </Button>
+        </Box>
+      </NewModal>
 
       <NewModal
         open={addModal.open}
@@ -324,8 +1114,7 @@ const UserManagement = () => {
               })
             }
             select
-          >
-          </TextField>
+          ></TextField>
 
           <Button
             variant="contained"

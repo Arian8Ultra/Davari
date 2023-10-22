@@ -98,6 +98,14 @@ const ArgumentHeader = (props: Props) => {
                 color: "white",
               }}
             >
+              مبلغ پیشنهادی خواهان(ریال)
+            </TableCell>
+            <TableCell
+              sx={{
+                fontWeight: "bold",
+                color: "white",
+              }}
+            >
               پاسخ خوانده
             </TableCell>
             <TableCell

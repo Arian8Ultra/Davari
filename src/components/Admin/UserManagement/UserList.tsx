@@ -13,6 +13,7 @@ import UserCard from "./UserCard";
 import { useQuery } from "@apollo/client";
 import { GET_ALL_USERS } from "../../../GraphQL/Users/Queries";
 import { User } from "../../../static/Types";
+import { UserType } from "../../../gql/graphql";
 
 const UserList = () => {
   const {data,loading,error,refetch} = useQuery(GET_ALL_USERS,{
@@ -31,7 +32,7 @@ const UserList = () => {
         // outline: '1px solid red',
         backgroundColor: primaryTransparent,
         // padding: 2,
-        borderRadius: 2,
+        borderRadius: "0.5rem",
         // boxShadow: "2px 2px 5px 1px rgba(0,0,0,0.2)",
       }}
     >
@@ -45,7 +46,7 @@ const UserList = () => {
           zIndex: 1,
           borderRadius: {
             xs: 0,
-            md:"10px 10px 0px 0px"
+            md:"0.5rem 0.5rem 0px 0px"
           },
           borderBottom: "1px solid grey",
           position: "sticky",
@@ -64,10 +65,10 @@ const UserList = () => {
           // },
           gap:1,
           gridTemplateAreas:{
-            xs: `"fullName" "operation operation operation"`,
-            md: `"fullName" "operation operation operation"`,
-            lg: `"fullName  department status operation"`,
-            xl: `"fullName department status operation"`,
+            xs: `"fullName department userName type" "operation operation operation"`,
+            md: `"fullName department userName type" "operation operation operation"`,
+            lg: `"fullName  department userName type operation"`,
+            xl: `"fullName department userName type operation"`,
           },
           gridAutoColumns: "1fr",
 
@@ -104,7 +105,7 @@ const UserList = () => {
         <Typography
         display={{ xs: "none", md: "block" }}
           textAlign={"center"}
-          gridArea={"status"}
+          gridArea={"userName"}
           fontSize={{
             xs: 11,
             sm: 12,
@@ -113,6 +114,19 @@ const UserList = () => {
           }}
         >
           نام کاربری
+        </Typography>
+        <Typography
+        display={{ xs: "none", md: "block" }}
+          textAlign={"center"}
+          gridArea={"type"}
+          fontSize={{
+            xs: 11,
+            sm: 12,
+            md: 14,
+            lg: 16,
+          }}
+        >
+          نوع کاربر
         </Typography>
         <Typography
           gridArea={"operation"}
@@ -140,6 +154,7 @@ const UserList = () => {
           userName={user.userName}
           refetch={refetch}
           userRoles={user.userRoles}
+          userType={user.userType == "INDIVIDUAL" ? "فرد" : "شرکت"}
         />
       ))}
     </Stack>

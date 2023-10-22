@@ -17,6 +17,7 @@ export const UserLogin = gql`
             roleType
             id
           }
+          userType
         }
         token
         expireDate

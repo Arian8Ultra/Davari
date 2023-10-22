@@ -14,7 +14,7 @@ import {
   Select,
   TextField,
   Tooltip,
-  Typography
+  Typography,
 } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import { useState } from "react";
@@ -38,9 +38,10 @@ import {
   RedLight,
   background,
   primary,
-  primaryTransparent
+  primaryTransparent,
 } from "../../../theme/color";
 import NewModal from "../../Modals";
+import { UserType } from "../../../gql/graphql";
 interface Props {
   fullName?: string;
   lastName?: string;
@@ -50,6 +51,7 @@ interface Props {
   id: string | number;
   refetch: () => void;
   userRoles?: UserRole[];
+  userType?: string;
 }
 const UserCard = (props: Props) => {
   // alijh state for modal
@@ -67,8 +69,6 @@ const UserCard = (props: Props) => {
   const handleCloseAnchor = () => {
     setAnchorEl(null);
   };
-
-
 
   const [editModal, setEditModal] = useState({
     open: false,
@@ -142,11 +142,11 @@ const UserCard = (props: Props) => {
         display: "grid",
         alignItems: "center",
         gap: 1,
-        gridTemplateAreas: {
-          xs: `"fullName" "operation operation operation"`,
-          md: `"fullName" "operation operation operation"`,
-          lg: `"fullName  department status operation"`,
-          xl: `"fullName department status operation"`,
+        gridTemplateAreas:{
+          xs: `"fullName department userName type" "operation operation operation"`,
+          md: `"fullName department userName type" "operation operation operation"`,
+          lg: `"fullName  department userName type operation"`,
+          xl: `"fullName department userName type operation"`,
         },
         gridAutoColumns: "1fr",
         "&:hover": {
@@ -185,7 +185,7 @@ const UserCard = (props: Props) => {
       </Typography>
 
       <Typography
-        gridArea={"status"}
+        gridArea={"userName"}
         display={{ xs: "none", md: "block" }}
         textAlign={"center"}
         fontSize={{
@@ -199,6 +199,22 @@ const UserCard = (props: Props) => {
         // }}
       >
         {props.userName && props.userName}
+      </Typography>
+      <Typography
+        gridArea={"type"}
+        display={{ xs: "none", md: "block" }}
+        textAlign={"center"}
+        fontSize={{
+          xs: 11,
+          sm: 12,
+          md: 14,
+          lg: 16,
+        }}
+        // sx={{
+        //   outline:'2px solid red'
+        // }}
+      >
+        {props.userType && props.userType}
       </Typography>
       <Box
         gridArea={"operation"}
@@ -220,7 +236,7 @@ const UserCard = (props: Props) => {
           onClick={handleClickAnchor}
           fullWidth
         >
-          <BsFillCaretDownFill/>
+          <BsFillCaretDownFill />
         </Button>
         <Menu
           id="user-menu"
@@ -229,8 +245,9 @@ const UserCard = (props: Props) => {
           onClose={handleCloseAnchor}
           sx={{
             "& .MuiMenu-paper": {
-              borderRadius: "15px",
-              border: `2px solid ${primary}`,
+              borderRadius: "0.5rem",
+              // border: `2px solid ${primary}`,
+              width: anchorEl ? anchorEl.clientWidth : undefined,
             },
           }}
           MenuListProps={{

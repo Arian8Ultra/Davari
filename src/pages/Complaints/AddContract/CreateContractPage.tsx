@@ -6,7 +6,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { Add } from "@mui/icons-material";
 import {
   Alert,
@@ -42,6 +42,7 @@ import {
   primary,
   secondary,
 } from "../../../theme/color";
+import { GET_ALL_ORGANIZATION_USERS } from "../../../GraphQL/Users/Queries";
 
 const CreateContractPage = () => {
   const user = useUserStore((state) => state.user);
@@ -107,11 +108,11 @@ const CreateContractPage = () => {
     CircularNumber?: string;
     CircularDate?: string;
   }>({
-    contratTypes:[''],
-    CircularDate:undefined,
-    CircularNumber:undefined,
-    CircularTitle:undefined,
-    other:false
+    contratTypes: [""],
+    CircularDate: undefined,
+    CircularNumber: undefined,
+    CircularTitle: undefined,
+    other: false,
   });
   const [contratDetailsError, setContratDetailsError] =
     React.useState({
@@ -279,6 +280,22 @@ const CreateContractPage = () => {
   const [departments, setDepartments] = React.useState<
     { label: string; id: number }[]
   >([]);
+  useQuery(GET_ALL_ORGANIZATION_USERS, {
+    onCompleted(data) {
+      console.log(data);
+      setDepartments(
+        data?.user_getUsers?.result?.items?.map(
+          (item: { id: number; fullName: string; }) => ({
+            label: item.fullName,
+            id: item.id,
+          })
+        )
+      );
+    },
+    onError(error) {
+      console.log(error);
+    },
+  });
 
   //
   //
@@ -585,7 +602,7 @@ const CreateContractPage = () => {
         AuthorizedDelaysAccuser: AuthorizedDelays,
         UnauthorizedDelaysAccuser: UnauthorizedDelays,
         AccusedDepartmentId: AccusedDepartmentId,
-        AccuserDepartmentId: user.departmentId,
+        AccuserDepartmentId: user.id,
       },
     }
   );
@@ -683,7 +700,7 @@ const CreateContractPage = () => {
           renderInput={(params) => (
             <FaTextField
               {...params}
-              label="نام بخش خوانده"
+              label="نام  خوانده"
               error={
                 AccusedDepartmentIdError &&
                 AccusedDepartmentIdError.error
@@ -706,21 +723,13 @@ const CreateContractPage = () => {
           )}
         />
         <FaTextField
-          label="نام بخش خواهان"
+          label="نام  خواهان"
           sx={{
             width: "100%",
             gridColumn: "span 3",
           }}
-          value={
-            departments?.find(
-              (item: { id: number; label: string }) =>
-                item.id === user.departmentId
-            )?.label
-          }
-          placeholder={
-            departments?.find((item) => item.id === user.departmentId)
-              ?.label
-          }
+          value={user.parent?.fullName || user.fullName}
+          placeholder={user.parent?.fullName || user.fullName}
           focused
           //   disabled
         />
@@ -769,6 +778,7 @@ const CreateContractPage = () => {
             </MenuItem>
           ))}
         </FaTextField>
+        
 
         <Divider
           sx={{
@@ -2785,11 +2795,11 @@ const CreateContractPage = () => {
             <Button
               onClick={() => {
                 void createComplaint({
-                  onCompleted(d,clientOptions) {
-                    console.log('data', d);
+                  onCompleted(d, clientOptions) {
+                    console.log("data", d);
                     console.log("clientOptions", clientOptions);
                     navigate(
-                      `/complaints/${data?.contract_addContract?.result.id}/${d?.complaint_addComplaint?.result?.id}/addArguements/0`
+                      `/complaints/${data?.contract_addContract?.result.id}/${d?.complaint_addComplaint?.result?.id}/addComplaint`
                     );
                   },
                 });

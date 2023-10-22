@@ -6,7 +6,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import {
   Autocomplete,
   Box,
@@ -19,7 +19,7 @@ import {
   TableHead,
   TableRow,
   TextField,
-  Typography
+  Typography,
 } from "@mui/material";
 import { grey, red } from "@mui/material/colors";
 import { useState } from "react";
@@ -41,9 +41,10 @@ import {
   primaryDark,
   primaryLightTransparent,
   secondary,
-  secondaryDark
+  secondaryDark,
 } from "../../theme/color";
 import NewModal from "../Modals";
+import { GET_USER } from "../../GraphQL/Users/Queries";
 interface Props {
   id: number;
   complaintId?: number;
@@ -68,8 +69,6 @@ const ComplaintCardNew = (props: Props) => {
     open: false,
   });
 
-  
-
   const style = {
     width: "100%",
     border: `1px solid ${secondary}`,
@@ -90,6 +89,24 @@ const ComplaintCardNew = (props: Props) => {
     },
     onCompleted(data, clientOptions) {
       props.refetch && props.refetch();
+    },
+  });
+
+  const { data: accuser } = useQuery(GET_USER, {
+    variables: {
+      id: props.acusserId,
+    },
+    onCompleted(data) {
+      props.acusser = data.user_getUser?.result;
+    },
+  });
+
+  const { data: accused } = useQuery(GET_USER, {
+    variables: {
+      id: props.acussedId,
+    },
+    onCompleted(data) {
+      props.acussed = data.user_getUser?.result;
     },
   });
 
@@ -126,13 +143,10 @@ const ComplaintCardNew = (props: Props) => {
           شماره قرارداد :{convertToPersianDigits(props.contractId)}
         </Typography>
         <Typography>
-          خواهان : {props.acusser}
+          خواهان : {accuser?.user_getUser?.result?.fullName}
         </Typography>
         <Typography>
-          خوانده :
-          {
-            props.acussedId
-          }
+          خوانده :{accused?.user_getUser?.result?.fullName}
         </Typography>
       </Box>
       <Box
@@ -168,9 +182,7 @@ const ComplaintCardNew = (props: Props) => {
           thickness={3}
           value={
             // @ts-ignore
-            (StatesCap.indexOf(props.state)/ 44).toFixed(
-              2
-            ) * 100
+            (StatesCap.indexOf(props.state) / 44).toFixed(2) * 100
           }
           sx={{
             gridColumn: "3",
@@ -195,9 +207,7 @@ const ComplaintCardNew = (props: Props) => {
         >
           {convertToPersianDigits(
             // @ts-ignore
-            (StatesCap.indexOf(props.state)/ 44).toFixed(
-              2
-            ) * 100
+            (StatesCap.indexOf(props.state) / 44).toFixed(2) * 100
           )}
           %
         </Typography>
@@ -265,9 +275,7 @@ const ComplaintCardNew = (props: Props) => {
                         color: secondaryDark,
                       }}
                     >
-                      {
-                        props.acussedId
-                      }
+                      {props.acussedId}
                     </TableCell>
                   </TableRow>
 
@@ -288,9 +296,7 @@ const ComplaintCardNew = (props: Props) => {
                         color: secondaryDark,
                       }}
                     >
-                      {
-                       props.acusserId
-                      }
+                      {props.acusserId}
                     </TableCell>
                   </TableRow>
 

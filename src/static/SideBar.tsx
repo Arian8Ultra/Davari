@@ -71,7 +71,7 @@ export const SideBarMenu = [
     icon: <BsPersonCircle />,
     hasLink: false,
     hasCollapse: true,
-    accessNeeded: ["SUPER_ADMIN"],
+    accessNeeded: ["SUPER_ADMIN","SENIOR_USER"],
     children: [
       {
         primary: Titles.userManagement,

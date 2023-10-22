@@ -8,8 +8,9 @@ export type User = {
   userName: string;
   email: string;
   id: string;
-  users: User[];
-  parent: User | null;
+  users?: User[];
+  parent?: User | null;
+  userType?:"INDIVIDUAL" | "ORGANIZATION";
 };
 
 export type Argument = {

@@ -30,7 +30,7 @@ import {
   secondary,
   secondaryDark,
   secondaryLight,
-  secondaryLighter
+  secondaryLighter,
 } from "../../theme/color";
 
 interface Props {
@@ -73,9 +73,7 @@ const ArgumentCard = ({
           key={id}
           sx={{
             background:
-              id % 2 == 0
-                ? "rgba(230,230,230)"
-                : "rgba(200,200,200)",
+              id % 2 == 0 ? "rgba(230,230,230)" : "rgba(200,200,200)",
             borderBottom: `1px solid ${primaryGreyTransparent}`,
             transition: "all 0.2s ease-in-out",
           }}
@@ -101,7 +99,7 @@ const ArgumentCard = ({
           >
             {arguement.description?.length &&
             arguement.description?.length > 80
-              ? arguement.description?.slice(0,80) + "..."
+              ? arguement.description?.slice(0, 80) + "..."
               : arguement.description}
           </TableCell>
           <TableCell
@@ -247,9 +245,7 @@ const ArgumentCard = ({
           key={id}
           sx={{
             background:
-              id % 2 == 0
-                ? "rgba(230,230,230)"
-                : "rgba(200,200,200)",
+              id % 2 == 0 ? "rgba(230,230,230)" : "rgba(200,200,200)",
             borderBottom: `1px solid ${secondary}`,
             transition: "all 0.2s ease-in-out",
           }}
@@ -264,6 +260,22 @@ const ArgumentCard = ({
             }}
           >
             {arguement.summary}
+          </TableCell>
+          <TableCell
+            sx={{
+              borderInline:
+                id % 2 == 0
+                  ? `1px solid ${secondary}`
+                  : `1px solid ${secondary}`,
+            }}
+          >
+            {arguement.suggestedAmount
+              ? convertToPersianDigits(
+                  arguement.suggestedAmount
+                    ?.toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                ) || ""
+              : "ندارد"}{" "}
           </TableCell>
           <TableCell
             sx={{

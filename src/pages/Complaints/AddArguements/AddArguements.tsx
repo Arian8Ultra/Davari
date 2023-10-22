@@ -10,6 +10,8 @@ import {
   Skeleton,
   Table,
   TableBody,
+  TableCell,
+  TableRow,
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
@@ -40,10 +42,11 @@ import {
 } from "../../../theme/color";
 import { UPDATE_COMPLAINT } from "../../../GraphQL/Complaints/Mutations";
 import states from "../../../static/states.json";
+import { convertToPersianDigits } from "../../../functions/Functions";
 
 const AddArgument = () => {
   const { contractId, complaintId, state } = useParams();
-  const navigate = useNavigate( )
+  const navigate = useNavigate();
   const complaintIdInt = complaintId && parseInt(complaintId);
   const user = useUserStore((state) => state.user);
   const stateInt = state ? parseInt(state) : 0;
@@ -70,7 +73,7 @@ const AddArgument = () => {
       complaintState: states.ComplaintRegistered.cap,
     },
     onCompleted(data) {
-      console.log('state',states.ComplaintRegistered.cap);
+      console.log("state", states.ComplaintRegistered.cap);
       console.log(data);
       alert("ثبت شد");
       // navigate("/complaints");
@@ -233,6 +236,58 @@ const AddArgument = () => {
                       setVewMoreModal: setViewMoreModal,
                     })
                 )}
+              <TableRow
+                sx={{
+                  display: stateInt != 0 ? "none" : "table-row",
+                }}
+              >
+                <TableCell
+                  sx={{
+                    fontWeight: "bold",
+                    color: "white",
+                  }}
+                ></TableCell>
+                <TableCell
+                  sx={{
+                    fontWeight: "bold",
+                    color: "white",
+                  }}
+                ></TableCell>
+                <TableCell
+                  sx={{
+                    fontWeight: "bold",
+                    color: "white",
+                  }}
+                ></TableCell>
+                <TableCell
+                  sx={{
+                    fontWeight: "bold",
+                    color: secondary,
+                  }}
+                >
+                  مبلغ خواسته شده ادعا(ریال) جمع کل :{" "}
+                  {convertToPersianDigits(
+                    data?.complaintArgument_getComplaintArguments?.result?.items?.reduce(
+                      (a, b) => a + (b?.suggestedAmount ?? 0),
+                      0
+                    ).toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                  )}
+                </TableCell>
+                <TableCell
+                  sx={{
+                    fontWeight: "bold",
+                    color: "white",
+                  }}
+                ></TableCell>
+                <TableCell
+                  sx={{
+                    fontWeight: "bold",
+                    color: "white",
+                  }}
+                >
+                </TableCell>
+              </TableRow>
             </TableBody>
           </Table>
           <IconButton

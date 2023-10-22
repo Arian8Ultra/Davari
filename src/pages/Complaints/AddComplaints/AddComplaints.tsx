@@ -58,7 +58,7 @@ const AddComplaint = () => {
     localStorage.getItem("complaints") || "{}"
   );
 
-  const { contractId } = useParams();
+  const { contractId, complaintId } = useParams();
 
   const { data } = useQuery(GET_CONTRACT, {
     variables: {
@@ -71,7 +71,7 @@ const AddComplaint = () => {
 
   const [createForm] = useMutation(CREATE_ARBITRATION_TERMS_FORM, {
     variables: {
-      complaintId: contractId && parseInt(contractId),
+      complaintId: complaintId && parseInt(complaintId),
       userId: user.id,
       filledBy: "ACCUSER",
       firstCondition: FisrtCondition.checked.indexOf(true) !== -1,
@@ -84,7 +84,7 @@ const AddComplaint = () => {
       fourthConditionFileName: FourthCondition.fileName,
       projectName: ProjectName,
       projectNumber: ProjectNumber,
-      hasReadAgreement: AgreeWithTerms,
+      hasReadAgreement: true,
     },
   });
 
@@ -584,8 +584,8 @@ const AddComplaint = () => {
           flexDirection={"column"}
           gap={2}
         >
-          <FileBox disabled={!FourthCondition.checked[1]}/>
-          <FileBox disabled={!FourthCondition.checked[2]}/>
+          <FileBox disabled={!FourthCondition.checked[1]} />
+          <FileBox disabled={!FourthCondition.checked[2]} />
         </Box>
 
         <div
@@ -684,7 +684,20 @@ const AddComplaint = () => {
               })
             );
             contractId &&
-              navigate(`/complaints/${contractId}/addArguements/0`);
+              complaintId &&
+              void createForm({
+                onCompleted(data, clientOptions) {
+                  navigate(
+                    `/complaints/${contractId}/${complaintId}/addArguements/0`
+                  );
+                },
+                onError(error) {
+                  console.log(error);
+                  navigate(
+                    `/complaints/${contractId}/${complaintId}/addArguements/0`
+                  );
+                },
+              });
           }}
         >
           ادامه
