@@ -1,12 +1,25 @@
 import React from 'react'
 import Title from '../../../components/Forms/Title/Title'
 import TitleWithGrid from '../../../components/Forms/Title/TitleWithGrid'
+import TreeChart from '../../../components/TreeChart'
 
 const Test = () => {
   return (
     <div>
-        <Title id={'1'} title='عنوان تستی 1' />
-        <TitleWithGrid id={'2'} title='عنوان تستی 2' />
+        <TreeChart object={{
+          name:"root",
+          children:[
+            {
+              name:"لورم ایپسوم متن ساختگی با تولید سادگی ",
+              children:[
+                {
+                  name:"لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت ",
+                  children:[]
+                }
+              ]
+            }
+          ]
+        }}/>
     </div>
   )
 }

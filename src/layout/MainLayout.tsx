@@ -585,9 +585,11 @@ export default function MainLayout() {
           position="fixed"
           open={open}
           sx={{
-            backgroundColor: theme.palette.background.default,
+            backgroundColor: background,
             justifyContent: "center",
             alignItems: "space-between",
+            boxShadow: "none",
+            // borderBottom: `1px solid ${secondary}`,
           }}
         >
           <Toolbar

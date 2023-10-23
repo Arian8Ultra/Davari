@@ -18,7 +18,7 @@ const Home = () => {
       overflow={'hidden'}
     >
       <InfoCard
-        columns="span 2"
+        columns="span 3"
         data={[
           {
             title: "تستی",
@@ -29,7 +29,7 @@ const Home = () => {
         ]}
       />
       <PeopleCard
-        columns="span 6"
+        columns="span 5"
         people={[
           {
             id: 1,

@@ -150,7 +150,7 @@ const UserCard = (props: Props) => {
         },
         gridAutoColumns: "1fr",
         "&:hover": {
-          backgroundColor: "rgba(255,255,255,0.6)",
+          backgroundColor: "rgba(255,255,255,0.7)",
         },
       }}
     >

@@ -12,7 +12,7 @@ export const GET_ALL_USERS = gql`
           phoneNumber
           nationalCode
           userType
-          childUsers{
+          childUsers {
             parentId
             fullName
             id
@@ -31,9 +31,58 @@ export const GET_ALL_USERS = gql`
   }
 `;
 export const GET_USER = gql`
-  query GetUser ($id: String!){
+  query GetUser($id: String!) {
     user_getUser(entityId: $id) {
-      result{
+      result {
+        id
+        userName
+        email
+        fullName
+        phoneNumber
+        nationalCode
+        userType
+        parentId
+        parent {
+          fullName
+          id
+          parent {
+            fullName
+            id
+            parent {
+              fullName
+              id
+              # parent {
+              #   fullName
+              #   id
+              # }
+            }
+          }
+        }
+        childUsers {
+          parentId
+          fullName
+          id
+        }
+        userRoles {
+          id
+          roleType
+          userId
+          isDeleted
+          createdDate
+        }
+      }
+      status {
+        code
+        value
+      }
+    }
+  }
+`;
+export const GET_USER_QUERIABLE = gql`
+  query GetUser($id: String!) {
+    user_getUserQueryable(entityId: $id) {
+      result {
+        items {
           id
           userName
           email
@@ -41,7 +90,24 @@ export const GET_USER = gql`
           phoneNumber
           nationalCode
           userType
-          childUsers{
+          parentId
+          parent {
+            fullName
+            id
+            parent {
+              fullName
+              id
+              parent {
+                fullName
+                id
+                # parent {
+                #   fullName
+                #   id
+                # }
+              }
+            }
+          }
+          childUsers {
             parentId
             fullName
             id
@@ -53,18 +119,16 @@ export const GET_USER = gql`
             isDeleted
             createdDate
           }
+        }
       }
-      status{
-        code
-        value
-      }
+      status
     }
   }
 `;
 export const GET_ALL_ORGANIZATION_USERS = gql`
   query getAllOganizationUsers {
     user_getUsers {
-      result(take: 2000,where: {userType: {eq: ORGANIZATION}}) {
+      result(take: 2000, where: { userType: { eq: ORGANIZATION } }) {
         items {
           id
           userName
@@ -72,7 +136,7 @@ export const GET_ALL_ORGANIZATION_USERS = gql`
           fullName
           phoneNumber
           nationalCode
-          childUsers{
+          childUsers {
             parentId
             fullName
             id
@@ -96,7 +160,6 @@ export const TOKEN_CHECK = gql`
     user_isTokenValid
   }
 `;
-
 
 export type UserRole = {
   id: string;
