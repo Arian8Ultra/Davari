@@ -34,7 +34,7 @@ const TreeChart = (props: TreeChartProps) => {
       sx={{
         display: props.object ? "flex" : "none",
         flexDirection: "column",
-        gap: 2,
+        gap: 1,
         justifyContent: "center",
         alignItems: "start",
         width: "100%",

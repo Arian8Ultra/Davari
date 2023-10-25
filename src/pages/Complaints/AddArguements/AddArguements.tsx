@@ -70,10 +70,10 @@ const AddArgument = () => {
   const [updateCompaint] = useMutation(UPDATE_COMPLAINT, {
     variables: {
       id: complaintIdInt,
-      complaintState: states.ComplaintRegistered.cap,
+      complaintState: states.AccuserApprovedArguments.cap,
     },
     onCompleted(data) {
-      console.log("state", states.ComplaintRegistered.cap);
+      console.log("state", states.AccuserApprovedArguments.cap);
       console.log(data);
       alert("ثبت شد");
       // navigate("/complaints");
@@ -332,7 +332,19 @@ const AddArgument = () => {
           }}
           onClick={() => {
             if (stateInt == 0) {
-              void updateCompaint();
+              void updateCompaint({
+                variables: {
+                  id: complaintIdInt,
+                  complaintState: states.WaitingForAccusedToFillForms.cap,
+                },
+              });
+            }else if (stateInt == 1){
+              void updateCompaint({
+                variables: {
+                  id: complaintIdInt,
+                  complaintState: states.AccusedAnsweredArguments.cap,
+                },
+              });
             }
           }}
         >

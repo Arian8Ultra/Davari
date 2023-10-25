@@ -47,6 +47,9 @@ import {
   primary,
   secondary,
 } from "../../../theme/color";
+import { States } from "../../../static/States";
+import { GET_ALL_ORGANIZATION_USERS } from "../../../GraphQL/Users/Queries";
+import DateButton from "../../../components/DateButton";
 
 const UpdateContractPage = () => {
   const user = useUserStore((state) => state.user);
@@ -137,7 +140,7 @@ const UpdateContractPage = () => {
       error: false as boolean,
       text: "" as string,
     });
-  const [ContractDate, setContractDate] = React.useState<number>();
+  const [ContractDate, setContractDate] = React.useState<Date>();
   const [ContractDateError, setContractDateError] = React.useState({
     error: false as boolean,
     text: "" as string,
@@ -287,6 +290,22 @@ const UpdateContractPage = () => {
   const [departments, setDepartments] = React.useState<
     { label: string; id: string }[]
   >([]);
+  useQuery(GET_ALL_ORGANIZATION_USERS, {
+    onCompleted(data) {
+      console.log(data);
+      setDepartments(
+        data?.user_getUsers?.result?.items?.map(
+          (item: { id: number; fullName: string }) => ({
+            label: item.fullName,
+            id: item.id,
+          })
+        )
+      );
+    },
+    onError(error) {
+      console.log(error);
+    },
+  });
 
   //
   //
@@ -558,7 +577,7 @@ const UpdateContractPage = () => {
         CircularDate: contratDetails && contratDetails.CircularDate,
         ContractSubject:
           contratDetails && contratDetails.CircularTitle,
-        ContractNumber: ContractNumber,
+        // ContractNumber: ContractNumber,
         ContractDate: ContractDate,
         InitialBudget: InitialBudget,
         InitialTimePeriod: InitialTimePeriod,
@@ -591,7 +610,7 @@ const UpdateContractPage = () => {
         ],
         SupervisionDepartment: SupervisionDepartment,
         AuthorizedDelaysAccuser: AuthorizedDelays,
-        UnauthorizedDelaysAccuser: UnauthorizedDelays,
+        UnauthorizedDelaysAccuser: UnauthorizedDelays || undefined,
         id: contractId ? parseInt(contractId) : 0,
       },
     }
@@ -632,11 +651,7 @@ const UpdateContractPage = () => {
         );
       setAccusedDepartmentId(contract.accusedDepartmentUserId);
       setAccuserDepartmentId(contract.accuserDepartmentUserId);
-      setContractNumber(
-        contract.contractNumberByAccuser
-          ? parseInt(contract.contractNumberByAccuser)
-          : 0
-      );
+      contractId && setContractNumber(parseInt(contractId));
       setAssigningType(contract.assigningTypeByAccuser);
       setAuthorizedDelays(
         contract.authorizedDelaysByAccuser
@@ -644,7 +659,7 @@ const UpdateContractPage = () => {
           : undefined
       );
       setUnauthorizedDelays(
-        String(contract.unauthorizedDelaysByAccuser)
+        contract.unauthorizedDelaysByAccuser?.toString()
       );
     },
   });
@@ -661,13 +676,13 @@ const UpdateContractPage = () => {
   const [updateCompaint] = useMutation(UPDATE_COMPLAINT, {
     variables: {
       id: complaintId ? parseInt(complaintId) : 0,
-      complaintState: states.ComplaintRegistered.cap,
+      complaintState: states.AccusedCompletedContract.cap,
     },
     onCompleted(data) {
-      console.log("state", states.WaitingForAccusedToFillForms.cap);
+      console.log("state", states.AccusedCompletedContract);
       console.log(data);
       alert("ثبت شد");
-      // navigate(`/complaints/${contractId}/${complaintId}/addArguements/1`);
+      navigate(`/complaints/${contractId}/${complaintId}/addArguements/1`);
     },
   });
   //
@@ -684,12 +699,162 @@ const UpdateContractPage = () => {
       <BackButton to="/complaints" />
       <Box
         display={"grid"}
+        gridTemplateColumns={"repeat(6, 1fr)"}
+        alignItems={"center"}
+        justifyContent={"center"}
+        gap={2}
+        padding={"2rem"}
+        paddingTop={"0"}
+        border={`2px solid ${secondary}`}
+        borderRadius={"1rem"}
+        position={"relative"}
+        marginY={"3rem"}
+        paddingX={"25%"}
+      >
+        <Box
+          gridColumn={"span 12"}
+          borderRadius={"1rem"}
+          sx={{
+            position: "sticky",
+            top: 100,
+            left: "50%",
+            transform: "translateY(-50%) translateX(-50%)",
+            background: primary,
+            padding: "0.5rem 1rem",
+            userSelect: "none",
+            width: "max-content",
+            zIndex: 1000,
+          }}
+        >
+          <FaTypography variant="h6" textAlign={"center"}>
+            اطلاعات قرارداد
+          </FaTypography>
+        </Box>
+        <FaTextField
+          label="عنوان قرارداد: "
+          variant="outlined"
+          sx={{
+            gridColumn: "span 6",
+          }}
+          value={ContractSubject}
+          onChange={(e) => {
+            setContractSubject(e.target.value);
+          }}
+          error={ContractSubjectError.error}
+          helperText={ContractSubjectError.text}
+        />
+        <div
+          style={{
+            gridColumn: "span 6",
+          }}
+        />
+        <FaTextField
+          label="شماره قرارداد: "
+          variant="outlined"
+          sx={{
+            gridColumn: "span 3",
+          }}
+          value={ContractNumber}
+          onChange={(e) => {
+            setContractNumber(parseInt(e.target.value));
+          }}
+          error={ContractNumberError.error}
+          helperText={ContractNumberError.text}
+          focused
+        />
+        <DateButton
+          date={ContractDate}
+          setDate={setContractDate}
+          sx={{
+            gridColumn: "span 3",
+          }}
+          label="تاریخ انعقاد قرارداد"
+        />
+        <div
+          style={{
+            gridColumn: "span 6",
+          }}
+        />
+        <FaTextField
+          label="کارفرما"
+          sx={{
+            width: "100%",
+            gridColumn: "span 3",
+          }}
+          //   disabled
+        />
+        <FaTextField
+          label="طرف قرارداد"
+          sx={{
+            width: "100%",
+            gridColumn: "span 3",
+          }}
+          //   disabled
+        />
+        <div
+          style={{
+            gridColumn: "span 6",
+          }}
+        />
+        <FaTextField
+          label="مبلغ اوليه/ حق‌الزحمه قرارداد: "
+          variant="outlined"
+          type="number"
+          InputProps={{
+            endAdornment: "ریال",
+          }}
+          sx={{
+            gridColumn: "span 3",
+          }}
+          value={InitialBudget}
+          onChange={(e) => {
+            setInitialBudget(parseInt(e.target.value));
+          }}
+          error={InitialBudgetError.error}
+          helperText={InitialBudgetError.text}
+        />
+        <FaTextField
+          label="مدت اوليه قرارداد: "
+          variant="outlined"
+          type="text"
+          InputProps={{
+            endAdornment: "ماه",
+          }}
+          sx={{
+            gridColumn: "span 3",
+          }}
+          value={InitialTimePeriod}
+          onChange={(e) => {
+            setInitialTimePeriod(parseInt(e.target.value));
+          }}
+          error={InitialTimePeriodError.error}
+          helperText={InitialTimePeriodError.text}
+        />
+        <div
+          style={{
+            gridColumn: "span 6",
+          }}
+        />
+
+        <Button
+          sx={{
+            color: secondary,
+            backgroundColor: primary,
+            borderRadius: "0.5rem",
+            gridColumn: "5/span 2",
+          }}
+        >
+          تایید اطلاعات
+        </Button>
+      </Box>
+      <Box
+        display={"grid"}
         gridTemplateColumns={"repeat(12, 1fr)"}
         alignItems={"center"}
         justifyContent={"center"}
         gap={2}
         padding={"2rem"}
-        paddingTop={"4rem"}
+        paddingTop={"0rem"}
         border={`2px solid ${secondary}`}
         borderRadius={"1rem"}
         position={"relative"}
@@ -699,16 +864,18 @@ const UpdateContractPage = () => {
           gridColumn={"span 12"}
           borderRadius={"1rem"}
           sx={{
-            position: "absolute",
-            top: 0,
+            position: "sticky",
+            top: 100,
             left: "50%",
             transform: "translateY(-50%) translateX(-50%)",
             background: primary,
             padding: "0.5rem 1rem",
             userSelect: "none",
+            width: "max-content",
+            zIndex: 1000,
           }}
         >
-          <FaTypography variant="h4" textAlign={"center"}>
+          <FaTypography variant="h6" textAlign={"center"}>
             فرم تکمیل اطلاعات قرارداد
           </FaTypography>
         </Box>
@@ -722,51 +889,59 @@ const UpdateContractPage = () => {
     
     */}
         <FaTypography variant="h5" gridColumn={"span 12"}>
-          1- طرفین قرارداد:
+          طرفین قرارداد:
         </FaTypography>
         <FaTextField
-          label="نام بخش خواهان"
+          label="نام خواهان"
           sx={{
             width: "100%",
             gridColumn: "span 3",
           }}
           value={
-            departments?.find(
-              (item) => item.id === AccuserDepartmentId
+            departments.find(
+              (item) =>
+                AccuserDepartmentId && item.id === AccuserDepartmentId
             )?.label
           }
           placeholder={
-            departments?.find(
-              (item) => item.id === AccuserDepartmentId
+            departments.find(
+              (item) =>
+                AccuserDepartmentId && item.id === AccuserDepartmentId
             )?.label
           }
           focused
           //   disabled
         />
+        {/* {JSON.stringify(departments)}
+        <br/>
+        <br/>
+        <br/>
+        {AccusedDepartmentId} */}
         <FaTextField
-          label="نام بخش خوانده"
+          label="نام خوانده"
           sx={{
             width: "100%",
             gridColumn: "span 3",
           }}
           value={
-            departments?.find(
-              (item) => item.id === AccusedDepartmentId
+            departments.find(
+              (item) =>
+                AccusedDepartmentId && item.id === AccusedDepartmentId
             )?.label
           }
           placeholder={
-            departments?.find(
-              (item) => item.id === AccusedDepartmentId
-            )?.label
+            departments.find(
+              (item) =>
+                AccusedDepartmentId && item.id === AccusedDepartmentId
+            )?.label || ""
           }
           focused
-          //   disabled
+          // disabled
         />
 
         <Divider
-          orientation="vertical"
           sx={{
-            gridColumn: "span 1",
+            gridColumn: "span 12",
           }}
         />
 
@@ -777,8 +952,8 @@ const UpdateContractPage = () => {
 
     
     */}
-        <FaTypography variant="h5" gridColumn={"span 2"}>
-          {"2- تابعيت خوانده: "}
+        <FaTypography variant="h5" gridColumn={"span 12"}>
+          {"تابعيت خوانده: "}
         </FaTypography>
         <FaTextField
           label="تابعيت : "
@@ -823,7 +998,7 @@ const UpdateContractPage = () => {
     */}
 
         <FaTypography variant="h5" gridColumn={"span 12"}>
-          {"3- افراد مطلع و مرتبط با پروژه: "}
+          {"افراد مطلع و مرتبط با پروژه: "}
         </FaTypography>
         <Box
           gridColumn={"span 6"}
@@ -1048,7 +1223,7 @@ const UpdateContractPage = () => {
     
     */}
         <FaTypography variant="h5" gridColumn={"span 12"}>
-          {"4- مشخصات قرارداد: "}
+          {"مشخصات قرارداد: "}
         </FaTypography>
         <FaTypography variant="h6" gridColumn={"span 12"}>
           {
@@ -1065,8 +1240,8 @@ const UpdateContractPage = () => {
             control={<Checkbox />}
             label={
               <FaTypography>
-                • موافقتنامه و شرایط عمومی و شرایط خصوصی پیمان‌ها-
-                نشریه شماره ۴۳۱۱ – بخشنامه شماره 842/54-1088/102 مورخ
+                موافقتنامه و شرایط عمومی و شرایط خصوصی پیمان‌ها- نشریه
+                شماره ۴۳۱۱ – بخشنامه شماره 842/54-1088/102 مورخ
                 ۱۳۷۸/۰۳/۰۳
               </FaTypography>
             }
@@ -1090,7 +1265,7 @@ const UpdateContractPage = () => {
             control={<Checkbox />}
             label={
               <FaTypography>
-                • انعقاد پیمان اجرای کارهای ساختمانی به صورت سرجمع-
+                انعقاد پیمان اجرای کارهای ساختمانی به صورت سرجمع-
                 بخشنامه شماره ۹۶/۱۲۹۹۱۸۸ مورخ 1396/05/04
               </FaTypography>
             }
@@ -1114,7 +1289,7 @@ const UpdateContractPage = () => {
             control={<Checkbox />}
             label={
               <FaTypography>
-                • انعقاد پیمان اجرای کارهای ساختمانی به صورت سرجمع-
+                انعقاد پیمان اجرای کارهای ساختمانی به صورت سرجمع-
                 بخشنامه شماره 100/6405 مورخ 1389/02/04
               </FaTypography>
             }
@@ -1138,7 +1313,7 @@ const UpdateContractPage = () => {
             control={<Checkbox />}
             label={
               <FaTypography>
-                • انعقاد پیمان بر اساس فهرست بهای تجمیع شده راه، باند
+                انعقاد پیمان بر اساس فهرست بهای تجمیع شده راه، باند
                 فرودگاه و زیرسازی راه آهن – شماره 65637/100 مورخ
                 1391/08/14
               </FaTypography>
@@ -1161,7 +1336,7 @@ const UpdateContractPage = () => {
           />
           <FormControlLabel
             control={<Checkbox />}
-            label="•	موافقتنامه و شرایط عمومی همسان قراردادهای خدمات مشاوره - نشریه شماره ۴۳۱۸- بخشنامه شماره ۱۰۵/۸۴۲-۵۴/۲۴۶۰- مورخ ۱۳۷۹/۰۴/۲۹ "
+            label="	موافقتنامه و شرایط عمومی همسان قراردادهای خدمات مشاوره - نشریه شماره ۴۳۱۸- بخشنامه شماره ۱۰۵/۸۴۲-۵۴/۲۴۶۰- مورخ ۱۳۷۹/۰۴/۲۹ "
             onChange={(e) => {
               // @ts-ignore
               setContratDetails({
@@ -1180,7 +1355,7 @@ const UpdateContractPage = () => {
           />
           <FormControlLabel
             control={<Checkbox />}
-            label="•	موافقتنامه و شرایط عمومی همسان قراردادهای خدمات مشاوره پژوهشی - نشریه شماره 3419- بخشنامه شماره 2753/54-1670/102 مورخ ۱۳۷۹/۰5/۲۴ "
+            label="	موافقتنامه و شرایط عمومی همسان قراردادهای خدمات مشاوره پژوهشی - نشریه شماره 3419- بخشنامه شماره 2753/54-1670/102 مورخ ۱۳۷۹/۰5/۲۴ "
             onChange={(e) => {
               // @ts-ignore
               setContratDetails({
@@ -1199,7 +1374,7 @@ const UpdateContractPage = () => {
           />
           <FormControlLabel
             control={<Checkbox />}
-            label="•	موافقتنامه و شرایط عمومی همسان قراردادهای خدمات مدیریت طرح- نشریه شماره ۲۴۱۲۱ مورخ ۱۳۸۰/۰۱/۲۸ "
+            label="	موافقتنامه و شرایط عمومی همسان قراردادهای خدمات مدیریت طرح- نشریه شماره ۲۴۱۲۱ مورخ ۱۳۸۰/۰۱/۲۸ "
             onChange={(e) => {
               // @ts-ignore
               setContratDetails({
@@ -1218,7 +1393,7 @@ const UpdateContractPage = () => {
           />
           <FormControlLabel
             control={<Checkbox />}
-            label="•	موافقتنامه، پیوست‌ها، شرایط عمومی و شرایط خصوصی پیمان‌های مهندسی، تأمین کالا و تجهیزات، ساختمان و نصب به صورت توأم (EPC) برای کارهای صنعتی - نشریه شماره ۵۴۹۰ مورخ ۰۱/۰۳/۱۳۸۱ "
+            label="	موافقتنامه، پیوست‌ها، شرایط عمومی و شرایط خصوصی پیمان‌های مهندسی، تأمین کالا و تجهیزات، ساختمان و نصب به صورت توأم (EPC) برای کارهای صنعتی - نشریه شماره ۵۴۹۰ مورخ ۰۱/۰۳/۱۳۸۱ "
             onChange={(e) => {
               // @ts-ignore
               setContratDetails({
@@ -1237,7 +1412,7 @@ const UpdateContractPage = () => {
           />
           <FormControlLabel
             control={<Checkbox />}
-            label="•	موافقتنامه، پیوست‌ها، شرایط عمومی و شرایط خصوصی پیمان‌های تامین کالا و تجهیزات، ساختمان و نصب به صورت توام  (PC)، برای کارهای صنعتی مورخ  ۱۸/۱۲/۱۳۸۳ "
+            label="	موافقتنامه، پیوست‌ها، شرایط عمومی و شرایط خصوصی پیمان‌های تامین کالا و تجهیزات، ساختمان و نصب به صورت توام  (PC)، برای کارهای صنعتی مورخ  ۱۸/۱۲/۱۳۸۳ "
             onChange={(e) => {
               // @ts-ignore
               setContratDetails({
@@ -1256,7 +1431,7 @@ const UpdateContractPage = () => {
           />
           <FormControlLabel
             control={<Checkbox />}
-            label="•	قرارداد همسان طرح و ساخت (EPC غیر صنعتی)- 85428/101 مورخ ۱۵/۰۵/۱۳۸۴ "
+            label="	قرارداد همسان طرح و ساخت (EPC غیر صنعتی)- 85428/101 مورخ ۱۵/۰۵/۱۳۸۴ "
             onChange={(e) => {
               // @ts-ignore
               setContratDetails({
@@ -1275,7 +1450,7 @@ const UpdateContractPage = () => {
           />
           <FormControlLabel
             control={<Checkbox />}
-            label="•	موافقت‌نامه مشارکت عمومی- خصوصی (PPP) بخشنامه شماره ۹۳/۱۷۲۸۰۴-مورخ ۲۶/۱۲/۱۳۹۳ "
+            label="	موافقت‌نامه مشارکت عمومی- خصوصی (PPP) بخشنامه شماره ۹۳/۱۷۲۸۰۴-مورخ ۲۶/۱۲/۱۳۹۳ "
             onChange={(e) => {
               // @ts-ignore
               setContratDetails({
@@ -1294,7 +1469,7 @@ const UpdateContractPage = () => {
           />
           <FormControlLabel
             control={<Checkbox />}
-            label="•	موافقتنامه ساخت، بهره‌برداری، واگذاری  (BOT)- نشریه شماره ۴۶۹ مورخ ۲۴/۱۰/۱۳۸۷ "
+            label="	موافقتنامه ساخت، بهره‌برداری، واگذاری  (BOT)- نشریه شماره ۴۶۹ مورخ ۲۴/۱۰/۱۳۸۷ "
             onChange={(e) => {
               // @ts-ignore
               setContratDetails({
@@ -1313,7 +1488,7 @@ const UpdateContractPage = () => {
           />
           <FormControlLabel
             control={<Checkbox />}
-            label="•    سایر "
+            label="    سایر "
             onChange={(e) => {
               // @ts-ignore
               setContratDetails({
@@ -1394,190 +1569,6 @@ const UpdateContractPage = () => {
             gridColumn: "span 12",
           }}
         />
-
-        {/* 
-
-
-      4-1- موضوع قرارداد
-
-    
-    */}
-        <FaTypography variant="h5" gridColumn={"span 1"}>
-          4-1-
-        </FaTypography>
-
-        <FaTextField
-          label="موضوع قرارداد: "
-          variant="outlined"
-          sx={{
-            gridColumn: "span 3",
-          }}
-          value={ContractSubject}
-          onChange={(e) => {
-            setContractSubject(e.target.value);
-          }}
-          error={ContractSubjectError.error}
-          helperText={ContractSubjectError.text}
-        />
-
-        <div
-          style={{
-            gridColumn: "span 12",
-          }}
-        />
-        <Divider
-          sx={{
-            gridColumn: "span 6",
-          }}
-        />
-        <div
-          style={{
-            gridColumn: "span 12",
-          }}
-        />
-
-        {/* 
-
-
-      4-2
-
-    
-    */}
-        <FaTypography variant="h6" gridColumn={"span 12"}>
-          4-2- قرارداد شماره و تاريخ:
-        </FaTypography>
-        <FaTextField
-          label="شماره: "
-          variant="outlined"
-          sx={{
-            gridColumn: "span 3",
-          }}
-          value={ContractNumber}
-          onChange={(e) => {
-            setContractNumber(parseInt(e.target.value));
-          }}
-          error={ContractNumberError.error}
-          helperText={ContractNumberError.text}
-        />
-        <TextField
-          label="تاریخ: "
-          variant="outlined"
-          type="date"
-          focused
-          sx={{
-            gridColumn: "span 3",
-          }}
-          value={ContractDate}
-          onChange={(e) => {
-            const date = new Date(e.target.value);
-            setContractDate(date.getTime());
-          }}
-          error={ContractDateError.error}
-          helperText={ContractDateError.text}
-        />
-
-        {/* <Divider sx={{ gridColumn: "span 3" }} /> */}
-        <div
-          style={{
-            gridColumn: "span 12",
-          }}
-        />
-        <Divider
-          sx={{
-            gridColumn: "span 6",
-          }}
-        />
-        <div
-          style={{
-            gridColumn: "span 12",
-          }}
-        />
-        {/* 
-
-
-      4-3
-
-    
-    */}
-        <FaTypography variant="h6" gridColumn={"span 1"}>
-          4-3-
-        </FaTypography>
-        <FaTextField
-          label="مبلغ اوليه/ حق‌الزحمه: "
-          variant="outlined"
-          type="number"
-          InputProps={{
-            endAdornment: "ریال",
-          }}
-          sx={{
-            gridColumn: "span 3",
-          }}
-          value={InitialBudget}
-          onChange={(e) => {
-            setInitialBudget(parseInt(e.target.value));
-          }}
-          error={InitialBudgetError.error}
-          helperText={InitialBudgetError.text}
-        />
-        <div
-          style={{
-            gridColumn: "span 12",
-          }}
-        />
-        <Divider
-          sx={{
-            gridColumn: "span 6",
-          }}
-        />
-        <div
-          style={{
-            gridColumn: "span 12",
-          }}
-        />
-
-        {/* 
-
-
-      4-4
-
-    
-    */}
-        <FaTypography variant="h6" gridColumn={"span 1"}>
-          4-4-
-        </FaTypography>
-        <FaTextField
-          label="مدت اوليه: "
-          variant="outlined"
-          type="text"
-          InputProps={{
-            endAdornment: "ماه",
-          }}
-          sx={{
-            gridColumn: "span 3",
-          }}
-          value={InitialTimePeriod}
-          onChange={(e) => {
-            setInitialTimePeriod(parseInt(e.target.value));
-          }}
-          error={InitialTimePeriodError.error}
-          helperText={InitialTimePeriodError.text}
-        />
-        <div
-          style={{
-            gridColumn: "span 12",
-          }}
-        />
-        <Divider
-          sx={{
-            gridColumn: "span 6",
-          }}
-        />
-        <div
-          style={{
-            gridColumn: "span 12",
-          }}
-        />
-
         {/* 
 
 
@@ -1586,7 +1577,7 @@ const UpdateContractPage = () => {
     
     */}
         <FaTypography variant="h6" gridColumn={"span 12"}>
-          4-5- فهرست‌هاي پايه منضم به پيمان و سال انتشار
+          فهرست‌هاي پايه منضم به پيمان و سال انتشار
         </FaTypography>
 
         {/* 
@@ -1718,7 +1709,7 @@ const UpdateContractPage = () => {
     
     */}
         <FaTypography variant="h6" gridColumn={"span 12"}>
-          4-6- فهرست بهاي خاص (غيرپايه) منضم به پيمان:
+          فهرست بهاي خاص (غيرپايه) منضم به پيمان:
         </FaTypography>
 
         <RadioGroup
@@ -1868,10 +1859,6 @@ const UpdateContractPage = () => {
 
     
     */}
-        <FaTypography variant="h6" gridColumn={"span 1"}>
-          4-7-
-        </FaTypography>
-
         <TextField
           label="ضريب پيشنهادي: "
           sx={{
@@ -1940,9 +1927,6 @@ const UpdateContractPage = () => {
 
     
     */}
-        <FaTypography variant="h6" gridColumn={"span 1"}>
-          4-8-
-        </FaTypography>
 
         <FormControl
           sx={{
@@ -2027,9 +2011,6 @@ const UpdateContractPage = () => {
 
     
     */}
-        <FaTypography variant="h6" gridColumn={"span 1"}>
-          4-9-
-        </FaTypography>
         <FormControl
           sx={{
             gridColumn: "span 6",
@@ -2137,7 +2118,7 @@ const UpdateContractPage = () => {
     
     */}
         <FaTypography variant="h6" gridColumn={"span 2"}>
-          4-10- دوره شاخص مبنا
+          دوره شاخص مبنا
         </FaTypography>
 
         <FormControl
@@ -2307,7 +2288,7 @@ const UpdateContractPage = () => {
     
     */}
         <FaTypography variant="h6" gridColumn={"span 2"}>
-          4-11- تاريخ شروع كار:
+          تاريخ شروع كار:
         </FaTypography>
         <TextField
           label="تاريخ شروع كار خوانده"
@@ -2360,7 +2341,7 @@ const UpdateContractPage = () => {
     
     */}
         <FaTypography variant="h6" gridColumn={"span 5"}>
-          4-12- پيشرفت فيزيكي كار در تاريخ درخواست داوري:
+          پيشرفت فيزيكي كار در تاريخ درخواست داوري:
         </FaTypography>
 
         <FaTextField
@@ -2387,7 +2368,7 @@ const UpdateContractPage = () => {
     
     */}
         <FaTypography variant="h6" gridColumn={"span 5"}>
-          4-13- پيشرفت ریالی كار در تاريخ درخواست داوري:
+          پيشرفت ریالی كار در تاريخ درخواست داوري:
         </FaTypography>
 
         <FaTextField
@@ -2435,7 +2416,7 @@ const UpdateContractPage = () => {
     
     */}
         <FaTypography variant="h6" gridColumn={"span 4"}>
-          4-14- وضعیت قرارداد در تاریخ درخواست داوری:
+          وضعیت قرارداد در تاریخ درخواست داوری:
         </FaTypography>
 
         <FormControl
@@ -2588,9 +2569,6 @@ const UpdateContractPage = () => {
 
     
     */}
-        <FaTypography variant="h6" gridColumn={"span 1"}>
-          4-15-
-        </FaTypography>
         <FaTextField
           label={"دستگاه نظارت (مهندس مشاور) :"}
           sx={{
@@ -2626,10 +2604,10 @@ const UpdateContractPage = () => {
     
     */}
         <FaTypography variant="h6" gridColumn={"span 12"}>
-          4-16- تاخیرات
+          تاخیرات
         </FaTypography>
         <FaTypography variant="body1" gridColumn={"span 2"}>
-          4-16-1- مجاز
+          مجاز
         </FaTypography>
         <FaTextField
           label={"از نظر خوانده:"}
@@ -2662,7 +2640,7 @@ const UpdateContractPage = () => {
           }}
         />
         <FaTypography variant="body1" gridColumn={"span 2"}>
-          4-16-2- غیر مجاز
+          غیر مجاز
         </FaTypography>
         <FaTextField
           label={"از نظر خوانده:"}
@@ -2704,7 +2682,7 @@ const UpdateContractPage = () => {
           fontWeight={800}
           gridColumn={"span 12"}
         >
-          • گزارش توجیهی تاخیرات قرارداد شامل:
+          گزارش توجیهی تاخیرات قرارداد شامل:
         </FaTypography>
         <List
           sx={{
@@ -2717,7 +2695,7 @@ const UpdateContractPage = () => {
             paddingY={"1rem"}
           >
             <FaTypography variant="body1">
-              • برنامه های زمان‏بندی اولیه و اصلاحی ابلاغ شده
+              برنامه های زمان‏بندی اولیه و اصلاحی ابلاغ شده
             </FaTypography>
             <FileBox />
           </Box>
@@ -2727,7 +2705,7 @@ const UpdateContractPage = () => {
             paddingY={"1rem"}
           >
             <FaTypography variant="body1">
-              • گزارش تهیه شده توسط پیمانکار (به همراه کلیه مستندات و
+              گزارش تهیه شده توسط پیمانکار (به همراه کلیه مستندات و
               پیوست‏ها)
             </FaTypography>
             <FileBox />
@@ -2738,7 +2716,7 @@ const UpdateContractPage = () => {
             paddingY={"1rem"}
           >
             <FaTypography variant="body1">
-              • گزارش رسیدگی به تاخیرات توسط مهندس مشاور
+              گزارش رسیدگی به تاخیرات توسط مهندس مشاور
             </FaTypography>
             <FileBox />
           </Box>
@@ -2748,7 +2726,7 @@ const UpdateContractPage = () => {
             paddingY={"1rem"}
           >
             <FaTypography variant="body1">
-              • مستندات ابلاغ نتایج رسیدگی به تاخیرات به پیمانکار توسط
+              مستندات ابلاغ نتایج رسیدگی به تاخیرات به پیمانکار توسط
               کارفرما
             </FaTypography>
             <FileBox />

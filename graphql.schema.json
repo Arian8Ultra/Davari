@@ -13779,6 +13779,39 @@
             "deprecationReason": null
           },
           {
+            "name": "user_getUserQueryable",
+            "description": null,
+            "args": [
+              {
+                "name": "entityId",
+                "description": null,
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "ListResponseBaseOfUser",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "user_getUsers",
             "description": null,
             "args": [],
@@ -19159,6 +19192,7 @@ type Query {
   userRole_getUserRoles(userId: String!): ListResponseBaseOfUserRole!
   user_getCurrentUser: ResponseBaseOfUser!
   user_getUser(entityId: String!): ResponseBaseOfUser!
+  user_getUserQueryable(entityId: String!): ListResponseBaseOfUser!
   user_getUsers: ListResponseBaseOfUser!
   user_isTokenValid: Boolean!
 }

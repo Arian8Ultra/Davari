@@ -26,6 +26,7 @@ import {
   Radio,
   RadioGroup,
   TextField,
+  Typography,
 } from "@mui/material";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -483,9 +484,7 @@ const CreateContractPage = () => {
       });
     }
 
-    if (
-      OperationStartDateAccuser
-    ) {
+    if (OperationStartDateAccuser) {
       setOperationStartDateAccuserError({
         error: true,
         text: "مقدار فیلد نباید خالی باشد",
@@ -709,7 +708,7 @@ const CreateContractPage = () => {
   //
 
   return (
-    <>
+    <Box position={"relative"} width={'100%'}>
       <BackButton to="/complaints" />
       <Box
         display={"grid"}
@@ -718,7 +717,7 @@ const CreateContractPage = () => {
         justifyContent={"center"}
         gap={2}
         padding={"2rem"}
-        paddingTop={"4rem"}
+        paddingTop={"0"}
         border={`2px solid ${secondary}`}
         borderRadius={"1rem"}
         position={"relative"}
@@ -729,13 +728,15 @@ const CreateContractPage = () => {
           gridColumn={"span 12"}
           borderRadius={"1rem"}
           sx={{
-            position: "absolute",
-            top: 0,
+            position: "sticky",
+            top: 100,
             left: "50%",
             transform: "translateY(-50%) translateX(-50%)",
             background: primary,
             padding: "0.5rem 1rem",
             userSelect: "none",
+            width: "max-content",
+            zIndex: 1000,
           }}
         >
           <FaTypography variant="h6" textAlign={"center"}>
@@ -865,23 +866,28 @@ const CreateContractPage = () => {
         justifyContent={"center"}
         gap={2}
         padding={"2rem"}
-        paddingTop={"4rem"}
+        paddingTop={"0rem"}
         border={`2px solid ${secondary}`}
         borderRadius={"1rem"}
         position={"relative"}
         marginY={"1rem"}
+        onScroll={() => {
+          console.log("scroll");
+        }}
       >
         <Box
           gridColumn={"span 12"}
           borderRadius={"1rem"}
           sx={{
-            position: "absolute",
-            top: 0,
+            position: "sticky",
+            top: 100,
             left: "50%",
             transform: "translateY(-50%) translateX(-50%)",
             background: primary,
             padding: "0.5rem 1rem",
             userSelect: "none",
+            width: "max-content",
+            zIndex: 1000,
           }}
         >
           <FaTypography variant="h6" textAlign={"center"}>
@@ -977,6 +983,7 @@ const CreateContractPage = () => {
               item.id === parseInt(AccusedDepartmentId)
           )}
         />
+        <TreeChart gridColumn={"span 5"} object={treeViewObject} />
 
         <Divider
           orientation="horizontal"
@@ -1022,8 +1029,6 @@ const CreateContractPage = () => {
             </MenuItem>
           ))}
         </FaTextField>
-
-        <TreeChart gridColumn={"span 4"} object={treeViewObject} />
 
         <Divider
           sx={{
@@ -2942,7 +2947,7 @@ const CreateContractPage = () => {
           </Alert>
         )}
       </Box>
-    </>
+    </Box>
   );
 };
 

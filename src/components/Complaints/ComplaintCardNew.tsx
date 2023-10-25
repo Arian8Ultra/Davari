@@ -29,9 +29,10 @@ import {
   UPDATE_COMPLAINT,
 } from "../../GraphQL/Complaints/Mutations";
 import { convertToPersianDigits } from "../../functions/Functions";
-import { StatesCap, StatesFa } from "../../static/States";
+import { States, StatesCap, StatesFa } from "../../static/States";
 import { User } from "../../static/Types";
 import statesCap from "../../static/statesCap.json";
+import states from "../../static/states.json";
 import {
   Green,
   GreenLight,
@@ -44,7 +45,13 @@ import {
   secondaryDark,
 } from "../../theme/color";
 import NewModal from "../Modals";
-import { GET_USER } from "../../GraphQL/Users/Queries";
+import {
+  GET_ALL_ORGANIZATION_USERS,
+  GET_ORGANIZATION_INDIVIDUAL_USERS_WITH_ROLE,
+  GET_USER,
+  GET_USER_QUERIABLE,
+} from "../../GraphQL/Users/Queries";
+import { useUserStore } from "../../Context/UserStore";
 interface Props {
   id: number;
   complaintId?: number;
@@ -64,6 +71,7 @@ const ComplaintCardNew = (props: Props) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const user = useUserStore((state) => state.user);
   const navigate = useNavigate();
   const [addModal, setAddModal] = useState({
     open: false,
@@ -107,6 +115,43 @@ const ComplaintCardNew = (props: Props) => {
     },
     onCompleted(data) {
       props.acussed = data.user_getUser?.result;
+    },
+  });
+
+  const { data: ParentUser } = useQuery(GET_USER_QUERIABLE, {
+    variables: {
+      id: user.id,
+    },
+    onCompleted(data) {
+      console.log("IndivisualsFromOrg", data);
+      setDepartmentsUsers(
+        data.user_getUserQueryable?.result?.items[0]?.childUsers?.map(
+          (user: any) => ({
+            id: user.id,
+            label: user.fullName,
+          })
+        )
+      );
+    },
+  });
+
+  const [departments, setDepartments] = useState<
+    { label: string; id: string }[]
+  >([]);
+  useQuery(GET_ALL_ORGANIZATION_USERS, {
+    onCompleted(data) {
+      console.log(data);
+      setDepartments(
+        data?.user_getUsers?.result?.items?.map(
+          (item: { id: number; fullName: string }) => ({
+            label: item.fullName,
+            id: item.id,
+          })
+        )
+      );
+    },
+    onError(error) {
+      console.log(error);
     },
   });
 
@@ -205,11 +250,12 @@ const ComplaintCardNew = (props: Props) => {
             right: "55%",
           }}
         >
-          {convertToPersianDigits(
-            // @ts-ignore
-            (StatesCap.indexOf(props.state) / 44).toFixed(2) * 100
-          )}
-          %
+          {String(
+            convertToPersianDigits(
+              // @ts-ignore
+              (StatesCap.indexOf(props.state) / 44).toFixed(2) * 100
+            )
+          ).split(".")[0] + "%"}
         </Typography>
       </Box>
 
@@ -275,7 +321,7 @@ const ComplaintCardNew = (props: Props) => {
                         color: secondaryDark,
                       }}
                     >
-                      {props.acussedId}
+                      {accused?.user_getUser?.result?.fullName}
                     </TableCell>
                   </TableRow>
 
@@ -296,7 +342,7 @@ const ComplaintCardNew = (props: Props) => {
                         color: secondaryDark,
                       }}
                     >
-                      {props.acusserId}
+                      {accuser?.user_getUser?.result?.fullName}
                     </TableCell>
                   </TableRow>
 
@@ -342,7 +388,7 @@ const ComplaintCardNew = (props: Props) => {
                       {convertToPersianDigits(props.contractId)}
                     </TableCell>
                   </TableRow>
-                  <TableRow
+                  {/* <TableRow
                     sx={{
                       borderBottom: `2px solid ${grey[300]}`,
                     }}
@@ -361,7 +407,7 @@ const ComplaintCardNew = (props: Props) => {
                     >
                       {props.projectId}
                     </TableCell>
-                  </TableRow>
+                  </TableRow> */}
                   <TableRow>
                     <TableCell
                       sx={{
@@ -455,8 +501,8 @@ const ComplaintCardNew = (props: Props) => {
               }}
               onClick={() => {
                 if (
-                  statesCap[props.state! as keyof typeof statesCap]
-                    ?.id == 3
+                  States[StatesCap.indexOf(props.state!)] ==
+                  states.WaitingForAccusedToFillForms.name
                 ) {
                   navigate(
                     `/complaints/${props.contractId}/${props.id}/UpdateContractPage`

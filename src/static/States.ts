@@ -139,3 +139,8 @@ export const StatesCap=[
     'ACCUSED_NOTIFIED_OF_OFFEROR_CHANGING_RESULT',
     'ACCUSER_NOTIFIED_OF_SUCCESSFUL_CHANGING_OF_THE_OFFEROR'
   ]
+
+
+  export const StatesObj = [
+    
+  ]

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
@@ -546,13 +547,12 @@ const UserManagement = () => {
             }}
             onChange={(e) => {
               console.log(e.target.value);
-
               setAddPersonelToOrganzation({
                 ...addPersonelToOrganzationModal,
                 parentID:
                   OrganizationsUsers?.user_getUsers?.result?.items.find(
                     (item: User) => item.id === e.target.value
-                  )?.fullName,
+                  )?.id,
               });
             }}
             select
@@ -565,6 +565,26 @@ const UserManagement = () => {
               )
             )}
           </TextField>
+          <TextField
+            fullWidth
+            label={"نام کاربری"}
+            variant={"outlined"}
+            autoComplete="firstName"
+            value={addPersonelToOrganzationModal.userName}
+            sx={{
+              gridColumn: "span 2",
+              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
+                {
+                  borderRadius: "0.5rem",
+                },
+            }}
+            onChange={(e) =>
+              setAddPersonelToOrganzation({
+                ...addPersonelToOrganzationModal,
+                userName: e.target.value,
+              })
+            }
+          />
           <TextField
             fullWidth
             label={"نام"}
@@ -709,11 +729,12 @@ const UserManagement = () => {
               </Button>
             </Box>
           </Modal>
-          <FaTextField
+          <TextField
             fullWidth
             label={"کد ملی"}
             variant={"outlined"}
             autoComplete="lastName"
+            type="number"
             value={addPersonelToOrganzationModal.nationalCode}
             sx={{
               "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
@@ -873,7 +894,37 @@ const UserManagement = () => {
               },
             }}
             type="submit"
-            onClick={() => userSignUp()}
+            onClick={() =>
+              userSignUp({
+                variables: {
+                  fullName:
+                    addPersonelToOrganzationModal.firstName +
+                    " " +
+                    addPersonelToOrganzationModal.lastName,
+                  nationalCode:
+                    addPersonelToOrganzationModal.nationalCode,
+                  password: addPersonelToOrganzationModal.password,
+                  confirmPassword:
+                    addPersonelToOrganzationModal.confirmPassword,
+                  email: addPersonelToOrganzationModal.email,
+                  phoneNumber: addModal.phoneNumber,
+                  userName:addPersonelToOrganzationModal.userName,
+                  userType:"INDIVIDUAL",
+                  birthDate:addPersonelToOrganzationModal.birthDate,
+                  parentId:addPersonelToOrganzationModal.parentID
+                },
+
+                // $confirmPassword: String!
+                // $email: String!
+                // $fullName: String!
+                // $nationalCode: String!
+                // $password: String!
+                // $phoneNumber: String!
+                // $userName: String!
+                // $birthDate: Date!
+                // $userType : UserType!
+              })
+            }
           >
             {loading && "در حال افزودن..."}
             افزودن

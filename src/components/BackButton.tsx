@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { Button } from "@mui/material";
-import { VscArrowCircleRight } from "react-icons/vsc";
 import { useNavigate } from "react-router-dom";
 import { primary } from "../theme/color";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
 const BackButton = (props: { steps?: number; to?: string }) => {
   const navigate = useNavigate();
@@ -31,7 +31,7 @@ const BackButton = (props: { steps?: number; to?: string }) => {
           : window.history.back();
       }}
     >
-      <VscArrowCircleRight />
+      <ChevronRightIcon />
       بازگشت
     </Button>
   );

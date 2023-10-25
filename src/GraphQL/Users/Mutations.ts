@@ -38,14 +38,15 @@ export type UserLoginInput = {
 export const UserSignUp = gql`
   mutation UserSignUp(
     $confirmPassword: String!
-    $email: String!
+    $email: String
     $fullName: String!
-    $nationalCode: String!
+    $nationalCode: String
     $password: String!
-    $phoneNumber: String!
+    $phoneNumber: String
     $userName: String!
-    $birthDate: Date!
+    $birthDate: Date
     $userType : UserType!
+    $parentId: String
   ) {
     user_signUp(
       input: {
@@ -58,6 +59,7 @@ export const UserSignUp = gql`
         password: $password
         phoneNumber: $phoneNumber
         userName: $userName
+        parentId: $parentId
       }
     ) {
       code
