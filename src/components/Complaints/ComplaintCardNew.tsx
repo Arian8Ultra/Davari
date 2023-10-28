@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
@@ -31,7 +32,6 @@ import {
 import { convertToPersianDigits } from "../../functions/Functions";
 import { States, StatesCap, StatesFa } from "../../static/States";
 import { User } from "../../static/Types";
-import statesCap from "../../static/statesCap.json";
 import states from "../../static/states.json";
 import {
   Green,
@@ -47,7 +47,6 @@ import {
 import NewModal from "../Modals";
 import {
   GET_ALL_ORGANIZATION_USERS,
-  GET_ORGANIZATION_INDIVIDUAL_USERS_WITH_ROLE,
   GET_USER,
   GET_USER_QUERIABLE,
 } from "../../GraphQL/Users/Queries";
@@ -95,7 +94,7 @@ const ComplaintCardNew = (props: Props) => {
     variables: {
       id: props.id,
     },
-    onCompleted(data, clientOptions) {
+    onCompleted() {
       props.refetch && props.refetch();
     },
   });
@@ -118,7 +117,7 @@ const ComplaintCardNew = (props: Props) => {
     },
   });
 
-  const { data: ParentUser } = useQuery(GET_USER_QUERIABLE, {
+  useQuery(GET_USER_QUERIABLE, {
     variables: {
       id: user.id,
     },
@@ -135,7 +134,7 @@ const ComplaintCardNew = (props: Props) => {
     },
   });
 
-  const [departments, setDepartments] = useState<
+  const [, setDepartments] = useState<
     { label: string; id: string }[]
   >([]);
   useQuery(GET_ALL_ORGANIZATION_USERS, {
@@ -206,7 +205,7 @@ const ComplaintCardNew = (props: Props) => {
           size={"88%"}
           variant="determinate"
           value={100}
-          thickness={2}
+          thickness={1.75}
           sx={{
             gridColumn: "3",
             padding: "1rem",
@@ -219,25 +218,31 @@ const ComplaintCardNew = (props: Props) => {
               color: secondary,
               borderRadius: "0.5rem",
             },
+            "&.MuiCircularProgress-circleDeterminate": {
+              borderRadius: "1rem",
+              background:'red'
+            },
           }}
         />
         <CircularProgress
           size={"90%"}
           variant="determinate"
-          thickness={3}
+          thickness={3.5}
           value={
             // @ts-ignore
-            (StatesCap.indexOf(props.state) / 44).toFixed(2) * 100
+            (StatesCap.indexOf(props.state) / StatesCap.length).toFixed(2) * 100
           }
           sx={{
+            width: "90%",
             gridColumn: "3",
             padding: "1rem",
+            borderRadius: "1rem",
             // gridRow: "1/3",
             "& .MuiCircularProgress-circle": {
               backgroundColor: "rgba(0,0,0,1)",
               color: primary,
               borderRadius: "1rem",
-            },
+            }
           }}
         />
         <Typography

@@ -1,5 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import { ReactNode } from "react";
+import { UserRole } from "../GraphQL/Users/Queries";
+import { SideBarMenu } from "../static/SideBar";
+import { Titles } from "../static/Titles";
+import { User } from "../static/Types";
 
 export const convertRoleToPersian = (role: string) => {
   switch (role) {
@@ -75,3 +80,27 @@ export function convertToEnglishDigits(str: string) {
   return str.replace(/\u06F0/g, "0").replace(/\u06F1/g, "1");
 }
 
+
+
+export function hasAccessToRoute(user: User, route: string) {
+  const role = user.userRoles as UserRole[];
+  const roleTypes = role.map((r) => r.roleType);
+
+  if (roleTypes.includes("SUPER_ADMIN")) return true;
+
+  if (route == "/") return true;
+  if(route.includes("/user-management") && roleTypes.includes("SUPER_ADMIN")) return true;
+
+
+  SideBarMenu.forEach((page)=>{
+    if(page.primary == Titles.home) return true;
+    if(page.primary == Titles.userManagement) {
+      if(roleTypes.includes("SUPER_ADMIN")) return true;
+      else if(user.userType == "ORGANIZATION") return true;
+      else if(roleTypes.includes("SENIOR_USER")) return true;
+      else if(roleTypes.some((r)=> page.accessNeeded.includes(r))) return true;
+      else return false;
+    }
+  })
+
+}
