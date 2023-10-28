@@ -1,10 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import {
   BsPeopleFill,
-  BsPersonCircle
+  BsPersonCircle,
+  BsViewStacked
 } from "react-icons/bs";
 import { FaBalanceScale, FaHome } from "react-icons/fa";
 import { Titles } from "./Titles";
+import { AiFillMessage, AiOutlineMessage } from "react-icons/ai";
+import { Dashboard, DashboardOutlined, SpaceDashboardOutlined } from "@mui/icons-material";
 
 export const SideBarMenu = [
   {
@@ -15,6 +18,8 @@ export const SideBarMenu = [
     hasCollapse: false,
     children: [],
     accessNeeded: ["NORMAL","SENIOR_USER","EXPERT","SUPER_ADMIN"],
+    mailRoom: true,
+    justMailRoom: false,
   },
   {
     primary: Titles.complaints,
@@ -24,6 +29,8 @@ export const SideBarMenu = [
     hasCollapse: false,
     children: [],
     accessNeeded: ["SENIOR_USER","SUPER_ADMIN","EXPERT"],
+    mailRoom: false,
+    justMailRoom: false,
   },
   // {
   //   primary: Titles.contracts,
@@ -33,37 +40,16 @@ export const SideBarMenu = [
   //   hasCollapse: false,
   //   children: [],
   // },
-  // {
-  //   primary: Titles.portal,
-  //   to: "/portal",
-  //   icon: <BsViewStacked />,
-  //   hasLink: true,
-  //   hasCollapse: true,
-  //   accessNeeded: ["EXPERT" ,"SENIOR_USER","SUPER_ADMIN"],
-  //   children: [
-  //     {
-  //       primary: Titles.messages,
-  //       to: "/portal/messages",
-  //       icon: <AiFillMessage />,
-  //       hasLink: true,
-  //       hasCollapse: false,
-  //     },
-  //     // {
-  //     //   primary: Titles.employeeManagement,
-  //     //   to: "/portal/employee_management",
-  //     //   icon: <BsPeopleFill />,
-  //     //   hasLink: true,
-  //     //   hasCollapse: false,
-  //     // },
-  //     {
-  //       primary: Titles.answerToComplaints,
-  //       to: "/portal/complain_answers",
-  //       icon: <AiOutlineMessage />,
-  //       hasLink: true,
-  //       hasCollapse: false,
-  //     },
-  //   ],
-  // },
+  {
+    primary: Titles.portal,
+    to: "/portal",
+    icon: <SpaceDashboardOutlined />,
+    hasLink: true,
+    hasCollapse: false,
+    accessNeeded: ["EXPERT" ,"SENIOR_USER"],
+    mailRoom: true,
+    justMailRoom: true,
+  },
   {
     primary: Titles.adminPanel,
     to: "",
@@ -71,6 +57,8 @@ export const SideBarMenu = [
     hasLink: false,
     hasCollapse: true,
     accessNeeded: ["SUPER_ADMIN","SENIOR_USER"],
+    mailRoom: true,
+    justMailRoom: false,
     children: [
       {
         primary: Titles.userManagement,
@@ -78,6 +66,8 @@ export const SideBarMenu = [
         icon: <BsPeopleFill />,
         hasLink: true,
         hasCollapse: false,
+        mailRoom: true,
+        justMailRoom: false,
       },
       // {
       //   primary: Titles.formManager,
@@ -99,4 +89,6 @@ export type SideBarLinkType = {
   hasCollapse?: boolean;
   children?: SideBarLinkType[];
   accessNeeded?: ["NORMAL","SENIOR_USER","EXPERT","SUPER_ADMIN"];
+  mailRoom?: boolean;
+  justMailRoom?: boolean;
 };

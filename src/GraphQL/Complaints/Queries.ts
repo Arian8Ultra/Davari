@@ -156,6 +156,48 @@ export const GET_ACCUSER_COMPLAINTS = gql`
     }
   }
 `;
+export const GET_CHIEF_COMPLAINTS = gql`
+  query GET_CHIEF_COMPLAINTS{
+    complaint_getComplaints {
+      result(
+        where: {
+          complaintState:{eq:WaitingForChiefToAssign}
+        }
+      ) {
+        items {
+          userId
+          id
+          contractId
+          createdDate
+          arbitrationTermsForms {
+            firstCondition
+            firstConditionFileName
+            secondCondition
+            secondConditionFileName
+            thirdCondition
+            thirdConditionFileName
+            fourthCondition
+            fourthConditionFileName
+          }
+          complaintState
+          complaintCode
+          assignedUser {
+            userName
+            fullName
+            phoneNumber
+          }
+          contract {
+            contractNumberByAccuser
+            contractDateByAccuser
+            initialBudgetByAccuser
+            accusedDepartmentUserId
+            accuserDepartmentUserId
+          }
+        }
+      }
+    }
+  }
+`;
 
 export const GET_COMPLAINT_ARGUMENTS = gql`
   query GetComplaintArguments($id: Int!) {

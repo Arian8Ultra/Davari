@@ -21,12 +21,13 @@ import {
   Complaint,
   GET_ACCUSED_COMPLAINTS,
   GET_ACCUSER_COMPLAINTS,
+  GET_CHIEF_COMPLAINTS,
   GET_COMPLAINT_ASSIGNED,
 } from "../../GraphQL/Complaints/Queries";
 interface Props {
   userId?: string;
   departmentId?: string;
-  type?: "accused" | "accuser" | "assigned"
+  type?: "accused" | "accuser" | "assigned" | "chief";
 }
 const ComplaintsList = ({ departmentId, type, userId }: Props) => {
   const {
@@ -51,6 +52,16 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
     },
     onCompleted(data) {
       console.log("accuser data", data);
+    },
+  });
+  const {
+    data: chiefData,
+    loading: chiefLoading,
+    refetch: chiefRefetch,
+  } = useQuery(GET_CHIEF_COMPLAINTS, {
+
+    onCompleted(data) {
+      console.log("chief data", data);
     },
   });
 
@@ -120,7 +131,7 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
             ? "در حال دریافت اطلاعات"
             : "درخواست های داوری شما"}
         </Typography>
-      ) : (
+      ) : type === "assigned" ? (
         <Typography
           variant="h5"
           component="h2"
@@ -139,7 +150,9 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
             ? "در حال دریافت اطلاعات"
             : "درخواست های داوری تعیین شده برای شما"}
         </Typography>
-      )}
+      ) : type === "chief" ? (
+        null
+      ) : null}
 
       <Box
         display={"grid"}
@@ -153,8 +166,12 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
                 <ComplaintCardNew
                   key={complaint.id}
                   id={complaint.id}
-                  acussedId={complaint?.contract?.accusedDepartmentUserId}
-                  acusserId={complaint?.contract?.accuserDepartmentUserId}
+                  acussedId={
+                    complaint?.contract?.accusedDepartmentUserId
+                  }
+                  acusserId={
+                    complaint?.contract?.accuserDepartmentUserId
+                  }
                   date={complaint?.createdDate}
                   contractId={complaint?.contractId}
                   state={complaint?.complaintState}
@@ -172,8 +189,12 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
                   acussed={complaint?.assignedUser?.userName}
                   date={complaint?.createdDate}
                   contractId={complaint?.contractId}
-                  acussedId={complaint?.contract?.accusedDepartmentUserId}
-                  acusserId={complaint?.contract?.accuserDepartmentUserId}
+                  acussedId={
+                    complaint?.contract?.accusedDepartmentUserId
+                  }
+                  acusserId={
+                    complaint?.contract?.accuserDepartmentUserId
+                  }
                   type="accuser"
                   state={complaint?.complaintState}
                   refetch={accuserRefetch}
@@ -188,8 +209,12 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
                   acussed={complaint?.assignedUser?.userName}
                   date={complaint?.createdDate}
                   contractId={complaint?.contractId}
-                  acussedId={complaint?.contract?.accusedDepartmentUserId}
-                  acusserId={complaint?.contract?.accuserDepartmentUserId}
+                  acussedId={
+                    complaint?.contract?.accusedDepartmentUserId
+                  }
+                  acusserId={
+                    complaint?.contract?.accuserDepartmentUserId
+                  }
                   type="assigned"
                   state={complaint?.complaintState}
                   refetch={assignedRefetch}

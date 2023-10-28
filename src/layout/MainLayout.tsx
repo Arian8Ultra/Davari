@@ -74,7 +74,7 @@ import {
   primaryGrey,
   primaryLight,
   secondary,
-  secondaryDark
+  secondaryDark,
 } from "../theme/color";
 
 const drawerWidth = 230;
@@ -157,6 +157,9 @@ export default function MainLayout() {
   const oldLocation = useLayoutStore((state) => state.location);
   const navigate = useNavigate();
   const setUser = useUserStore((state) => state.setUser);
+  const setIsMailRoom = useUserStore((state) => state.setIsMailRoom);
+  const isMailRoom = useUserStore((state) => state.isMailRoom);
+  const setAccesses = useUserStore((state) => state.setAccesses);
   const token = useUserStore((state) => state.token);
   const fullName = useUserStore((state) => state.user.fullName);
   const user = useUserStore((state) => state.user);
@@ -208,7 +211,6 @@ export default function MainLayout() {
     nextFetchPolicy: "network-only",
     pollInterval: 1000,
   });
-
 
   useEffect(() => {
     if (token && token !== "") {
@@ -287,6 +289,10 @@ export default function MainLayout() {
           expireDate
         );
         localStorage.setItem("token", data.user_signIn.result.token);
+        setIsMailRoom(
+          data.user_signIn.result.user.parentId ===
+            "e7a85297-91d4-4f27-a4b2-ff394fe71dd3"
+        );
       }
     },
     onError(error) {
@@ -346,9 +352,13 @@ export default function MainLayout() {
               backgroundPositionX: "center",
             }}
           >
-            <Box width={"100%"} height={"100%"} sx={{
-              backdropFilter: "blur(5px) brightness(0.8)",
-            }}>
+            <Box
+              width={"100%"}
+              height={"100%"}
+              sx={{
+                backdropFilter: "blur(5px) brightness(0.8)",
+              }}
+            >
               <img
                 src={pboLogo}
                 alt="logo"
@@ -385,25 +395,25 @@ export default function MainLayout() {
                 height={"max-content"}
                 padding={4}
               >
-                  <Box
-                    display={"flex"}
-                    justifyContent={"center"}
-                    alignItems={"center"}
-                    flexDirection={'column'}
-                    padding={1}
-                    borderRadius={"1rem"}
-                    marginBottom={"1rem"}
-                    width={'100%'}
-                    gap={2}
-                    sx={{
-                      // backgroundColor: secondary,
-                      color: secondary,
-                      fontSize: "2rem",
-                    }}
-                  >
-                    <FaBalanceScale />
-                    سامانه هوشمند داوری
-                  </Box>
+                <Box
+                  display={"flex"}
+                  justifyContent={"center"}
+                  alignItems={"center"}
+                  flexDirection={"column"}
+                  padding={1}
+                  borderRadius={"1rem"}
+                  marginBottom={"1rem"}
+                  width={"100%"}
+                  gap={2}
+                  sx={{
+                    // backgroundColor: secondary,
+                    color: secondary,
+                    fontSize: "2rem",
+                  }}
+                >
+                  <FaBalanceScale />
+                  سامانه هوشمند داوری
+                </Box>
                 <Typography
                   variant="body1"
                   sx={{
@@ -411,7 +421,7 @@ export default function MainLayout() {
                     paddingBottom: "1rem",
                   }}
                 >
-                  برای ورود نام کاربری و رمز عبور خود را وارد کنید 
+                  برای ورود نام کاربری و رمز عبور خود را وارد کنید
                 </Typography>
 
                 <form
@@ -513,7 +523,7 @@ export default function MainLayout() {
                       color: "white",
                       width: "80%",
                       borderRadius: "10px",
-                      boxShadow:'none',
+                      boxShadow: "none",
                       padding: "0.5rem",
                       "&:hover": {
                         backgroundColor: Green,
@@ -538,7 +548,7 @@ export default function MainLayout() {
                     variant="text"
                     sx={{
                       marginTop: "1rem",
-                      color:primary,
+                      color: primary,
                       width: "80%",
                       borderRadius: "15px",
                       padding: "0.5rem",
@@ -693,16 +703,21 @@ export default function MainLayout() {
                   variant="subtitle2"
                   noWrap
                   component="div"
-                    fontSize={"10px"}
-                    sx={{
-                      flexGrow: 1,
-                      color: secondary,
-                      marginRight: 2,
-                    }}
-                  >
-                    {user.userRoles && user.userRoles.map((role,index) => (
+                  fontSize={"10px"}
+                  sx={{
+                    flexGrow: 1,
+                    color: secondary,
+                    marginRight: 2,
+                  }}
+                >
+                  {user.userRoles &&
+                    user.userRoles.map((role, index) => (
                       <span key={role.id}>
-                        {convertRoleToPersian(role.roleType)}{user.userRoles && index !== user.userRoles.length-1 ? " - " : ""}
+                        {convertRoleToPersian(role.roleType)}
+                        {user.userRoles &&
+                        index !== user.userRoles.length - 1
+                          ? " - "
+                          : ""}
                       </span>
                     ))}
                 </Typography>
@@ -910,10 +925,11 @@ export default function MainLayout() {
                 hasCollapse={item.hasCollapse}
                 open={open}
                 display={
+                  isMailRoom == item.mailRoom ? "block" :
                   user.userRoles &&
                   user.userRoles.some((role) =>
                     item.accessNeeded?.includes(role.roleType)
-                  )
+                  ) && !item.justMailRoom
                     ? "block"
                     : "none"
                 }

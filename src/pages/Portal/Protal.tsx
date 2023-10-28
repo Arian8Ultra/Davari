@@ -1,8 +1,9 @@
-import Messages from "./Messages/Messages";
+import ComplaintsList from "../../components/Complaints/ComplaintsList";
+
 const Protal = () => {
   return (
     <>
-      <Messages />
+    <ComplaintsList type="chief"/>
     </>
   );
 };

@@ -13,6 +13,7 @@ export const UserLogin = gql`
           fullName
           phoneNumber
           nationalCode
+          parentId
           userRoles{
             roleType
             id

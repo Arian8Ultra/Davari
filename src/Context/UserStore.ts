@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { User } from "../static/Types";
 import { UserRole } from "../GraphQL/Users/Queries";
+import { Accesses, AccessesEnum } from "../static/Accesses";
 
 interface UserStore {
   user: {
@@ -16,7 +17,11 @@ interface UserStore {
   };
   token: string;
   expireDate: Date;
+  accesses: string[];
+  isMailRoom: boolean;
+  setAccesses: (newAccesses: string[]) => void;
   setUser: (user: User, token: string, expireDate: Date) => void;
+  setIsMailRoom: (isMailRoom: boolean) => void;
   logout: () => void;
 }
 
@@ -32,9 +37,23 @@ export const useUserStore = create<UserStore>()(
         userRole: "",
       },
       token: "",
+      isMailRoom: false,
       expireDate: new Date(),
+      accesses: [AccessesEnum.HOME, AccessesEnum.COMPLAINTS],
       setUser: (user: User, token: string, expireDate: Date) => {
         set({ user: user, token: token, expireDate: expireDate });
+      },
+      setAccesses: (newAccesses: string[]) => {
+        set({
+          accesses: [
+            ...newAccesses,
+            AccessesEnum.HOME,
+            AccessesEnum.COMPLAINTS,
+          ],
+        });
+      },
+      setIsMailRoom: (isMailRoom: boolean) => {
+        set({ isMailRoom: isMailRoom });
       },
       logout: () => {
         set({
@@ -46,6 +65,9 @@ export const useUserStore = create<UserStore>()(
             phoneNumber: "",
           },
           token: "",
+          expireDate: new Date(),
+          accesses: [AccessesEnum.HOME, AccessesEnum.COMPLAINTS],
+          isMailRoom: false,
         });
       },
     }),

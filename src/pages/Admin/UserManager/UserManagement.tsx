@@ -19,17 +19,13 @@ import {
 import { red } from "@mui/material/colors";
 import { useState } from "react";
 import { BsEye, BsEyeSlash, BsPersonAdd } from "react-icons/bs";
+import { VscOrganization } from "react-icons/vsc";
 import { Calendar, CalendarProvider } from "zaman";
 import { useUserStore } from "../../../Context/UserStore";
 import { UserSignUp } from "../../../GraphQL/Users/Mutations";
+import { GET_ALL_ORGANIZATION_USERS } from "../../../GraphQL/Users/Queries";
 import UserList from "../../../components/Admin/UserManagement/UserList";
-import FaTextField from "../../../components/FaComponents/FaTextField";
 import NewModal from "../../../components/Modals";
-import {
-  User,
-  UserType,
-  useGetAllOganizationUsersQuery,
-} from "../../../gql/graphql";
 import { Titles } from "../../../static/Titles";
 import {
   Green,
@@ -38,8 +34,7 @@ import {
   primary,
   secondary,
 } from "../../../theme/color";
-import { GET_ALL_ORGANIZATION_USERS } from "../../../GraphQL/Users/Queries";
-import { VscOrganization } from "react-icons/vsc";
+import { User } from "../../../static/Types";
 
 const UserManagement = () => {
   const user = useUserStore((state) => state.user);
@@ -125,7 +120,7 @@ const UserManagement = () => {
         paddingY={1}
         gap={1}
       >
-        <Button
+        {/* <Button
           variant="contained"
           endIcon={<BsPersonAdd />}
           onClick={() => [setAddModal({ ...addModal, open: true })]}
@@ -144,7 +139,7 @@ const UserManagement = () => {
           }}
         >
           افزودن کاربر
-        </Button>
+        </Button> */}
         <Button
           variant="contained"
           endIcon={<BsPersonAdd />}
@@ -157,7 +152,12 @@ const UserManagement = () => {
             fontSize: "1rem",
             boxShadow: "none",
             display:
-              user.userType === "ORGANIZATION" ? "flex" : "none",
+              user.userType === "ORGANIZATION" ||
+              user.userRoles?.find(
+                (role) => role.roleType === "SENIOR_USER"
+              )
+                ? "flex"
+                : "none",
             "&:hover": {
               backgroundColor: GreenLight,
               color: Green,
@@ -194,7 +194,7 @@ const UserManagement = () => {
             },
           }}
         >
-          افزودن کارشناس به دستگاه
+          افزودن کاربر به دستگاه
         </Button>
         <Button
           variant="contained"
@@ -908,10 +908,10 @@ const UserManagement = () => {
                     addPersonelToOrganzationModal.confirmPassword,
                   email: addPersonelToOrganzationModal.email,
                   phoneNumber: addModal.phoneNumber,
-                  userName:addPersonelToOrganzationModal.userName,
-                  userType:"INDIVIDUAL",
-                  birthDate:addPersonelToOrganzationModal.birthDate,
-                  parentId:addPersonelToOrganzationModal.parentID
+                  userName: addPersonelToOrganzationModal.userName,
+                  userType: "INDIVIDUAL",
+                  birthDate: addPersonelToOrganzationModal.birthDate,
+                  parentId: addPersonelToOrganzationModal.parentID,
                 },
 
                 // $confirmPassword: String!
