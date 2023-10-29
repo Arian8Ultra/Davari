@@ -157,12 +157,10 @@ export const GET_ACCUSER_COMPLAINTS = gql`
   }
 `;
 export const GET_CHIEF_COMPLAINTS = gql`
-  query GET_CHIEF_COMPLAINTS{
+  query GET_CHIEF_COMPLAINTS {
     complaint_getComplaints {
       result(
-        where: {
-          complaintState:{eq:WaitingForChiefToAssign}
-        }
+        where: { complaintState: { eq: WAITING_FOR_CHIEF_TO_ASSIGN  } }
       ) {
         items {
           userId
@@ -232,11 +230,7 @@ export const GET_COMPLAINT_ARGUMENTS = gql`
 export const GET_COMPLAINT_ASSIGNED = gql`
   query GET_COMPLAINT_ASSIGNED($id: String!) {
     complaint_getComplaints {
-      result(
-        where: {
-          assignedUserId: { eq: $id }
-        }
-      ) {
+      result(where: { assignedUserId: { eq: $id } }) {
         items {
           userId
           id

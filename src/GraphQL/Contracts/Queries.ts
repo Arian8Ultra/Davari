@@ -74,8 +74,7 @@ export const GET_CONTRACT = gql`
           authorizedDelaysByAccuser
           unauthorizedDelaysByAccused
           unauthorizedDelaysByAccuser
-          isExecutiveByAccused
-          isExecutiveByAccuser
+          isExecutive
           fileNamesByAccused
           fileNamesByAccuser
         }

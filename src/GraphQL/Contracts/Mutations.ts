@@ -140,6 +140,28 @@ export const UPDATE_CONTRACT_BY_ACCUSED = gql`
     }
   }
 `;
+export const UPDATE_CONTRACT_BY_EXPERT= gql`
+  mutation UPDATE_CONTRACT_BY_ACCUSED(
+    $isExecutive: Boolean!
+    $id: Int!
+  ) {
+    contract_updateContract(
+      input: {
+        id: $id
+        isExecutive: $isExecutive
+      }
+    ) {
+      result {
+        id
+        isExecutive
+      }
+      status {
+        code
+        value
+      }
+    }
+  }
+`;
 
 export const DELETE_CONTRACT = gql`
   mutation DeleteContract($id: Int!) {

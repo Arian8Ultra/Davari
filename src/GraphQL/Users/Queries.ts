@@ -128,7 +128,15 @@ export const GET_USER_QUERIABLE = gql`
 export const GET_ALL_ORGANIZATION_USERS = gql`
   query getAllOganizationUsers {
     user_getUsers {
-      result(take: 2000, where: { userType: { eq: ORGANIZATION } }) {
+      result(
+        take: 2000
+        where: {
+          or : [
+            {userType: {eq: ORGANIZATION}},
+            {userType: {eq: CONTRACTOR_OR_CONSULTANT}}
+          ]
+        }
+      ) {
         items {
           id
           userName
@@ -157,8 +165,8 @@ export const GET_ALL_ORGANIZATION_USERS = gql`
 export const GET_ORGANIZATION_INDIVIDUAL_USERS_WITH_ROLE = gql`
   query GET_ORGANIZATION_INDIVIDUAL_USERS_WITH_ROLE(
     $organizationId: String!
-    # $roleType: RoleType!
-  ) {
+  ) # $roleType: RoleType!
+  {
     user_getUsers {
       result(
         take: 2000

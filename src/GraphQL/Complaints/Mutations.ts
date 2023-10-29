@@ -44,6 +44,7 @@ export const UPDATE_COMPLAINT = gql`
       contractId: $contractId
       userId: $userId
       complaintState: $complaintState
+      
     }
   ) {
     result {
