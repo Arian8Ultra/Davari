@@ -27,7 +27,12 @@ import {
 interface Props {
   userId?: string;
   departmentId?: string;
-  type?: "accused" | "accuser" | "assigned" | "chief";
+  type?:
+    | "accused"
+    | "accuser"
+    | "assigned"
+    | "chief"
+    | "mainRoomExpert";
 }
 const ComplaintsList = ({ departmentId, type, userId }: Props) => {
   const {
@@ -59,7 +64,6 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
     loading: chiefLoading,
     refetch: chiefRefetch,
   } = useQuery(GET_CHIEF_COMPLAINTS, {
-
     onCompleted(data) {
       console.log("chief data", data);
     },
@@ -150,14 +154,14 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
             ? "در حال دریافت اطلاعات"
             : "درخواست های داوری تعیین شده برای شما"}
         </Typography>
-      ) : type === "chief" ? (
-        null
-      ) : null}
+      ) : type === "chief" ? null : null}
 
       <Box
         display={"grid"}
         gap={2}
-        gridTemplateColumns={"1fr 1fr"}
+        gridTemplateColumns={
+          type === "chief" || type == 'mainRoomExpert' ? "repeat(4, 1fr)" : "repeat(2, 1fr)"
+        }
         padding={1}
       >
         {type === "accused"
@@ -201,7 +205,8 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
                 />
               )
             )
-          : assignedData?.complaint_getComplaints?.result.items.map(
+          : type === "assigned"
+          ? assignedData?.complaint_getComplaints?.result.items.map(
               (complaint: Complaint) => (
                 <ComplaintCardNew
                   key={complaint.id}
@@ -220,7 +225,50 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
                   refetch={assignedRefetch}
                 />
               )
-            )}
+            )
+          : type === "chief"
+          ? chiefData?.complaint_getComplaints?.result.items.map(
+              (complaint: Complaint) => (
+                <ComplaintCardNew
+                  key={complaint.id}
+                  id={complaint.id}
+                  acussed={complaint?.assignedUser?.userName}
+                  date={complaint?.createdDate}
+                  contractId={complaint?.contractId}
+                  acussedId={
+                    complaint?.contract?.accusedDepartmentUserId
+                  }
+                  acusserId={
+                    complaint?.contract?.accuserDepartmentUserId
+                  }
+                  type="chief"
+                  state={complaint?.complaintState}
+                  refetch={assignedRefetch}
+                />
+              )
+            )
+          : type === "mainRoomExpert"
+          ? assignedData?.complaint_getComplaints?.result.items.map(
+              (complaint: Complaint) => (
+                <ComplaintCardNew
+                  key={complaint.id}
+                  id={complaint.id}
+                  acussed={complaint?.assignedUser?.userName}
+                  date={complaint?.createdDate}
+                  contractId={complaint?.contractId}
+                  acussedId={
+                    complaint?.contract?.accusedDepartmentUserId
+                  }
+                  acusserId={
+                    complaint?.contract?.accuserDepartmentUserId
+                  }
+                  type="mainRoomExpert"
+                  state={complaint?.complaintState}
+                  refetch={assignedRefetch}
+                />
+              )
+            )
+          : null}
       </Box>
     </Stack>
   );

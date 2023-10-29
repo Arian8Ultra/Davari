@@ -225,6 +225,14 @@ export default function MainLayout() {
             setSignInModal({ ...signInModal, open: false });
           }
         },
+        onError(error) {
+          console.log(error);
+          
+          setSignedIn(true);
+          setSignInModal({ ...signInModal, open: true });
+          // setSignedIn(false);
+          // setSignInModal({ ...signInModal, open: false });
+        },
       });
     }
   }, [TokenCheck, token, path]);
@@ -925,11 +933,13 @@ export default function MainLayout() {
                 hasCollapse={item.hasCollapse}
                 open={open}
                 display={
-                  isMailRoom == item.mailRoom ? "block" :
-                  user.userRoles &&
-                  user.userRoles.some((role) =>
-                    item.accessNeeded?.includes(role.roleType)
-                  ) && !item.justMailRoom
+                  isMailRoom == item.mailRoom
+                    ? "block"
+                    : user.userRoles &&
+                      user.userRoles.some((role) =>
+                        item.accessNeeded?.includes(role.roleType)
+                      ) &&
+                      !item.justMailRoom
                     ? "block"
                     : "none"
                 }

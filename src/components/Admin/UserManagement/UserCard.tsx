@@ -41,7 +41,6 @@ import {
   primaryTransparent,
 } from "../../../theme/color";
 import NewModal from "../../Modals";
-import { UserType } from "../../../gql/graphql";
 interface Props {
   fullName?: string;
   lastName?: string;

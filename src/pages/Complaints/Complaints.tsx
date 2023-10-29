@@ -67,7 +67,7 @@ const Complaints = () => {
               color: Green,
             },
             display: user?.userRoles?.some(
-              (role) => role.roleType === "SENIOR_USER"
+              (role) => role.roleType === "SENIOR_USER" || role.roleType === "EXPERT"
             )
               ? "flex"
               : "none",
@@ -91,7 +91,7 @@ const Complaints = () => {
         ) && (
           <ComplaintsList
             type="accuser"
-            departmentId={user.id}
+            departmentId={user.userType === "CONTRACTOR_OR_CONSULTANT" || user.userType === "ORGANIZATION" ? user.id : user.parentId}
           />
         )}
 
@@ -100,7 +100,7 @@ const Complaints = () => {
         ) && (
           <ComplaintsList
             type="accused"
-            departmentId={user.id}
+            departmentId={user.userType === "CONTRACTOR_OR_CONSULTANT" || user.userType === "ORGANIZATION" ? user.id : user.parentId}
           />
         )}
 
@@ -109,7 +109,7 @@ const Complaints = () => {
         ) && (
           <ComplaintsList
             type="assigned"
-            departmentId={user.id}
+            departmentId={user.parentId}
             userId={user.id}
           />
         )}

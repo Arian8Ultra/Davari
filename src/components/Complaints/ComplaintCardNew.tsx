@@ -63,7 +63,13 @@ interface Props {
   state?: string;
   summary?: string;
   projectId?: number;
-  type?: "accused" | "accuser" | "assigned";
+  type?:
+    | "accused"
+    | "accuser"
+    | "assigned"
+    | "chief"
+    | "mainRoomExpert";
+  departmentId?: string;
   refetch?: () => void;
 }
 const ComplaintCardNew = (props: Props) => {
@@ -119,7 +125,7 @@ const ComplaintCardNew = (props: Props) => {
 
   useQuery(GET_USER_QUERIABLE, {
     variables: {
-      id: user.id,
+      id: user.userType == "ORGANIZATION" ? user.id : user.parentId,
     },
     onCompleted(data) {
       console.log("IndivisualsFromOrg", data);
@@ -220,7 +226,7 @@ const ComplaintCardNew = (props: Props) => {
             },
             "&.MuiCircularProgress-circleDeterminate": {
               borderRadius: "1rem",
-              background:'red'
+              background: "red",
             },
           }}
         />
@@ -230,7 +236,10 @@ const ComplaintCardNew = (props: Props) => {
           thickness={3.5}
           value={
             // @ts-ignore
-            (StatesCap.indexOf(props.state) / StatesCap.length).toFixed(2) * 100
+            (
+              // @ts-ignore
+              StatesCap.indexOf(props.state) / StatesCap.length
+            ).toFixed(2) * 100
           }
           sx={{
             width: "90%",
@@ -242,7 +251,7 @@ const ComplaintCardNew = (props: Props) => {
               backgroundColor: "rgba(0,0,0,1)",
               color: primary,
               borderRadius: "1rem",
-            }
+            },
           }}
         />
         <Typography
@@ -474,6 +483,119 @@ const ComplaintCardNew = (props: Props) => {
               ارسال درخواست داوری به کارشناس
             </Button>
           </Box>
+
+          <Box
+            display={
+              props.type == "mainRoomExpert" &&
+              props.state == states.CheckingForBeingConstructive.cap
+                ? "grid"
+                : "none"
+            }
+            gridTemplateColumns={"repeat(2,1fr)"}
+            mt={"1rem"}
+            gap={"6rem"}
+          >
+            <Button
+              sx={{
+                borderRadius: "0.5rem",
+                backgroundColor: Green,
+                color: "white",
+                "&:hover": {
+                  backgroundColor: GreenLight,
+                  color: Green,
+                },
+              }}
+              onClick={() => {
+                navigate(
+                  `/contract/${props.contractId}/${props.id}`,
+                  {
+                    state: {
+                      complaintId: props.id,
+                    },
+                  }
+                );
+              }}
+            >
+              مشاهده قرارداد و تایید عمرانی بودن
+            </Button>
+          </Box>
+          <Box
+            display={
+              props.type == "mainRoomExpert" &&
+              props.state == states.AddingToComplaintList.cap
+                ? "grid"
+                : "none"
+            }
+            gridTemplateColumns={"repeat(2,1fr)"}
+            mt={"1rem"}
+            gap={"6rem"}
+          >
+            <Button
+              sx={{
+                borderRadius: "0.5rem",
+                backgroundColor: Green,
+                color: "white",
+                "&:hover": {
+                  backgroundColor: GreenLight,
+                  color: Green,
+                },
+              }}
+              onClick={() => {
+                navigate(
+                  // complaints/:contractId/:complaintId/addArguements/:state
+                  `/complaints/${props.contractId}/${props.id}/addArguements/2`,
+                  {
+                    state: {
+                      complaintId: props.id,
+                    },
+                  }
+                );
+              }}
+            >
+              مشاهده دعاوی
+            </Button>
+          </Box>
+
+          <Box
+            display={props.type != "chief" ? "none" : "grid"}
+            gridTemplateColumns={"repeat(2,1fr)"}
+            mt={"1rem"}
+            gap={"6rem"}
+          >
+            <Button
+              sx={{
+                borderRadius: "0.5rem",
+                backgroundColor: Red,
+                color: "white",
+                "&:hover": {
+                  backgroundColor: red[100],
+                  color: Red,
+                },
+              }}
+              onClick={handleClose}
+            >
+              انصراف
+            </Button>
+            <Button
+              sx={{
+                borderRadius: "0.5rem",
+                backgroundColor: Green,
+                color: "white",
+                "&:hover": {
+                  backgroundColor: GreenLight,
+                  color: Green,
+                },
+              }}
+              onClick={() => {
+                setAddModal({
+                  open: true,
+                });
+              }}
+            >
+              ارسال درخواست داوری به کارشناس
+            </Button>
+          </Box>
+
           <Box
             display={props.type != "assigned" ? "none" : "grid"}
             gridTemplateColumns={"repeat(2,1fr)"}
@@ -585,16 +707,33 @@ const ComplaintCardNew = (props: Props) => {
                   mt: "0.5rem",
                 }}
                 onClick={() => {
-                  void updateComplaint({
-                    variables: {
-                      id: props.id,
-                      assignedUserId: assignedUser?.id,
-                    },
+                  if (
+                    props.state == states.WaitingForChiefToAssign.cap
+                  ) {
+                    void updateComplaint({
+                      variables: {
+                        id: props.id,
+                        assignedUserId: assignedUser?.id,
+                        complaintState:
+                          states.CheckingForBeingConstructive.cap,
+                      },
 
-                    onCompleted(data) {
-                      console.log(data);
-                    },
-                  });
+                      onCompleted(data) {
+                        console.log(data);
+                      },
+                    });
+                  } else {
+                    void updateComplaint({
+                      variables: {
+                        id: props.id,
+                        assignedUserId: assignedUser?.id,
+                      },
+
+                      onCompleted(data) {
+                        console.log(data);
+                      },
+                    });
+                  }
                   setAddModal({
                     open: false,
                   });
@@ -642,12 +781,29 @@ const ComplaintCardNew = (props: Props) => {
                 },
               }}
               onClick={() => {
-                navigate(
-                  `/complaints/${props.contractId}/${props.id}/addArguements/0`
-                );
+                if (
+                  props.state ==
+                  states.AccusedApprovedArgumentsAnswers.cap
+                ) {
+                  navigate(
+                    `/complaints/${props.contractId}/${props.id}/addArguements/3`
+                  );
+                } else if (
+                  props.state == states.AccuserAddedContract.cap
+                ) {
+                  navigate(
+                    `/complaints/${props.contractId}/${props.id}/addArguements/0`
+                  );
+                }
               }}
             >
-              ادامه درخواست داوری
+              {props.state ==
+              states.AccusedApprovedArgumentsAnswers.cap
+                ? "مشاهده پاسخ خوانده"
+                : props.state == states.AccuserAddedContract.cap
+                ? "ادام درخواست داوری و افزودن دعاوی"
+                : ""}
+              {/* ادامه درخواست داوری */}
             </Button>
           </Box>
         </Box>

@@ -12,8 +12,9 @@ interface UserStore {
     nationalCode: string;
     phoneNumber: string;
     userRoles?: UserRole[];
-    userType?: "INDIVIDUAL" | "ORGANIZATION";
+    userType?: "INDIVIDUAL" | "ORGANIZATION" | "CONTRACTOR_OR_CONSULTANT";
     parent?: User | null;
+    parentId?: string;
   };
   token: string;
   expireDate: Date;

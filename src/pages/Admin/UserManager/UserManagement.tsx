@@ -67,6 +67,7 @@ const UserManagement = () => {
       birthDate: undefined as Date | undefined,
       showPassword: false,
       showCalendar: false,
+      parentIsSet: false,
     });
 
   const [addOrganizationModal, setAddOrganizationModal] = useState({
@@ -143,7 +144,14 @@ const UserManagement = () => {
         <Button
           variant="contained"
           endIcon={<BsPersonAdd />}
-          onClick={() => [setAddModal({ ...addModal, open: true })]}
+          onClick={() => [
+            setAddPersonelToOrganzation({
+              ...addPersonelToOrganzationModal,
+              open: true,
+              parentID: user.parentId ? user.parentId : "",
+              parentIsSet: user.parentId ? true : false,
+            }),
+          ]}
           sx={{
             borderRadius: 2,
             backgroundColor: Green,
@@ -537,7 +545,11 @@ const UserManagement = () => {
             label={"نام دستگاه"}
             variant={"outlined"}
             autoComplete="firstName"
-            value={addPersonelToOrganzationModal.parentID}
+            value={
+              addPersonelToOrganzationModal.parentIsSet
+                ? user.parentId
+                : addPersonelToOrganzationModal.parentID
+            }
             sx={{
               gridColumn: "span 2",
               "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
@@ -555,6 +567,7 @@ const UserManagement = () => {
                   )?.id,
               });
             }}
+            disabled={addPersonelToOrganzationModal.parentIsSet}
             select
           >
             {OrganizationsUsers?.user_getUsers?.result?.items.map(

@@ -76,7 +76,6 @@ const AddArgument = () => {
       console.log("state", states.AccuserApprovedArguments.cap);
       console.log(data);
       alert("ثبت شد");
-      // navigate("/complaints");
     },
   });
 
@@ -339,10 +338,41 @@ const AddArgument = () => {
                 },
               });
             }else if (stateInt == 1){
+              const agreed = confirm("آیا مطمئن هستید؟");
+              if (!agreed) return;
               void updateCompaint({
                 variables: {
                   id: complaintIdInt,
-                  complaintState: states.AccusedAnsweredArguments.cap,
+                  complaintState: states.AccusedApprovedArgumentsAnswers.cap,
+                },
+                onCompleted(data, clientOptions) {
+                  navigate("/complaints");
+                },
+              });
+            }
+            else if (stateInt == -1){
+              const agreed = confirm("آیا مطمئن هستید؟");
+              if (!agreed) return;
+              void updateCompaint({
+                variables: {
+                  id: complaintIdInt,
+                  complaintState: states.WaitingForChiefToAssign.cap,
+                },
+                onCompleted() {
+                  navigate("/complaints");
+                },
+              });
+            }
+            else if (stateInt == 2){
+              const agreed = confirm("آیا مطمئن هستید؟");
+              if (!agreed) return;
+              void updateCompaint({
+                variables: {
+                  id: complaintIdInt,
+                  complaintState: states.MailRoomChiefReviewingTheFinalReport.cap,
+                },
+                onCompleted() {
+                  navigate("/complaints");
                 },
               });
             }

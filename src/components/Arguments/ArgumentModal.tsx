@@ -14,7 +14,7 @@ import {
 import { UPLOAD_FILE } from "../../api/upload";
 import {
   OptionalArgument,
-  OptionalArgumentSamll
+  OptionalArgumentSamll,
 } from "../../static/Types";
 import { Green, background } from "../../theme/color";
 import FileBox from "../FileBox";
@@ -190,8 +190,8 @@ const ArgumentModal = (props: Props) => {
 
             <FileBox
               sx={{
-                height:"100%",
-                gridRow:'span 2',
+                height: "100%",
+                gridRow: "span 2",
                 gridColumn: "span 1",
               }}
               setFiles={(files: File[]) => {
@@ -206,7 +206,7 @@ const ArgumentModal = (props: Props) => {
             </FileBox>
             <Button
               onClick={() => {
-                if(props.editMode){
+                if (props.editMode) {
                   void UpdateArgument({
                     variables: {
                       id: props.argumentId,
@@ -215,8 +215,7 @@ const ArgumentModal = (props: Props) => {
                       suggestedAmount: Argument.suggestedAmount,
                     },
                   });
-                }
-                else if (
+                } else if (
                   Argument?.Files?.length &&
                   Argument?.Files?.length > 0
                 )
@@ -283,7 +282,7 @@ const ArgumentModal = (props: Props) => {
         >
           <Box
             display={"grid"}
-            gridTemplateColumns={'1fr 1fr'}
+            gridTemplateColumns={"1fr 1fr"}
             gap={"1rem"}
             width={"100%"}
             justifyContent={"center"}
@@ -312,8 +311,8 @@ const ArgumentModal = (props: Props) => {
             />
             <FileBox
               sx={{
-                height:"100%",
-                gridRow:'span 2',
+                height: "100%",
+                gridRow: "span 2",
                 gridColumn: "span 1",
               }}
               setFiles={(files: File[]) => {
@@ -386,7 +385,154 @@ const ArgumentModal = (props: Props) => {
           isCloseable={true}
           backgroundColor={background}
         >
-          <div>hello</div>
+          <Box
+            display={"grid"}
+            gridTemplateColumns={"1fr 1fr"}
+            gap={"1rem"}
+            width={"100%"}
+            justifyContent={"center"}
+            alignItems={"center"}
+          >
+            <TextField
+              label={"نظر کارشناسی به طور مفصل"}
+              variant={"outlined"}
+              focused={Argument?.expertOpinion != ""}
+              sx={{
+                borderRadius: "1rem",
+                gridColumn: "span 2",
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "0.5rem",
+                },
+              }}
+              fullWidth
+              multiline
+              rows={4}
+              value={Argument?.expertOpinion}
+              onChange={(e) => {
+                setArgument({
+                  ...Argument,
+                  expertOpinion: e.target.value,
+                });
+              }}
+            />
+            <TextField
+              label={"متن رای پیشنهادی کارشناس"}
+              variant={"outlined"}
+              focused={Argument?.expertVerdict != ""}
+              sx={{
+                borderRadius: "1rem",
+                gridColumn: "span 2",
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "0.5rem",
+                },
+              }}
+              fullWidth
+              multiline
+              rows={4}
+              value={Argument?.expertVerdict}
+              onChange={(e) => {
+                setArgument({
+                  ...Argument,
+                  expertVerdict: e.target.value,
+                });
+              }}
+            />
+
+            <TextField
+              label={"مبلغ مورد تایید کارشناس"}
+              variant={"outlined"}
+              focused={Argument?.mailRoomExpertApprovedAmount != 0}
+              sx={{
+                borderRadius: "1rem",
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "0.5rem",
+                },
+              }}
+              fullWidth
+              type="number"
+              InputProps={{
+                endAdornment: "ریال",
+              }}
+              value={
+                Argument?.mailRoomExpertApprovedAmount == 0
+                  ? ""
+                  : Argument?.mailRoomExpertApprovedAmount
+              }
+              onChange={(e) => {
+                setArgument({
+                  ...Argument,
+                  mailRoomExpertApprovedAmount: parseFloat(
+                    e.target.value
+                  ),
+                });
+              }}
+            />
+            <FileBox
+              sx={{
+                height: "100%",
+                gridRow: "span 2",
+                gridColumn: "span 1",
+              }}
+              setFiles={(files: File[]) => {
+                setArgument({
+                  ...Argument,
+                  Files: files,
+                });
+              }}
+              files={Argument?.Files}
+            >
+              آپلود مستندات
+            </FileBox>
+
+            <Button
+              onClick={() => {
+                if (
+                  Argument?.Files?.length &&
+                  Argument?.Files?.length > 0
+                )
+                  void UPLOAD_FILE({
+                    file: Argument?.Files
+                      ? Argument?.Files[0]
+                      : undefined,
+                    // @ts-ignore
+                    token: localStorage.getItem("token")
+                      ? localStorage.getItem("token")
+                      : undefined,
+                    onSuccess(res) {
+                      console.log(res);
+                      void UpdateArgument({
+                        variables: {
+                          id: props.argumentId,
+                          expertOpinion: Argument?.expertOpinion,
+                          expertVerdict: Argument?.expertVerdict,
+                          mailRoomExpertApprovedAmount:
+                            Argument.mailRoomExpertApprovedAmount,
+                          expertOpinionFileName:
+                            res.result[0].newFileName,
+                        },
+                      });
+                    },
+                  });
+                else {
+                  void UpdateArgument({
+                    variables: {
+                      id: props.argumentId,
+                      accuserResponse: Argument?.accusedResponse,
+                    },
+                  });
+                }
+              }}
+              sx={{
+                background: Green,
+                color: "white",
+                borderRadius: "0.5rem",
+                width: "100%",
+              }}
+              variant={"contained"}
+            >
+              ثبت
+            </Button>
+          </Box>
         </NewModal>
       );
   }

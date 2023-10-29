@@ -1,306 +1,269 @@
 {
-  "ComplaintIsCanceledByAccuser" :{
+  "ComplaintIsCanceledByAccuser": {
     "name": "ComplaintIsCanceledByAccuser",
     "fa": "انصراف از درخواست داوری ",
-    "cap": "COMPLAINT_IS_CANCELED_BY_ACCUSER",       
+    "cap": "COMPLAINT_IS_CANCELED_BY_ACCUSER",
     "id": 0
   },
-  "AccuserAddedContract":
-  {
+  "AccuserAddedContract": {
     "name": "AccuserAddedContract",
     "fa": "ارسال قرارداد توسط خواهان ",
     "cap": "ACCUSER_ADDED_CONTRACT",
     "id": 1
   },
-  "AccuserAddedComplaint":
-  {
+  "AccuserAddedComplaint": {
     "name": "AccuserAddedComplaint",
     "fa": "ارسال شکایت توسط خواهان ",
     "cap": "ACCUSER_ADDED_COMPLAINT",
     "id": 2
   },
-  "AccuserAddedArbitrationTerms":
-  {
+  "AccuserAddedArbitrationTerms": {
     "name": "AccuserAddedArbitrationTerms",
     "fa": "ارسال شرایط داوری توسط خواهان ",
-    "cap": "ACCUSER_ADDED_ARBITRATION_TERMS",        
+    "cap": "ACCUSER_ADDED_ARBITRATION_TERMS",
     "id": 3
   },
-  "AccuserRegisteredArguments":
-  {
+  "AccuserRegisteredArguments": {
     "name": "AccuserRegisteredArguments",
     "fa": "ثبت دلایل توسط خواهان ",
     "cap": "ACCUSER_REGISTERED_ARGUMENTS",
     "id": 4
   },
-  "AccuserApprovedArguments":
-  {
+  "AccuserApprovedArguments": {
     "name": "AccuserApprovedArguments",
     "fa": "تایید دلایل توسط خواهان ",
     "cap": "ACCUSER_APPROVED_ARGUMENTS",
     "id": 5
   },
-  "AccusedCompletedContract":
-  {
+  "AccusedCompletedContract": {
     "name": "AccusedCompletedContract",
     "fa": "تکمیل قرارداد توسط خوانده ",
     "cap": "ACCUSED_COMPLETED_CONTRACT",
     "id": 6
   },
-  "AccusedCompletedArbitrationTerms":
-  {
-    "name": "AccusedCompletedArbitrationTerms",      
+  "AccusedCompletedArbitrationTerms": {
+    "name": "AccusedCompletedArbitrationTerms",
     "fa": "تکمیل شرایط داوری توسط خوانده ",
-    "cap": "ACCUSED_COMPLETED_ARBITRATION_TERMS",    
+    "cap": "ACCUSED_COMPLETED_ARBITRATION_TERMS",
     "id": 7
   },
-  "AccusedAnsweredArguments":
-  {
+  "AccusedAnsweredArguments": {
     "name": "AccusedAnsweredArguments",
     "fa": "پاسخ به دلایل توسط خوانده ",
     "cap": "ACCUSED_ANSWERED_ARGUMENTS",
     "id": 8
   },
-  "AccusedApprovedArgumentsAnswers":
-  {
-    "name": "AccusedApprovedArgumentsAnswers",       
-    "fa": "تایید پاسخ به دلایل توسط خوانده ",        
-    "cap": "ACCUSED_APPROVED_ARGUMENTS_ANSWERS",     
+  "AccusedApprovedArgumentsAnswers": {
+    "name": "AccusedApprovedArgumentsAnswers",
+    "fa": "تایید پاسخ به دلایل توسط خوانده ",
+    "cap": "ACCUSED_APPROVED_ARGUMENTS_ANSWERS",
     "id": 9
   },
-  "AccuserViewedArguments":
-  {
+  "AccuserViewedArguments": {
     "name": "AccuserViewedArguments",
     "fa": "مشاهده دلایل توسط خواهان ",
     "cap": "ACCUSER_VIEWED_ARGUMENTS",
     "id": 10
   },
-  "AccuserAddedAnswer":
-  {
+  "AccuserAddedAnswer": {
     "name": "AccuserAddedAnswer",
     "fa": "ارسال پاسخ توسط خواهان ",
     "cap": "ACCUSER_ADDED_ANSWER",
     "id": 11
   },
-  "AccuserAcceptedAccusedAnswers":
-  {
+  "AccuserAcceptedAccusedAnswers": {
     "name": "AccuserAcceptedAccusedAnswers",
-    "fa": "تایید پاسخ های خوانده توسط خواهان",       
-    "cap": "ACCUSER_ACCEPTED_ACCUSED_ANSWERS",       
+    "fa": "تایید پاسخ های خوانده توسط خواهان",
+    "cap": "ACCUSER_ACCEPTED_ACCUSED_ANSWERS",
     "id": 12
   },
-  "WaitingForAccusedToFillForms":
-  {
+  "WaitingForChiefToAssign": {
+    "name": "WaitingForChiefToAssign",
+    "fa": "در انتظار اختصاص کارشناس ",
+    "cap": "WAITING_FOR_CHIEF_TO_ASSIGN",
+    "id": 44
+  },
+  "WaitingForAccusedToFillForms": {
     "name": "WaitingForAccusedToFillForms",
-    "fa": "در انتظار خوانده برای تکمیل فرم ها ",     
-    "cap": "WAITING_FOR_ACCUSED_TO_FILL_FORMS",      
+    "fa": "در انتظار خوانده برای تکمیل فرم ها ",
+    "cap": "WAITING_FOR_ACCUSED_TO_FILL_FORMS",
     "id": 13
   },
-  "CheckingForBeingConstructive":
-  {
+  "CheckingForBeingConstructive": {
     "name": "CheckingForBeingConstructive",
-    "fa": "بررسی وضعیت عمرانی بودن و اعلام نتیجه ",  
-    "cap": "CHECKING_FOR_BEING_CONSTRUCTIVE",        
+    "fa": "بررسی وضعیت عمرانی بودن و اعلام نتیجه ",
+    "cap": "CHECKING_FOR_BEING_CONSTRUCTIVE",
     "id": 14
   },
-  "NotAcceptedForBeingConstructive":
-  {
-    "name": "NotAcceptedForBeingConstructive",       
+  "NotAcceptedForBeingConstructive": {
+    "name": "NotAcceptedForBeingConstructive",
     "fa": "عدم تایید عمرانی بودن ",
-    "cap": "NOT_ACCEPTED_FOR_BEING_CONSTRUCTIVE",    
+    "cap": "NOT_ACCEPTED_FOR_BEING_CONSTRUCTIVE",
     "id": 15
   },
-  "AddingToComplaintList":
-  {
+  "AddingToComplaintList": {
     "name": "AddingToComplaintList",
     "fa": "تعیین لیست دولت ",
     "cap": "ADDING_TO_COMPLAINT_LIST",
     "id": 16
   },
-  "WaitingForLetterResponseFromMinistersCouncil":
-  {
+  "WaitingForLetterResponseFromMinistersCouncil": {
     "name": "WaitingForLetterResponseFromMinistersCouncil",
-    "fa": "دریافت پاسخ نامه از هیات وزیران ",        
+    "fa": "دریافت پاسخ نامه از هیات وزیران ",
     "cap": "WAITING_FOR_LETTER_RESPONSE_FROM_MINISTERS_COUNCIL",
     "id": 17
   },
-  "WaitingForFirstPayment":
-  {
+  "WaitingForFirstPayment": {
     "name": "WaitingForFirstPayment",
     "fa": "اطلاع رسانی به خواهان و تعیین مهلت پرداخت هزینه اول داوری ",
     "cap": "WAITING_FOR_FIRST_PAYMENT",
     "id": 18
   },
-  "DidNotFulfillFirstPayment":
-  {
+  "DidNotFulfillFirstPayment": {
     "name": "DidNotFulfillFirstPayment",
     "fa": "عدم پرداخت هزینه اول داوری در مهلت مقرر ",
     "cap": "DID_NOT_FULFILL_FIRST_PAYMENT",
     "id": 19
   },
-  "WaitingForAccuserAndAccusedToSignDecree":       
-  {
+  "WaitingForAccuserAndAccusedToSignDecree": {
     "name": "WaitingForAccuserAndAccusedToSignDecree",
     "fa": "امضای قرارنامه توسط خواهان + امضای الکترونیک قرارنامه توسط خوانده یا سپری شدن مهات مقرر جهت امضا ",
     "cap": "WAITING_FOR_ACCUSER_AND_ACCUSED_TO_SIGN_DECREE",
     "id": 20
   },
-  "WaitingForAccuserToSignDecree":
-  {
+  "WaitingForAccuserToSignDecree": {
     "name": "WaitingForAccuserToSignDecree",
     "fa": "امضای قرارنامه توسط خواهان ",
-    "cap": "WAITING_FOR_ACCUSER_TO_SIGN_DECREE",     
+    "cap": "WAITING_FOR_ACCUSER_TO_SIGN_DECREE",
     "id": 21
   },
-  "WaitingForAccusedToSignDecree":
-  {
+  "WaitingForAccusedToSignDecree": {
     "name": "WaitingForAccusedToSignDecree",
     "fa": "امضای الکترونیک قرارنامه توسط خوانده یا سپری شدن مهات مقرر جهت امضا ",
-    "cap": "WAITING_FOR_ACCUSED_TO_SIGN_DECREE",     
+    "cap": "WAITING_FOR_ACCUSED_TO_SIGN_DECREE",
     "id": 22
   },
-  "CheckingAndUploadingTheSignedDecree":
-  {
-    "name": "CheckingAndUploadingTheSignedDecree",   
-    "fa": "بررسی و بارگزاری قرارنامه امضا شده ",     
+  "CheckingAndUploadingTheSignedDecree": {
+    "name": "CheckingAndUploadingTheSignedDecree",
+    "fa": "بررسی و بارگزاری قرارنامه امضا شده ",
     "cap": "CHECKING_AND_UPLOADING_THE_SIGNED_DECREE",
     "id": 23
   },
-  "DeterminingCaseExpert":
-  {
+  "DeterminingCaseExpert": {
     "name": "DeterminingCaseExpert",
     "fa": "تعیین کارشناس پرونده ",
     "cap": "DETERMINING_CASE_EXPERT",
     "id": 24
   },
-  "WaitingForExpertsCouncilPayment":
-  {
-    "name": "WaitingForExpertsCouncilPayment",       
-    "fa": "واریز هزینه مرتبط کانون کارشناسان ",      
-    "cap": "WAITING_FOR_EXPERTS_COUNCIL_PAYMENT",    
+  "WaitingForExpertsCouncilPayment": {
+    "name": "WaitingForExpertsCouncilPayment",
+    "fa": "واریز هزینه مرتبط کانون کارشناسان ",
+    "cap": "WAITING_FOR_EXPERTS_COUNCIL_PAYMENT",
     "id": 25
   },
-  "WaitingForCaseExpertRegistry":
-  {
+  "WaitingForCaseExpertRegistry": {
     "name": "WaitingForCaseExpertRegistry",
-    "fa": "ثبت نام کارشناس پرونده در سامانه ",       
-    "cap": "WAITING_FOR_CASE_EXPERT_REGISTRY",       
+    "fa": "ثبت نام کارشناس پرونده در سامانه ",
+    "cap": "WAITING_FOR_CASE_EXPERT_REGISTRY",
     "id": 26
   },
-  "UploadingDocumentsAndReviewingomplaint":
-  {
+  "UploadingDocumentsAndReviewingomplaint": {
     "name": "UploadingDocumentsAndReviewingComplaint",
     "fa": "ثبت مدارک و مستندات مورد نیاز و بررسی شکایت  ",
     "cap": "UPLOADING_DOCUMENTS_AND_REVIEWING_COMPLAINT",
     "id": 27
   },
-  "RedeterminingCaseExpert":
-  {
+  "RedeterminingCaseExpert": {
     "name": "RedeterminingCaseExpert",
-    "fa": "تعیین کارشناس پرونده پس از انصراف ",      
+    "fa": "تعیین کارشناس پرونده پس از انصراف ",
     "cap": "REDETERMINING_CASE_EXPERT",
     "id": 28
   },
-  "WaitingForFinalReportRegistration":
-  {
-    "name": "WaitingForFinalReportRegistration",     
+  "WaitingForFinalReportRegistration": {
+    "name": "WaitingForFinalReportRegistration",
     "fa": "ثبت نهایی گزارش و تنظیم خودکار پیش نویس رای داوری ",
-    "cap": "WAITING_FOR_FINAL_REPORT_REGISTRATION",  
+    "cap": "WAITING_FOR_FINAL_REPORT_REGISTRATION",
     "id": 29
   },
-  "MailRoomExpertReviewingTheFinalReport":
-  {
-    "name": "MailRoomExpertReviewingTheFinalReport", 
-    "fa": "بررسی گزارش دریافتی از کارشناس پرونده ",  
+  "MailRoomExpertReviewingTheFinalReport": {
+    "name": "MailRoomExpertReviewingTheFinalReport",
+    "fa": "بررسی گزارش دریافتی از کارشناس پرونده ",
     "cap": "MAIL_ROOM_EXPERT_REVIEWING_THE_FINAL_REPORT",
     "id": 30
   },
-  "MailRoomChiefReviewingTheFinalReport":
-  {
-    "name": "MailRoomChiefReviewingTheFinalReport",  
-    "fa": "بررسی گزارش دریافتی از کارشناس پرونده ",  
+  "MailRoomChiefReviewingTheFinalReport": {
+    "name": "MailRoomChiefReviewingTheFinalReport",
+    "fa": "بررسی گزارش دریافتی از کارشناس پرونده ",
     "cap": "MAIL_ROOM_CHIEF_REVIEWING_THE_FINAL_REPORT",
     "id": 31
   },
-  "WaitingForCouncilResult":
-  {
+  "WaitingForCouncilResult": {
     "name": "WaitingForCouncilResult",
     "fa": "نتیجه بررسی توسط شورا ",
     "cap": "WAITING_FOR_COUNCIL_RESULT",
     "id": 32
   },
-  "WaitingForFinalResultUpload":
-  {
+  "WaitingForFinalResultUpload": {
     "name": "WaitingForFinalResultUpload",
     "fa": "بارگزاری اسکن رای نهایی ",
-    "cap": "WAITING_FOR_FINAL_RESULT_UPLOAD",        
+    "cap": "WAITING_FOR_FINAL_RESULT_UPLOAD",
     "id": 33
   },
-  "WaitingForSecondPayment":
-  {
+  "WaitingForSecondPayment": {
     "name": "WaitingForSecondPayment",
     "fa": "اطلاع رسانی به خواهان و تعیین مهلت پرداخت هزینه دوم داوری ",
     "cap": "WAITING_FOR_SECOND_PAYMENT",
     "id": 34
   },
-  "ResultNotifiedAbilityToViewScannedPhysicalResult":
-  {
+  "ResultNotifiedAbilityToViewScannedPhysicalResult": {
     "name": "ResultNotifiedAbilityToViewScannedPhysicalResult",
     "fa": "ابلاغ فیزیکی رای و امکان مشاهده رای اسکن شده در سامانه برای خواهان و خوانده ",
     "cap": "RESULT_NOTIFIED_ABILITY_TO_VIEW_SCANNED_PHYSICAL_RESULT",
     "id": 35
   },
-  "ComplaintDetermined":
-  {
+  "ComplaintDetermined": {
     "name": "ComplaintDetermined",
     "fa": "شکایت تعیین تکلیف شده ",
     "cap": "COMPLAINT_DETERMINED",
     "id": 36
   },
-  "WaitingForNewOfferorsInfo":
-  {
+  "WaitingForNewOfferorsInfo": {
     "name": "WaitingForNewOfferorsInfo",
     "fa": "ثبت اطلاعات مربوط به کارفرمای جدید قرارداد ",
     "cap": "WAITING_FOR_NEW_OFFERORS_INFO",
     "id": 37
   },
-  "NewOfferorNotified":
-  {
+  "NewOfferorNotified": {
     "name": "NewOfferorNotified",
     "fa": "اطلاع رسانی به کارفرمای جدید ",
     "cap": "NEW_OFFEROR_NOTIFIED",
     "id": 38
   },
-  "WaitingForRelatedFormsCompletionAndCommentingOnOfferorChanging":
-  {
+  "WaitingForRelatedFormsCompletionAndCommentingOnOfferorChanging": {
     "name": "WaitingForRelatedFormsCompletionAndCommentingOnOfferorChanging",
     "fa": "تکمیل فرم های مربوطه و اظهار نظر در خصوص تغییر کارفرما ",
     "cap": "WAITING_FOR_RELATED_FORMS_COMPLETION_AND_COMMENTING_ON_OFFEROR_CHANGING",
     "id": 39
   },
-  "WaitingToDetermineIfTheOldOrTheNewOfferorIsTheAccused":
-  {
+  "WaitingToDetermineIfTheOldOrTheNewOfferorIsTheAccused": {
     "name": "WaitingToDetermineIfTheOldOrTheNewOfferorIsTheAccused",
     "fa": "بررسی اینکه کدام یک از کارفرمایان قدیم یا جدید خوانده محسوب می شوند ",
     "cap": "WAITING_TO_DETERMINE_IF_THE_OLD_OR_THE_NEW_OFFEROR_IS_THE_ACCUSED",
     "id": 40
   },
-  "ReviewingExpertOpinionOnOfferorChanging":
-  {
+  "ReviewingExpertOpinionOnOfferorChanging": {
     "name": "ReviewingExpertOpinionOnOfferorChanging",
     "fa": "بررسی اظهار نظر کارشناس ",
     "cap": "REVIEWING_EXPERT_OPINION_ON_OFFEROR_CHANGING",
     "id": 41
   },
-  "AccusedNotifiedOfOfferorChangingResult":       
-  {
+  "AccusedNotifiedOfOfferorChangingResult": {
     "name": "AccusedNotifiedOfOfferorChangingResult",
     "fa": "اطلاع رسانی نتیجه به خوانده ",
     "cap": "ACCUSED_NOTIFIED_OF_OFFEROR_CHANGING_RESULT",
     "id": 42
   },
-  "AccuserNotifiedOfSuccessfulChangingOfTheOfferor":
-  {
+  "AccuserNotifiedOfSuccessfulChangingOfTheOfferor": {
     "name": "AccuserNotifiedOfSuccessfulChangingOfTheOfferor",
     "fa": "اطلاع رسانی به کارفرمای مربوطه به عنوان خواهان در فرآیند داوری ",
     "cap": "ACCUSER_NOTIFIED_OF_SUCCESSFUL_CHANGING_OF_THE_OFFEROR",

@@ -138,7 +138,7 @@ const UserList = () => {
             lg: 16,
           }}
         >
-          عملیات ها
+          ...
         </Typography>
       </Box>
 
@@ -154,7 +154,7 @@ const UserList = () => {
           userName={user.userName}
           refetch={refetch}
           userRoles={user.userRoles}
-          userType={user.userType == "INDIVIDUAL" ? "فرد" : "شرکت"}
+          userType={user.userType == "INDIVIDUAL" ? "حقیقی" : "دستگاه"}
         />
       ))}
     </Stack>

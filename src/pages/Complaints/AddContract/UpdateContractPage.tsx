@@ -50,6 +50,7 @@ import {
 import { States } from "../../../static/States";
 import { GET_ALL_ORGANIZATION_USERS } from "../../../GraphQL/Users/Queries";
 import DateButton from "../../../components/DateButton";
+import fehrestbaha from "../../../static/fehrestbaha.json";
 
 const UpdateContractPage = () => {
   const user = useUserStore((state) => state.user);
@@ -363,12 +364,6 @@ const UpdateContractPage = () => {
         text: "مقدار فیلد نباید خالی باشد",
       });
     }
-    if (ContractNumber) {
-      setContractNumberError({
-        error: true,
-        text: "مقدار فیلد نباید خالی باشد",
-      });
-    }
     if (ContractDate) {
       setContractDateError({
         error: true,
@@ -521,7 +516,6 @@ const UpdateContractPage = () => {
       AccusedNationalityError.error ||
       contratDetailsError.error ||
       ContractSubjectError.error ||
-      ContractNumberError.error ||
       ContractDateError.error ||
       InitialBudgetError.error ||
       InitialTimePeriodError.error ||
@@ -748,7 +742,7 @@ const UpdateContractPage = () => {
             gridColumn: "span 6",
           }}
         />
-        <FaTextField
+        <TextField
           label="شماره قرارداد: "
           variant="outlined"
           sx={{

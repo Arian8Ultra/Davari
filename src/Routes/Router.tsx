@@ -36,9 +36,6 @@ const NewAddForm = lazy(
   () => import("../pages/Admin/FormManager/AddForm/NewAddForm")
 );
 const Contracts = lazy(() => import("../pages/Contracts/Contracts"));
-const ViewFormAll = lazy(
-  () => import("../pages/Contracts/ViewForm/ViewForm")
-);
 const AddContract = lazy(
   () => import("../pages/Complaints/AddContract/AddContract")
 );
@@ -52,6 +49,7 @@ const AddArgument = lazy(
   () => import("../pages/Complaints/AddArguements/AddArguements")
 );
 import "../index.css";
+import ContractPage from "../pages/Contracts/ContractPage";
 const UpdateContractPage = lazy(
   () => import("../pages/Complaints/AddContract/UpdateContractPage")
 );
@@ -99,33 +97,12 @@ const router = createBrowserRouter(
           element={<ComplainAnswers />}
         />
         <Route
+          path="contract/:contractId/:complaintId"
+          element={<ContractPage />}
+        />
+        <Route
           path="admin/usermanagement"
           element={<UserManagement />}
-        />
-        <Route path="admin/formanager" element={<FormManager />} />
-        <Route
-          path="admin/formanager/addForm"
-          element={<AddForm />}
-        />
-        <Route
-          path="admin/formanager/addForm/:formId/:fromType"
-          element={<NewAddForm />}
-        />
-        {/* <Route
-          path="admin/formanager/addForm/:formId/:fromType"
-          element={<AddForm />}
-        /> */}
-        <Route
-          path="admin/formanager/viewForm/:formId/:fromType"
-          element={<ViewForm />}
-        />
-        <Route
-          path="/viewForm/:formId/:fromType"
-          element={<ViewFormAll />}
-        />
-        <Route
-          path="admin/formanager/editForm/:formId/:fromType"
-          element={<EditForm />}
         />
 
         <Route path="test" element={<Test />} />

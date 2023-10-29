@@ -53,6 +53,7 @@ import {
 import TreeChart from "../../../components/TreeChart";
 import { Calendar, CalendarProvider } from "zaman";
 import DateButton from "../../../components/DateButton";
+import fehrestbaha from "../../../static/fehrestbaha.json";
 
 const CreateContractPage = () => {
   const user = useUserStore((state) => state.user);
@@ -303,11 +304,12 @@ const CreateContractPage = () => {
   }>();
 
   const [departments, setDepartments] = React.useState<
-    { label: string; id: number }[]
+    { label: string; id: string }[]
   >([]);
   useQuery(GET_ALL_ORGANIZATION_USERS, {
     onCompleted(data) {
       console.log(data);
+      // remove department that id is e7a85297-91d4-4f27-a4b2-ff394fe71dd3
       setDepartments(
         data?.user_getUsers?.result?.items?.map(
           (item: { id: number; fullName: string }) => ({
@@ -664,7 +666,7 @@ const CreateContractPage = () => {
         AuthorizedDelaysAccuser: AuthorizedDelays,
         UnauthorizedDelaysAccuser: UnauthorizedDelays,
         AccusedDepartmentId: AccusedDepartmentId,
-        AccuserDepartmentId: user.id,
+        AccuserDepartmentId: user.parentId,
       },
     }
   );
@@ -708,7 +710,7 @@ const CreateContractPage = () => {
   //
 
   return (
-    <Box position={"relative"} width={'100%'}>
+    <Box position={"relative"} width={"100%"}>
       <BackButton to="/complaints" />
       <Box
         display={"grid"}
@@ -761,7 +763,7 @@ const CreateContractPage = () => {
             gridColumn: "span 6",
           }}
         />
-        <FaTextField
+        <TextField
           label="شماره قرارداد: "
           variant="outlined"
           sx={{
@@ -913,14 +915,20 @@ const CreateContractPage = () => {
             width: "100%",
             gridColumn: "span 3",
           }}
-          value={user.parent?.fullName || user.fullName}
-          placeholder={user.parent?.fullName || user.fullName}
+          value={departments.find((d) => {
+            return d.id === user.parentId;
+          })?.label}
+          placeholder={departments.find((d) => {
+            d.id === user.parentId;
+          })?.label}
           focused
           //   disabled
         />
         <Autocomplete
           disablePortal
-          options={departments}
+          options={departments.filter(
+            (item: { id: string }) => item.id !== "e7a85297-91d4-4f27-a4b2-ff394fe71dd3"
+          )}
           sx={{
             width: "100%",
             gridColumn: "span 3",
@@ -980,7 +988,7 @@ const CreateContractPage = () => {
           value={departments.find(
             (item) =>
               AccusedDepartmentId &&
-              item.id === parseInt(AccusedDepartmentId)
+              item.id === AccusedDepartmentId
           )}
         />
         <TreeChart gridColumn={"span 5"} object={treeViewObject} />

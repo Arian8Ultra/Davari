@@ -10,7 +10,7 @@ export type User = {
   id: string;
   users?: User[];
   parent?: User | null;
-  userType?:"INDIVIDUAL" | "ORGANIZATION";
+  userType?:"INDIVIDUAL" | "ORGANIZATION" | "CONTRACTOR_OR_CONSULTANT";
 };
 
 export type Argument = {
