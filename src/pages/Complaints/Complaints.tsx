@@ -220,7 +220,7 @@ const Complaints = () => {
                           open: false,
                         });
                         navigate(
-                          `/complaints/${addModal.contractId}/addComplaint/`
+                          `/complaints/${addModal.contractId}/createContractPage/`
                         );
                       } else {
                         alert("قراردادی با این شماره وجود ندارد");

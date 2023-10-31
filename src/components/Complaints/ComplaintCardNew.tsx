@@ -775,6 +775,13 @@ const ComplaintCardNew = (props: Props) => {
                 borderRadius: "0.5rem",
                 backgroundColor: primaryDark,
                 color: "white",
+                display:
+                  props.state ==
+                  states.AccusedApprovedArgumentsAnswers.cap
+                    ? "flex"
+                    : props.state == states.AccuserAddedContract.cap
+                    ? "flex"
+                    : "none",
                 "&:hover": {
                   backgroundColor: primary,
                   color: "white",
@@ -801,7 +808,7 @@ const ComplaintCardNew = (props: Props) => {
               states.AccusedApprovedArgumentsAnswers.cap
                 ? "مشاهده پاسخ خوانده"
                 : props.state == states.AccuserAddedContract.cap
-                ? "ادام درخواست داوری و افزودن دعاوی"
+                ? "ادامه درخواست داوری و افزودن دعاوی"
                 : ""}
               {/* ادامه درخواست داوری */}
             </Button>

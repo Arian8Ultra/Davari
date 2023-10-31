@@ -55,6 +55,7 @@ const ArgumentModal = (props: Props) => {
     onCompleted(data) {
       console.log(data);
       props.onClose();
+      setArgument({} as OptionalArgumentSamll);
       props.refetch && props.refetch();
     },
   });
@@ -62,6 +63,7 @@ const ArgumentModal = (props: Props) => {
     onCompleted(data) {
       console.log(data);
       props.onClose();
+      setArgument({} as OptionalArgumentSamll);
       props.refetch && props.refetch();
     },
   });
@@ -207,14 +209,42 @@ const ArgumentModal = (props: Props) => {
             <Button
               onClick={() => {
                 if (props.editMode) {
-                  void UpdateArgument({
-                    variables: {
-                      id: props.argumentId,
-                      summary: Argument?.summary,
-                      description: Argument?.description,
-                      suggestedAmount: Argument.suggestedAmount,
-                    },
-                  });
+                  if (
+                    Argument?.Files?.length &&
+                    Argument?.Files?.length > 0
+                  ) {
+                    void UPLOAD_FILE({
+                      file: Argument?.Files
+                        ? Argument?.Files[0]
+                        : undefined,
+                      // @ts-ignore
+                      token: localStorage.getItem("token")
+                        ? localStorage.getItem("token")
+                        : undefined,
+                      onSuccess(res) {
+                        console.log(res);
+                        void UpdateArgument({
+                          variables: {
+                            id: props.argumentId,
+                            summary: Argument?.summary,
+                            description: Argument?.description,
+                            suggestedAmount: Argument.suggestedAmount,
+                            // @ts-ignore
+                            fileName: res.result[0].newFileName,
+                          },
+                        });
+                      },
+                    });
+                  } else {
+                    void UpdateArgument({
+                      variables: {
+                        id: props.argumentId,
+                        summary: Argument?.summary,
+                        description: Argument?.description,
+                        suggestedAmount: Argument.suggestedAmount,
+                      },
+                    });
+                  }
                 } else if (
                   Argument?.Files?.length &&
                   Argument?.Files?.length > 0
