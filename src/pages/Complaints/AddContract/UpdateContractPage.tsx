@@ -135,7 +135,7 @@ const UpdateContractPage = () => {
       text: "" as string,
     });
   const [ContractNumber, setContractNumber] =
-    React.useState<number>();
+    React.useState<string>();
   const [ContractNumberError, setContractNumberError] =
     React.useState({
       error: false as boolean,
@@ -645,7 +645,7 @@ const UpdateContractPage = () => {
         );
       setAccusedDepartmentId(contract.accusedDepartmentUserId);
       setAccuserDepartmentId(contract.accuserDepartmentUserId);
-      contractId && setContractNumber(parseInt(contractId));
+      contractId && setContractNumber(contractId);
       setAssigningType(contract.assigningTypeByAccuser);
       setAuthorizedDelays(
         contract.authorizedDelaysByAccuser
@@ -676,7 +676,9 @@ const UpdateContractPage = () => {
       console.log("state", states.AccusedCompletedContract);
       console.log(data);
       alert("ثبت شد");
-      navigate(`/complaints/${contractId}/${complaintId}/addArguements/1`);
+      navigate(
+        `/complaints/${contractId}/${complaintId}/addArguements/1`
+      );
     },
   });
   //
@@ -750,7 +752,7 @@ const UpdateContractPage = () => {
           }}
           value={ContractNumber}
           onChange={(e) => {
-            setContractNumber(parseInt(e.target.value));
+            setContractNumber(String(e.target.value));
           }}
           error={ContractNumberError.error}
           helperText={ContractNumberError.text}
@@ -1626,7 +1628,7 @@ const UpdateContractPage = () => {
                     console.log(PriceListOfBasicUnitOfField);
                   }}
                 ></FaTextField>
-                <FaTextField
+                <TextField
                   label="فهرست بهاي واحد پايه رشته"
                   variant="outlined"
                   type="number"
@@ -1648,7 +1650,14 @@ const UpdateContractPage = () => {
                     setPriceListOfBasicUnitOfField(newPeoples);
                     console.log(PriceListOfBasicUnitOfField);
                   }}
-                ></FaTextField>
+                  select
+                >
+                  {fehrestbaha.map((item, index) => (
+                    <MenuItem key={index} value={item}>
+                      {item}
+                    </MenuItem>
+                  ))}
+                </TextField>
               </Box>
             </Box>
           ))}

@@ -77,7 +77,9 @@ export function convertToPersianDigits(
 
 
 export function convertToEnglishDigits(str: string) {
-  return str.replace(/\u06F0/g, "0").replace(/\u06F1/g, "1");
+  return str.replace(/[۰-۹]/g, function (digit) {
+    return String.fromCharCode(digit.charCodeAt(0) - 1728);
+  });
 }
 
 

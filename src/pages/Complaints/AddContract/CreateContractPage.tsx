@@ -28,8 +28,8 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { useUserStore } from "../../../Context/UserStore";
 import { CREATE_COMPLAINT } from "../../../GraphQL/Complaints/Mutations";
 import { CREATE_CONTRACT } from "../../../GraphQL/Contracts/Mutations";
@@ -58,6 +58,7 @@ import fehrestbaha from "../../../static/fehrestbaha.json";
 const CreateContractPage = () => {
   const user = useUserStore((state) => state.user);
   const navigate = useNavigate();
+  const {contractId} = useParams<{contractId?: string}>();
   const [RelatedPeopleByAccusser, setRelatedPeopleByAccusser] =
     React.useState<
       [
@@ -79,6 +80,8 @@ const CreateContractPage = () => {
     error: false as boolean,
     text: "" as string,
   });
+  const [Employer, setEmployer] = React.useState<string>();
+  const [Employee, setEmployee] = React.useState<string>();
   const [RelatedPeopleByAccussed, setRelatedPeopleByAccussed] =
     React.useState<
       [
@@ -138,7 +141,7 @@ const CreateContractPage = () => {
       text: "" as string,
     });
   const [ContractNumber, setContractNumber] =
-    React.useState<number>();
+    React.useState<string>();
   const [ContractNumberError, setContractNumberError] =
     React.useState({
       error: false as boolean,
@@ -233,7 +236,7 @@ const CreateContractPage = () => {
   const [
     PhysicalProgressInArbitrationDate,
     setPhysicalProgressInArbitrationDate,
-  ] = React.useState<string>();
+  ] = React.useState<number>();
   const [
     PhysicalProgressInArbitrationDateError,
     setPhysicalProgressInArbitrationDateError,
@@ -241,7 +244,7 @@ const CreateContractPage = () => {
   const [
     FinancialProgressInArbitrationDateAccuser,
     setFinancialProgressInArbitrationDateAccuser,
-  ] = React.useState<string>();
+  ] = React.useState<number>();
   const [
     FinancialProgressInArbitrationDateAccuserError,
     setFinancialProgressInArbitrationDateAccuserError,
@@ -276,11 +279,11 @@ const CreateContractPage = () => {
   const [SupervisionDepartmentError, setSupervisionDepartmentError] =
     React.useState({ error: false as boolean, text: "" as string });
   const [AuthorizedDelays, setAuthorizedDelays] =
-    React.useState<string>();
+    React.useState<number>();
   const [AuthorizedDelaysError, setAuthorizedDelaysError] =
     React.useState({ error: false as boolean, text: "" as string });
   const [UnauthorizedDelays, setUnauthorizedDelays] =
-    React.useState<string>();
+    React.useState<number>();
   const [UnauthorizedDelaysError, setUnauthorizedDelaysError] =
     React.useState({ error: false as boolean, text: "" as string });
   const [AccusedDepartmentId, setAccusedDepartmentId] =
@@ -304,7 +307,14 @@ const CreateContractPage = () => {
   }>();
 
   const [departments, setDepartments] = React.useState<
-    { label: string; id: string }[]
+    {
+      label: string;
+      id: string;
+      type:
+        | "INDIVIDUAL"
+        | "ORGANIZATION"
+        | "CONTRACTOR_OR_CONSULTANT";
+    }[]
   >([]);
   useQuery(GET_ALL_ORGANIZATION_USERS, {
     onCompleted(data) {
@@ -312,9 +322,17 @@ const CreateContractPage = () => {
       // remove department that id is e7a85297-91d4-4f27-a4b2-ff394fe71dd3
       setDepartments(
         data?.user_getUsers?.result?.items?.map(
-          (item: { id: number; fullName: string }) => ({
+          (item: {
+            id: number;
+            fullName: string;
+            userType:
+              | "INDIVIDUAL"
+              | "ORGANIZATION"
+              | "CONTRACTOR_OR_CONSULTANT";
+          }) => ({
             label: item.fullName,
             id: item.id,
+            type: item.userType,
           })
         )
       );
@@ -420,27 +438,27 @@ const CreateContractPage = () => {
         text: "مقدار فیلد نباید خالی باشد",
       });
     }
-    if (ContractNumber) {
+    if (!ContractNumber) {
       setContractNumberError({
         error: true,
         text: "مقدار فیلد نباید خالی باشد",
       });
     }
-    if (ContractDate) {
+    if (!ContractDate) {
       setContractDateError({
         error: true,
         text: "مقدار فیلد نباید خالی باشد",
       });
     }
 
-    if (InitialBudget) {
+    if (!InitialBudget) {
       setInitialBudgetError({
         error: true,
         text: "مقدار فیلد نباید خالی باشد",
       });
     }
 
-    if (InitialTimePeriod) {
+    if (!InitialTimePeriod) {
       setInitialTimePeriodError({
         error: true,
         text: "مقدار فیلد نباید خالی باشد",
@@ -493,27 +511,21 @@ const CreateContractPage = () => {
       });
     }
 
-    if (OperationStartDate) {
+    if (!OperationStartDate) {
       setOperationStartDateError({
         error: true,
         text: "مقدار فیلد نباید خالی باشد",
       });
     }
 
-    if (
-      PhysicalProgressInArbitrationDate &&
-      PhysicalProgressInArbitrationDate.length <= 0
-    ) {
+    if (!PhysicalProgressInArbitrationDate) {
       setPhysicalProgressInArbitrationDateError({
         error: true,
         text: "مقدار فیلد نباید خالی باشد",
       });
     }
 
-    if (
-      FinancialProgressInArbitrationDateAccuser &&
-      FinancialProgressInArbitrationDateAccuser.length <= 0
-    ) {
+    if (!FinancialProgressInArbitrationDateAccuser) {
       setFinancialProgressInArbitrationDateAccuserError({
         error: true,
         text: "مقدار فیلد نباید خالی باشد",
@@ -549,14 +561,14 @@ const CreateContractPage = () => {
       });
     }
 
-    if (AuthorizedDelays && AuthorizedDelays.length <= 0) {
+    if (!AuthorizedDelays) {
       setAuthorizedDelaysError({
         error: true,
         text: "مقدار فیلد نباید خالی باشد",
       });
     }
 
-    if (UnauthorizedDelays && UnauthorizedDelays.length <= 0) {
+    if (!UnauthorizedDelays) {
       setUnauthorizedDelaysError({
         error: true,
         text: "مقدار فیلد نباید خالی باشد",
@@ -666,7 +678,10 @@ const CreateContractPage = () => {
         AuthorizedDelaysAccuser: AuthorizedDelays,
         UnauthorizedDelaysAccuser: UnauthorizedDelays,
         AccusedDepartmentId: AccusedDepartmentId,
-        AccuserDepartmentId: user.parentId,
+        AccuserDepartmentId:
+          user.userType == "CONTRACTOR_OR_CONSULTANT"
+            ? user.id
+            : user.parentId,
       },
     }
   );
@@ -702,6 +717,23 @@ const CreateContractPage = () => {
   //
   //
   //
+
+  useEffect(()=>{
+    if(contractId){
+      // get contract data
+    }
+  },[contractId])
+
+
+
+
+
+
+
+
+
+
+
   //
   //
   //
@@ -770,8 +802,9 @@ const CreateContractPage = () => {
             gridColumn: "span 3",
           }}
           value={ContractNumber}
+          type="number"
           onChange={(e) => {
-            setContractNumber(parseInt(e.target.value));
+            setContractNumber(String(e.target.value));
           }}
           error={ContractNumberError.error}
           helperText={ContractNumberError.text}
@@ -789,22 +822,89 @@ const CreateContractPage = () => {
             gridColumn: "span 6",
           }}
         />
-        <FaTextField
+        <TextField
           label="کارفرما"
           sx={{
             width: "100%",
             gridColumn: "span 3",
           }}
+          value={
+            departments.find((d) => {
+              return d.id === user.parentId;
+            })?.type === "ORGANIZATION"
+              ? departments.find((d) => {
+                  return d.id === user.parentId;
+                })!.label
+              : user.userType == "ORGANIZATION"
+              ? user.fullName
+              : Employer
+          }
+          onChange={(e) => {
+            setEmployer(e.target.value);
+          }}
+          select={
+            user.userType == "ORGANIZATION" ||
+            departments.find((d) => {
+              return d.id === user.parentId;
+            })?.type === "ORGANIZATION"
+              ? false
+              : true
+          }
+          disabled={
+            user.userType == "ORGANIZATION" ||
+            departments.find((d) => {
+              return d.id === user.parentId;
+            })?.type === "ORGANIZATION"
+              ? true
+              : false
+          }
           //   disabled
-        />
+        >
+          {departments.map((item) => (
+            <MenuItem value={item.id}>{item.label}</MenuItem>
+          ))}
+        </TextField>
         <FaTextField
           label="طرف قرارداد"
           sx={{
             width: "100%",
             gridColumn: "span 3",
           }}
-          //   disabled
-        />
+          value={
+            departments.find((d) => {
+              return d.id === user.parentId;
+            })?.type === "CONTRACTOR_OR_CONSULTANT"
+              ? departments.find((d) => {
+                  return d.id === user.parentId;
+                })!.label
+              : user.userType == "CONTRACTOR_OR_CONSULTANT"
+              ? user.fullName
+              : Employee
+          }
+          onChange={(e) => {
+            setEmployee(e.target.value);
+          }}
+          select={
+            user.userType == "CONTRACTOR_OR_CONSULTANT" ||
+            departments.find((d) => {
+              return d.id === user.parentId;
+            })?.type === "CONTRACTOR_OR_CONSULTANT"
+              ? false
+              : true
+          }
+          disabled={
+            user.userType == "CONTRACTOR_OR_CONSULTANT" ||
+            departments.find((d) => {
+              return d.id === user.parentId;
+            })?.type === "CONTRACTOR_OR_CONSULTANT"
+              ? true
+              : false
+          }
+        >
+          {departments.map((item) => (
+            <MenuItem value={item.id}>{item.label}</MenuItem>
+          ))}
+        </FaTextField>
         <div
           style={{
             gridColumn: "span 6",
@@ -915,19 +1015,34 @@ const CreateContractPage = () => {
             width: "100%",
             gridColumn: "span 3",
           }}
-          value={departments.find((d) => {
-            return d.id === user.parentId;
-          })?.label}
-          placeholder={departments.find((d) => {
-            d.id === user.parentId;
-          })?.label}
+          value={
+            user.userType == "ORGANIZATION" ||
+            user.userType == "CONTRACTOR_OR_CONSULTANT"
+              ? departments.find((d) => {
+                  return d.id === user.id;
+                })?.label
+              : departments.find((d) => {
+                  return d.id === user.parentId;
+                })?.label
+          }
+          placeholder={
+            user.userType == "ORGANIZATION" ||
+            user.userType == "CONTRACTOR_OR_CONSULTANT"
+              ? departments.find((d) => {
+                  return d.id === user.id;
+                })?.label
+              : departments.find((d) => {
+                  return d.id === user.parentId;
+                })?.label
+          }
           focused
           //   disabled
         />
         <Autocomplete
           disablePortal
           options={departments.filter(
-            (item: { id: string }) => item.id !== "e7a85297-91d4-4f27-a4b2-ff394fe71dd3"
+            (item: { id: string }) =>
+              item.id !== "e7a85297-91d4-4f27-a4b2-ff394fe71dd3"
           )}
           sx={{
             width: "100%",
@@ -987,8 +1102,7 @@ const CreateContractPage = () => {
           }}
           value={departments.find(
             (item) =>
-              AccusedDepartmentId &&
-              item.id === AccusedDepartmentId
+              AccusedDepartmentId && item.id === AccusedDepartmentId
           )}
         />
         <TreeChart gridColumn={"span 5"} object={treeViewObject} />
@@ -1790,7 +1904,7 @@ const CreateContractPage = () => {
                     console.log(PriceListOfBasicUnitOfField);
                   }}
                 ></FaTextField>
-                <FaTextField
+                <TextField
                   label="فهرست بهاي واحد پايه رشته"
                   variant="outlined"
                   type="number"
@@ -1812,7 +1926,14 @@ const CreateContractPage = () => {
                     setPriceListOfBasicUnitOfField(newPeoples);
                     console.log(PriceListOfBasicUnitOfField);
                   }}
-                ></FaTextField>
+                  select
+                >
+                  {fehrestbaha.map((item, index) => (
+                    <MenuItem key={index} value={item}>
+                      {item}
+                    </MenuItem>
+                  ))}
+                </TextField>
               </Box>
             </Box>
           ))}
@@ -2497,7 +2618,7 @@ const CreateContractPage = () => {
           }}
           value={PhysicalProgressInArbitrationDate}
           onChange={(e) => {
-            setPhysicalProgressInArbitrationDate(e.target.value);
+            setPhysicalProgressInArbitrationDate(parseInt(e.target.value));
           }}
           error={PhysicalProgressInArbitrationDateError.error}
           helperText={PhysicalProgressInArbitrationDateError.text}
@@ -2525,7 +2646,7 @@ const CreateContractPage = () => {
           value={FinancialProgressInArbitrationDateAccuser}
           onChange={(e) => {
             setFinancialProgressInArbitrationDateAccuser(
-              e.target.value
+              parseInt(e.target.value)
             );
           }}
           error={FinancialProgressInArbitrationDateAccuserError.error}
@@ -2758,8 +2879,9 @@ const CreateContractPage = () => {
             endAdornment: "روز",
           }}
           value={AuthorizedDelays}
+          type="number"
           onChange={(e) => {
-            setAuthorizedDelays(e.target.value);
+            setAuthorizedDelays(parseInt(e.target.value));
           }}
           error={AuthorizedDelaysError.error}
           helperText={AuthorizedDelaysError.text}
@@ -2791,8 +2913,9 @@ const CreateContractPage = () => {
             endAdornment: "روز",
           }}
           value={UnauthorizedDelays}
+          type="number"
           onChange={(e) => {
-            setUnauthorizedDelays(e.target.value);
+            setUnauthorizedDelays(parseInt(e.target.value));
           }}
           error={UnauthorizedDelaysError.error}
           helperText={UnauthorizedDelaysError.text}

@@ -73,6 +73,10 @@ const router = createBrowserRouter(
           element={<CreateContractPage />}
         />
         <Route
+          path="complaints/:contractId/createContractPage"
+          element={<CreateContractPage />}
+        />
+        <Route
           path="complaints/:contractId/:complaintId/UpdateContractPage"
           element={<UpdateContractPage />}
         />

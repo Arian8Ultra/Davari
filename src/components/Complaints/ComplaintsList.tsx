@@ -5,18 +5,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Box, Stack, Typography } from "@mui/material";
-import {
-  primary,
-  primaryGrey,
-  primaryTransparent,
-  secondary,
-  secondaryLight,
-  secondaryLighter,
-} from "../../theme/color";
-import theme from "../../theme/theme";
-import ComplaintCardNew from "./ComplaintCardNew";
 import { useQuery } from "@apollo/client";
+import { Box, Stack, Typography } from "@mui/material";
 import {
   Complaint,
   GET_ACCUSED_COMPLAINTS,
@@ -24,6 +14,11 @@ import {
   GET_CHIEF_COMPLAINTS,
   GET_COMPLAINT_ASSIGNED,
 } from "../../GraphQL/Complaints/Queries";
+import {
+  secondary
+} from "../../theme/color";
+import theme from "../../theme/theme";
+import ComplaintCardNew from "./ComplaintCardNew";
 interface Props {
   userId?: string;
   departmentId?: string;
@@ -87,6 +82,25 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
       width={"100%"}
       maxHeight={`calc(100vh - ${theme.spacing(25)})`}
       height={"max-content"}
+      display={
+        (type === "chief" &&
+          chiefData?.complaint_getComplaints?.result.items.length ===
+            0) ||
+        (type === "mainRoomExpert" &&
+          assignedData?.complaint_getComplaints?.result.items
+            .length === 0) ||
+        (type === "accused" &&
+          accusedData?.complaint_getComplaints?.result.items
+            .length === 0) ||
+        (type === "accuser" &&
+          accuserData?.complaint_getComplaints?.result.items
+            .length === 0) ||
+        (type === "assigned" &&
+          assignedData?.complaint_getComplaints?.result.items
+            .length === 0)
+          ? "none"
+          : "block"
+      }
       sx={{
         background: "rgba(200,200,200,0.7)",
         // backgroundColor: secondaryLighter,
@@ -102,11 +116,11 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
           variant="h5"
           component="h2"
           sx={{
-            color: "white",
+            color: secondary,
             // backgroundColor: primaryGrey,
-            backgroundColor: secondary,
+            // backgroundColor: secondary,
             // background: "rgba(255,255,255,0.3)",
-            padding: "1rem",
+            padding: "0.5rem",
             // borderRadius: 2,
             // textAlign: "center",
             position: "sticky",
@@ -121,11 +135,11 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
           variant="h5"
           component="h2"
           sx={{
-            color: "white",
+            color: secondary,
             // backgroundColor: primaryGrey,
-            backgroundColor: secondary,
+            // backgroundColor: secondary,
             // background: "rgba(255,255,255,0.3)",
-            padding: "1rem",
+            padding: "0.5rem",
             // borderRadius: 2,
             // textAlign: "center",
             position: "sticky",
@@ -140,11 +154,11 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
           variant="h5"
           component="h2"
           sx={{
-            color: "white",
+            color: secondary,
             // backgroundColor: primaryGrey,
-            backgroundColor: secondary,
+            // backgroundColor: secondary,
             // background: "rgba(255,255,255,0.3)",
-            padding: "1rem",
+            padding: "0.5rem",
             // borderRadius: 2,
             // textAlign: "center",
             position: "sticky",
@@ -160,9 +174,12 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
         display={"grid"}
         gap={2}
         gridTemplateColumns={
-          type === "chief" || type == 'mainRoomExpert' ? "repeat(4, 1fr)" : "repeat(2, 1fr)"
+          type === "chief" || type == "mainRoomExpert"
+            ? "repeat(4, 1fr)"
+            : "repeat(2, 1fr)"
         }
         padding={1}
+        paddingTop={0}
       >
         {type === "accused"
           ? accusedData?.complaint_getComplaints?.result.items.map(

@@ -786,7 +786,7 @@ const ComplaintCardNew = (props: Props) => {
                   states.AccusedApprovedArgumentsAnswers.cap
                 ) {
                   navigate(
-                    `/complaints/${props.contractId}/${props.id}/addArguements/3`
+                    `/complaints/${props.contractId}/${props.id}/addArguements/-1`
                   );
                 } else if (
                   props.state == states.AccuserAddedContract.cap

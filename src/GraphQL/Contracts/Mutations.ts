@@ -4,7 +4,7 @@ export const CREATE_CONTRACT = gql`
   mutation CREATE_CONTRACT(
     $AccuserRelatedPeople: String
     $AccusedRelatedPeople: String
-    $AccuserNationality: String!
+    $AccuserNationality: String
     $ContractType: [String!]
     $CircularNumber: String
     $CircularDate: Date
@@ -15,7 +15,7 @@ export const CREATE_CONTRACT = gql`
     $InitialTimePeriod: Int
     $PriceListOfBasicUnitOfField: String
     $IsSpecialPriceListAttachedToContract: String
-    $RecommendedCoefficient: Int
+    $RecommendedCoefficient: Float
     $CoefficientType: String
     $AssigningType: String
     $DoesContainAdjustment: String
@@ -75,7 +75,7 @@ export const UPDATE_CONTRACT_BY_ACCUSED = gql`
   mutation UPDATE_CONTRACT_BY_ACCUSED(
     $AccuserRelatedPeople: String
     $AccusedRelatedPeople: String
-    $AccuserNationality: String!
+    $AccuserNationality: String
     $ContractType: [String!]
     $CircularNumber: String
     $CircularDate: Date
@@ -86,7 +86,7 @@ export const UPDATE_CONTRACT_BY_ACCUSED = gql`
     $InitialTimePeriod: Int
     $PriceListOfBasicUnitOfField: String
     $IsSpecialPriceListAttachedToContract: String
-    $RecommendedCoefficient: Int
+    $RecommendedCoefficient: Float
     $CoefficientType: String
     $AssigningType: String
     $DoesContainAdjustment: String

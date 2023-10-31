@@ -76,6 +76,7 @@ import {
   secondary,
   secondaryDark,
 } from "../theme/color";
+import { MutationWrapper } from "../GraphQL/MutationWrapper";
 
 const drawerWidth = 230;
 
@@ -164,6 +165,10 @@ export default function MainLayout() {
   const fullName = useUserStore((state) => state.user.fullName);
   const user = useUserStore((state) => state.user);
   const logout = useUserStore((state) => state.logout);
+  const [loginError, setLoginError] = useState<{
+    message: string;
+    code: number;
+  }>();
   const [changePasswordModal, setChangePasswordModal] = useState({
     open: false,
     oldPassword: "",
@@ -227,7 +232,7 @@ export default function MainLayout() {
         },
         onError(error) {
           console.log(error);
-          
+
           setSignedIn(true);
           setSignInModal({ ...signInModal, open: true });
           // setSignedIn(false);
@@ -275,32 +280,45 @@ export default function MainLayout() {
     setOpen(false);
   };
 
-  const [userLogin, { error, loading }] = useMutation(UserLogin, {
+  const {
+    handleMutation,
+    loading: loadingMutation,
+    error,
+  } = MutationWrapper(UserLogin, "user_signIn");
+
+  const [userLogin, { loading }] = useMutation(UserLogin, {
     variables: {
       userName: signInModal.userName,
       password: signInModal.password,
     },
     onCompleted(data) {
       console.log(data);
-      const expireDate = new Date(data.user_signIn.result.expireDate);
-      const now = new Date();
-      const diff = expireDate.getTime() - now.getTime();
-      const expiresIn = diff / 1000;
-      console.log(expiresIn);
-      if (
-        (data.user_signIn.result.user as User) &&
-        data.user_signIn.result.token
-      ) {
-        setUser(
-          data.user_signIn.result.user,
-          data.user_signIn.result.token,
-          expireDate
+      if (data.user_signIn.status.code === 1) {
+        const expireDate = new Date(
+          data.user_signIn.result.expireDate
         );
-        localStorage.setItem("token", data.user_signIn.result.token);
-        setIsMailRoom(
-          data.user_signIn.result.user.parentId ===
-            "e7a85297-91d4-4f27-a4b2-ff394fe71dd3"
-        );
+        const now = new Date();
+        const diff = expireDate.getTime() - now.getTime();
+        const expiresIn = diff / 1000;
+        console.log(expiresIn);
+        if (
+          (data.user_signIn.result.user as User) &&
+          data.user_signIn.result.token
+        ) {
+          setUser(
+            data.user_signIn.result.user,
+            data.user_signIn.result.token,
+            expireDate
+          );
+          localStorage.setItem(
+            "token",
+            data.user_signIn.result.token
+          );
+          setIsMailRoom(
+            data.user_signIn.result.user.parentId ===
+              "e7a85297-91d4-4f27-a4b2-ff394fe71dd3"
+          );
+        }
       }
     },
     onError(error) {
@@ -435,7 +453,38 @@ export default function MainLayout() {
                 <form
                   onSubmit={(e) => {
                     e.preventDefault();
-                    void userLogin();
+                    // void userLogin();
+                    void handleMutation({
+                      variables: {
+                        userName: signInModal.userName,
+                        password: signInModal.password,
+                      },
+                    }).then((data) => {
+                      console.log(data);
+                      if (data instanceof Error) {
+                        setLoginError({
+                          message: data.message,
+                          code: data.name === "Error" ? 500 : 400,
+                        });
+                      }else{
+                        const expireDate = new Date(
+                          data.expireDate
+                        );
+                        setUser(
+                          data.user,
+                          data.token,
+                          expireDate
+                        );
+                        localStorage.setItem(
+                          "token",
+                          data.token
+                        );
+                        setIsMailRoom(
+                          data.user.parentId ===
+                            "e7a85297-91d4-4f27-a4b2-ff394fe71dd3"
+                        );
+                      }
+                    });
                   }}
                   style={{
                     display: "flex",
@@ -455,8 +504,8 @@ export default function MainLayout() {
                         userName: e.target.value,
                       })
                     }
-                    helperText={error?.message}
-                    error={error?.message ? true : false}
+                    helperText={loginError?.message}
+                    error={loginError ? true : false}
                     value={signInModal.userName}
                     InputProps={{
                       sx: {
@@ -508,8 +557,8 @@ export default function MainLayout() {
                         password: e.target.value,
                       })
                     }
-                    helperText={error?.message}
-                    error={error?.message ? true : false}
+                    helperText={loginError?.message}
+                    error={loginError ? true : false}
                     value={signInModal.password}
                     sx={{
                       width: "80%",
@@ -538,9 +587,21 @@ export default function MainLayout() {
                       },
                     }}
                     type="submit"
-                    onClick={() => {
-                      void userLogin();
-                    }}
+                    // onClick={() => {
+                    //   // void userLogin();
+                    //   void handleMutation({
+                    //     variables: {
+                    //       userName: signInModal.userName,
+                    //       password: signInModal.password,
+                    //     },
+                    //   })
+                    //     .then((data) => {
+                    //       // check if the data is an Error
+                    //       if(data instanceof Error){
+                    //         throw data;
+                    //       }
+                    //     })
+                    // }}
                   >
                     {loading ? (
                       <LinearProgress

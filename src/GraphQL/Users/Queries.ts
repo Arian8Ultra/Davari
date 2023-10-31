@@ -148,7 +148,9 @@ export const GET_ALL_ORGANIZATION_USERS = gql`
             parentId
             fullName
             id
+            userType
           }
+          userType
           userRoles {
             id
             roleType
