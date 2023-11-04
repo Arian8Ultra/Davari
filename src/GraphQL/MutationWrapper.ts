@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import {
+  MutationFunctionOptions,
   MutationOptions,
   TypedDocumentNode,
   useMutation,
@@ -20,7 +21,7 @@ export const MutationWrapper = (
     ...options
   }: {
     variables: any;
-    options?: MutationOptions<any, any>;
+    options?:MutationFunctionOptions<any, any>;
   }) {
     try {
       const mutationData = await mutationFunction({

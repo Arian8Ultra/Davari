@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { useLazyQuery, useQuery } from "@apollo/client";
-import { TypedQueryDocumentNode } from "graphql";
+import { MutationOptions, QueryFunctionOptions, useLazyQuery, useQuery } from "@apollo/client";
+import { DocumentNode, TypedQueryDocumentNode } from "graphql";
 
 export const errors: Record<string, ErrorType> = {
   IncorrectPassword: {
@@ -267,14 +267,17 @@ export const errors: Record<string, ErrorType> = {
 };
 
 export const QueryWrapper = (
-  query: TypedQueryDocumentNode,
-  queryName: string
+  query: DocumentNode,
+  queryName: string,
+  variables?: any,
+  options?: QueryFunctionOptions<any, any>
 ) => {
   const { data, loading, error } = useQuery(query, {
+    variables,
+    ...options,
     onCompleted(data) {
       console.log(data);
       const status = data[queryName].status;
-
       if (status.code != 1) {
         console.log(errors[status.value].fa);
         if (status.code == 44) {
@@ -287,7 +290,9 @@ export const QueryWrapper = (
     },
   });
 
-  return { data, loading, error };
+  const result = { data: data ? data[queryName].result : null, loading, error };
+
+  return result;
 };
 
 
