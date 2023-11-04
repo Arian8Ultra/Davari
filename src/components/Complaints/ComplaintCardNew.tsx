@@ -30,7 +30,15 @@ import {
   UPDATE_COMPLAINT,
 } from "../../GraphQL/Complaints/Mutations";
 import { convertToPersianDigits } from "../../functions/Functions";
-import { States, StatesCap, StatesFa } from "../../static/States";
+import {
+  States,
+  StatesCap,
+  StatesFa,
+  newStates,
+  newStatesCap,
+  newStatesFa,
+  newStatesObj,
+} from "../../static/States";
 import { User } from "../../static/Types";
 import states from "../../static/states.json";
 import {
@@ -57,9 +65,9 @@ interface Props {
   contractId?: number;
   date?: string;
   acussed?: string;
-  acussedId?: number;
+  acussedId?: string;
   acusser?: string;
-  acusserId?: number;
+  acusserId?: string;
   state?: string;
   summary?: string;
   projectId?: number;
@@ -160,6 +168,1086 @@ const ComplaintCardNew = (props: Props) => {
     },
   });
 
+  const buttons = () => {
+    switch (props.state) {
+      case newStatesObj.waitingForAccuserToRegisterContract.cap:
+        if (props.type == "accuser")
+          return (
+            <Box
+              display={"grid"}
+              gridTemplateColumns={"repeat(2,1fr)"}
+              mt={"1rem"}
+              gap={"6rem"}
+            >
+              <Button
+                sx={{
+                  borderRadius: "0.5rem",
+                  backgroundColor: Red,
+                  color: "white",
+                  "&:hover": {
+                    backgroundColor: red[100],
+                    color: Red,
+                  },
+                }}
+                onClick={() => {
+                  const agree = confirm(
+                    "آیا از انصراف از این درخواست داوری مطمئن هستید؟"
+                  );
+                  if (agree) {
+                    void deleteComplaint();
+                  }
+                }}
+              >
+                انصراف از درخواست داوری
+              </Button>
+              <Button
+                sx={{
+                  borderRadius: "0.5rem",
+                  backgroundColor: primaryDark,
+                  color: "white",
+                  "&:hover": {
+                    backgroundColor: primary,
+                    color: "white",
+                  },
+                }}
+                onClick={() => {
+                  navigate(
+                    `/complaints/${props.contractId}/${props.id}/UpdateContractPage`
+                  );
+                }}
+              >
+                ادامه درخواست داوری
+              </Button>
+            </Box>
+          );
+        else {
+          break;
+        }
+      case newStatesObj.waitingForAccuserToRegisterComplaint.cap:
+        if (props.type == "accuser")
+          return (
+            <Box
+              display={"grid"}
+              gridTemplateColumns={"repeat(2,1fr)"}
+              mt={"1rem"}
+              gap={"6rem"}
+            >
+              <Button
+                sx={{
+                  borderRadius: "0.5rem",
+                  backgroundColor: Red,
+                  color: "white",
+                  "&:hover": {
+                    backgroundColor: red[100],
+                    color: Red,
+                  },
+                }}
+                onClick={() => {
+                  const agree = confirm(
+                    "آیا از انصراف از این درخواست داوری مطمئن هستید؟"
+                  );
+                  if (agree) {
+                    void deleteComplaint();
+                  }
+                }}
+              >
+                انصراف از درخواست داوری
+              </Button>
+              <Button
+                sx={{
+                  borderRadius: "0.5rem",
+                  backgroundColor: primaryDark,
+                  color: "white",
+                  "&:hover": {
+                    backgroundColor: primary,
+                    color: "white",
+                  },
+                }}
+                onClick={() => {
+                  navigate(
+                    `/complaints/${props.contractId}/${props.id}/addComplaint`
+                  );
+                }}
+              >
+                ادامه درخواست داوری
+              </Button>
+            </Box>
+          );
+        else {
+          break;
+        }
+
+      case newStatesObj.waitingForAccuserToRegisterArbitrationTerms
+        .cap:
+        if (props.type == "accuser")
+          return (
+            <Box
+              display={"grid"}
+              gridTemplateColumns={"repeat(2,1fr)"}
+              mt={"1rem"}
+              gap={"6rem"}
+            >
+              <Button
+                sx={{
+                  borderRadius: "0.5rem",
+                  backgroundColor: Red,
+                  color: "white",
+                  "&:hover": {
+                    backgroundColor: red[100],
+                    color: Red,
+                  },
+                }}
+                onClick={() => {
+                  const agree = confirm(
+                    "آیا از انصراف از این درخواست داوری مطمئن هستید؟"
+                  );
+                  if (agree) {
+                    void deleteComplaint();
+                  }
+                }}
+              >
+                انصراف از درخواست داوری
+              </Button>
+              <Button
+                sx={{
+                  borderRadius: "0.5rem",
+                  backgroundColor: primaryDark,
+                  color: "white",
+                  "&:hover": {
+                    backgroundColor: primary,
+                    color: "white",
+                  },
+                }}
+                onClick={() => {
+                  navigate(
+                    `/complaints/${props.contractId}/${props.id}/addComplaint`
+                  );
+                }}
+              >
+                ادامه درخواست داوری
+              </Button>
+            </Box>
+          );
+        else {
+          break;
+        }
+      case newStatesObj.waitingForAccuserToRegisterArguments.cap:
+        if (props.type == "accuser")
+          return (
+            <Box
+              display={"grid"}
+              gridTemplateColumns={"repeat(2,1fr)"}
+              mt={"1rem"}
+              gap={"6rem"}
+            >
+              <Button
+                sx={{
+                  borderRadius: "0.5rem",
+                  backgroundColor: Red,
+                  color: "white",
+                  "&:hover": {
+                    backgroundColor: red[100],
+                    color: Red,
+                  },
+                }}
+                onClick={() => {
+                  const agree = confirm(
+                    "آیا از انصراف از این درخواست داوری مطمئن هستید؟"
+                  );
+                  if (agree) {
+                    void deleteComplaint();
+                  }
+                }}
+              >
+                انصراف از درخواست داوری
+              </Button>
+              <Button
+                sx={{
+                  borderRadius: "0.5rem",
+                  backgroundColor: primaryDark,
+                  color: "white",
+                  "&:hover": {
+                    backgroundColor: primary,
+                    color: "white",
+                  },
+                }}
+                onClick={() => {
+                  navigate(
+                    `/complaints/${props.contractId}/${props.id}/addArguements/0`
+                  );
+                }}
+              >
+                ادامه درخواست داوری و افزودن دعاوی
+              </Button>
+            </Box>
+          );
+        else {
+          break;
+        }
+
+      case newStatesObj.waitingForAccuserToApproveArguments.cap:
+        if (props.type == "accuser")
+          return (
+            <Box
+              display={"grid"}
+              gridTemplateColumns={"repeat(2,1fr)"}
+              mt={"1rem"}
+              gap={"6rem"}
+            >
+              <Button
+                sx={{
+                  borderRadius: "0.5rem",
+                  backgroundColor: Red,
+                  color: "white",
+                  "&:hover": {
+                    backgroundColor: red[100],
+                    color: Red,
+                  },
+                }}
+                onClick={() => {
+                  const agree = confirm(
+                    "آیا از انصراف از این درخواست داوری مطمئن هستید؟"
+                  );
+                  if (agree) {
+                    void deleteComplaint();
+                  }
+                }}
+              >
+                انصراف از درخواست داوری
+              </Button>
+              <Button
+                sx={{
+                  borderRadius: "0.5rem",
+                  backgroundColor: primaryDark,
+                  color: "white",
+                  "&:hover": {
+                    backgroundColor: primary,
+                    color: "white",
+                  },
+                }}
+                onClick={() => {
+                  navigate(
+                    `/complaints/${props.contractId}/${props.id}/addArguements/0`
+                  );
+                }}
+              >
+                ادامه درخواست داوری و افزودن دعاوی
+              </Button>
+            </Box>
+          );
+        else {
+          return (
+            <Box
+              display={"grid"}
+              gridTemplateColumns={"repeat(2,1fr)"}
+              mt={"1rem"}
+              gap={"6rem"}
+            >
+              <Button
+                sx={{
+                  borderRadius: "0.5rem",
+                  backgroundColor: Red,
+                  color: "white",
+                  "&:hover": {
+                    backgroundColor: red[100],
+                    color: Red,
+                  },
+                }}
+                onClick={() => {
+                  const agree = confirm(
+                    "آیا از انصراف از این درخواست داوری مطمئن هستید؟"
+                  );
+                  if (agree) {
+                    void deleteComplaint();
+                  }
+                }}
+              >
+                انصراف از درخواست داوری
+              </Button>
+            </Box>
+          );
+        }
+
+      case newStatesObj.waitingForAccusedToRegisterContract.cap:
+        if (props.type == "accused") {
+          return (
+            <Box
+              display={"grid"}
+              gridTemplateColumns={"repeat(2,1fr)"}
+              mt={"1rem"}
+              gap={"6rem"}
+            >
+              <Button
+                sx={{
+                  borderRadius: "0.5rem",
+                  backgroundColor: Red,
+                  color: "white",
+                  "&:hover": {
+                    backgroundColor: red[100],
+                    color: Red,
+                  },
+                }}
+                onClick={handleClose}
+              >
+                انصراف
+              </Button>
+              <Button
+                sx={{
+                  borderRadius: "0.5rem",
+                  backgroundColor: Green,
+                  color: "white",
+                  "&:hover": {
+                    backgroundColor: GreenLight,
+                    color: Green,
+                  },
+                }}
+                onClick={() => {
+                  setAddModal({
+                    open: true,
+                  });
+                }}
+              >
+                ارسال درخواست داوری به کارشناس
+              </Button>
+            </Box>
+          );
+        } else if (props.type == "assigned") {
+          return (
+            <Box
+              display={"grid"}
+              gridTemplateColumns={"repeat(2,1fr)"}
+              mt={"1rem"}
+              gap={"6rem"}
+            >
+              <Button
+                sx={{
+                  borderRadius: "0.5rem",
+                  backgroundColor: Red,
+                  color: "white",
+                  "&:hover": {
+                    backgroundColor: red[100],
+                    color: Red,
+                  },
+                }}
+                onClick={handleClose}
+              >
+                انصراف
+              </Button>
+              <Button
+                sx={{
+                  borderRadius: "0.5rem",
+                  backgroundColor: Green,
+                  color: "white",
+                  "&:hover": {
+                    backgroundColor: GreenLight,
+                    color: Green,
+                  },
+                }}
+                onClick={() => {
+                  navigate(
+                    `/complaints/${props.contractId}/${props.id}/UpdateContractPage`
+                  );
+                }}
+              >
+                پاسخ به درخواست داوری
+              </Button>
+            </Box>
+          );
+        } else {
+          return (
+            <Box
+              display={"grid"}
+              gridTemplateColumns={"repeat(2,1fr)"}
+              mt={"1rem"}
+              gap={"6rem"}
+            >
+              <Button
+                sx={{
+                  borderRadius: "0.5rem",
+                  backgroundColor: Red,
+                  color: "white",
+                  "&:hover": {
+                    backgroundColor: red[100],
+                    color: Red,
+                  },
+                }}
+                onClick={() => {
+                  const agree = confirm(
+                    "آیا از انصراف از این درخواست داوری مطمئن هستید؟"
+                  );
+                  if (agree) {
+                    void deleteComplaint();
+                  }
+                }}
+              >
+                انصراف از درخواست داوری
+              </Button>
+            </Box>
+          );
+        }
+      case newStatesObj.waitingForAccusedToRegisterArbitrationTerms
+        .cap:
+        if (props.type == "accused")
+          return (
+            <Box
+              display={"grid"}
+              gridTemplateColumns={"repeat(2,1fr)"}
+              mt={"1rem"}
+              gap={"6rem"}
+            >
+              <Button
+                sx={{
+                  borderRadius: "0.5rem",
+                  backgroundColor: Red,
+                  color: "white",
+                  "&:hover": {
+                    backgroundColor: red[100],
+                    color: Red,
+                  },
+                }}
+                onClick={handleClose}
+              >
+                انصراف
+              </Button>
+              <Button
+                sx={{
+                  borderRadius: "0.5rem",
+                  backgroundColor: Green,
+                  color: "white",
+                  "&:hover": {
+                    backgroundColor: GreenLight,
+                    color: Green,
+                  },
+                }}
+                onClick={() => {
+                  navigate(
+                    `/complaints/${props.contractId}/${props.id}/addComplaint`
+                  );
+                }}
+              >
+                پاسخ به درخواست داوری
+              </Button>
+            </Box>
+          );
+        else {
+          break;
+        }
+      case newStatesObj.waitingForAccusedToAnswerArguments.cap:
+        if (props.type == "accused")
+          return (
+            <Box
+              display={"grid"}
+              gridTemplateColumns={"repeat(2,1fr)"}
+              mt={"1rem"}
+              gap={"6rem"}
+            >
+              <Button
+                sx={{
+                  borderRadius: "0.5rem",
+                  backgroundColor: Red,
+                  color: "white",
+                  "&:hover": {
+                    backgroundColor: red[100],
+                    color: Red,
+                  },
+                }}
+                onClick={handleClose}
+              >
+                انصراف
+              </Button>
+              <Button
+                sx={{
+                  borderRadius: "0.5rem",
+                  backgroundColor: Green,
+                  color: "white",
+                  "&:hover": {
+                    backgroundColor: GreenLight,
+                    color: Green,
+                  },
+                }}
+                onClick={() => {
+                  navigate(
+                    `/complaints/${props.contractId}/${props.id}/addArguements/1`
+                  );
+                }}
+              >
+                پاسخ به درخواست داوری
+              </Button>
+            </Box>
+          );
+        else {
+          break;
+        }
+      case newStatesObj.waitingForAccusedToApproveArgumentsAnswers
+        .cap:
+        if (props.type == "accused")
+          return (
+            <Box
+              display={"grid"}
+              gridTemplateColumns={"repeat(2,1fr)"}
+              mt={"1rem"}
+              gap={"6rem"}
+            >
+              <Button
+                sx={{
+                  borderRadius: "0.5rem",
+                  backgroundColor: Red,
+                  color: "white",
+                  "&:hover": {
+                    backgroundColor: red[100],
+                    color: Red,
+                  },
+                }}
+                onClick={handleClose}
+              >
+                انصراف
+              </Button>
+              <Button
+                sx={{
+                  borderRadius: "0.5rem",
+                  backgroundColor: Green,
+                  color: "white",
+                  "&:hover": {
+                    backgroundColor: GreenLight,
+                    color: Green,
+                  },
+                }}
+                onClick={() => {
+                  navigate(
+                    `/complaints/${props.contractId}/${props.id}/addArguements/1`
+                  );
+                }}
+              >
+                پاسخ به درخواست داوری
+              </Button>
+            </Box>
+          );
+        else {
+          break;
+        }
+
+      case newStatesObj.waitingForAccuserToViewArguments.cap:
+        if (props.type == "accuser")
+          return (
+            <Box
+              display={"grid"}
+              gridTemplateColumns={"repeat(2,1fr)"}
+              mt={"1rem"}
+              gap={"6rem"}
+            >
+              <Button
+                sx={{
+                  borderRadius: "0.5rem",
+                  backgroundColor: Red,
+                  color: "white",
+                  "&:hover": {
+                    backgroundColor: red[100],
+                    color: Red,
+                  },
+                }}
+                onClick={() => {
+                  const agree = confirm(
+                    "آیا از انصراف از این درخواست داوری مطمئن هستید؟"
+                  );
+                  if (agree) {
+                    void deleteComplaint();
+                  }
+                }}
+              >
+                انصراف از درخواست داوری
+              </Button>
+              <Button
+                sx={{
+                  borderRadius: "0.5rem",
+                  backgroundColor: Green,
+                  color: "white",
+                  "&:hover": {
+                    backgroundColor: GreenLight,
+                    color: Green,
+                  },
+                }}
+                onClick={() => {
+                  navigate(
+                    `/complaints/${props.contractId}/${props.id}/addArguements/-1`
+                  );
+                }}
+              >
+                مشاهده پاسخ خوانده
+              </Button>
+            </Box>
+          );
+        else {
+          break;
+        }
+
+      case newStatesObj.waitingForAccuserToApproveAccusedAnswers.cap:
+        if (props.type == "accuser")
+          return (
+            <Box
+              display={"grid"}
+              gridTemplateColumns={"repeat(2,1fr)"}
+              mt={"1rem"}
+              gap={"6rem"}
+            >
+              <Button
+                sx={{
+                  borderRadius: "0.5rem",
+                  backgroundColor: Red,
+                  color: "white",
+                  "&:hover": {
+                    backgroundColor: red[100],
+                    color: Red,
+                  },
+                }}
+                onClick={() => {
+                  const agree = confirm(
+                    "آیا از انصراف از این درخواست داوری مطمئن هستید؟"
+                  );
+                  if (agree) {
+                    void deleteComplaint();
+                  }
+                }}
+              >
+                انصراف از درخواست داوری
+              </Button>
+              <Button
+                sx={{
+                  borderRadius: "0.5rem",
+                  backgroundColor: Green,
+                  color: "white",
+                  "&:hover": {
+                    backgroundColor: GreenLight,
+                    color: Green,
+                  },
+                }}
+                onClick={() => {
+                  navigate(
+                    `/complaints/${props.contractId}/${props.id}/addArguements/-1`
+                  );
+                }}
+              >
+                مشاهده پاسخ خوانده
+              </Button>
+            </Box>
+          );
+        else {
+          break;
+        }
+
+      case newStatesObj.waitingForChiefToAssign.cap:
+        if (props.type == "chief")
+          return (
+            <Box
+              display={"grid"}
+              gridTemplateColumns={"repeat(2,1fr)"}
+              mt={"1rem"}
+              gap={"6rem"}
+            >
+              <Button
+                sx={{
+                  borderRadius: "0.5rem",
+                  backgroundColor: Red,
+                  color: "white",
+                  "&:hover": {
+                    backgroundColor: red[100],
+                    color: Red,
+                  },
+                }}
+                onClick={handleClose}
+              >
+                انصراف
+              </Button>
+              <Button
+                sx={{
+                  borderRadius: "0.5rem",
+                  backgroundColor: Green,
+                  color: "white",
+                  "&:hover": {
+                    backgroundColor: GreenLight,
+                    color: Green,
+                  },
+                }}
+                onClick={() => {
+                  setAddModal({
+                    open: true,
+                  });
+                }}
+              >
+                ارسال درخواست داوری به کارشناس
+              </Button>
+            </Box>
+          );
+        else {
+          break;
+        }
+      case newStatesObj.checkingForBeingConstructive.cap:
+        if (props.type == "mainRoomExpert")
+          return (
+            <Box
+              display={"grid"}
+              gridTemplateColumns={"repeat(2,1fr)"}
+              mt={"1rem"}
+              gap={"6rem"}
+            >
+              <Button
+                sx={{
+                  borderRadius: "0.5rem",
+                  backgroundColor: Red,
+                  color: "white",
+                  "&:hover": {
+                    backgroundColor: red[100],
+                    color: Red,
+                  },
+                }}
+                onClick={handleClose}
+              >
+                انصراف
+              </Button>
+              <Button
+                sx={{
+                  borderRadius: "0.5rem",
+                  backgroundColor: Green,
+                  color: "white",
+                  "&:hover": {
+                    backgroundColor: GreenLight,
+                    color: Green,
+                  },
+                }}
+                onClick={() => {
+                  navigate(
+                    `/contract/${props.contractId}/${props.id}`,
+                    {
+                      state: {
+                        complaintId: props.id,
+                      },
+                    }
+                  );
+                }}
+              >
+                مشاهده قرارداد و تایید عمرانی بودن
+              </Button>
+            </Box>
+          );
+        else {
+          break;
+        }
+      case newStatesObj
+        .waitingForMailRoomExpertToGiveAnswersToArguments.cap:
+        if (
+          user.parentId == props.acusserId ||
+          user.parentId == props.acusser ||
+          user.id == props.acusserId ||
+          user.id == props.acusser
+        )
+          return (
+            <Box
+              display={"grid"}
+              gridTemplateColumns={"repeat(2,1fr)"}
+              mt={"1rem"}
+              gap={"6rem"}
+            >
+              <Button
+                sx={{
+                  borderRadius: "0.5rem",
+                  backgroundColor: Red,
+                  color: "white",
+                  "&:hover": {
+                    backgroundColor: red[100],
+                    color: Red,
+                  },
+                }}
+                onClick={() => {
+                  const agree = confirm(
+                    "آیا از انصراف از این درخواست داوری مطمئن هستید؟"
+                  );
+                  if (agree) {
+                    void deleteComplaint();
+                  }
+                }}
+              >
+                انصراف از درخواست داوری
+              </Button>
+            </Box>
+          );
+        return (
+          <Box
+            display={
+              props.type == "mainRoomExpert" &&
+              props.state ==
+                newStatesObj
+                  .waitingForMailRoomExpertToGiveAnswersToArguments
+                  .cap
+                ? "grid"
+                : "none"
+            }
+            gridTemplateColumns={"repeat(2,1fr)"}
+            mt={"1rem"}
+            gap={"6rem"}
+          >
+            <Button
+              sx={{
+                borderRadius: "0.5rem",
+                backgroundColor: Green,
+                color: "white",
+                "&:hover": {
+                  backgroundColor: GreenLight,
+                  color: Green,
+                },
+              }}
+              onClick={() => {
+                navigate(
+                  // complaints/:contractId/:complaintId/addArguements/:state
+                  `/complaints/${props.contractId}/${props.id}/addArguements/2`,
+                  {
+                    state: {
+                      complaintId: props.id,
+                    },
+                  }
+                );
+              }}
+            >
+              مشاهده دعاوی
+            </Button>
+          </Box>
+        );
+      case newStatesObj
+        .acceptedForBeingConstructive.cap:
+        if (
+          user.parentId == props.acusserId ||
+          user.parentId == props.acusser ||
+          user.id == props.acusserId ||
+          user.id == props.acusser
+        )
+          return (
+            <Box
+              display={"grid"}
+              gridTemplateColumns={"repeat(2,1fr)"}
+              mt={"1rem"}
+              gap={"6rem"}
+            >
+              <Button
+                sx={{
+                  borderRadius: "0.5rem",
+                  backgroundColor: Red,
+                  color: "white",
+                  "&:hover": {
+                    backgroundColor: red[100],
+                    color: Red,
+                  },
+                }}
+                onClick={() => {
+                  const agree = confirm(
+                    "آیا از انصراف از این درخواست داوری مطمئن هستید؟"
+                  );
+                  if (agree) {
+                    void deleteComplaint();
+                  }
+                }}
+              >
+                انصراف از درخواست داوری
+              </Button>
+            </Box>
+          );
+        return (
+          <Box
+            display={
+              props.type == "mainRoomExpert" &&
+              props.state ==
+                newStatesObj
+                  .acceptedForBeingConstructive
+                  .cap
+                ? "grid"
+                : "none"
+            }
+            gridTemplateColumns={"repeat(2,1fr)"}
+            mt={"1rem"}
+            gap={"6rem"}
+          >
+            <Button
+              sx={{
+                borderRadius: "0.5rem",
+                backgroundColor: Green,
+                color: "white",
+                "&:hover": {
+                  backgroundColor: GreenLight,
+                  color: Green,
+                },
+              }}
+              onClick={() => {
+                navigate(
+                  // complaints/:contractId/:complaintId/addArguements/:state
+                  `/complaints/${props.contractId}/${props.id}/addArguements/2`,
+                  {
+                    state: {
+                      complaintId: props.id,
+                    },
+                  }
+                );
+              }}
+            >
+              مشاهده دعاوی
+            </Button>
+          </Box>
+        );
+      case newStatesObj
+        .waitingForMailRoomExpertToApproveAnswersToArguments.cap:
+        if (
+          user.parentId == props.acusserId ||
+          user.parentId == props.acusser ||
+          user.id == props.acusserId ||
+          user.id == props.acusser
+        )
+          return (
+            <Box
+              display={"grid"}
+              gridTemplateColumns={"repeat(2,1fr)"}
+              mt={"1rem"}
+              gap={"6rem"}
+            >
+              <Button
+                sx={{
+                  borderRadius: "0.5rem",
+                  backgroundColor: Red,
+                  color: "white",
+                  "&:hover": {
+                    backgroundColor: red[100],
+                    color: Red,
+                  },
+                }}
+                onClick={() => {
+                  const agree = confirm(
+                    "آیا از انصراف از این درخواست داوری مطمئن هستید؟"
+                  );
+                  if (agree) {
+                    void deleteComplaint();
+                  }
+                }}
+              >
+                انصراف از درخواست داوری
+              </Button>
+            </Box>
+          );
+        return (
+          <Box
+            display={
+              props.type == "mainRoomExpert" &&
+              props.state ==
+                newStatesObj
+                  .waitingForMailRoomExpertToGiveAnswersToArguments
+                  .cap
+                ? "grid"
+                : "none"
+            }
+            gridTemplateColumns={"repeat(2,1fr)"}
+            mt={"1rem"}
+            gap={"6rem"}
+          >
+            <Button
+              sx={{
+                borderRadius: "0.5rem",
+                backgroundColor: Green,
+                color: "white",
+                "&:hover": {
+                  backgroundColor: GreenLight,
+                  color: Green,
+                },
+              }}
+              onClick={() => {
+                navigate(
+                  // complaints/:contractId/:complaintId/addArguements/:state
+                  `/complaints/${props.contractId}/${props.id}/addArguements/2`,
+                  {
+                    state: {
+                      complaintId: props.id,
+                    },
+                  }
+                );
+              }}
+            >
+              مشاهده دعاوی
+            </Button>
+          </Box>
+        );
+
+      case newStatesObj
+        .waitingForChiefToApproveExpertsAnswersToArguments.cap:
+        if (props.type == "chief") {
+          return (
+            <Box
+              display={"grid"}
+              gridTemplateColumns={"repeat(2,1fr)"}
+              mt={"1rem"}
+              gap={"6rem"}
+            >
+              <Button
+                sx={{
+                  borderRadius: "0.5rem",
+                  backgroundColor: Green,
+                  color: "white",
+                  "&:hover": {
+                    backgroundColor: GreenLight,
+                    color: Green,
+                  },
+                }}
+                onClick={() => {
+                  navigate(
+                    // complaints/:contractId/:complaintId/addArguements/:state
+                    `/complaints/${props.contractId}/${props.id}/addArguements/3`,
+                    {
+                      state: {
+                        complaintId: props.id,
+                      },
+                    }
+                  );
+                }}
+              >
+                مشاهده پاسخ کارشناس
+              </Button>
+            </Box>
+          );
+        } else {
+          break;
+        }
+      default:
+        if (
+          user.parentId == props.acusserId ||
+          user.parentId == props.acusser ||
+          user.id == props.acusserId ||
+          user.id == props.acusser
+        )
+          return (
+            <Box
+              display={"grid"}
+              gridTemplateColumns={"repeat(2,1fr)"}
+              mt={"1rem"}
+              gap={"6rem"}
+            >
+              <Button
+                sx={{
+                  borderRadius: "0.5rem",
+                  backgroundColor: Red,
+                  color: "white",
+                  "&:hover": {
+                    backgroundColor: red[100],
+                    color: Red,
+                  },
+                }}
+                onClick={() => {
+                  const agree = confirm(
+                    "آیا از انصراف از این درخواست داوری مطمئن هستید؟"
+                  );
+                  if (agree) {
+                    void deleteComplaint();
+                  }
+                }}
+              >
+                انصراف از درخواست داوری
+              </Button>
+            </Box>
+          );
+    }
+  };
+
   return (
     <Box
       sx={{
@@ -238,7 +1326,7 @@ const ComplaintCardNew = (props: Props) => {
             // @ts-ignore
             (
               // @ts-ignore
-              StatesCap.indexOf(props.state) / StatesCap.length
+              newStatesCap.indexOf(props.state) / newStatesCap.length
             ).toFixed(2) * 100
           }
           sx={{
@@ -267,7 +1355,11 @@ const ComplaintCardNew = (props: Props) => {
           {String(
             convertToPersianDigits(
               // @ts-ignore
-              (StatesCap.indexOf(props.state) / 44).toFixed(2) * 100
+              (
+                // @ts-ignore
+                newStatesCap.indexOf(props.state) /
+                newStatesCap.length
+              ).toFixed(2) * 100
             )
           ).split(".")[0] + "%"}
         </Typography>
@@ -378,7 +1470,8 @@ const ComplaintCardNew = (props: Props) => {
                       }}
                     >
                       {/* @ts-ignore */}
-                      {StatesFa[StatesCap.indexOf(props.state)]}
+                      {newStatesFa[newStatesCap.indexOf(props.state)]}
+                      {/* {props.state} */}
                     </TableCell>
                   </TableRow>
 
@@ -444,7 +1537,8 @@ const ComplaintCardNew = (props: Props) => {
               </Table>
             </TableContainer>
           </Box>
-          <Box
+          {buttons()}
+          {/* <Box
             display={props.type != "accused" ? "none" : "grid"}
             gridTemplateColumns={"repeat(2,1fr)"}
             mt={"1rem"}
@@ -487,7 +1581,8 @@ const ComplaintCardNew = (props: Props) => {
           <Box
             display={
               props.type == "mainRoomExpert" &&
-              props.state == states.CheckingForBeingConstructive.cap
+              props.state ==
+                newStatesObj.checkingForBeingConstructive.cap
                 ? "grid"
                 : "none"
             }
@@ -522,7 +1617,10 @@ const ComplaintCardNew = (props: Props) => {
           <Box
             display={
               props.type == "mainRoomExpert" &&
-              props.state == states.AddingToComplaintList.cap
+              props.state ==
+                newStatesObj
+                  .waitingForMailRoomExpertToGiveAnswersToArguments
+                  .cap
                 ? "grid"
                 : "none"
             }
@@ -628,8 +1726,8 @@ const ComplaintCardNew = (props: Props) => {
               }}
               onClick={() => {
                 if (
-                  States[StatesCap.indexOf(props.state!)] ==
-                  states.WaitingForAccusedToFillForms.name
+                  newStates[newStatesCap.indexOf(props.state!)] ==
+                  "waitingForAccuserToRegisterContract"
                 ) {
                   navigate(
                     `/complaints/${props.contractId}/${props.id}/UpdateContractPage`
@@ -643,7 +1741,82 @@ const ComplaintCardNew = (props: Props) => {
             >
               پاسخ به درخواست داوری
             </Button>
-          </Box>
+          </Box> */}
+          {/* <Box
+            display={props.type != "accuser" ? "none" : "grid"}
+            gridTemplateColumns={"repeat(2,1fr)"}
+            mt={"1rem"}
+            gap={"6rem"}
+          >
+            <Button
+              sx={{
+                borderRadius: "0.5rem",
+                backgroundColor: Red,
+                color: "white",
+                "&:hover": {
+                  backgroundColor: red[100],
+                  color: Red,
+                },
+              }}
+              onClick={() => {
+                const agree = confirm(
+                  "آیا از انصراف از این درخواست داوری مطمئن هستید؟"
+                );
+                if (agree) {
+                  void deleteComplaint();
+                }
+              }}
+            >
+              انصراف از درخواست داوری
+            </Button>
+            <Button
+              sx={{
+                borderRadius: "0.5rem",
+                backgroundColor: primaryDark,
+                color: "white",
+                display:
+                  props.state ==
+                  newStatesObj.waitingForAccuserToViewArguments.cap
+                    ? "flex"
+                    : props.state ==
+                      newStatesObj
+                        .waitingForAccuserToRegisterArguments.cap
+                    ? "flex"
+                    : "none",
+                "&:hover": {
+                  backgroundColor: primary,
+                  color: "white",
+                },
+              }}
+              onClick={() => {
+                if (
+                  props.state ==
+                  newStatesObj.waitingForAccuserToViewArguments.cap
+                ) {
+                  navigate(
+                    `/complaints/${props.contractId}/${props.id}/addArguements/-1`
+                  );
+                } else if (
+                  props.state ==
+                  newStatesObj.waitingForAccuserToRegisterArguments
+                    .cap
+                ) {
+                  navigate(
+                    `/complaints/${props.contractId}/${props.id}/addArguements/0`
+                  );
+                }
+              }}
+            >
+              {props.state ==
+              newStatesObj.waitingForAccuserToViewArguments.cap
+                ? "مشاهده پاسخ خوانده"
+                : props.state ==
+                  newStatesObj.waitingForAccuserToRegisterArguments
+                    .cap
+                ? "ادامه درخواست داوری و افزودن دعاوی"
+                : ""}
+            </Button>
+          </Box> */}
           <NewModal
             open={addModal.open}
             onClose={() => {
@@ -708,7 +1881,8 @@ const ComplaintCardNew = (props: Props) => {
                 }}
                 onClick={() => {
                   if (
-                    props.state == states.WaitingForChiefToAssign.cap
+                    props.state ==
+                    newStatesObj.waitingForChiefToAssign.cap
                   ) {
                     void updateComplaint({
                       variables: {
@@ -743,76 +1917,6 @@ const ComplaintCardNew = (props: Props) => {
               </Button>
             </Box>
           </NewModal>
-          <Box
-            display={props.type != "accuser" ? "none" : "grid"}
-            gridTemplateColumns={"repeat(2,1fr)"}
-            mt={"1rem"}
-            gap={"6rem"}
-          >
-            <Button
-              sx={{
-                borderRadius: "0.5rem",
-                backgroundColor: Red,
-                color: "white",
-                "&:hover": {
-                  backgroundColor: red[100],
-                  color: Red,
-                },
-              }}
-              onClick={() => {
-                const agree = confirm(
-                  "آیا از انصراف از این درخواست داوری مطمئن هستید؟"
-                );
-                if (agree) {
-                  void deleteComplaint();
-                }
-              }}
-            >
-              انصراف از درخواست داوری
-            </Button>
-            <Button
-              sx={{
-                borderRadius: "0.5rem",
-                backgroundColor: primaryDark,
-                color: "white",
-                display:
-                  props.state ==
-                  states.AccusedApprovedArgumentsAnswers.cap
-                    ? "flex"
-                    : props.state == states.AccuserAddedContract.cap
-                    ? "flex"
-                    : "none",
-                "&:hover": {
-                  backgroundColor: primary,
-                  color: "white",
-                },
-              }}
-              onClick={() => {
-                if (
-                  props.state ==
-                  states.AccusedApprovedArgumentsAnswers.cap
-                ) {
-                  navigate(
-                    `/complaints/${props.contractId}/${props.id}/addArguements/-1`
-                  );
-                } else if (
-                  props.state == states.AccuserAddedContract.cap
-                ) {
-                  navigate(
-                    `/complaints/${props.contractId}/${props.id}/addArguements/0`
-                  );
-                }
-              }}
-            >
-              {props.state ==
-              states.AccusedApprovedArgumentsAnswers.cap
-                ? "مشاهده پاسخ خوانده"
-                : props.state == states.AccuserAddedContract.cap
-                ? "ادامه درخواست داوری و افزودن دعاوی"
-                : ""}
-              {/* ادامه درخواست داوری */}
-            </Button>
-          </Box>
         </Box>
       </NewModal>
     </Box>
