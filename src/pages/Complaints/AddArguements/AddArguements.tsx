@@ -43,6 +43,7 @@ import {
 import { UPDATE_COMPLAINT } from "../../../GraphQL/Complaints/Mutations";
 import states from "../../../static/states.json";
 import { convertToPersianDigits } from "../../../functions/Functions";
+import { newStates, newStatesObj } from "../../../static/States";
 
 const AddArgument = () => {
   const { contractId, complaintId, state } = useParams();
@@ -155,7 +156,6 @@ const AddArgument = () => {
         return <NoAccess />;
       } else {
         setNoAccess(false);
-
         console.log(
           "accusedDepartmentId",
           data?.complaint_getComplaint.result.contract
@@ -266,11 +266,13 @@ const AddArgument = () => {
                 >
                   مبلغ خواسته شده ادعا(ریال) جمع کل :{" "}
                   {convertToPersianDigits(
-                    data?.complaintArgument_getComplaintArguments?.result?.items?.reduce(
-                      (a, b) => a + (b?.suggestedAmount ?? 0),
-                      0
-                    ).toString()
-                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                    data?.complaintArgument_getComplaintArguments?.result?.items
+                      ?.reduce(
+                        (a, b) => a + (b?.suggestedAmount ?? 0),
+                        0
+                      )
+                      .toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                   )}
                 </TableCell>
                 <TableCell
@@ -284,8 +286,66 @@ const AddArgument = () => {
                     fontWeight: "bold",
                     color: "white",
                   }}
-                >
+                ></TableCell>
+              </TableRow>
+              <TableRow
+                sx={{
+                  display: stateInt != 0 ? "none" : "table-row",
+                }}
+              >
+                <TableCell
+                  sx={{
+                    fontWeight: "bold",
+                    color: "white",
+                  }}
+                ></TableCell>
+                <TableCell
+                  sx={{
+                    fontWeight: "bold",
+                    color: "white",
+                  }}
+                ></TableCell>
+                <TableCell
+                  sx={{
+                    fontWeight: "bold",
+                    color: "white",
+                  }}
+                ></TableCell>
+                <TableCell
+                    sx={{
+                      fontWeight: "bold",
+                      color: secondary,
+                    }}
+                  >
+                    مبلغ داوری : 
+                    {
+                      // 10% of all suggestedAmounts
+                      convertToPersianDigits(
+                        (
+                          data?.complaintArgument_getComplaintArguments?.result
+                            ?.items
+                            ?.reduce(
+                              (a, b) => a + (b?.suggestedAmount ?? 0),
+                              0
+                            ) ?? 0 * 0.01
+                        )
+                          .toString()
+                          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                      )
+                  }
                 </TableCell>
+                <TableCell
+                  sx={{
+                    fontWeight: "bold",
+                    color: "white",
+                  }}
+                ></TableCell>
+                <TableCell
+                  sx={{
+                    fontWeight: "bold",
+                    color: "white",
+                  }}
+                ></TableCell>
               </TableRow>
             </TableBody>
           </Table>
@@ -334,42 +394,47 @@ const AddArgument = () => {
               void updateCompaint({
                 variables: {
                   id: complaintIdInt,
-                  complaintState: states.WaitingForAccusedToFillForms.cap,
+                  complaintState:
+                    newStatesObj.waitingForAccusedToRegisterContract
+                      .cap,
                 },
               });
-            }else if (stateInt == 1){
+            } else if (stateInt == 1) {
               const agreed = confirm("آیا مطمئن هستید؟");
               if (!agreed) return;
               void updateCompaint({
                 variables: {
                   id: complaintIdInt,
-                  complaintState: states.AccusedApprovedArgumentsAnswers.cap,
+                  complaintState:
+                    newStatesObj.waitingForAccuserToViewArguments.cap,
                 },
                 onCompleted(data, clientOptions) {
                   navigate("/complaints");
                 },
               });
-            }
-            else if (stateInt == -1){
+            } else if (stateInt == -1) {
               const agreed = confirm("آیا مطمئن هستید؟");
               if (!agreed) return;
               void updateCompaint({
                 variables: {
                   id: complaintIdInt,
-                  complaintState: states.WaitingForChiefToAssign.cap,
+                  complaintState:
+                    newStatesObj.waitingForChiefToAssign.cap,
                 },
                 onCompleted() {
                   navigate("/complaints");
                 },
               });
-            }
-            else if (stateInt == 2){
+            } else if (stateInt == 2) {
               const agreed = confirm("آیا مطمئن هستید؟");
               if (!agreed) return;
               void updateCompaint({
                 variables: {
                   id: complaintIdInt,
-                  complaintState: states.MailRoomChiefReviewingTheFinalReport.cap,
+                  complaintState:
+                    newStatesObj
+                      .waitingForChiefToApproveExpertsAnswersToArguments
+                      .cap,
                 },
                 onCompleted() {
                   navigate("/complaints");
@@ -404,6 +469,10 @@ const AddArgument = () => {
         state={stateInt}
       />
       <ArgumentModal
+        isFirst={
+          data?.complaintArgument_getComplaintArguments?.result?.items
+            ?.length == 0
+        }
         argumentId={
           selectedArgument.id ? parseInt(selectedArgument.id) : 0
         }
