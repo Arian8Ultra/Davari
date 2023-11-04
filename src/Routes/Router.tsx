@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable react-refresh/only-export-components */
 import { lazy } from "react";
 import {
   Route,
@@ -19,22 +21,8 @@ const Messages = lazy(
 const ComplainAnswers = lazy(
   () => import("../pages/Portal/ComplainAnswers/ComplainAnswers")
 );
-const FormManager = lazy(
-  () => import("../pages/Admin/FormManager/FormManager")
-);
-const AddForm = lazy(
-  () => import("../pages/Admin/FormManager/AddForm/AddForm")
-);
-const ViewForm = lazy(
-  () => import("../pages/Admin/FormManager/ViewForm/ViewForm")
-);
+
 const Test = lazy(() => import("../pages/Admin/Test/Test"));
-const EditForm = lazy(
-  () => import("../pages/Admin/FormManager/EditForm/EditForm")
-);
-const NewAddForm = lazy(
-  () => import("../pages/Admin/FormManager/AddForm/NewAddForm")
-);
 const Contracts = lazy(() => import("../pages/Contracts/Contracts"));
 const AddContract = lazy(
   () => import("../pages/Complaints/AddContract/AddContract")
