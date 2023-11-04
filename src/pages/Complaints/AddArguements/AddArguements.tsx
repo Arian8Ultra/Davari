@@ -40,9 +40,11 @@ import states from "../../../static/states.json";
 import {
   Green,
   GreenLight,
+  Red,
+  RedLight,
   onSecondary,
   primary,
-  secondary
+  secondary,
 } from "../../../theme/color";
 
 const AddArgument = () => {
@@ -469,6 +471,28 @@ const AddArgument = () => {
                   navigate("/complaints");
                 },
               });
+            } else if (stateInt == 3) {
+              const agreed = confirm("آیا مطمئن هستید؟");
+              if (!agreed) return;
+              void updateCompaint({
+                variables: {
+                  id: complaintIdInt,
+                  complaintState:
+                    newStatesObj
+                      .givingTrackingCodeToComplaint
+                      .cap,
+                  isApprovedByChief: true,
+                } as {
+                  id: number | "" | undefined;
+                  complaintState: string;
+                  isApprovedByChief: boolean;
+                },
+                onCompleted() {
+                  alert("ثبت شد");
+                  navigate("/complaints");
+                },
+              });
+
             }
           }}
         >
@@ -479,7 +503,58 @@ const AddArgument = () => {
               marginInline: "1rem",
             }}
           >
-            ثبت
+            تایید
+          </Typography>
+        </IconButton>
+        <IconButton
+          sx={{
+            background: Red,
+            color: "white",
+            position: "fixed",
+            bottom: 10,
+            right: 50,
+            fontSize: "3rem",
+            display: stateInt != 3 ? "none" : "flex",
+            borderRadius: "1.5rem",
+            "&:hover": {
+              backgroundColor: RedLight,
+              color: Red,
+            },
+          }}
+          onClick={() => {
+            
+              const agreed = confirm("آیا مطمئن هستید؟");
+              if (!agreed) return;
+              void updateCompaint({
+                variables: {
+                  id: complaintIdInt,
+                  complaintState:
+                    newStatesObj
+                      .waitingForChiefToAssign
+                      .cap,
+                  isApprovedByChief: false,
+                } as {
+                  id: number | "" | undefined;
+                  complaintState: string;
+                  isApprovedByChief: boolean;
+                },
+                onCompleted() {
+                  alert("ثبت شد");
+                  navigate("/complaints");
+                },
+              });
+
+            
+          }}
+        >
+          <BsCheck />
+          <Typography
+            fontSize={"1.2rem"}
+            sx={{
+              marginInline: "1rem",
+            }}
+          >
+            رد
           </Typography>
         </IconButton>
       </Box>
