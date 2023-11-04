@@ -47,7 +47,7 @@ import {
   primary,
   secondary,
 } from "../../../theme/color";
-import { States } from "../../../static/States";
+import { States, newStates, newStatesObj } from "../../../static/States";
 import { GET_ALL_ORGANIZATION_USERS } from "../../../GraphQL/Users/Queries";
 import DateButton from "../../../components/DateButton";
 import fehrestbaha from "../../../static/fehrestbaha.json";
@@ -670,14 +670,14 @@ const UpdateContractPage = () => {
   const [updateCompaint] = useMutation(UPDATE_COMPLAINT, {
     variables: {
       id: complaintId ? parseInt(complaintId) : 0,
-      complaintState: states.AccusedCompletedContract.cap,
+      complaintState: newStatesObj.waitingForAccusedToRegisterArbitrationTerms.cap,
     },
     onCompleted(data) {
       console.log("state", states.AccusedCompletedContract);
       console.log(data);
       alert("ثبت شد");
       navigate(
-        `/complaints/${contractId}/${complaintId}/addArguements/1`
+        `/complaints/${contractId}/${complaintId}/addComplaint`
       );
     },
   });

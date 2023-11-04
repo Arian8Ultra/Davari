@@ -466,19 +466,11 @@ export default function MainLayout() {
                           message: data.message,
                           code: data.name === "Error" ? 500 : 400,
                         });
-                      }else{
-                        const expireDate = new Date(
-                          data.expireDate
-                        );
-                        setUser(
-                          data.user,
-                          data.token,
-                          expireDate
-                        );
-                        localStorage.setItem(
-                          "token",
-                          data.token
-                        );
+                      } else {
+                        const expireDate = new Date(data.expireDate);
+                        setUser(data.user, data.token, expireDate);
+                        localStorage.setItem("token", data.token);
+                        setLoginError(undefined);
                         setIsMailRoom(
                           data.user.parentId ===
                             "e7a85297-91d4-4f27-a4b2-ff394fe71dd3"
@@ -984,56 +976,63 @@ export default function MainLayout() {
               gap: "1rem",
             }}
           >
-            {SideBarMenu.map((item, index) => (
-              <ListItemLink
-                key={index}
-                to={item.to}
-                primary={item.primary}
-                icon={item.icon}
-                hasLink={item.hasLink}
-                hasCollapse={item.hasCollapse}
-                open={open}
-                display={
-                  isMailRoom == item.mailRoom
-                    ? "block"
-                    : user.userRoles &&
-                      user.userRoles.some((role) =>
-                        item.accessNeeded?.includes(role.roleType)
-                      ) &&
-                      !item.justMailRoom
-                    ? "block"
-                    : "none"
-                }
-              >
-                {item.children?.map(
-                  (child: SideBarLinkType, index) => (
-                    <ListItemLink
-                      key={index}
-                      to={child.to && child.to}
-                      primary={child.primary}
-                      icon={child.icon}
-                      hasLink={child.hasLink}
-                      hasCollapse={child.hasCollapse}
-                      open={open}
-                    >
-                      {child.children?.map(
-                        (child: SideBarLinkType, index) => (
-                          <ListItemLink
-                            key={index}
-                            to={child.to && child.to}
-                            primary={child.primary}
-                            icon={child.icon}
-                            hasLink={child.hasLink}
-                            hasCollapse={child.hasCollapse}
-                            open={open}
-                          />
-                        )
-                      )}
-                    </ListItemLink>
-                  )
-                )}
-              </ListItemLink>
-            ))}
+            {SideBarMenu.map((item, index) =>
+              user.userType === "CONTRACTOR_OR_CONSULTANT" &&
+              item.primary === Titles.adminPanel ? null : (
+                <ListItemLink
+                  key={index}
+                  to={item.to}
+                  primary={item.primary}
+                  icon={item.icon}
+                  hasLink={item.hasLink}
+                  hasCollapse={item.hasCollapse}
+                  open={open}
+                  display={
+                    item.mailRoom == isMailRoom
+                      ? "block"
+                      : (user.userRoles &&
+                          user.userRoles.some((role) =>
+                            item.accessNeeded?.includes(role.roleType)
+                          )) ||
+                        (isMailRoom &&
+                          item.accessNeeded.includes("MAIL_ROOM"))
+                      ? "block"
+                      : "none"
+                  }
+                >
+                  {item.children?.map(
+                    (child: SideBarLinkType, index: number) => (
+                      <ListItemLink
+                        key={index}
+                        to={child.to && child.to}
+                        primary={child.primary}
+                        icon={child.icon}
+                        hasLink={child.hasLink}
+                        hasCollapse={child.hasCollapse}
+                        open={open}
+                      >
+                        {child.children?.map(
+                          (
+                            subChild: SideBarLinkType,
+                            subIndex: number
+                          ) => (
+                            <ListItemLink
+                              key={subIndex}
+                              to={subChild.to && subChild.to}
+                              primary={subChild.primary}
+                              icon={subChild.icon}
+                              hasLink={subChild.hasLink}
+                              hasCollapse={subChild.hasCollapse}
+                              open={open}
+                            />
+                          )
+                        )}
+                      </ListItemLink>
+                    )
+                  )}
+                </ListItemLink>
+              )
+            )}
           </List>
         </Drawer>
       ) : (

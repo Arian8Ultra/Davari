@@ -46,6 +46,7 @@ import DateButton from "../../components/DateButton";
 import { GET_ALL_ORGANIZATION_USERS } from "../../GraphQL/Users/Queries";
 import { UPDATE_COMPLAINT } from "../../GraphQL/Complaints/Mutations";
 import states from "../../static/states.json";
+import { newStatesObj } from "../../static/States";
 
 const ContractPage = () => {
   const { contractId, complaintId } = useParams<{
@@ -982,7 +983,7 @@ const ContractPage = () => {
                   void updateCompaint({
                     variables: {
                       complaintState:
-                        states.NotAcceptedForBeingConstructive.cap,
+                        newStatesObj.notAcceptedForBeingConstructive.cap,
                       id: complaintId
                         ? parseInt(complaintId)
                         : undefined,
@@ -1020,7 +1021,7 @@ const ContractPage = () => {
                   void updateCompaint({
                     variables: {
                       complaintState:
-                        states.AddingToComplaintList.cap,
+                        newStatesObj.acceptedForBeingConstructive.cap,
                       id: complaintId
                         ? parseInt(complaintId)
                         : undefined,

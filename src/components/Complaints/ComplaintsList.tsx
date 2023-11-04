@@ -14,9 +14,7 @@ import {
   GET_CHIEF_COMPLAINTS,
   GET_COMPLAINT_ASSIGNED,
 } from "../../GraphQL/Complaints/Queries";
-import {
-  secondary
-} from "../../theme/color";
+import { secondary } from "../../theme/color";
 import theme from "../../theme/theme";
 import ComplaintCardNew from "./ComplaintCardNew";
 interface Props {
@@ -179,7 +177,7 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
             : "repeat(2, 1fr)"
         }
         padding={1}
-        paddingTop={0}
+        paddingTop={type === "chief" || type == "mainRoomExpert" ? 1 : 0}
       >
         {type === "accused"
           ? accusedData?.complaint_getComplaints?.result.items.map(
@@ -187,11 +185,11 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
                 <ComplaintCardNew
                   key={complaint.id}
                   id={complaint.id}
-                  acussedId={
+                  acussedId={String(
                     complaint?.contract?.accusedDepartmentUserId
-                  }
+                  )}
                   acusserId={
-                    complaint?.contract?.accuserDepartmentUserId
+                    String(complaint?.contract?.accuserDepartmentUserId)
                   }
                   date={complaint?.createdDate}
                   contractId={complaint?.contractId}
@@ -210,11 +208,11 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
                   acussed={complaint?.assignedUser?.userName}
                   date={complaint?.createdDate}
                   contractId={complaint?.contractId}
-                  acussedId={
+                  acussedId={String(
                     complaint?.contract?.accusedDepartmentUserId
-                  }
+                  )}
                   acusserId={
-                    complaint?.contract?.accuserDepartmentUserId
+                    String(complaint?.contract?.accuserDepartmentUserId)
                   }
                   type="accuser"
                   state={complaint?.complaintState}
@@ -231,11 +229,11 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
                   acussed={complaint?.assignedUser?.userName}
                   date={complaint?.createdDate}
                   contractId={complaint?.contractId}
-                  acussedId={
+                  acussedId={String(
                     complaint?.contract?.accusedDepartmentUserId
-                  }
+                  )}
                   acusserId={
-                    complaint?.contract?.accuserDepartmentUserId
+                    String(complaint?.contract?.accuserDepartmentUserId)
                   }
                   type="assigned"
                   state={complaint?.complaintState}
@@ -252,11 +250,11 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
                   acussed={complaint?.assignedUser?.userName}
                   date={complaint?.createdDate}
                   contractId={complaint?.contractId}
-                  acussedId={
+                  acussedId={String(
                     complaint?.contract?.accusedDepartmentUserId
-                  }
+                  )}
                   acusserId={
-                    complaint?.contract?.accuserDepartmentUserId
+                    String(complaint?.contract?.accuserDepartmentUserId)
                   }
                   type="chief"
                   state={complaint?.complaintState}
@@ -273,11 +271,11 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
                   acussed={complaint?.assignedUser?.userName}
                   date={complaint?.createdDate}
                   contractId={complaint?.contractId}
-                  acussedId={
+                  acussedId={String(
                     complaint?.contract?.accusedDepartmentUserId
-                  }
+                  )}
                   acusserId={
-                    complaint?.contract?.accuserDepartmentUserId
+                    String(complaint?.contract?.accuserDepartmentUserId)
                   }
                   type="mainRoomExpert"
                   state={complaint?.complaintState}

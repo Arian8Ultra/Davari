@@ -10,6 +10,7 @@ import { useUserStore } from "../../Context/UserStore";
 import {
   ADD_ARGUMENT_TO_COMPLAINT,
   UPDATE_ARGUMENT,
+  UPDATE_COMPLAINT,
 } from "../../GraphQL/Complaints/Mutations";
 import { UPLOAD_FILE } from "../../api/upload";
 import {
@@ -19,6 +20,7 @@ import {
 import { Green, background } from "../../theme/color";
 import FileBox from "../FileBox";
 import NewModal from "../Modals";
+import { newStatesObj } from "../../static/States";
 
 interface Props {
   state?: number;
@@ -38,6 +40,7 @@ interface Props {
   complaintId?: number;
   editMode?: boolean;
   refetch?: () => void;
+  isFirst?: boolean;
 }
 const ArgumentModal = (props: Props) => {
   const [Argument, setArgument] =
@@ -56,6 +59,13 @@ const ArgumentModal = (props: Props) => {
       console.log(data);
       props.onClose();
       setArgument({} as OptionalArgumentSamll);
+      props.isFirst &&               void updateCompaint({
+        variables: {
+          id: props.complaintId,
+          complaintState:
+            newStatesObj.waitingForAccuserToApproveArguments.cap,
+        }
+      });
       props.refetch && props.refetch();
     },
   });
@@ -67,6 +77,8 @@ const ArgumentModal = (props: Props) => {
       props.refetch && props.refetch();
     },
   });
+
+  const [updateCompaint] = useMutation(UPDATE_COMPLAINT);
   const user = useUserStore((state) => state.user);
 
   const { data } = useQuery(

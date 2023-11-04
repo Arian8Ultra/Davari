@@ -1,13 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import { SpaceDashboardOutlined } from "@mui/icons-material";
 import {
   BsPeopleFill,
-  BsPersonCircle,
-  BsViewStacked
+  BsPersonCircle
 } from "react-icons/bs";
 import { FaBalanceScale, FaHome } from "react-icons/fa";
 import { Titles } from "./Titles";
-import { AiFillMessage, AiOutlineMessage } from "react-icons/ai";
-import { Dashboard, DashboardOutlined, SpaceDashboardOutlined } from "@mui/icons-material";
 
 export const SideBarMenu = [
   {
@@ -46,7 +44,7 @@ export const SideBarMenu = [
     icon: <SpaceDashboardOutlined />,
     hasLink: true,
     hasCollapse: false,
-    accessNeeded: ["EXPERT" ,"SENIOR_USER"],
+    accessNeeded: ["MAIL_ROOM"],
     mailRoom: true,
     justMailRoom: true,
   },
@@ -68,6 +66,7 @@ export const SideBarMenu = [
         hasCollapse: false,
         mailRoom: true,
         justMailRoom: false,
+        // accessNeeded: ["SUPER_ADMIN","SENIOR_USER"],
       },
       // {
       //   primary: Titles.formManager,
@@ -88,7 +87,7 @@ export type SideBarLinkType = {
   hasLink?: boolean;
   hasCollapse?: boolean;
   children?: SideBarLinkType[];
-  accessNeeded?: ["NORMAL","SENIOR_USER","EXPERT","SUPER_ADMIN"];
+  accessNeeded?: ["NORMAL","SENIOR_USER","EXPERT","SUPER_ADMIN","MAIL_ROOM"];
   mailRoom?: boolean;
   justMailRoom?: boolean;
 };

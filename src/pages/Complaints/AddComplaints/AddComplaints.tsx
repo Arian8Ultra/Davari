@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
@@ -26,14 +28,23 @@ import {
 import { useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQuery } from "@apollo/client";
 import { GET_CONTRACT } from "../../../GraphQL/Contracts/Queries";
-import { CREATE_ARBITRATION_TERMS_FORM } from "../../../GraphQL/Complaints/Mutations";
+import {
+  CREATE_ARBITRATION_TERMS_FORM,
+  UPDATE_COMPLAINT,
+} from "../../../GraphQL/Complaints/Mutations";
 import { useUserStore } from "../../../Context/UserStore";
 import FaTypography from "../../../components/FaComponents/FaTypography";
 import FileBox from "../../../components/FileBox";
+import { QueryWrapper } from "../../../GraphQL/QueryWrapper";
+import { MutationWrapper } from "../../../GraphQL/MutationWrapper";
+import { newStates, newStatesObj } from "../../../static/States";
 
 const AddComplaint = () => {
   const navigate = useNavigate();
   const user = useUserStore((state) => state.user);
+  const [graphError, setGraphError] = React.useState({
+    message: "",
+  });
   const [ProjectName, setProjectName] = React.useState("");
   const [ProjectNumber, setProjectNumber] = React.useState("");
   const [FisrtCondition, setFisrtCondition] = React.useState({
@@ -60,20 +71,22 @@ const AddComplaint = () => {
 
   const { contractId, complaintId } = useParams();
 
-  const { data } = useQuery(GET_CONTRACT, {
-    variables: {
-      id: contractId && parseInt(contractId),
-    },
-    onCompleted(data) {
-      console.log(data);
-    },
-  });
+  const { data, loading, error } = QueryWrapper(
+    GET_CONTRACT,
+    "contract_getContracts",
+    { id: contractId && parseInt(contractId) }
+  );
+  console.log(data);
 
   const [createForm] = useMutation(CREATE_ARBITRATION_TERMS_FORM, {
     variables: {
       complaintId: complaintId && parseInt(complaintId),
       userId: user.id,
-      filledBy: "ACCUSER",
+      filledBy:
+        data?.items[0]?.accuserDepartmentUserId == user.id ||
+        data?.items[0]?.accuserDepartmentUserId == user.parentId
+          ? "ACCUSER"
+          : "ACCUSED",
       firstCondition: FisrtCondition.checked.indexOf(true) !== -1,
       firstConditionFileName: FisrtCondition.fileName,
       secondCondition: SecondCondition.checked.indexOf(true) !== -1,
@@ -88,6 +101,14 @@ const AddComplaint = () => {
     },
   });
 
+  const {
+    handleMutation: createFormMutation,
+    loading: createFormLoadingMutation,
+  } = MutationWrapper(
+    CREATE_ARBITRATION_TERMS_FORM,
+    "arbitrationTermsForm_addArbitrationTermsForm"
+  );
+
   React.useEffect(() => {
     if (complaints?.FisrtCondition) {
       setFisrtCondition(complaints.FisrtCondition);
@@ -97,6 +118,64 @@ const AddComplaint = () => {
       setAgreeWithTerms(complaints.AgreeWithTerms);
     }
   }, []);
+
+  const firstConditionItems = [
+    "عمرانی (تملک دارایی سرمایه ای)",
+    "غیرعمرانی",
+  ];
+  const secondConditionItems = [
+    "در ماده حل اختلاف قرارداد، داوری شورای عالی فنی درج شده است.",
+    "طرفین پس از عقد قرارداد، بر داوری شورا تراضی نموده اند.",
+    "فاقد تراضی روی داوری شورا در حین قرارداد یا پس از آن.",
+  ];
+
+  const thirdConditionItems = [
+    "صورتحساب نهایی توسط پیمانکار امضا نشده است.",
+    "صورتحساب نهایی بدون امضای پیمانکار، به پیمانکار ابلاغ شده است؛ اما پیمانکار ظرف مهلت مقرر در قرارداد به آن اعتراض نموده است.",
+    "صورتحساب نهایی توسط پیمانکار امضا شده است اما صرفا دعاوی مربوط به آزادسازی ضمانتنامه ها مورد درخواست است.",
+    "هیچ یک از موارد فوق.",
+  ];
+
+  const fourthConditionItems = [
+    "رای قطعی در خصوص دعاوی مورد درخواست توسط مراجع قضایی و شورا صادر نشده است.",
+    "رای قطعی در خصوص دعاوی مورد درخواست توسط مراجع قضایی صادر شده است",
+    "رای قطعی در خصوص دعاوی مورد درخواست توسط شورا صادر شده است",
+    "قرار عدم صلاحیت (استماع) توسط مراجع قضایی صادر شده است.",
+  ];
+
+  const [updateCompaint] = useMutation(UPDATE_COMPLAINT, {
+    variables: {
+      id: complaintId ? parseInt(complaintId) : 0,
+      complaintState:
+        data?.items[0]?.accuserDepartmentUserId == user.id ||
+        data?.items[0]?.accuserDepartmentUserId == user.parentId
+          ? newStatesObj.waitingForAccuserToRegisterArguments.cap
+          : newStatesObj.waitingForAccusedToAnswerArguments.cap,
+    },
+    onCompleted() {
+      console.log(
+        "state",
+        data?.items[0]?.accuserDepartmentUserId == user.id ||
+          data?.items[0]?.accuserDepartmentUserId == user.parentId
+          ? newStatesObj.waitingForAccuserToRegisterArguments.cap
+          : newStatesObj.waitingForAccusedToAnswerArguments.cap
+      );
+      console.log(data);
+      alert("ثبت شد");
+      if (
+        data?.items[0]?.accuserDepartmentUserId == user.id ||
+        data?.items[0]?.accuserDepartmentUserId == user.parentId
+      ) {
+        navigate(
+          `/complaints/${contractId}/${complaintId}/addArguements/0`
+        );
+      }else{
+        navigate(
+          `/complaints/${contractId}/${complaintId}/addArguements/1`
+        );
+      }
+    },
+  });
   return (
     <>
       <BackButton />
@@ -125,7 +204,11 @@ const AddComplaint = () => {
           }}
         >
           <FaTypography variant="h4" textAlign={"center"}>
-            فرم احراز شرایط داوری
+            {"فرم احراز شرایط داوری توسط " +
+              (data?.items[0]?.accuserDepartmentUserId == user.id ||
+              data?.items[0]?.accuserDepartmentUserId == user.parentId
+                ? "خواهان"
+                : "خوانده")}
           </FaTypography>
         </Box>
 
@@ -185,7 +268,7 @@ const AddComplaint = () => {
         />
         <Box sx={{ gridColumn: "span 3" }}>
           <FileButton
-            text="افزودن فایل"
+            text="افزودن مستندات"
             textColor={primary}
             borderRadius="0.5rem"
           >
@@ -271,7 +354,7 @@ const AddComplaint = () => {
         />
         <Box sx={{ gridColumn: "span 3" }}>
           <FileButton
-            text="افزودن فایل"
+            text="افزودن مستندات"
             textColor={primary}
             borderRadius="0.5rem"
           >
@@ -378,7 +461,7 @@ const AddComplaint = () => {
         />
         <Box sx={{ gridColumn: "span 3" }}>
           <FileButton
-            text="افزودن فایل"
+            text="افزودن مستندات"
             textColor={primary}
             borderRadius="0.5rem"
           >
@@ -496,7 +579,7 @@ const AddComplaint = () => {
         />
         <Box sx={{ gridColumn: "span 3" }}>
           <FileButton
-            text="افزودن فایل"
+            text="افزودن مستندات"
             textColor={primary}
             borderRadius="0.5rem"
           >
@@ -683,25 +766,122 @@ const AddComplaint = () => {
                 AgreeWithTerms,
               })
             );
+            console.log("FisrtCondition", FisrtCondition);
+            console.log(
+              "FisrtConditionSelected",
+              firstConditionItems[
+                FisrtCondition.checked.indexOf(true)
+              ]
+            );
+            console.log("SecondCondition", SecondCondition);
+            console.log(
+              "SecondConditionSelected",
+              secondConditionItems[
+                SecondCondition.checked.indexOf(true)
+              ]
+            );
+            console.log("ThirdCondition", ThirdCondition);
+            console.log(
+              "ThirdConditionSelected",
+              thirdConditionItems[
+                ThirdCondition.checked.indexOf(true)
+              ]
+            );
+            console.log("FourthCondition", FourthCondition);
+            console.log(
+              "FourthConditionSelected",
+              fourthConditionItems[
+                FourthCondition.checked.indexOf(true)
+              ]
+            );
+            console.log("AgreeWithTerms", AgreeWithTerms);
             contractId &&
               complaintId &&
-              void createForm({
-                onCompleted(data, clientOptions) {
-                  navigate(
-                    `/complaints/${contractId}/${complaintId}/addArguements/0`
-                  );
+              void createFormMutation({
+                variables: {
+                  complaintId: complaintId && parseInt(complaintId),
+                  userId: user.id,
+                  filledBy:
+                    data?.items[0]?.accuserDepartmentUserId ==
+                      user.id ||
+                    data?.items[0]?.accuserDepartmentUserId ==
+                      user.parentId
+                      ? "ACCUSER"
+                      : "ACCUSED",
+                  firstCondition:
+                    firstConditionItems[
+                      FisrtCondition.checked.indexOf(true)
+                    ],
+                  firstConditionFileName:
+                    FisrtCondition.fileName || undefined,
+                  secondCondition:
+                    secondConditionItems[
+                      SecondCondition.checked.indexOf(true)
+                    ],
+                  secondConditionFileName:
+                    SecondCondition.fileName || undefined,
+                  thirdCondition:
+                    thirdConditionItems[
+                      ThirdCondition.checked.indexOf(true)
+                    ],
+                  thirdConditionFileName:
+                    ThirdCondition.fileName || undefined,
+                  fourthCondition:
+                    fourthConditionItems[
+                      FourthCondition.checked.indexOf(true)
+                    ],
+                  fourthConditionFileName:
+                    FourthCondition.fileName || undefined,
+                  projectName: ProjectName,
+                  projectNumber: ProjectNumber,
+                  hasReadAgreement: AgreeWithTerms,
                 },
-                onError(error) {
-                  console.log(error);
-                  navigate(
-                    `/complaints/${contractId}/${complaintId}/addArguements/0`
-                  );
+                options: {
+                  onCompleted(data, clientOptions) {
+                    console.log(data);
+                  },
                 },
+              }).then((res: any) => {
+                if (res instanceof Error) {
+                  setGraphError({
+                    message: res.message,
+                  });
+                } else {
+                  void updateCompaint();
+                  // navigate(
+                  //   `/complaints/${contractId}/${complaintId}/addArguements/0`
+                  // );
+                }
               });
+            // void createForm({
+            //   onCompleted(data, clientOptions) {
+            //     navigate(
+            //       `/complaints/${contractId}/${complaintId}/addArguements/0`
+            //     );
+            //   },
+            //   onError(error) {
+            //     console.log(error);
+            //     navigate(
+            //       `/complaints/${contractId}/${complaintId}/addArguements/0`
+            //     );
+            //   },
+            // });
           }}
         >
           ادامه
         </Button>
+        {graphError.message && (
+          <Typography
+            variant="body1"
+            sx={{
+              gridColumn: "span 12",
+              color: "red",
+              textAlign: "center",
+            }}
+          >
+            {graphError.message}
+          </Typography>
+        )}
       </Box>
     </>
   );
