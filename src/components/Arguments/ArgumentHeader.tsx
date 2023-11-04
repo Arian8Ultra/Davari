@@ -257,6 +257,76 @@ const ArgumentHeader = (props: Props) => {
           </TableRow>
         </TableHead>
       );
+    case 3:
+      return (
+        <TableHead
+          sx={{
+            background: secondary,
+            borderRadius: "0.5rem",
+            color: "white",
+          }}
+        >
+          <TableRow>
+            <TableCell
+              sx={{
+                fontWeight: "bold",
+                color: "white",
+              }}
+            >
+              شناسه
+            </TableCell>
+            <TableCell
+              sx={{
+                fontWeight: "bold",
+                color: "white",
+              }}
+            >
+              خلاصه ادعا
+            </TableCell>
+            <TableCell
+              sx={{
+                fontWeight: "bold",
+                color: "white",
+              }}
+            >
+              نظر کارشناسی به طور مفصل
+            </TableCell>
+            <TableCell
+              sx={{
+                fontWeight: "bold",
+                color: "white",
+              }}
+            >
+              مستندات و نامه نظر کارشناسی
+            </TableCell>
+            <TableCell
+              sx={{
+                fontWeight: "bold",
+                color: "white",
+              }}
+            >
+              متن رای پیشنهادی
+            </TableCell>
+            <TableCell
+              sx={{
+                fontWeight: "bold",
+                color: "white",
+              }}
+            >
+              مبلغ مورد تایید کارشناس
+            </TableCell>
+            <TableCell
+              width={"50px"}
+              sx={{
+                fontWeight: "bold",
+                color: "white",
+              }}
+            >
+              ...
+            </TableCell>
+          </TableRow>
+        </TableHead>
+      );
   }
 };
 

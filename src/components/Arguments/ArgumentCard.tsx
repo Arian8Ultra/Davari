@@ -694,6 +694,164 @@ const ArgumentCard = ({
           </TableCell>
         </TableRow>
       );
+    case 3:
+      return (
+        <TableRow
+          key={id}
+          sx={{
+            background:
+              id % 2 == 0 ? "rgba(230,230,230)" : "rgba(200,200,200)",
+            borderBottom: `1px solid ${secondary}`,
+            transition: "all 0.2s ease-in-out",
+          }}
+        >
+          <TableCell>{id + 1}</TableCell>
+          <TableCell
+            sx={{
+              borderInline:
+                id % 2 == 0
+                  ? `1px solid ${secondary}`
+                  : `1px solid ${secondary}`,
+            }}
+          >
+            {arguement.summary}
+          </TableCell>
+          <TableCell
+            sx={{
+              borderInline:
+                id % 2 == 0
+                  ? `1px solid ${secondary}`
+                  : `1px solid ${secondary}`,
+            }}
+          >
+            {arguement.expertOpinion}
+          </TableCell>
+          <TableCell
+            sx={{
+              borderLeft:
+                id % 2 == 0
+                  ? `1px solid ${secondary}`
+                  : `1px solid ${secondary}`,
+            }}
+          >
+            {arguement.expertOpinionFileName && (
+              <Button
+                variant="contained"
+                endIcon={<AiFillFileAdd />}
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+                onClick={() => {
+                  // download file with url in fileName
+                  window.open(
+                    "http://172.16.23.50:7030/files/" +
+                      arguement.expertOpinionFileName
+                  );
+                }}
+                sx={{
+                  borderRadius: 2,
+                  backgroundColor: Green,
+                  fontWeight: 700,
+                  fontStyle: "normal",
+                  fontSize: "0.7rem",
+                  boxShadow: "none",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  "&:hover": {
+                    backgroundColor: GreenLight,
+                    color: Green,
+                  },
+                }}
+              >
+                {arguement.expertOpinionFileName}
+              </Button>
+            )}
+          </TableCell>
+          <TableCell
+            width={"250px"}
+            sx={{
+              borderLeft: `1px solid ${primaryGreyTransparent}`,
+              padding: 1,
+            }}
+          >
+            {arguement.expertVerdict}
+          </TableCell>
+          <TableCell
+            width={"250px"}
+            sx={{
+              borderLeft: `1px solid ${primaryGreyTransparent}`,
+              padding: 1,
+            }}
+          >
+            {convertToPersianDigits(
+              arguement.mailRoomExpertApprovedAmount
+                ?.toString()
+                .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+            )}
+          </TableCell>
+          <TableCell
+            width={'50px'}
+            sx={{
+              borderLeft: `1px solid ${secondary}`,
+              padding: 1,
+            }}
+          >
+            <Box
+              width={"100%"}
+              display={"grid"}
+              sx={{
+                gridTemplateColumns: "repeat(4, 50px)",
+                gap: 1,
+              }}
+            >
+              {/* <IconButton
+                // onClick={() => {
+                //   setSelectedArgument(arguement);
+                //   setAddModal({
+                //     ...addModal,
+                //     open: true,
+                //   });
+                // }}
+                sx={{
+                  backgroundColor: Green,
+                  color: "white",
+                  aspectRatio: "1/1",
+                  width: "40px",
+                  justifySelf: "center",
+                  "&:hover": {
+                    backgroundColor: GreenLight,
+                    color: Green,
+                  },
+                }}
+              >
+                <BsPaperclip />
+              </IconButton> */}
+              <IconButton
+                onClick={() => {
+                  console.log(arguement);
+                  setViewMoreModal &&
+                    setViewMoreModal({
+                      argument: arguement,
+                      open: true,
+                    });
+                }}
+                sx={{
+                  backgroundColor: primary,
+                  color: primaryLight,
+                  aspectRatio: "1/1",
+                  width: "40px",
+                  justifySelf: "center",
+                  "&:hover": {
+                    backgroundColor: primaryLight,
+                    color: primary,
+                  },
+                }}
+              >
+                <BsEyeFill />
+              </IconButton>
+            </Box>
+          </TableCell>
+        </TableRow>
+      );
   }
 };
 

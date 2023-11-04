@@ -18,6 +18,7 @@ import {
 } from "@mui/material";
 import { AiFillFileAdd } from "react-icons/ai";
 import FaTypography from "../FaComponents/FaTypography";
+import { convertToPersianDigits } from "../../functions/Functions";
 interface Props {
   open: boolean;
   handleClose: () => void;
@@ -125,7 +126,9 @@ const ArgumentInfoModal = (props: Props) => {
                         fontStyle: "normal",
                         fontSize: "0.7rem",
                         boxShadow: "none",
-                        display: props.argument.fileName ? "flex" : "none",
+                        display: props.argument.fileName
+                          ? "flex"
+                          : "none",
                         justifyContent: "center",
                         alignItems: "center",
                         "&:hover": {
@@ -214,7 +217,7 @@ const ArgumentInfoModal = (props: Props) => {
         </NewModal>
       );
 
-      case 2:
+    case 2:
       return (
         <NewModal
           open={props.open}
@@ -313,7 +316,9 @@ const ArgumentInfoModal = (props: Props) => {
                         fontStyle: "normal",
                         fontSize: "0.7rem",
                         boxShadow: "none",
-                        display: props.argument.fileName ? "flex" : "none",
+                        display: props.argument.fileName
+                          ? "flex"
+                          : "none",
                         justifyContent: "center",
                         alignItems: "center",
                         "&:hover": {
@@ -323,6 +328,185 @@ const ArgumentInfoModal = (props: Props) => {
                       }}
                     >
                       {props.argument.fileName}
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </NewModal>
+      );
+
+    case 3:
+      return (
+        <NewModal
+          open={props.open}
+          onClose={props.handleClose}
+          background={background}
+          isCloseable={true}
+          title={`مشخصات ادعا`}
+          width={{
+            xs: "100%",
+            md: "50%",
+          }}
+        >
+          <TableContainer
+            sx={{
+              width: "100%",
+            }}
+          >
+            <Table>
+              <TableBody>
+                <TableRow>
+                  <TableCell>خلاصه ادعا :</TableCell>
+                  <TableCell>{props.argument.summary}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>مشروح ادعا :</TableCell>
+                  <TableCell>{props.argument.description}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>مبلغ خواسته شده ادعا :</TableCell>
+                  <TableCell>
+                  {convertToPersianDigits(
+                      props.argument.suggestedAmount
+                        ?.toString()
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                    )}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>پاسخ خوانده :</TableCell>
+                  <TableCell>
+                    {props.argument.accusedResponse}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>پاسخ کارشناس :</TableCell>
+                  <TableCell>
+                    {props.argument.expertOpinion}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>متن رای پیشنهادی :</TableCell>
+                  <TableCell>
+                    {props.argument.expertVerdict}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>مبلغ مورد تایید کارشناس :</TableCell>
+                  <TableCell>
+                    {convertToPersianDigits(
+                      props.argument.mailRoomExpertApprovedAmount
+                        ?.toString()
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                    )}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>مستندات خوانده :</TableCell>
+                  <TableCell>
+                    <Button
+                      variant="contained"
+                      endIcon={<AiFillFileAdd />}
+                      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+                      onClick={() => {
+                        // download file with url in fileName
+                        window.open(
+                          "http://172.16.23.50:7030/files/" +
+                            props.argument.fileName
+                        );
+                      }}
+                      sx={{
+                        borderRadius: 2,
+                        backgroundColor: Green,
+                        fontWeight: 700,
+                        fontStyle: "normal",
+                        fontSize: "0.7rem",
+                        boxShadow: "none",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        "&:hover": {
+                          backgroundColor: GreenLight,
+                          color: Green,
+                        },
+                      }}
+                    >
+                      {props.argument.accusedResponseFileName}
+                    </Button>
+                  </TableCell>
+                </TableRow>
+
+                <TableRow>
+                  <TableCell>مستندات خواهان :</TableCell>
+                  <TableCell>
+                    <Button
+                      variant="contained"
+                      endIcon={<AiFillFileAdd />}
+                      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+                      onClick={() => {
+                        // download file with url in fileName
+                        window.open(
+                          "http://172.16.23.50:7030/files/" +
+                            props.argument.fileName
+                        );
+                      }}
+                      sx={{
+                        borderRadius: 2,
+                        backgroundColor: Green,
+                        fontWeight: 700,
+                        fontStyle: "normal",
+                        fontSize: "0.7rem",
+                        boxShadow: "none",
+                        display: props.argument.fileName
+                          ? "flex"
+                          : "none",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        "&:hover": {
+                          backgroundColor: GreenLight,
+                          color: Green,
+                        },
+                      }}
+                    >
+                      {props.argument.fileName}
+                    </Button>
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>مستندات کارشناس :</TableCell>
+                  <TableCell>
+                    <Button
+                      variant="contained"
+                      endIcon={<AiFillFileAdd />}
+                      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+                      onClick={() => {
+                        // download file with url in fileName
+                        window.open(
+                          "http://172.16.23.50:7030/files/" +
+                            props.argument.expertOpinionFileName
+                        );
+                      }}
+                      sx={{
+                        borderRadius: 2,
+                        backgroundColor: Green,
+                        fontWeight: 700,
+                        fontStyle: "normal",
+                        fontSize: "0.7rem",
+                        boxShadow: "none",
+                        display: props.argument.expertOpinionFileName
+                          ? "flex"
+                          : "none",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        "&:hover": {
+                          backgroundColor: GreenLight,
+                          color: Green,
+                        },
+                      }}
+                    >
+                      {props.argument.expertOpinionFileName}
                     </Button>
                   </TableCell>
                 </TableRow>
