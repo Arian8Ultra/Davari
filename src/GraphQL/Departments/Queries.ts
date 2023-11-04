@@ -1,4 +1,4 @@
-import { User } from "../../gql/graphql";
+import { User } from "../../static/Types";
 
 
 

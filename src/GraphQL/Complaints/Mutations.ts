@@ -3,7 +3,7 @@ import { gql } from "@apollo/client";
 export const CREATE_COMPLAINT = gql`
   mutation CreateComplaint($contractId: Int!, $userId: String!) {
     complaint_addComplaint(
-      input: { contractId: $contractId, userId: $userId,complaintState:WAITING_FOR_ACCUSED_TO_FILL_FORMS }
+      input: { contractId: $contractId, userId: $userId,complaintState:WAITING_FOR_ACCUSER_TO_REGISTER_ARBITRATION_TERMS }
     ) {
       result {
         id
@@ -82,13 +82,13 @@ export const CREATE_ARBITRATION_TERMS_FORM = gql`
     $userId: String!
     $filledBy: RegistrarType!
     $firstCondition: String!
-    $firstConditionFileName: String!
+    $firstConditionFileName: String
     $secondCondition: String!
-    $secondConditionFileName: String!
+    $secondConditionFileName: String
     $thirdCondition: String!
-    $thirdConditionFileName: String!
+    $thirdConditionFileName: String
     $fourthCondition: String!
-    $fourthConditionFileName: String!
+    $fourthConditionFileName: String
     $projectName: String!
     $projectNumber: String!
     $hasReadAgreement: Boolean!

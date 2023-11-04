@@ -30,6 +30,38 @@ export const GET_ALL_USERS = gql`
     }
   }
 `;
+
+
+
+export const GET_ALL_USERS_WITH_PARENT_ID = gql`
+query GetUsers ($id:String!){
+  user_getUsers{
+    result(where: {parentId: {eq: $id}}){
+      items {
+          id
+          userName
+          email
+          fullName
+          phoneNumber
+          nationalCode
+          userType
+          childUsers {
+            parentId
+            fullName
+            id
+          }
+          userRoles {
+            id
+            roleType
+            userId
+            isDeleted
+            createdDate
+          }
+      }
+    }
+    status
+  }
+}`
 export const GET_USER = gql`
   query GetUser($id: String!) {
     user_getUser(entityId: $id) {
@@ -78,6 +110,8 @@ export const GET_USER = gql`
     }
   }
 `;
+
+
 export const GET_USER_QUERIABLE = gql`
   query GET_USER_QUERIABLE($id: String!) {
     user_getUserQueryable(entityId: $id) {

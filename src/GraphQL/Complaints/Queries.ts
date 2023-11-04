@@ -160,7 +160,12 @@ export const GET_CHIEF_COMPLAINTS = gql`
   query GET_CHIEF_COMPLAINTS {
     complaint_getComplaints {
       result(
-        where: { complaintState: { eq: WAITING_FOR_CHIEF_TO_ASSIGN  } }
+        where: {
+          or: [
+            { complaintState: { eq: WAITING_FOR_CHIEF_TO_ASSIGN  } },
+            { complaintState: { eq: WAITING_FOR_CHIEF_TO_APPROVE_EXPERTS_ANSWERS_TO_ARGUMENTS } }
+          ]
+        }
       ) {
         items {
           userId
@@ -285,8 +290,8 @@ export type Complaint = {
     contractNumber: string;
     contractDate: string;
     initialBudget: number;
-    accusedDepartmentUserId: number;
-    accuserDepartmentUserId: number;
+    accusedDepartmentUserId: string;
+    accuserDepartmentUserId: string;
     department: Department;
   };
 };
