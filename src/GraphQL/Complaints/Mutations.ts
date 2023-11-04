@@ -36,6 +36,7 @@ export const UPDATE_COMPLAINT = gql`
   $contractId: Int
   $userId: String
   $complaintState: ComplaintState
+  $isApprovedByChief: Boolean
 ) {
   complaint_updateComplaint(
     input: {
@@ -44,6 +45,7 @@ export const UPDATE_COMPLAINT = gql`
       contractId: $contractId
       userId: $userId
       complaintState: $complaintState
+      isApprovedByChief: $isApprovedByChief
       
     }
   ) {

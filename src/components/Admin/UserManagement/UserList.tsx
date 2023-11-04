@@ -2,21 +2,20 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import { Box, Stack, Typography } from "@mui/material";
-import {
-  primaryGrey,
-  primaryTransparent,
-  secondary,
-} from "../../../theme/color";
-import theme from "../../../theme/theme";
-import UserCard from "./UserCard";
 import { useQuery } from "@apollo/client";
+import { Box, Stack, Typography } from "@mui/material";
+import { useUserStore } from "../../../Context/UserStore";
 import {
   GET_ALL_USERS,
   GET_ALL_USERS_WITH_PARENT_ID,
 } from "../../../GraphQL/Users/Queries";
 import { User } from "../../../static/Types";
-import { useUserStore } from "../../../Context/UserStore";
+import {
+  primaryTransparent,
+  secondary
+} from "../../../theme/color";
+import theme from "../../../theme/theme";
+import UserCard from "./UserCard";
 
 const UserList = () => {
   const user = useUserStore((state) => state.user);
@@ -30,9 +29,6 @@ const UserList = () => {
   });
   const {
     data: parentData,
-    loading: parentLoading,
-    error: parentError,
-    refetch: parentRefetch,
   } = useQuery(GET_ALL_USERS_WITH_PARENT_ID, {
     variables: {
       id: user.parentId,
@@ -175,8 +171,7 @@ const UserList = () => {
               refetch={refetch}
               userRoles={user.userRoles}
               userType={
-                user.userType == "INDIVIDUAL" ? "حقیقی" : "دستگاه"
-              }
+                user.userType == "INDIVIDUAL" ? "حقیقی" : user.userType == "CONTRACTOR_OR_CONSULTANT" ? "مشاور یا پیمانکار" : "دستگاه"              }
             />
           ))
         : parentData?.user_getUsers?.result?.items?.map(
@@ -190,7 +185,7 @@ const UserList = () => {
                 refetch={refetch}
                 userRoles={user.userRoles}
                 userType={
-                  user.userType == "INDIVIDUAL" ? "حقیقی" : "دستگاه"
+                  user.userType == "INDIVIDUAL" ? "حقیقی" : user.userType == "CONTRACTOR_OR_CONSULTANT" ? "مشاور یا پیمانکار" : "دستگاه"
                 }
               />
             )

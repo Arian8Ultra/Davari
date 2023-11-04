@@ -18,6 +18,7 @@ import React, { useState } from "react";
 import { BsCheck, BsPlusCircleDotted } from "react-icons/bs";
 import { useNavigate, useParams } from "react-router-dom";
 import { useUserStore } from "../../../Context/UserStore";
+import { UPDATE_COMPLAINT } from "../../../GraphQL/Complaints/Mutations";
 import {
   GET_COMPLAINT,
   GET_COMPLAINT_ARGUMENTS,
@@ -26,27 +27,26 @@ import ArgumentCard from "../../../components/Arguments/ArgumentCard";
 import ArgumentHeader from "../../../components/Arguments/ArgumentHeader";
 import ArgumentInfoModal from "../../../components/Arguments/ArgumentInfoModal";
 import ArgumentModal from "../../../components/Arguments/ArgumentModal";
+import FaTypography from "../../../components/FaComponents/FaTypography";
+import { convertToPersianDigits } from "../../../functions/Functions";
 import NoAccess from "../../../layout/NoAccess";
+import { newStatesObj } from "../../../static/States";
 import {
   Argument,
   OptionalArgument,
   OptionalArgumentSamll,
 } from "../../../static/Types";
+import states from "../../../static/states.json";
 import {
   Green,
   GreenLight,
   onSecondary,
   primary,
-  primaryGreyLightTransparent,
-  secondary,
+  secondary
 } from "../../../theme/color";
-import { UPDATE_COMPLAINT } from "../../../GraphQL/Complaints/Mutations";
-import states from "../../../static/states.json";
-import { convertToPersianDigits } from "../../../functions/Functions";
-import { newStates, newStatesObj } from "../../../static/States";
 
 const AddArgument = () => {
-  const { contractId, complaintId, state } = useParams();
+  const { complaintId, state } = useParams();
   const navigate = useNavigate();
   const complaintIdInt = complaintId && parseInt(complaintId);
   const user = useUserStore((state) => state.user);
@@ -192,7 +192,29 @@ const AddArgument = () => {
 
   return (
     <>
-      <Box display={!compaintLoading && noAccess ? "none" : "block"}>
+      <Box
+        display={!compaintLoading && noAccess ? "none" : "block"}
+        position={"relative"}
+      >
+        <Box
+          gridColumn={"span 12"}
+          borderRadius={"1rem"}
+          sx={{
+            position: "sticky",
+            top: 100,
+            left: "50%",
+            transform: "translateY(-50%) translateX(-50%)",
+            background: primary,
+            padding: "0.5rem 1rem",
+            userSelect: "none",
+            width: "max-content",
+            zIndex: 1000,
+          }}
+        >
+          <FaTypography variant="h6" textAlign={"center"}>
+            فرم ثبت دعاوی
+          </FaTypography>
+        </Box>
         <Box
           sx={{
             borderRadius: "0.5rem",
@@ -312,26 +334,24 @@ const AddArgument = () => {
                   }}
                 ></TableCell>
                 <TableCell
-                    sx={{
-                      fontWeight: "bold",
-                      color: secondary,
-                    }}
-                  >
-                    مبلغ داوری : 
-                    {
-                      // 10% of all suggestedAmounts
-                      convertToPersianDigits(
-                        (
-                          data?.complaintArgument_getComplaintArguments?.result
-                            ?.items
-                            ?.reduce(
-                              (a, b) => a + (b?.suggestedAmount ?? 0),
-                              0
-                            ) ?? 0 * 0.01
-                        )
-                          .toString()
-                          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                  sx={{
+                    fontWeight: "bold",
+                    color: secondary,
+                  }}
+                >
+                  مبلغ داوری :
+                  {
+                    // 10% of all suggestedAmounts
+                    convertToPersianDigits(
+                      (
+                        data?.complaintArgument_getComplaintArguments?.result?.items?.reduce(
+                          (a, b) => a + (b?.suggestedAmount ?? 0),
+                          0
+                        ) ?? 0 * 0.01
                       )
+                        .toString()
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                    )
                   }
                 </TableCell>
                 <TableCell
@@ -391,12 +411,18 @@ const AddArgument = () => {
           }}
           onClick={() => {
             if (stateInt == 0) {
+              const agreed = confirm("آیا مطمئن هستید؟");
+              if (!agreed) return;
               void updateCompaint({
                 variables: {
                   id: complaintIdInt,
                   complaintState:
                     newStatesObj.waitingForAccusedToRegisterContract
                       .cap,
+                },
+                onCompleted() {
+                  alert("ثبت شد");
+                  navigate("/complaints");
                 },
               });
             } else if (stateInt == 1) {
@@ -408,7 +434,8 @@ const AddArgument = () => {
                   complaintState:
                     newStatesObj.waitingForAccuserToViewArguments.cap,
                 },
-                onCompleted(data, clientOptions) {
+                onCompleted() {
+                  alert("ثبت شد");
                   navigate("/complaints");
                 },
               });
@@ -422,6 +449,7 @@ const AddArgument = () => {
                     newStatesObj.waitingForChiefToAssign.cap,
                 },
                 onCompleted() {
+                  alert("ثبت شد");
                   navigate("/complaints");
                 },
               });
@@ -437,6 +465,7 @@ const AddArgument = () => {
                       .cap,
                 },
                 onCompleted() {
+                  alert("ثبت شد");
                   navigate("/complaints");
                 },
               });

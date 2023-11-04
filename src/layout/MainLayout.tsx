@@ -771,7 +771,7 @@ export default function MainLayout() {
                     marginRight: 2,
                   }}
                 >
-                  {user.userRoles &&
+                  {user.userType != "CONTRACTOR_OR_CONSULTANT" && user.userRoles &&
                     user.userRoles.map((role, index) => (
                       <span key={role.id}>
                         {convertRoleToPersian(role.roleType)}

@@ -8,6 +8,7 @@ export const GET_COMPLAINTS = gql`
           userId
           id
           contractId
+          isApprovedByChief
           arbitrationTermsForms {
             firstCondition
             firstConditionFileName
@@ -42,6 +43,7 @@ export const GET_COMPLAINT = gql`
         userId
         id
         contractId
+        isApprovedByChief
         arbitrationTermsForms {
           firstCondition
           firstConditionFileName
@@ -84,6 +86,7 @@ export const GET_ACCUSED_COMPLAINTS = gql`
           id
           contractId
           createdDate
+          isApprovedByChief
           arbitrationTermsForms {
             firstCondition
             firstConditionFileName
@@ -127,6 +130,7 @@ export const GET_ACCUSER_COMPLAINTS = gql`
           id
           contractId
           createdDate
+          isApprovedByChief
           arbitrationTermsForms {
             firstCondition
             firstConditionFileName
@@ -172,6 +176,7 @@ export const GET_CHIEF_COMPLAINTS = gql`
           id
           contractId
           createdDate
+          isApprovedByChief
           arbitrationTermsForms {
             firstCondition
             firstConditionFileName
@@ -241,6 +246,7 @@ export const GET_COMPLAINT_ASSIGNED = gql`
           id
           contractId
           createdDate
+          isApprovedByChief
           arbitrationTermsForms {
             firstCondition
             firstConditionFileName
@@ -279,6 +285,7 @@ export type Complaint = {
   complaintState: string;
   complaintCode: string;
   createdDate: string;
+  isApprovedByChief: boolean;
   assignedUser: {
     userName: string;
     firstName: string;

@@ -47,7 +47,11 @@ import {
   primary,
   secondary,
 } from "../../../theme/color";
-import { States, newStates, newStatesObj } from "../../../static/States";
+import {
+  States,
+  newStates,
+  newStatesObj,
+} from "../../../static/States";
 import { GET_ALL_ORGANIZATION_USERS } from "../../../GraphQL/Users/Queries";
 import DateButton from "../../../components/DateButton";
 import fehrestbaha from "../../../static/fehrestbaha.json";
@@ -114,7 +118,7 @@ const UpdateContractPage = () => {
     other: boolean;
     CircularTitle?: string;
     CircularNumber?: string;
-    CircularDate?: string;
+    CircularDate?: Date;
   }>({
     contratTypes: [""],
     CircularDate: undefined,
@@ -201,7 +205,7 @@ const UpdateContractPage = () => {
   });
   const [Adjustment, setAdjustment] = useState<{
     number: number;
-    date: string;
+    date: Date;
   }>();
   const [AdjustmentError, setAdjustmentError] = useState({
     error: false as boolean,
@@ -222,7 +226,7 @@ const UpdateContractPage = () => {
     setOperationStartDateAccuserError,
   ] = React.useState({ error: false as boolean, text: "" as string });
   const [OperationStartDate, setOperationStartDate] =
-    React.useState<string>();
+    React.useState<Date>();
   const [OperationStartDateError, setOperationStartDateError] =
     React.useState({ error: false as boolean, text: "" as string });
   const [
@@ -434,7 +438,7 @@ const UpdateContractPage = () => {
       });
     }
 
-    if (OperationStartDate && OperationStartDate.length <= 0) {
+    if (!OperationStartDate) {
       setOperationStartDateError({
         error: true,
         text: "مقدار فیلد نباید خالی باشد",
@@ -626,6 +630,9 @@ const UpdateContractPage = () => {
   //
   //
   //
+
+
+
   useQuery(GET_CONTRACT, {
     variables: {
       id: contractId ? parseInt(contractId) : 0,
@@ -643,6 +650,7 @@ const UpdateContractPage = () => {
         setRelatedPeopleByAccussed(
           JSON.parse(contract.accusedRelatedPeopleByAccuser)
         );
+      setNationality(contract.accuserNationality);
       setAccusedDepartmentId(contract.accusedDepartmentUserId);
       setAccuserDepartmentId(contract.accuserDepartmentUserId);
       contractId && setContractNumber(contractId);
@@ -655,6 +663,8 @@ const UpdateContractPage = () => {
       setUnauthorizedDelays(
         contract.unauthorizedDelaysByAccuser?.toString()
       );
+      setContractNumber(contract.contractNumberByAccuser)
+      
     },
   });
 
@@ -670,7 +680,8 @@ const UpdateContractPage = () => {
   const [updateCompaint] = useMutation(UPDATE_COMPLAINT, {
     variables: {
       id: complaintId ? parseInt(complaintId) : 0,
-      complaintState: newStatesObj.waitingForAccusedToRegisterArbitrationTerms.cap,
+      complaintState:
+        newStatesObj.waitingForAccusedToRegisterArbitrationTerms.cap,
     },
     onCompleted(data) {
       console.log("state", states.AccusedCompletedContract);
@@ -1537,7 +1548,7 @@ const UpdateContractPage = () => {
           error={contratDetailsError.error}
           helperText={contratDetailsError.text}
         />
-        <TextField
+        {/* <TextField
           label={"تاریخ بخشنامه"}
           variant={"outlined"}
           type={"date"}
@@ -1559,6 +1570,27 @@ const UpdateContractPage = () => {
           }}
           error={contratDetailsError.error}
           helperText={contratDetailsError.text}
+        /> */}
+        <DateButton
+          date={contratDetails && contratDetails.CircularDate}
+          setDate={(date) => {
+            setContratDetails({
+              ...contratDetails,
+              // @ts-ignore
+              CircularDate: date,
+            });
+          }}
+          sx={{
+            gridColumn: "span 2",
+            display:
+              contratDetails && contratDetails.other
+                ? "block"
+                : "none",
+            border: contratDetailsError.error
+              ? "1px solid red"
+              : undefined,
+          }}
+          label="تاریخ بخشنامه"
         />
         <Divider
           sx={{
@@ -1800,14 +1832,14 @@ const UpdateContractPage = () => {
                 contratTypes: prevState.contratTypes || [],
                 other: prevState.other || false,
                 CircularTitle: prevState.CircularTitle || "",
-                CircularDate: prevState.CircularDate || "",
+                CircularDate: prevState.CircularDate || undefined,
               };
             });
           }}
           error={contratDetailsError.error}
           helperText={contratDetailsError.text}
         />
-        <TextField
+        {/* <TextField
           label={"تاریخ بخشنامه"}
           variant={"outlined"}
           type={"date"}
@@ -1830,6 +1862,27 @@ const UpdateContractPage = () => {
           }}
           error={contratDetailsError.error}
           helperText={contratDetailsError.text}
+        /> */}
+
+        <DateButton
+          date={contratDetails && contratDetails.CircularDate}
+          setDate={(date) => {
+            setContratDetails({
+              ...contratDetails,
+              // @ts-ignore
+              CircularDate: date,
+            });
+          }}
+          sx={{
+            gridColumn: "span 2",
+            display: IsSpecialPriceListAttachedToContract
+              ? "block"
+              : "none",
+            border: contratDetailsError.error
+              ? "1px solid red"
+              : undefined,
+          }}
+          label="تاریخ بخشنامه"
         />
 
         {/* 
@@ -2064,14 +2117,14 @@ const UpdateContractPage = () => {
             setAdjustment((prevAdjustment) => ({
               ...prevAdjustment,
               number: parseInt(e.target.value),
-              date: prevAdjustment?.date || "",
+              date: prevAdjustment?.date || new Date(),
             }));
           }}
           fullWidth
           error={AdjustmentError.error}
           helperText={AdjustmentError.text}
         />
-        <FaTextField
+        {/* <FaTextField
           label="تاریخ"
           type="date"
           focused
@@ -2095,6 +2148,25 @@ const UpdateContractPage = () => {
           fullWidth
           error={AdjustmentError.error}
           helperText={AdjustmentError.text}
+        /> */}
+
+        <DateButton
+          date={Adjustment && Adjustment.date}
+          setDate={(date) => {
+            setAdjustment({
+              ...Adjustment,
+              // @ts-ignore
+              date: date,
+            });
+          }}
+          sx={{
+            gridColumn: "span 3",
+            display: DoesContainAdjustment ? "block" : "none",
+            border: AdjustmentError.error
+              ? "1px solid red"
+              : undefined,
+          }}
+          label="تاریخ بخشنامه"
         />
 
         <div
@@ -2249,6 +2321,7 @@ const UpdateContractPage = () => {
           <MenuItem value={1}>اول</MenuItem>
           <MenuItem value={2}>دوم</MenuItem>
           <MenuItem value={3}>سوم</MenuItem>
+          <MenuItem value={4}>چهارم</MenuItem>
         </FaTextField>
         <FaTextField
           label="سال"
@@ -2293,33 +2366,18 @@ const UpdateContractPage = () => {
         <FaTypography variant="h6" gridColumn={"span 2"}>
           تاريخ شروع كار:
         </FaTypography>
-        <TextField
-          label="تاريخ شروع كار خوانده"
-          type="date"
-          focused
+
+
+        <DateButton
+          date={OperationStartDate}
+          setDate={setOperationStartDate}
           sx={{
             gridColumn: "span 3",
+            border: OperationStartDateError.error
+              ? "1px solid red"
+              : undefined,
           }}
-          value={OperationStartDateAccuser}
-          onChange={(e) => {
-            setOperationStartDateAccuser(e.target.value);
-          }}
-          error={OperationStartDateAccuserError.error}
-          helperText={OperationStartDateAccuserError.text}
-        />
-        <TextField
           label="تاريخ شروع كار "
-          type="date"
-          focused
-          sx={{
-            gridColumn: "span 3",
-          }}
-          value={OperationStartDate}
-          onChange={(e) => {
-            setOperationStartDate(e.target.value);
-          }}
-          error={OperationStartDateError.error}
-          helperText={OperationStartDateError.text}
         />
         <div
           style={{
