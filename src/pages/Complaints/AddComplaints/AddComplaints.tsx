@@ -211,27 +211,6 @@ const AddComplaint = () => {
                 : "خوانده")}
           </FaTypography>
         </Box>
-
-        <TextField
-          label="نام پروژه"
-          variant="outlined"
-          sx={{ gridColumn: "span 6" }}
-          value={ProjectName}
-          onChange={(e) => {
-            setProjectName(e.target.value);
-          }}
-        />
-
-        <TextField
-          label="شماره پروژه"
-          variant="outlined"
-          sx={{ gridColumn: "span 6" }}
-          value={ProjectNumber}
-          onChange={(e) => {
-            setProjectNumber(e.target.value);
-          }}
-        />
-
         <div
           style={{
             gridColumn: "span 12",
@@ -313,6 +292,27 @@ const AddComplaint = () => {
             }
           />
         </FormGroup>
+
+        
+        <TextField
+          label="نام پروژه"
+          variant="outlined"
+          sx={{ gridColumn: "span 6",display: FisrtCondition.checked[0]? "grid" : "none"}}
+          value={ProjectName}
+          onChange={(e) => {
+            setProjectName(e.target.value);
+          }}
+        />
+
+        <TextField
+          label="شماره پروژه"
+          variant="outlined"
+          sx={{ gridColumn: "span 6",display: FisrtCondition.checked[0]? "grid" : "none"}}
+          value={ProjectNumber}
+          onChange={(e) => {
+            setProjectNumber(e.target.value);
+          }}
+        />
 
         <div
           style={{

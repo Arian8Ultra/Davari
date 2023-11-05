@@ -470,6 +470,7 @@ const ComplaintCardNew = (props: Props) => {
 
       case newStatesObj.waitingForAccusedToRegisterContract.cap:
         if (props.type == "accused") {
+          if(user.userType == "INDIVIDUAL")
           return (
             <Box
               display={"grid"}
@@ -511,6 +512,49 @@ const ComplaintCardNew = (props: Props) => {
               </Button>
             </Box>
           );
+          else{
+            return(
+              <Box
+              display={"grid"}
+              gridTemplateColumns={"repeat(2,1fr)"}
+              mt={"1rem"}
+              gap={"6rem"}
+            >
+              <Button
+                sx={{
+                  borderRadius: "0.5rem",
+                  backgroundColor: Red,
+                  color: "white",
+                  "&:hover": {
+                    backgroundColor: red[100],
+                    color: Red,
+                  },
+                }}
+                onClick={handleClose}
+              >
+                انصراف
+              </Button>
+              <Button
+                sx={{
+                  borderRadius: "0.5rem",
+                  backgroundColor: Green,
+                  color: "white",
+                  "&:hover": {
+                    backgroundColor: GreenLight,
+                    color: Green,
+                  },
+                }}
+                onClick={() => {
+                  navigate(
+                    `/complaints/${props.contractId}/${props.id}/UpdateContractPage`
+                  );
+                }}
+              >
+                پاسخ به درخواست داوری
+              </Button>
+            </Box>
+            )
+          }
         } else if (props.type == "assigned") {
           return (
             <Box
@@ -1894,6 +1938,7 @@ const ComplaintCardNew = (props: Props) => {
 
                       onCompleted(data) {
                         console.log(data);
+                        alert("درخواست داوری با موفقیت ارسال شد");
                       },
                     });
                   } else {
@@ -1905,6 +1950,7 @@ const ComplaintCardNew = (props: Props) => {
 
                       onCompleted(data) {
                         console.log(data);
+                        alert("درخواست داوری با موفقیت ارسال شد");
                       },
                     });
                   }

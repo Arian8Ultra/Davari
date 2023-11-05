@@ -8,32 +8,12 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useMutation, useQuery } from "@apollo/client";
 import { Add } from "@mui/icons-material";
-import {
-  Alert,
-  Box,
-  Button,
-  Checkbox,
-  Divider,
-  FormControl,
-  FormControlLabel,
-  FormGroup,
-  FormLabel,
-  IconButton,
-  List,
-  MenuItem,
-  Radio,
-  RadioGroup,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Alert, Box, Button, Checkbox, Divider, FormControl, FormControlLabel, FormGroup, FormLabel, IconButton, List, MenuItem, Radio, RadioGroup, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useUserStore } from "../../../Context/UserStore";
 import { UPDATE_COMPLAINT } from "../../../GraphQL/Complaints/Mutations";
-import {
-  ContractSmall,
-  UPDATE_CONTRACT_BY_ACCUSED,
-} from "../../../GraphQL/Contracts/Mutations";
+import { ContractSmall, UPDATE_CONTRACT_BY_ACCUSED } from "../../../GraphQL/Contracts/Mutations";
 import { GET_CONTRACT } from "../../../GraphQL/Contracts/Queries";
 import BackButton from "../../../components/BackButton";
 import FaTextField from "../../../components/FaComponents/FaTextField";
@@ -41,17 +21,8 @@ import FaTypography from "../../../components/FaComponents/FaTypography";
 import FileBox from "../../../components/FileBox";
 import countries from "../../../static/Countries";
 import states from "../../../static/states.json";
-import {
-  Green,
-  GreenLight,
-  primary,
-  secondary,
-} from "../../../theme/color";
-import {
-  States,
-  newStates,
-  newStatesObj,
-} from "../../../static/States";
+import { Green, GreenLight, primary, secondary } from "../../../theme/color";
+import { States, newStates, newStatesObj } from "../../../static/States";
 import { GET_ALL_ORGANIZATION_USERS } from "../../../GraphQL/Users/Queries";
 import DateButton from "../../../components/DateButton";
 import fehrestbaha from "../../../static/fehrestbaha.json";
@@ -59,45 +30,39 @@ import fehrestbaha from "../../../static/fehrestbaha.json";
 const UpdateContractPage = () => {
   const user = useUserStore((state) => state.user);
   const { complaintId, contractId } = useParams();
-  const [RelatedPeopleByAccusser, setRelatedPeopleByAccusser] =
-    React.useState<
-      [
-        {
-          name: string;
-          phone: string;
-        }
-      ]
-    >([
+  const [Employer, setEmployer] = React.useState<string>();
+  const [Employee, setEmployee] = React.useState<string>();
+  const [RelatedPeopleByAccusser, setRelatedPeopleByAccusser] = React.useState<
+    [
       {
-        name: "",
-        phone: "",
-      },
-    ]);
-  const [
-    RelatedPeopleByAccusserError,
-    setRelatedPeopleByAccusserError,
-  ] = React.useState({
+        name: string;
+        phone: string;
+      }
+    ]
+  >([
+    {
+      name: "",
+      phone: "",
+    },
+  ]);
+  const [RelatedPeopleByAccusserError, setRelatedPeopleByAccusserError] = React.useState({
     error: false as boolean,
     text: "" as string,
   });
-  const [RelatedPeopleByAccussed, setRelatedPeopleByAccussed] =
-    React.useState<
-      [
-        {
-          name: string;
-          phone: string;
-        }
-      ]
-    >([
+  const [RelatedPeopleByAccussed, setRelatedPeopleByAccussed] = React.useState<
+    [
       {
-        name: "",
-        phone: "",
-      },
-    ]);
-  const [
-    RelatedPeopleByAccussedError,
-    setRelatedPeopleByAccussedError,
-  ] = React.useState({
+        name: string;
+        phone: string;
+      }
+    ]
+  >([
+    {
+      name: "",
+      phone: "",
+    },
+  ]);
+  const [RelatedPeopleByAccussedError, setRelatedPeopleByAccussedError] = React.useState({
     error: false as boolean,
     text: "" as string,
   });
@@ -106,13 +71,11 @@ const UpdateContractPage = () => {
     error: false as boolean,
     text: "" as string,
   });
-  const [AccusedNationality, setAccusedNationality] =
-    React.useState("");
-  const [AccusedNationalityError, setAccusedNationalityError] =
-    React.useState({
-      error: false as boolean,
-      text: "" as string,
-    });
+  const [AccusedNationality, setAccusedNationality] = React.useState("");
+  const [AccusedNationalityError, setAccusedNationalityError] = React.useState({
+    error: false as boolean,
+    text: "" as string,
+  });
   const [contratDetails, setContratDetails] = React.useState<{
     contratTypes: string[];
     other: boolean;
@@ -126,25 +89,20 @@ const UpdateContractPage = () => {
     CircularTitle: undefined,
     other: false,
   });
-  const [contratDetailsError, setContratDetailsError] =
-    React.useState({
-      error: false as boolean,
-      text: "" as string,
-    });
-  const [ContractSubject, setContractSubject] =
-    React.useState<string>();
-  const [ContractSubjectError, setContractSubjectError] =
-    React.useState({
-      error: false as boolean,
-      text: "" as string,
-    });
-  const [ContractNumber, setContractNumber] =
-    React.useState<string>();
-  const [ContractNumberError, setContractNumberError] =
-    React.useState({
-      error: false as boolean,
-      text: "" as string,
-    });
+  const [contratDetailsError, setContratDetailsError] = React.useState({
+    error: false as boolean,
+    text: "" as string,
+  });
+  const [ContractSubject, setContractSubject] = React.useState<string>();
+  const [ContractSubjectError, setContractSubjectError] = React.useState({
+    error: false as boolean,
+    text: "" as string,
+  });
+  const [ContractNumber, setContractNumber] = React.useState<string>();
+  const [ContractNumberError, setContractNumberError] = React.useState({
+    error: false as boolean,
+    text: "" as string,
+  });
   const [ContractDate, setContractDate] = React.useState<Date>();
   const [ContractDateError, setContractDateError] = React.useState({
     error: false as boolean,
@@ -155,17 +113,12 @@ const UpdateContractPage = () => {
     error: false as boolean,
     text: "" as string,
   });
-  const [InitialTimePeriod, setInitialTimePeriod] =
-    React.useState<number>();
-  const [InitialTimePeriodError, setInitialTimePeriodError] =
-    React.useState({
-      error: false as boolean,
-      text: "" as string,
-    });
-  const [
-    PriceListOfBasicUnitOfField,
-    setPriceListOfBasicUnitOfField,
-  ] = React.useState<
+  const [InitialTimePeriod, setInitialTimePeriod] = React.useState<number>();
+  const [InitialTimePeriodError, setInitialTimePeriodError] = React.useState({
+    error: false as boolean,
+    text: "" as string,
+  });
+  const [PriceListOfBasicUnitOfField, setPriceListOfBasicUnitOfField] = React.useState<
     [
       {
         year: string;
@@ -173,23 +126,16 @@ const UpdateContractPage = () => {
       }
     ]
   >();
-  const [
-    PriceListOfBasicUnitOfFieldError,
-    setPriceListOfBasicUnitOfFieldError,
-  ] = React.useState([
+  const [PriceListOfBasicUnitOfFieldError, setPriceListOfBasicUnitOfFieldError] = React.useState([
     {
       error: false as boolean,
       text: "" as string,
     },
   ]);
 
-  const [
-    IsSpecialPriceListAttachedToContract,
-    setIsSpecialPriceListAttachedToContract,
-  ] = React.useState(false);
+  const [IsSpecialPriceListAttachedToContract, setIsSpecialPriceListAttachedToContract] = React.useState<string>();
 
-  const [RecommendedCoefficient, setRecommendedCoefficient] =
-    React.useState<number>();
+  const [RecommendedCoefficient, setRecommendedCoefficient] = React.useState<number>();
   const [AssigningType, setAssigningType] = React.useState<string>();
   const [AssigningTypeError, setAssigningTypeError] = React.useState([
     {
@@ -197,8 +143,7 @@ const UpdateContractPage = () => {
       text: "" as string,
     },
   ]);
-  const [DoesContainAdjustment, setDoesContainAdjustment] =
-    React.useState<boolean>(true);
+  const [DoesContainAdjustment, setDoesContainAdjustment] = React.useState<boolean>(true);
   const [DoesContainAdjustmentEror] = React.useState({
     error: false as boolean,
     text: "" as string,
@@ -213,98 +158,62 @@ const UpdateContractPage = () => {
   });
   const [BaseIndexPeriod, setBaseIndexPeriod] = React.useState<{
     isQuarter: boolean;
-    quarter: number;
+    quarter: string;
     month: string;
     year: string;
   }>();
-  const [BaseIndexPeriodError, setBaseIndexPeriodError] =
-    React.useState({ error: false as boolean, text: "" as string });
-  const [OperationStartDateAccuser, setOperationStartDateAccuser] =
-    React.useState<string>();
-  const [
-    OperationStartDateAccuserError,
-    setOperationStartDateAccuserError,
-  ] = React.useState({ error: false as boolean, text: "" as string });
-  const [OperationStartDate, setOperationStartDate] =
-    React.useState<Date>();
-  const [OperationStartDateError, setOperationStartDateError] =
-    React.useState({ error: false as boolean, text: "" as string });
-  const [
-    PhysicalProgressInArbitrationDate,
-    setPhysicalProgressInArbitrationDate,
-  ] = React.useState<string>();
-  const [
-    PhysicalProgressInArbitrationDateError,
-    setPhysicalProgressInArbitrationDateError,
-  ] = React.useState({ error: false as boolean, text: "" as string });
-  const [
-    FinancialProgressInArbitrationDateAccuser,
-    setFinancialProgressInArbitrationDateAccuser,
-  ] = React.useState<string>();
-  const [
-    FinancialProgressInArbitrationDateAccuserError,
-    setFinancialProgressInArbitrationDateAccuserError,
-  ] = React.useState({ error: false as boolean, text: "" as string });
-  const [
-    ContractStatusInArbitration,
-    setContractStatusInArbitration,
-  ] = React.useState<string>();
+  const [BaseIndexPeriodError, setBaseIndexPeriodError] = React.useState({ error: false as boolean, text: "" as string });
+  const [OperationStartDateAccuser, setOperationStartDateAccuser] = React.useState<string>();
+  const [OperationStartDateAccuserError, setOperationStartDateAccuserError] = React.useState({ error: false as boolean, text: "" as string });
+  const [OperationStartDate, setOperationStartDate] = React.useState<Date>();
+  const [OperationStartDateError, setOperationStartDateError] = React.useState({ error: false as boolean, text: "" as string });
+  const [PhysicalProgressInArbitrationDate, setPhysicalProgressInArbitrationDate] = React.useState<number>();
+  const [PhysicalProgressInArbitrationDateError, setPhysicalProgressInArbitrationDateError] = React.useState({ error: false as boolean, text: "" as string });
+  const [FinancialProgressInArbitrationDateAccuser, setFinancialProgressInArbitrationDateAccuser] = React.useState<number>();
+  const [FinancialProgressInArbitrationDateAccuserError, setFinancialProgressInArbitrationDateAccuserError] = React.useState({ error: false as boolean, text: "" as string });
+  const [ContractStatusInArbitration, setContractStatusInArbitration] = React.useState<string>();
 
   const [TemporaryDelivery, setTemporaryDelivery] = useState<{
     checked: boolean;
-    date: string;
+    date: Date;
   }>();
   const [FinalDelivery, setFinalDelivery] = useState<{
     checked: boolean;
-    date: string;
+    date: Date;
   }>();
-  const [
-    ContractStatusInArbitrationError,
-    setContractStatusInArbitrationError,
-  ] = React.useState<[{ error: boolean; text: string }]>();
-  const [
-    ContractStatusInArbitrationDate,
-    setContractStatusInArbitrationDate,
-  ] = React.useState<string>();
-  const [
-    ContractStatusInArbitrationDateError,
-    setContractStatusInArbitrationDateError,
-  ] = React.useState({ error: false as boolean, text: "" as string });
-  const [SupervisionDepartment, setSupervisionDepartment] =
-    React.useState<string>();
-  const [SupervisionDepartmentError, setSupervisionDepartmentError] =
-    React.useState({ error: false as boolean, text: "" as string });
-  const [AuthorizedDelays, setAuthorizedDelays] =
-    React.useState<string>();
-  const [AuthorizedDelaysError, setAuthorizedDelaysError] =
-    React.useState({ error: false as boolean, text: "" as string });
-  const [UnauthorizedDelays, setUnauthorizedDelays] =
-    React.useState<string>();
-  const [UnauthorizedDelaysError, setUnauthorizedDelaysError] =
-    React.useState({ error: false as boolean, text: "" as string });
-  const [AccusedDepartmentId, setAccusedDepartmentId] =
-    React.useState<string>();
+  const [ContractStatusInArbitrationError, setContractStatusInArbitrationError] = React.useState<[{ error: boolean; text: string }]>();
+  const [ContractStatusInArbitrationDate, setContractStatusInArbitrationDate] = React.useState<string>();
+  const [ContractStatusInArbitrationDateError, setContractStatusInArbitrationDateError] = React.useState({ error: false as boolean, text: "" as string });
+  const [SupervisionDepartment, setSupervisionDepartment] = React.useState<string>();
+  const [SupervisionDepartmentError, setSupervisionDepartmentError] = React.useState({ error: false as boolean, text: "" as string });
+  const [AuthorizedDelays, setAuthorizedDelays] = React.useState<number>();
+  const [AuthorizedDelaysError, setAuthorizedDelaysError] = React.useState({ error: false as boolean, text: "" as string });
+  const [UnauthorizedDelays, setUnauthorizedDelays] = React.useState<number>();
+  const [UnauthorizedDelaysError, setUnauthorizedDelaysError] = React.useState({ error: false as boolean, text: "" as string });
+  const [AccusedDepartmentId, setAccusedDepartmentId] = React.useState<string>();
   React.useState({ error: false as boolean, text: "" as string });
-  const [AccuserDepartmentId, setAccuserDepartmentId] =
-    React.useState<string>();
-  const [AccusedDepartmentIdError, setAccusedDepartmentIdError] =
-    React.useState<{ error: boolean; text: string }>();
+  const [AccuserDepartmentId, setAccuserDepartmentId] = React.useState<string>();
+  const [AccusedDepartmentIdError, setAccusedDepartmentIdError] = React.useState<{ error: boolean; text: string }>();
   const [FileNames, setFileNames] = useState<string[]>();
   const [Files, SetFiles] = useState<File[]>();
 
   const [departments, setDepartments] = React.useState<
-    { label: string; id: string }[]
+    {
+      label: string;
+      id: string;
+      type: "INDIVIDUAL" | "ORGANIZATION" | "CONTRACTOR_OR_CONSULTANT";
+    }[]
   >([]);
   useQuery(GET_ALL_ORGANIZATION_USERS, {
     onCompleted(data) {
       console.log(data);
+      // remove department that id is e7a85297-91d4-4f27-a4b2-ff394fe71dd3
       setDepartments(
-        data?.user_getUsers?.result?.items?.map(
-          (item: { id: number; fullName: string }) => ({
-            label: item.fullName,
-            id: item.id,
-          })
-        )
+        data?.user_getUsers?.result?.items?.map((item: { id: number; fullName: string; userType: "INDIVIDUAL" | "ORGANIZATION" | "CONTRACTOR_OR_CONSULTANT" }) => ({
+          label: item.fullName,
+          id: item.id,
+          type: item.userType,
+        }))
       );
     },
     onError(error) {
@@ -335,10 +244,7 @@ const UpdateContractPage = () => {
   //
 
   const handleErrors = () => {
-    if (
-      RelatedPeopleByAccussed &&
-      RelatedPeopleByAccussed.length <= 0
-    ) {
+    if (RelatedPeopleByAccussed && RelatedPeopleByAccussed.length <= 0) {
       setRelatedPeopleByAccussedError({
         error: true,
         text: "مقدار فیلد نباید خالی باشد",
@@ -368,21 +274,21 @@ const UpdateContractPage = () => {
         text: "مقدار فیلد نباید خالی باشد",
       });
     }
-    if (ContractDate) {
+    if (!ContractDate) {
       setContractDateError({
         error: true,
         text: "مقدار فیلد نباید خالی باشد",
       });
     }
 
-    if (InitialBudget) {
+    if (!InitialBudget) {
       setInitialBudgetError({
         error: true,
         text: "مقدار فیلد نباید خالی باشد",
       });
     }
 
-    if (InitialTimePeriod) {
+    if (!InitialTimePeriod) {
       setInitialTimePeriodError({
         error: true,
         text: "مقدار فیلد نباید خالی باشد",
@@ -392,16 +298,12 @@ const UpdateContractPage = () => {
     PriceListOfBasicUnitOfField &&
       PriceListOfBasicUnitOfField.forEach((item, index) => {
         if (item.year.length <= 0 || item.price.length <= 0) {
-          const newPriceListOfBasicUnitOfFieldError = [
-            ...PriceListOfBasicUnitOfFieldError,
-          ];
+          const newPriceListOfBasicUnitOfFieldError = [...PriceListOfBasicUnitOfFieldError];
           newPriceListOfBasicUnitOfFieldError[index] = {
             error: true,
             text: "مقدار فیلد نباید خالی باشد",
           };
-          setPriceListOfBasicUnitOfFieldError(
-            newPriceListOfBasicUnitOfFieldError
-          );
+          setPriceListOfBasicUnitOfFieldError(newPriceListOfBasicUnitOfFieldError);
         }
       });
 
@@ -414,7 +316,7 @@ const UpdateContractPage = () => {
       ]);
     }
 
-    if (BaseIndexPeriod && BaseIndexPeriod.month.length <= 0) {
+    if (BaseIndexPeriod && !BaseIndexPeriod.month) {
       setBaseIndexPeriodError({
         error: true,
         text: "مقدار فیلد نباید خالی باشد",
@@ -428,10 +330,7 @@ const UpdateContractPage = () => {
       });
     }
 
-    if (
-      OperationStartDateAccuser &&
-      OperationStartDateAccuser.length <= 0
-    ) {
+    if (OperationStartDateAccuser && OperationStartDateAccuser.length <= 0) {
       setOperationStartDateAccuserError({
         error: true,
         text: "مقدار فیلد نباید خالی باشد",
@@ -445,30 +344,21 @@ const UpdateContractPage = () => {
       });
     }
 
-    if (
-      PhysicalProgressInArbitrationDate &&
-      PhysicalProgressInArbitrationDate.length <= 0
-    ) {
+    if (!PhysicalProgressInArbitrationDate) {
       setPhysicalProgressInArbitrationDateError({
         error: true,
         text: "مقدار فیلد نباید خالی باشد",
       });
     }
 
-    if (
-      FinancialProgressInArbitrationDateAccuser &&
-      FinancialProgressInArbitrationDateAccuser.length <= 0
-    ) {
+    if (!FinancialProgressInArbitrationDateAccuser) {
       setFinancialProgressInArbitrationDateAccuserError({
         error: true,
         text: "مقدار فیلد نباید خالی باشد",
       });
     }
 
-    if (
-      ContractStatusInArbitration &&
-      ContractStatusInArbitration.length <= 0
-    ) {
+    if (ContractStatusInArbitration && ContractStatusInArbitration.length <= 0) {
       setContractStatusInArbitrationError([
         {
           error: true,
@@ -477,10 +367,7 @@ const UpdateContractPage = () => {
       ]);
     }
 
-    if (
-      ContractStatusInArbitrationDate &&
-      ContractStatusInArbitrationDate.length <= 0
-    ) {
+    if (ContractStatusInArbitrationDate && ContractStatusInArbitrationDate.length <= 0) {
       setContractStatusInArbitrationDateError({
         error: true,
         text: "مقدار فیلد نباید خالی باشد",
@@ -494,14 +381,14 @@ const UpdateContractPage = () => {
       });
     }
 
-    if (AuthorizedDelays && AuthorizedDelays.length <= 0) {
+    if (!AuthorizedDelays) {
       setAuthorizedDelaysError({
         error: true,
         text: "مقدار فیلد نباید خالی باشد",
       });
     }
 
-    if (UnauthorizedDelays && UnauthorizedDelays.length <= 0) {
+    if (!UnauthorizedDelays) {
       setUnauthorizedDelaysError({
         error: true,
         text: "مقدار فیلد نباید خالی باشد",
@@ -515,29 +402,7 @@ const UpdateContractPage = () => {
       });
     }
 
-    return (
-      RelatedPeopleByAccussedError.error ||
-      AccusedNationalityError.error ||
-      contratDetailsError.error ||
-      ContractSubjectError.error ||
-      ContractDateError.error ||
-      InitialBudgetError.error ||
-      InitialTimePeriodError.error ||
-      PriceListOfBasicUnitOfFieldError.some((item) => item.error) ||
-      AssigningTypeError.some((item) => item.error) ||
-      DoesContainAdjustmentEror.error ||
-      BaseIndexPeriodError.error ||
-      OperationStartDateAccuserError.error ||
-      OperationStartDateError.error ||
-      PhysicalProgressInArbitrationDateError.error ||
-      FinancialProgressInArbitrationDateAccuserError.error ||
-      ContractStatusInArbitrationError?.some((item) => item.error) ||
-      ContractStatusInArbitrationDateError.error ||
-      SupervisionDepartmentError.error ||
-      AuthorizedDelaysError.error ||
-      UnauthorizedDelaysError.error ||
-      AccusedDepartmentIdError?.error
-    );
+    return RelatedPeopleByAccussedError.error || AccusedNationalityError.error || contratDetailsError.error || ContractSubjectError.error || ContractDateError.error || InitialBudgetError.error || InitialTimePeriodError.error || PriceListOfBasicUnitOfFieldError.some((item) => item.error) || AssigningTypeError.some((item) => item.error) || DoesContainAdjustmentEror.error || BaseIndexPeriodError.error || OperationStartDateAccuserError.error || OperationStartDateError.error || PhysicalProgressInArbitrationDateError.error || FinancialProgressInArbitrationDateAccuserError.error || ContractStatusInArbitrationError?.some((item) => item.error) || ContractStatusInArbitrationDateError.error || SupervisionDepartmentError.error || AuthorizedDelaysError.error || UnauthorizedDelaysError.error || AccusedDepartmentIdError?.error;
   };
 
   //
@@ -562,57 +427,36 @@ const UpdateContractPage = () => {
   //
   //
   // @ts-ignore
-  const [createContractMutation, { data, loading }] = useMutation(
-    UPDATE_CONTRACT_BY_ACCUSED,
-    {
-      variables: {
-        AccuserRelatedPeople: JSON.stringify(RelatedPeopleByAccusser),
-        AccusedRelatedPeople: JSON.stringify(RelatedPeopleByAccussed),
-        AccuserNationality: Nationality,
-        ContractType: contratDetails && contratDetails.contratTypes,
-        CircularNumber:
-          contratDetails && contratDetails.CircularNumber,
-        CircularDate: contratDetails && contratDetails.CircularDate,
-        ContractSubject:
-          contratDetails && contratDetails.CircularTitle,
-        // ContractNumber: ContractNumber,
-        ContractDate: ContractDate,
-        InitialBudget: InitialBudget,
-        InitialTimePeriod: InitialTimePeriod,
-        PriceListOfBasicUnitOfField: JSON.stringify(
-          PriceListOfBasicUnitOfField
-        ),
-        IsSpecialPriceListAttachedToContract: String(
-          IsSpecialPriceListAttachedToContract
-        ),
-        RecommendedCoefficient: RecommendedCoefficient,
-        CoefficientType:
-          RecommendedCoefficient && RecommendedCoefficient > 1
-            ? "پلوس"
-            : "مینوس",
-        AssigningType: AssigningType,
-        DoesContainAdjustment: String(DoesContainAdjustment),
-        BaseIndexPeriod: JSON.stringify(BaseIndexPeriod),
-        OperationStartDateAccuser: OperationStartDateAccuser,
-        PhysicalProgressInArbitrationDateAccuser:
-          PhysicalProgressInArbitrationDate,
-        FinancialProgressInArbitrationDateAccuser:
-          FinancialProgressInArbitrationDateAccuser,
-        ContractStatusInArbitration: [
-          JSON.stringify([
-            ContractStatusInArbitration,
-            ContractStatusInArbitrationDate,
-          ]),
-          JSON.stringify({ "تحویل موقت": TemporaryDelivery }),
-          JSON.stringify({ "تحویل قطعی": FinalDelivery }),
-        ],
-        SupervisionDepartment: SupervisionDepartment,
-        AuthorizedDelaysAccuser: AuthorizedDelays,
-        UnauthorizedDelaysAccuser: UnauthorizedDelays || undefined,
-        id: contractId ? parseInt(contractId) : 0,
-      },
-    }
-  );
+  const [createContractMutation, { data, loading }] = useMutation(UPDATE_CONTRACT_BY_ACCUSED, {
+    variables: {
+      AccuserRelatedPeople: JSON.stringify(RelatedPeopleByAccusser),
+      AccusedRelatedPeople: JSON.stringify(RelatedPeopleByAccussed),
+      AccuserNationality: Nationality,
+      ContractType: contratDetails && contratDetails.contratTypes,
+      CircularNumber: contratDetails && contratDetails.CircularNumber,
+      CircularDate: contratDetails && contratDetails.CircularDate,
+      ContractSubject: contratDetails && contratDetails.CircularTitle,
+      // ContractNumber: ContractNumber,
+      ContractDate: ContractDate,
+      InitialBudget: InitialBudget,
+      InitialTimePeriod: InitialTimePeriod,
+      PriceListOfBasicUnitOfField: JSON.stringify(PriceListOfBasicUnitOfField),
+      IsSpecialPriceListAttachedToContract: String(IsSpecialPriceListAttachedToContract),
+      RecommendedCoefficient: RecommendedCoefficient,
+      CoefficientType: RecommendedCoefficient && RecommendedCoefficient > 1 ? "پلوس" : "مینوس",
+      AssigningType: AssigningType,
+      DoesContainAdjustment: String(DoesContainAdjustment),
+      BaseIndexPeriod: JSON.stringify(BaseIndexPeriod),
+      OperationStartDateAccuser: OperationStartDateAccuser,
+      PhysicalProgressInArbitrationDateAccuser: PhysicalProgressInArbitrationDate,
+      FinancialProgressInArbitrationDateAccuser: FinancialProgressInArbitrationDateAccuser,
+      ContractStatusInArbitration: [JSON.stringify([ContractStatusInArbitration, ContractStatusInArbitrationDate]), JSON.stringify({ "تحویل موقت": TemporaryDelivery }), JSON.stringify({ "تحویل قطعی": FinalDelivery })],
+      SupervisionDepartment: SupervisionDepartment,
+      AuthorizedDelaysAccuser: AuthorizedDelays,
+      UnauthorizedDelaysAccuser: UnauthorizedDelays || undefined,
+      id: contractId ? parseInt(contractId) : 0,
+    },
+  });
 
   //
   //
@@ -630,41 +474,47 @@ const UpdateContractPage = () => {
   //
   //
   //
-
-
 
   useQuery(GET_CONTRACT, {
     variables: {
       id: contractId ? parseInt(contractId) : 0,
     },
     onCompleted(data) {
-      console.log(data);
-      const contract = data.contract_getContracts.result
-        .items[0] as ContractSmall;
+      console.log("GET_CONTRACT",data);
+      const contract = data.contract_getContracts.result.items[0] as ContractSmall;
       console.log(contract);
-      contract.accuserRelatedPeopleByAccuser &&
-        setRelatedPeopleByAccusser(
-          JSON.parse(contract.accuserRelatedPeopleByAccuser)
-        );
-      contract.accusedRelatedPeopleByAccuser &&
-        setRelatedPeopleByAccussed(
-          JSON.parse(contract.accusedRelatedPeopleByAccuser)
-        );
-      setNationality(contract.accuserNationality);
-      setAccusedDepartmentId(contract.accusedDepartmentUserId);
+      setContratDetails({
+        ...contratDetails,
+        contratTypes: contract.contractTypeByAccuser || [""],
+        CircularNumber: contract.circularNumberByAccuser || undefined,
+        CircularDate: contract.circularDateByAccuser || undefined,
+        CircularTitle: contract.contractSubjectByAccuser || undefined,
+        other: contract.circularDateByAccuser|| contract.circularNumberByAccuser || contract.contractSubjectByAccuser ? true : false,
+      })
+      setAccusedDepartmentId(contract.accusedDepartmentUserId);      
       setAccuserDepartmentId(contract.accuserDepartmentUserId);
-      contractId && setContractNumber(contractId);
+      setContractNumber(contract.contractNumberByAccuser);
+      setContractDate(contract.contractDateByAccuser);
+      setInitialBudget(contract.initialBudgetByAccuser);
+      setInitialTimePeriod(contract.initialTimePeriodByAccuser || undefined);
+      setPriceListOfBasicUnitOfField(JSON.parse(contract.priceListOfBasicUnitOfFieldByAccuser || ""));
+      setIsSpecialPriceListAttachedToContract(contract.isSpecialPriceListAttachedToContractByAccuser);
+      contract.accuserRelatedPeopleByAccuser && setRelatedPeopleByAccusser(JSON.parse(contract.accuserRelatedPeopleByAccuser));
+      contract.accusedRelatedPeopleByAccuser && setRelatedPeopleByAccussed(JSON.parse(contract.accusedRelatedPeopleByAccuser));
+      setRecommendedCoefficient(contract.recommendedCoefficientByAccuser);
+      setNationality(contract.accuserNationality);
       setAssigningType(contract.assigningTypeByAccuser);
-      setAuthorizedDelays(
-        contract.authorizedDelaysByAccuser
-          ? String(contract.authorizedDelaysByAccuser)
-          : undefined
-      );
-      setUnauthorizedDelays(
-        contract.unauthorizedDelaysByAccuser?.toString()
-      );
-      setContractNumber(contract.contractNumberByAccuser)
-      
+      setDoesContainAdjustment(contract.doesContainAdjustmentByAccuser == "true");
+      setBaseIndexPeriod(JSON.parse(contract.baseIndexPeriodByAccuser || ""));
+      setOperationStartDate(contract.operationStartDateByAccuser || new Date());
+      setFinancialProgressInArbitrationDateAccuser(contract.financialProgressInArbitrationDateByAccuser);
+      setContractStatusInArbitration(JSON.parse(contract.contractStatusAndDateInArbitrationByAccuser || ""));
+      setSupervisionDepartment(contract.supervisionDepartmentByAccuser)
+      setContractNumber(contractId);
+      setAssigningType(contract.assigningTypeByAccuser);
+      setAuthorizedDelays(contract.authorizedDelaysByAccuser ? contract.authorizedDelaysByAccuser : undefined);
+      setUnauthorizedDelays(contract.unauthorizedDelaysByAccuser);
+      setContractNumber(contract.contractNumberByAccuser);
     },
   });
 
@@ -680,16 +530,13 @@ const UpdateContractPage = () => {
   const [updateCompaint] = useMutation(UPDATE_COMPLAINT, {
     variables: {
       id: complaintId ? parseInt(complaintId) : 0,
-      complaintState:
-        newStatesObj.waitingForAccusedToRegisterArbitrationTerms.cap,
+      complaintState: newStatesObj.waitingForAccusedToRegisterArbitrationTerms.cap,
     },
     onCompleted(data) {
       console.log("state", states.AccusedCompletedContract);
       console.log(data);
       alert("ثبت شد");
-      navigate(
-        `/complaints/${contractId}/${complaintId}/addComplaint`
-      );
+      navigate(`/complaints/${contractId}/${complaintId}/addComplaint`);
     },
   });
   //
@@ -704,20 +551,7 @@ const UpdateContractPage = () => {
   return (
     <>
       <BackButton to="/complaints" />
-      <Box
-        display={"grid"}
-        gridTemplateColumns={"repeat(6, 1fr)"}
-        alignItems={"center"}
-        justifyContent={"center"}
-        gap={2}
-        padding={"2rem"}
-        paddingTop={"0"}
-        border={`2px solid ${secondary}`}
-        borderRadius={"1rem"}
-        position={"relative"}
-        marginY={"3rem"}
-        paddingX={"25%"}
-      >
+      <Box display={"grid"} gridTemplateColumns={"repeat(6, 1fr)"} alignItems={"center"} justifyContent={"center"} gap={2} padding={"2rem"} paddingTop={"0"} border={`2px solid ${secondary}`} borderRadius={"1rem"} position={"relative"} marginY={"3rem"} paddingX={"25%"}>
         <Box
           gridColumn={"span 12"}
           borderRadius={"1rem"}
@@ -782,22 +616,66 @@ const UpdateContractPage = () => {
             gridColumn: "span 6",
           }}
         />
-        <FaTextField
+        <TextField
           label="کارفرما"
           sx={{
             width: "100%",
             gridColumn: "span 3",
           }}
+          value={
+            departments.find((d) => {
+              return d.id === AccuserDepartmentId;
+            })?.type === "ORGANIZATION"
+              ? departments.find((d) => {
+                  return d.id === AccuserDepartmentId;
+                })!.label
+              : departments.find((d) => {
+                  return d.id === AccusedDepartmentId;
+                })?.type === "ORGANIZATION"
+              ? departments.find((d) => {
+                  return d.id === AccusedDepartmentId;
+                })!.label
+              : ""
+          }
+          onChange={(e) => {
+            setEmployer(e.target.value);
+          }}
+          disabled={
+            true
+          }
           //   disabled
-        />
-        <FaTextField
+        >
+          {departments.map((item) => (
+            <MenuItem value={item.id}>{item.label}</MenuItem>
+          ))}
+        </TextField>
+        <TextField
           label="طرف قرارداد"
           sx={{
             width: "100%",
             gridColumn: "span 3",
           }}
-          //   disabled
-        />
+          value={
+            departments.find((d) => {
+              return d.id === AccusedDepartmentId;
+            })?.type === "CONTRACTOR_OR_CONSULTANT"
+              ? departments.find((d) => {
+                  return d.id === AccusedDepartmentId;
+                })!.label
+              : departments.find((d) => {
+                return d.id === AccuserDepartmentId;
+              })?.type === "CONTRACTOR_OR_CONSULTANT"
+                ? departments.find((d) => {
+                    return d.id === AccusedDepartmentId;
+                  })!.label : ""
+          }
+          disabled={true
+          }
+        >
+          {departments.map((item) => (
+            <MenuItem value={item.id}>{item.label}</MenuItem>
+          ))}
+        </TextField>
         <div
           style={{
             gridColumn: "span 6",
@@ -854,19 +732,7 @@ const UpdateContractPage = () => {
           تایید اطلاعات
         </Button>
       </Box>
-      <Box
-        display={"grid"}
-        gridTemplateColumns={"repeat(12, 1fr)"}
-        alignItems={"center"}
-        justifyContent={"center"}
-        gap={2}
-        padding={"2rem"}
-        paddingTop={"0rem"}
-        border={`2px solid ${secondary}`}
-        borderRadius={"1rem"}
-        position={"relative"}
-        marginY={"1rem"}
-      >
+      <Box display={"grid"} gridTemplateColumns={"repeat(12, 1fr)"} alignItems={"center"} justifyContent={"center"} gap={2} padding={"2rem"} paddingTop={"0rem"} border={`2px solid ${secondary}`} borderRadius={"1rem"} position={"relative"} marginY={"1rem"}>
         <Box
           gridColumn={"span 12"}
           borderRadius={"1rem"}
@@ -904,18 +770,8 @@ const UpdateContractPage = () => {
             width: "100%",
             gridColumn: "span 3",
           }}
-          value={
-            departments.find(
-              (item) =>
-                AccuserDepartmentId && item.id === AccuserDepartmentId
-            )?.label
-          }
-          placeholder={
-            departments.find(
-              (item) =>
-                AccuserDepartmentId && item.id === AccuserDepartmentId
-            )?.label
-          }
+          value={departments.find((item) => AccuserDepartmentId && item.id === AccuserDepartmentId)?.label}
+          placeholder={departments.find((item) => AccuserDepartmentId && item.id === AccuserDepartmentId)?.label}
           focused
           //   disabled
         />
@@ -930,18 +786,8 @@ const UpdateContractPage = () => {
             width: "100%",
             gridColumn: "span 3",
           }}
-          value={
-            departments.find(
-              (item) =>
-                AccusedDepartmentId && item.id === AccusedDepartmentId
-            )?.label
-          }
-          placeholder={
-            departments.find(
-              (item) =>
-                AccusedDepartmentId && item.id === AccusedDepartmentId
-            )?.label || ""
-          }
+          value={departments.find((item) => AccusedDepartmentId && item.id === AccusedDepartmentId)?.label}
+          placeholder={departments.find((item) => AccusedDepartmentId && item.id === AccusedDepartmentId)?.label || ""}
           focused
           // disabled
         />
@@ -1007,23 +853,13 @@ const UpdateContractPage = () => {
         <FaTypography variant="h5" gridColumn={"span 12"}>
           {"افراد مطلع و مرتبط با پروژه: "}
         </FaTypography>
-        <Box
-          gridColumn={"span 6"}
-          display={"grid"}
-          gridTemplateColumns={"repeat(1,1fr)"}
-          rowGap={2}
-        >
+        <Box gridColumn={"span 6"} display={"grid"} gridTemplateColumns={"repeat(1,1fr)"} rowGap={2}>
           <FaTypography variant="body1" gridColumn={"span 12"}>
-            اسامی و تلفن (ثابت و همراه) افراد مطلع و مرتبط با پروژه از
-            طرف خواهان:
+            اسامی و تلفن (ثابت و همراه) افراد مطلع و مرتبط با پروژه از طرف خواهان:
           </FaTypography>
           {RelatedPeopleByAccusser &&
             RelatedPeopleByAccusser.map((item, index) => (
-              <Box
-                key={index}
-                display={"grid"}
-                gridTemplateColumns={"repeat(12,1fr)"}
-              >
+              <Box key={index} display={"grid"} gridTemplateColumns={"repeat(12,1fr)"}>
                 <Box
                   gridColumn={{
                     xs: "span 12",
@@ -1044,9 +880,7 @@ const UpdateContractPage = () => {
                     }}
                     value={item.name}
                     onChange={(e) => {
-                      const newPeoples = [
-                        ...RelatedPeopleByAccusser,
-                      ] as [
+                      const newPeoples = [...RelatedPeopleByAccusser] as [
                         {
                           name: string;
                           phone: string;
@@ -1067,9 +901,7 @@ const UpdateContractPage = () => {
                     }}
                     value={item.phone}
                     onChange={(e) => {
-                      const newPeoples = [
-                        ...RelatedPeopleByAccusser,
-                      ] as [
+                      const newPeoples = [...RelatedPeopleByAccusser] as [
                         {
                           name: string;
                           phone: string;
@@ -1110,25 +942,13 @@ const UpdateContractPage = () => {
             <Add />
           </IconButton>
         </Box>
-        <Box
-          gridColumn={"span 6"}
-          display={"flex"}
-          flexDirection={"column"}
-          justifyContent={"start"}
-          alignItems={"flex-start"}
-          rowGap={2}
-        >
+        <Box gridColumn={"span 6"} display={"flex"} flexDirection={"column"} justifyContent={"start"} alignItems={"flex-start"} rowGap={2}>
           <FaTypography variant="body1" gridColumn={"span 12"}>
-            اسامی و تلفن (ثابت و همراه) افراد مطلع و مرتبط با پروژه از
-            طرف خوانده:
+            اسامی و تلفن (ثابت و همراه) افراد مطلع و مرتبط با پروژه از طرف خوانده:
           </FaTypography>
           {RelatedPeopleByAccussed &&
             RelatedPeopleByAccussed.map((item, index) => (
-              <Box
-                key={index}
-                display={"grid"}
-                gridTemplateColumns={"repeat(12,1fr)"}
-              >
+              <Box key={index} display={"grid"} gridTemplateColumns={"repeat(12,1fr)"}>
                 <Box
                   gridColumn={{
                     xs: "span 12",
@@ -1149,9 +969,7 @@ const UpdateContractPage = () => {
                     }}
                     value={item.name}
                     onChange={(e) => {
-                      const newPeoples = [
-                        ...RelatedPeopleByAccussed,
-                      ] as [
+                      const newPeoples = [...RelatedPeopleByAccussed] as [
                         {
                           name: string;
                           phone: string;
@@ -1172,9 +990,7 @@ const UpdateContractPage = () => {
                     }}
                     value={item.phone}
                     onChange={(e) => {
-                      const newPeoples = [
-                        ...RelatedPeopleByAccussed,
-                      ] as [
+                      const newPeoples = [...RelatedPeopleByAccussed] as [
                         {
                           name: string;
                           phone: string;
@@ -1233,10 +1049,9 @@ const UpdateContractPage = () => {
           {"مشخصات قرارداد: "}
         </FaTypography>
         <FaTypography variant="h6" gridColumn={"span 12"}>
-          {
-            "در این قسمت لازم است نوع قرارداد همسان سازمان برنامه و بودجه کشور که مورد استفاده قرار گرفته علامت زده شود:"
-          }
+          {"در این قسمت لازم است نوع قرارداد همسان سازمان برنامه و بودجه کشور که مورد استفاده قرار گرفته علامت زده شود:"}
         </FaTypography>
+        {/* {String(contratDetails.contratTypes)} */}
 
         <FormGroup
           sx={{
@@ -1245,13 +1060,7 @@ const UpdateContractPage = () => {
         >
           <FormControlLabel
             control={<Checkbox />}
-            label={
-              <FaTypography>
-                موافقتنامه و شرایط عمومی و شرایط خصوصی پیمان‌ها- نشریه
-                شماره ۴۳۱۱ – بخشنامه شماره 842/54-1088/102 مورخ
-                ۱۳۷۸/۰۳/۰۳
-              </FaTypography>
-            }
+            label={<FaTypography>موافقتنامه و شرایط عمومی و شرایط خصوصی پیمان‌ها- نشریه شماره ۴۳۱۱ – بخشنامه شماره 842/54-1088/102 مورخ ۱۳۷۸/۰۳/۰۳</FaTypography>}
             onChange={(e) => {
               // @ts-ignore
               setContratDetails({
@@ -1267,15 +1076,13 @@ const UpdateContractPage = () => {
                     ),
               });
             }}
+            checked={
+              contratDetails.contratTypes[0] == "on"
+            }
           />
           <FormControlLabel
             control={<Checkbox />}
-            label={
-              <FaTypography>
-                انعقاد پیمان اجرای کارهای ساختمانی به صورت سرجمع-
-                بخشنامه شماره ۹۶/۱۲۹۹۱۸۸ مورخ 1396/05/04
-              </FaTypography>
-            }
+            label={<FaTypography>انعقاد پیمان اجرای کارهای ساختمانی به صورت سرجمع- بخشنامه شماره ۹۶/۱۲۹۹۱۸۸ مورخ 1396/05/04</FaTypography>}
             onChange={(e) => {
               // @ts-ignore
               setContratDetails({
@@ -1291,15 +1098,13 @@ const UpdateContractPage = () => {
                     ),
               });
             }}
+            checked={
+              contratDetails.contratTypes[1] == "on"
+            }
           />
           <FormControlLabel
             control={<Checkbox />}
-            label={
-              <FaTypography>
-                انعقاد پیمان اجرای کارهای ساختمانی به صورت سرجمع-
-                بخشنامه شماره 100/6405 مورخ 1389/02/04
-              </FaTypography>
-            }
+            label={<FaTypography>انعقاد پیمان اجرای کارهای ساختمانی به صورت سرجمع- بخشنامه شماره 100/6405 مورخ 1389/02/04</FaTypography>}
             onChange={(e) => {
               // @ts-ignore
               setContratDetails({
@@ -1315,16 +1120,13 @@ const UpdateContractPage = () => {
                     ),
               });
             }}
+            checked={
+              contratDetails.contratTypes[2] == "on"
+            }
           />
           <FormControlLabel
             control={<Checkbox />}
-            label={
-              <FaTypography>
-                انعقاد پیمان بر اساس فهرست بهای تجمیع شده راه، باند
-                فرودگاه و زیرسازی راه آهن – شماره 65637/100 مورخ
-                1391/08/14
-              </FaTypography>
-            }
+            label={<FaTypography>انعقاد پیمان بر اساس فهرست بهای تجمیع شده راه، باند فرودگاه و زیرسازی راه آهن – شماره 65637/100 مورخ 1391/08/14</FaTypography>}
             onChange={(e) => {
               // @ts-ignore
               setContratDetails({
@@ -1340,6 +1142,9 @@ const UpdateContractPage = () => {
                     ),
               });
             }}
+            checked={
+              contratDetails.contratTypes[3] == "on"
+            }
           />
           <FormControlLabel
             control={<Checkbox />}
@@ -1359,6 +1164,9 @@ const UpdateContractPage = () => {
                     ),
               });
             }}
+            checked={
+              contratDetails.contratTypes[4] == "on"
+            }
           />
           <FormControlLabel
             control={<Checkbox />}
@@ -1378,6 +1186,9 @@ const UpdateContractPage = () => {
                     ),
               });
             }}
+            checked={
+              contratDetails.contratTypes[5] == "on"
+            }
           />
           <FormControlLabel
             control={<Checkbox />}
@@ -1397,6 +1208,9 @@ const UpdateContractPage = () => {
                     ),
               });
             }}
+            checked={
+              contratDetails.contratTypes[6] == "on"
+            }
           />
           <FormControlLabel
             control={<Checkbox />}
@@ -1416,6 +1230,9 @@ const UpdateContractPage = () => {
                     ),
               });
             }}
+            checked={
+              contratDetails.contratTypes[7] == "on"
+            }
           />
           <FormControlLabel
             control={<Checkbox />}
@@ -1435,6 +1252,9 @@ const UpdateContractPage = () => {
                     ),
               });
             }}
+            checked={
+              contratDetails.contratTypes[8] == "on"
+            }
           />
           <FormControlLabel
             control={<Checkbox />}
@@ -1454,6 +1274,9 @@ const UpdateContractPage = () => {
                     ),
               });
             }}
+            checked={
+              contratDetails.contratTypes[9] == "on"
+            }
           />
           <FormControlLabel
             control={<Checkbox />}
@@ -1473,6 +1296,9 @@ const UpdateContractPage = () => {
                     ),
               });
             }}
+            checked={
+              contratDetails.contratTypes[10] == "on"
+            }
           />
           <FormControlLabel
             control={<Checkbox />}
@@ -1492,6 +1318,9 @@ const UpdateContractPage = () => {
                     ),
               });
             }}
+            checked={
+              contratDetails.contratTypes[11] == "on"
+            }
           />
           <FormControlLabel
             control={<Checkbox />}
@@ -1504,6 +1333,9 @@ const UpdateContractPage = () => {
                 other: e.target.checked,
               });
             }}
+            checked={
+              contratDetails.other
+            }
           />
         </FormGroup>
         <FaTextField
@@ -1511,10 +1343,7 @@ const UpdateContractPage = () => {
           variant={"outlined"}
           sx={{
             gridColumn: "span 2",
-            display:
-              contratDetails && contratDetails.other
-                ? "block"
-                : "none",
+            display: contratDetails && contratDetails.other ? "block" : "none",
           }}
           value={contratDetails && contratDetails.CircularTitle}
           onChange={(e) => {
@@ -1532,10 +1361,7 @@ const UpdateContractPage = () => {
           variant={"outlined"}
           sx={{
             gridColumn: "span 2",
-            display:
-              contratDetails && contratDetails.other
-                ? "block"
-                : "none",
+            display: contratDetails && contratDetails.other ? "block" : "none",
           }}
           value={contratDetails && contratDetails.CircularNumber}
           onChange={(e) => {
@@ -1582,13 +1408,8 @@ const UpdateContractPage = () => {
           }}
           sx={{
             gridColumn: "span 2",
-            display:
-              contratDetails && contratDetails.other
-                ? "block"
-                : "none",
-            border: contratDetailsError.error
-              ? "1px solid red"
-              : undefined,
+            display: contratDetails && contratDetails.other ? "block" : "none",
+            border: contratDetailsError.error ? "1px solid red" : undefined,
           }}
           label="تاریخ بخشنامه"
         />
@@ -1647,9 +1468,7 @@ const UpdateContractPage = () => {
                   }}
                   value={item.year}
                   onChange={(e) => {
-                    const newPeoples = [
-                      ...PriceListOfBasicUnitOfField,
-                    ] as [
+                    const newPeoples = [...PriceListOfBasicUnitOfField] as [
                       {
                         year: string;
                         price: string;
@@ -1670,9 +1489,7 @@ const UpdateContractPage = () => {
                   }}
                   value={item.price}
                   onChange={(e) => {
-                    const newPeoples = [
-                      ...PriceListOfBasicUnitOfField,
-                    ] as [
+                    const newPeoples = [...PriceListOfBasicUnitOfField] as [
                       {
                         year: string;
                         price: string;
@@ -1760,20 +1577,19 @@ const UpdateContractPage = () => {
             control={<Radio />}
             label="دارد"
             defaultChecked
-            checked={IsSpecialPriceListAttachedToContract}
+            checked={IsSpecialPriceListAttachedToContract === "دارد"}
             onChange={() => {
-              // @ts-ignore
-              setIsSpecialPriceListAttachedToContract(true);
+              setIsSpecialPriceListAttachedToContract("دارد");
             }}
           />
           <FormControlLabel
             value={false}
             control={<Radio />}
             label="ندارد"
-            checked={!IsSpecialPriceListAttachedToContract}
+            checked={IsSpecialPriceListAttachedToContract === "ندارد"}
             onChange={() => {
               // @ts-ignore
-              setIsSpecialPriceListAttachedToContract(false);
+              setIsSpecialPriceListAttachedToContract("ندارد");
             }}
           />
         </RadioGroup>
@@ -1796,9 +1612,7 @@ const UpdateContractPage = () => {
           variant={"outlined"}
           sx={{
             gridColumn: "span 2",
-            display: IsSpecialPriceListAttachedToContract
-              ? "block"
-              : "none",
+            display: IsSpecialPriceListAttachedToContract ? "block" : "none",
           }}
           value={contratDetails && contratDetails.CircularTitle}
           onChange={(e) => {
@@ -1818,9 +1632,7 @@ const UpdateContractPage = () => {
           variant={"outlined"}
           sx={{
             gridColumn: "span 2",
-            display: IsSpecialPriceListAttachedToContract
-              ? "block"
-              : "none",
+            display: IsSpecialPriceListAttachedToContract ? "block" : "none",
           }}
           value={contratDetails?.CircularNumber || ""}
           onChange={(e) => {
@@ -1875,12 +1687,8 @@ const UpdateContractPage = () => {
           }}
           sx={{
             gridColumn: "span 2",
-            display: IsSpecialPriceListAttachedToContract
-              ? "block"
-              : "none",
-            border: contratDetailsError.error
-              ? "1px solid red"
-              : undefined,
+            display: IsSpecialPriceListAttachedToContract ? "block" : "none",
+            border: contratDetailsError.error ? "1px solid red" : undefined,
           }}
           label="تاریخ بخشنامه"
         />
@@ -1928,13 +1736,7 @@ const UpdateContractPage = () => {
         />
 
         <FaTypography variant="h6" gridColumn={"span 1"}>
-          {RecommendedCoefficient
-            ? RecommendedCoefficient > 1
-              ? (RecommendedCoefficient * 100 - 100).toPrecision(2) +
-                "% پلوس"
-              : (100 - RecommendedCoefficient * 100).toPrecision(2) +
-                "% مینوس"
-            : ""}
+          {RecommendedCoefficient ? (RecommendedCoefficient > 1 ? (RecommendedCoefficient * 100 - 100).toPrecision(2) + "% پلوس" : (100 - RecommendedCoefficient * 100).toPrecision(2) + "% مینوس") : ""}
         </FaTypography>
         {/* <RadioGroup defaultValue={CoefficientType} row>
         <FormControlLabel
@@ -1989,14 +1791,8 @@ const UpdateContractPage = () => {
             gridColumn: "span 6",
           }}
         >
-          <FormLabel id="demo-row-radio-buttons-group-label">
-            نحوه واگذاري كار
-          </FormLabel>
-          <RadioGroup
-            row
-            aria-labelledby="demo-row-radio-buttons-group-label"
-            name="row-radio-buttons-group"
-          >
+          <FormLabel id="demo-row-radio-buttons-group-label">نحوه واگذاري كار</FormLabel>
+          <RadioGroup row aria-labelledby="demo-row-radio-buttons-group-label" name="row-radio-buttons-group">
             <FormControlLabel
               value="مناقصه عمومی"
               checked={AssigningType === "مناقصه عمومی"}
@@ -2027,20 +1823,17 @@ const UpdateContractPage = () => {
                 setAssigningType(e.target.value);
               }}
             />
-            <FormControlLabel
-              control={<FaTextField label="سایر" />}
-              label=""
-              value={
-                AssigningType !== "مناقصه " &&
-                AssigningType !== "ترك مناقصه"
-                  ? AssigningType
-                  : ""
-              }
+             <FormControlLabel
+              value="سایر"
+              checked={AssigningType === "سایر"}
+              control={<Radio />}
+              label="سایر"
               onChange={(e) => {
                 // @ts-ignore
                 setAssigningType(e.target.value);
               }}
             />
+            <FormControlLabel control={<FaTextField label="سایر" disabled={AssigningType !== "سایر"} />} label="" />
           </RadioGroup>
         </FormControl>
 
@@ -2072,9 +1865,7 @@ const UpdateContractPage = () => {
             gridColumn: "span 6",
           }}
         >
-          <FormLabel id="demo-row-radio-buttons-group-label">
-            پيمان مشمول تعديل
-          </FormLabel>
+          <FormLabel id="demo-row-radio-buttons-group-label">پيمان مشمول تعديل</FormLabel>
           <RadioGroup row>
             <FormControlLabel
               value={true}
@@ -2112,7 +1903,7 @@ const UpdateContractPage = () => {
             gridColumn: "span 3",
             display: DoesContainAdjustment ? "block" : "none",
           }}
-          value={BaseIndexPeriod && BaseIndexPeriod.month}
+          value={Adjustment && Adjustment.number}
           onChange={(e) => {
             setAdjustment((prevAdjustment) => ({
               ...prevAdjustment,
@@ -2162,9 +1953,7 @@ const UpdateContractPage = () => {
           sx={{
             gridColumn: "span 3",
             display: DoesContainAdjustment ? "block" : "none",
-            border: AdjustmentError.error
-              ? "1px solid red"
-              : undefined,
+            border: AdjustmentError.error ? "1px solid red" : undefined,
           }}
           label="تاریخ بخشنامه"
         />
@@ -2201,9 +1990,7 @@ const UpdateContractPage = () => {
             gridColumn: "span 12",
           }}
         >
-          <FormLabel id="demo-row-radio-buttons-group-label">
-            نوع دوره شاخص مبنا
-          </FormLabel>
+          <FormLabel id="demo-row-radio-buttons-group-label">نوع دوره شاخص مبنا</FormLabel>
           <RadioGroup row>
             <FormControlLabel
               value={true}
@@ -2214,7 +2001,7 @@ const UpdateContractPage = () => {
                 setBaseIndexPeriod((prevBaseIndexPeriod) => ({
                   ...prevBaseIndexPeriod,
                   isQuarter: true,
-                  quarter: prevBaseIndexPeriod?.quarter || 0,
+                  quarter: prevBaseIndexPeriod?.quarter || '',
                   month: "",
                   year: "",
                 }));
@@ -2229,7 +2016,7 @@ const UpdateContractPage = () => {
                 setBaseIndexPeriod((prevBaseIndexPeriod) => ({
                   ...prevBaseIndexPeriod,
                   isQuarter: false,
-                  quarter: prevBaseIndexPeriod?.quarter || 0,
+                  quarter: prevBaseIndexPeriod?.quarter ||'',
                   month: prevBaseIndexPeriod?.month || "",
                   year: prevBaseIndexPeriod?.year || "",
                 }));
@@ -2243,10 +2030,7 @@ const UpdateContractPage = () => {
           type="number"
           sx={{
             gridColumn: "span 2",
-            display:
-              BaseIndexPeriod && !BaseIndexPeriod.isQuarter
-                ? "block"
-                : "none",
+            display: BaseIndexPeriod && !BaseIndexPeriod.isQuarter ? "block" : "none",
           }}
           value={BaseIndexPeriod && BaseIndexPeriod.month}
           onChange={(e) => {
@@ -2254,7 +2038,7 @@ const UpdateContractPage = () => {
               ...prevBaseIndexPeriod,
               month: e.target.value,
               isQuarter: prevBaseIndexPeriod?.isQuarter || false,
-              quarter: prevBaseIndexPeriod?.quarter || 0,
+              quarter: prevBaseIndexPeriod?.quarter || '',
               year: prevBaseIndexPeriod?.year || "",
             }));
           }}
@@ -2270,20 +2054,7 @@ const UpdateContractPage = () => {
           }}
           fullWidth
         >
-          {[
-            "فروردین",
-            "اردیبهشت",
-            "خرداد",
-            "تیر",
-            "مرداد",
-            "شهریور",
-            "مهر",
-            "آبان",
-            "آذر",
-            "دی",
-            "بهمن",
-            "اسفند",
-          ].map((m) => (
+          {["فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"].map((m) => (
             <MenuItem value={m}>{m}</MenuItem>
           ))}
         </FaTextField>
@@ -2291,20 +2062,17 @@ const UpdateContractPage = () => {
           label="سه ماهه"
           sx={{
             gridColumn: "span 2",
-            display:
-              BaseIndexPeriod && BaseIndexPeriod.isQuarter
-                ? "block"
-                : "none",
+            display: BaseIndexPeriod && BaseIndexPeriod.isQuarter ? "block" : "none",
           }}
           value={BaseIndexPeriod?.quarter || ""}
           onChange={(e) => {
-            setBaseIndexPeriod((prevBaseIndexPeriod) => ({
-              ...prevBaseIndexPeriod,
-              quarter: parseInt(e.target.value),
-              isQuarter: prevBaseIndexPeriod?.isQuarter || false,
-              month: prevBaseIndexPeriod?.month || "",
-              year: prevBaseIndexPeriod?.year || "",
-            }));
+            setBaseIndexPeriod((prevBaseIndexPeriod) => {
+              if (!prevBaseIndexPeriod) return prevBaseIndexPeriod;
+              return {
+                ...prevBaseIndexPeriod,
+                quarter: e.target.value,
+              };
+            });
           }}
           fullWidth
           error={BaseIndexPeriodError.error}
@@ -2318,10 +2086,10 @@ const UpdateContractPage = () => {
             },
           }}
         >
-          <MenuItem value={1}>اول</MenuItem>
-          <MenuItem value={2}>دوم</MenuItem>
-          <MenuItem value={3}>سوم</MenuItem>
-          <MenuItem value={4}>چهارم</MenuItem>
+          <MenuItem value={"اول"}>اول</MenuItem>
+          <MenuItem value={"دوم"}>دوم</MenuItem>
+          <MenuItem value={"سوم"}>سوم</MenuItem>
+          <MenuItem value={"چهارم"}>چهارم</MenuItem>
         </FaTextField>
         <FaTextField
           label="سال"
@@ -2367,15 +2135,12 @@ const UpdateContractPage = () => {
           تاريخ شروع كار:
         </FaTypography>
 
-
         <DateButton
           date={OperationStartDate}
           setDate={setOperationStartDate}
           sx={{
             gridColumn: "span 3",
-            border: OperationStartDateError.error
-              ? "1px solid red"
-              : undefined,
+            border: OperationStartDateError.error ? "1px solid red" : undefined,
           }}
           label="تاريخ شروع كار "
         />
@@ -2416,7 +2181,7 @@ const UpdateContractPage = () => {
           }}
           value={PhysicalProgressInArbitrationDate}
           onChange={(e) => {
-            setPhysicalProgressInArbitrationDate(e.target.value);
+            setPhysicalProgressInArbitrationDate(parseInt(e.target.value));
           }}
           error={PhysicalProgressInArbitrationDateError.error}
           helperText={PhysicalProgressInArbitrationDateError.text}
@@ -2443,14 +2208,10 @@ const UpdateContractPage = () => {
           }}
           value={FinancialProgressInArbitrationDateAccuser}
           onChange={(e) => {
-            setFinancialProgressInArbitrationDateAccuser(
-              e.target.value
-            );
+            setFinancialProgressInArbitrationDateAccuser(parseInt(e.target.value));
           }}
           error={FinancialProgressInArbitrationDateAccuserError.error}
-          helperText={
-            FinancialProgressInArbitrationDateAccuserError.text
-          }
+          helperText={FinancialProgressInArbitrationDateAccuserError.text}
         />
 
         <div
@@ -2485,11 +2246,7 @@ const UpdateContractPage = () => {
             gridColumn: "span 12",
           }}
         >
-          <RadioGroup
-            row
-            aria-labelledby="demo-row-radio-buttons-group-label"
-            name="row-radio-buttons-group"
-          >
+          <RadioGroup row aria-labelledby="demo-row-radio-buttons-group-label" name="row-radio-buttons-group">
             <FormControlLabel
               value="ابلاغ خاتمه"
               control={<Radio />}
@@ -2537,11 +2294,7 @@ const UpdateContractPage = () => {
 
         <FormGroup
           sx={{
-            display:
-              ContractStatusInArbitration === "ابلاغ فسخ" ||
-              ContractStatusInArbitration === "ابلاغ خاتمه"
-                ? "block"
-                : "none",
+            display: ContractStatusInArbitration === "ابلاغ فسخ" || ContractStatusInArbitration === "ابلاغ خاتمه" ? "block" : "none",
             gridColumn: "span 12",
           }}
         >
@@ -2558,23 +2311,6 @@ const UpdateContractPage = () => {
               });
             }}
           />
-          <TextField
-            label="تاریخ تحویل موقت"
-            disabled={!TemporaryDelivery?.checked}
-            value={TemporaryDelivery?.date}
-            onChange={(e) => {
-              // @ts-ignore
-              setTemporaryDelivery({
-                ...TemporaryDelivery,
-                date: e.target.value,
-              });
-            }}
-            type="date"
-            focused
-            sx={{
-              gridColumn: "span 3",
-            }}
-          />
           <FormControlLabel
             control={<Checkbox />}
             label="تحویل قطعی"
@@ -2588,24 +2324,39 @@ const UpdateContractPage = () => {
             }}
             value={FinalDelivery?.checked}
           />
-          <TextField
-            label="تاریخ تحویل موقت"
-            disabled={!FinalDelivery?.checked}
-            value={FinalDelivery?.date}
-            onChange={(e) => {
-              // @ts-ignore
-              setFinalDelivery({
-                ...FinalDelivery,
-                date: e.target.value,
-              });
-            }}
-            type="date"
-            focused
-            sx={{
-              gridColumn: "span 3",
-            }}
-          />
         </FormGroup>
+
+        <DateButton
+          date={TemporaryDelivery && TemporaryDelivery.date}
+          setDate={(date) => {
+            setTemporaryDelivery({
+              ...TemporaryDelivery,
+              // @ts-ignore
+              date: date,
+            });
+          }}
+          sx={{
+            gridColumn: "span 2",
+            display: TemporaryDelivery?.checked ? "block" : "none",
+          }}
+          label="تاریخ تحویل موقت"
+        />
+
+        <DateButton
+          date={FinalDelivery && FinalDelivery.date}
+          setDate={(date) => {
+            setFinalDelivery({
+              ...FinalDelivery,
+              // @ts-ignore
+              date: date,
+            });
+          }}
+          sx={{
+            gridColumn: "span 2",
+            display: FinalDelivery?.checked ? "block" : "none",
+          }}
+          label="تاریخ تحویل قطعی"
+        />
 
         <div
           style={{
@@ -2678,9 +2429,10 @@ const UpdateContractPage = () => {
           InputProps={{
             endAdornment: "روز",
           }}
+          type="number"
           value={AuthorizedDelays}
           onChange={(e) => {
-            setAuthorizedDelays(e.target.value);
+            setAuthorizedDelays(parseInt(e.target.value));
           }}
           error={AuthorizedDelaysError.error}
           helperText={AuthorizedDelaysError.text}
@@ -2711,9 +2463,10 @@ const UpdateContractPage = () => {
           InputProps={{
             endAdornment: "روز",
           }}
+          type="number"
           value={UnauthorizedDelays}
           onChange={(e) => {
-            setUnauthorizedDelays(e.target.value);
+            setUnauthorizedDelays(parseInt(e.target.value));
           }}
           error={UnauthorizedDelaysError.error}
           helperText={UnauthorizedDelaysError.text}
@@ -2730,19 +2483,10 @@ const UpdateContractPage = () => {
 
     
     */}
-        <FaTypography
-          variant="h5"
-          fontWeight={800}
-          gridColumn={"span 12"}
-        >
-          توجه مهم: چنانچه در خصوص تاخیرات و یا تبعات ناشی از آن
-          اختلافی وجود دارد، لازم است موارد زیر ارسال شوند:
+        <FaTypography variant="h5" fontWeight={800} gridColumn={"span 12"}>
+          توجه مهم: چنانچه در خصوص تاخیرات و یا تبعات ناشی از آن اختلافی وجود دارد، لازم است موارد زیر ارسال شوند:
         </FaTypography>
-        <FaTypography
-          variant="h6"
-          fontWeight={800}
-          gridColumn={"span 12"}
-        >
+        <FaTypography variant="h6" fontWeight={800} gridColumn={"span 12"}>
           گزارش توجیهی تاخیرات قرارداد شامل:
         </FaTypography>
         <List
@@ -2750,46 +2494,20 @@ const UpdateContractPage = () => {
             gridColumn: "span 6",
           }}
         >
-          <Box
-            display={"flex"}
-            justifyContent={"space-between"}
-            paddingY={"1rem"}
-          >
-            <FaTypography variant="body1">
-              برنامه های زمان‏بندی اولیه و اصلاحی ابلاغ شده
-            </FaTypography>
+          <Box display={"flex"} justifyContent={"space-between"} paddingY={"1rem"}>
+            <FaTypography variant="body1">برنامه های زمان‏بندی اولیه و اصلاحی ابلاغ شده</FaTypography>
             <FileBox />
           </Box>
-          <Box
-            display={"flex"}
-            justifyContent={"space-between"}
-            paddingY={"1rem"}
-          >
-            <FaTypography variant="body1">
-              گزارش تهیه شده توسط پیمانکار (به همراه کلیه مستندات و
-              پیوست‏ها)
-            </FaTypography>
+          <Box display={"flex"} justifyContent={"space-between"} paddingY={"1rem"}>
+            <FaTypography variant="body1">گزارش تهیه شده توسط پیمانکار (به همراه کلیه مستندات و پیوست‏ها)</FaTypography>
             <FileBox />
           </Box>
-          <Box
-            display={"flex"}
-            justifyContent={"space-between"}
-            paddingY={"1rem"}
-          >
-            <FaTypography variant="body1">
-              گزارش رسیدگی به تاخیرات توسط مهندس مشاور
-            </FaTypography>
+          <Box display={"flex"} justifyContent={"space-between"} paddingY={"1rem"}>
+            <FaTypography variant="body1">گزارش رسیدگی به تاخیرات توسط مهندس مشاور</FaTypography>
             <FileBox />
           </Box>
-          <Box
-            display={"flex"}
-            justifyContent={"space-between"}
-            paddingY={"1rem"}
-          >
-            <FaTypography variant="body1">
-              مستندات ابلاغ نتایج رسیدگی به تاخیرات به پیمانکار توسط
-              کارفرما
-            </FaTypography>
+          <Box display={"flex"} justifyContent={"space-between"} paddingY={"1rem"}>
+            <FaTypography variant="body1">مستندات ابلاغ نتایج رسیدگی به تاخیرات به پیمانکار توسط کارفرما</FaTypography>
             <FileBox />
           </Box>
         </List>

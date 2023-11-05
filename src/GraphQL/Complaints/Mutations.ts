@@ -91,8 +91,8 @@ export const CREATE_ARBITRATION_TERMS_FORM = gql`
     $thirdConditionFileName: String
     $fourthCondition: String!
     $fourthConditionFileName: String
-    $projectName: String!
-    $projectNumber: String!
+    $projectName: String
+    $projectNumber: String
     $hasReadAgreement: Boolean!
   ) {
     arbitrationTermsForm_addArbitrationTermsForm(

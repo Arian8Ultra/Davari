@@ -288,7 +288,7 @@ const AddArgument = () => {
                     color: secondary,
                   }}
                 >
-                  مبلغ خواسته شده ادعا(ریال) جمع کل :{" "}
+                   جمع کل  مبلغ خواسته شده ادعا:
                   {convertToPersianDigits(
                     data?.complaintArgument_getComplaintArguments?.result?.items
                       ?.reduce(
@@ -297,7 +297,8 @@ const AddArgument = () => {
                       )
                       .toString()
                       .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                  )}
+                  )
+                  + " ریال"}
                 </TableCell>
                 <TableCell
                   sx={{
@@ -346,14 +347,15 @@ const AddArgument = () => {
                     // 10% of all suggestedAmounts
                     convertToPersianDigits(
                       (
-                        data?.complaintArgument_getComplaintArguments?.result?.items?.reduce(
+                        (data?.complaintArgument_getComplaintArguments?.result?.items?.reduce(
                           (a, b) => a + (b?.suggestedAmount ?? 0),
                           0
-                        ) ?? 0 * 0.01
+                        ) ?? 0) / 100
                       )
                         .toString()
                         .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                     )
+                    + " ریال"
                   }
                 </TableCell>
                 <TableCell
@@ -478,9 +480,7 @@ const AddArgument = () => {
                 variables: {
                   id: complaintIdInt,
                   complaintState:
-                    newStatesObj
-                      .givingTrackingCodeToComplaint
-                      .cap,
+                    newStatesObj.givingTrackingCodeToComplaint.cap,
                   isApprovedByChief: true,
                 } as {
                   id: number | "" | undefined;
@@ -492,7 +492,6 @@ const AddArgument = () => {
                   navigate("/complaints");
                 },
               });
-
             }
           }}
         >
@@ -512,7 +511,7 @@ const AddArgument = () => {
             color: "white",
             position: "fixed",
             bottom: 10,
-            right: 50,
+            right: 200,
             fontSize: "3rem",
             display: stateInt != 3 ? "none" : "flex",
             borderRadius: "1.5rem",
@@ -522,29 +521,24 @@ const AddArgument = () => {
             },
           }}
           onClick={() => {
-            
-              const agreed = confirm("آیا مطمئن هستید؟");
-              if (!agreed) return;
-              void updateCompaint({
-                variables: {
-                  id: complaintIdInt,
-                  complaintState:
-                    newStatesObj
-                      .waitingForChiefToAssign
-                      .cap,
-                  isApprovedByChief: false,
-                } as {
-                  id: number | "" | undefined;
-                  complaintState: string;
-                  isApprovedByChief: boolean;
-                },
-                onCompleted() {
-                  alert("ثبت شد");
-                  navigate("/complaints");
-                },
-              });
-
-            
+            const agreed = confirm("آیا مطمئن هستید؟");
+            if (!agreed) return;
+            void updateCompaint({
+              variables: {
+                id: complaintIdInt,
+                complaintState:
+                  newStatesObj.waitingForChiefToAssign.cap,
+                isApprovedByChief: false,
+              } as {
+                id: number | "" | undefined;
+                complaintState: string;
+                isApprovedByChief: boolean;
+              },
+              onCompleted() {
+                alert("ثبت شد");
+                navigate("/complaints");
+              },
+            });
           }}
         >
           <BsCheck />

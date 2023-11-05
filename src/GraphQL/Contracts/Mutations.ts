@@ -32,8 +32,8 @@ export const CREATE_CONTRACT = gql`
   ) {
     contract_addContract(
       input: {
-        accuserRelatedPeopleByAccused: $AccuserRelatedPeople
-        accusedRelatedPeopleByAccused: $AccusedRelatedPeople
+        accuserRelatedPeopleByAccuser: $AccuserRelatedPeople
+        accusedRelatedPeopleByAccuser: $AccusedRelatedPeople
         accuserNationality: $AccuserNationality
         contractTypeByAccuser: $ContractType
         circularNumberByAccuser: $CircularNumber
@@ -265,8 +265,8 @@ export type ContractSmall = {
   initialBudgetByAccuser?: number;
   initialTimePeriodByAccused?: number;
   initialTimePeriodByAccuser?: number;
-  priceListOfBasicUnitOfFieldByAccused?: string[];
-  priceListOfBasicUnitOfFieldByAccuser?: string[];
+  priceListOfBasicUnitOfFieldByAccused?: string;
+  priceListOfBasicUnitOfFieldByAccuser?: string;
   isSpecialPriceListAttachedToContractByAccused?: string;
   isSpecialPriceListAttachedToContractByAccuser?: string;
   recommendedCoefficientByAccused?: number;
@@ -285,8 +285,8 @@ export type ContractSmall = {
   physicalProgressInArbitrationDateByAccuser?: number;
   financialProgressInArbitrationDateByAccused?: number;
   financialProgressInArbitrationDateByAccuser?: number;
-  contractStatusAndDateInArbitrationByAccused?: string[];
-  contractStatusAndDateInArbitrationByAccuser?: string[];
+  contractStatusAndDateInArbitrationByAccused?: string;
+  contractStatusAndDateInArbitrationByAccuser?: string;
   supervisionDepartmentByAccused?: string;
   supervisionDepartmentByAccuser?: string;
   authorizedDelaysByAccused?: number;

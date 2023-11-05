@@ -56,7 +56,7 @@ const DateButton = (props: DateButtonProps) => {
               marginInline: 1,
             }}
           >
-            {props.date.toLocaleDateString("fa-IR")}
+            {new Date(props.date).toLocaleDateString("fa-IR")}
           </Box>
         )}
       </Button>

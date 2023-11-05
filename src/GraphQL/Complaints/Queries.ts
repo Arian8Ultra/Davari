@@ -277,6 +277,28 @@ export const GET_COMPLAINT_ASSIGNED = gql`
   }
 `;
 
+export const GET_ARBITRATION_TERMS_FORM_BY_COMPLAINT_ID = gql`
+  query GET_ARBITRATION_TERMS_FORM($id: Int!) {
+    arbitrationTermsForm_getArbitrationTermsForms{
+      result(where: { complaintId: { eq: $id } }) {
+        items {
+          id
+          complaintId
+          firstCondition
+          firstConditionFileName
+          secondCondition
+          secondConditionFileName
+          thirdCondition
+          thirdConditionFileName
+          fourthCondition
+          fourthConditionFileName
+          filledBy
+        }
+      }
+    }
+  }
+`;
+
 export type Complaint = {
   userId: number;
   id: number;
