@@ -17,7 +17,7 @@ import {
   OptionalArgument,
   OptionalArgumentSamll,
 } from "../../static/Types";
-import { Green, background } from "../../theme/color";
+import { Green, GreenLight, background, primary, secondaryDark } from "../../theme/color";
 import FileBox from "../FileBox";
 import NewModal from "../Modals";
 import { newStatesObj } from "../../static/States";
@@ -299,10 +299,13 @@ const ArgumentModal = (props: Props) => {
                 }
               }}
               sx={{
-                background: Green,
-                color: "white",
+                background: primary,
+                color: secondaryDark,
                 borderRadius: "0.5rem",
                 // width: "50%",
+                "&:hover": {
+                  background:GreenLight
+                }
               }}
               variant={"contained"}
             >
@@ -404,10 +407,13 @@ const ArgumentModal = (props: Props) => {
                 }
               }}
               sx={{
-                background: Green,
-                color: "white",
+                background: primary,
+                color: secondaryDark,
                 borderRadius: "0.5rem",
                 width: "100%",
+                "&:hover": {
+                  background:GreenLight
+                }
               }}
               variant={"contained"}
             >
@@ -565,10 +571,13 @@ const ArgumentModal = (props: Props) => {
                 }
               }}
               sx={{
-                background: Green,
-                color: "white",
+                background: primary,
+                color: secondaryDark,
                 borderRadius: "0.5rem",
                 width: "100%",
+                "&:hover": {
+                  background:GreenLight
+                }
               }}
               variant={"contained"}
             >

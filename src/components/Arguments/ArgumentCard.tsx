@@ -455,7 +455,7 @@ const ArgumentCard = ({
               width={"100%"}
               display={"grid"}
               sx={{
-                gridTemplateColumns: "repeat(4, 50px)",
+                gridTemplateColumns: "repeat(2, auto)",
                 gap: 1,
               }}
             >
@@ -469,18 +469,18 @@ const ArgumentCard = ({
                     });
                 }}
                 sx={{
-                  backgroundColor: Green,
-                  color: "white",
+                  backgroundColor: primary,
+                  color: secondaryDark,
                   aspectRatio: "1/1",
                   width: "40px",
                   justifySelf: "center",
                   "&:hover": {
                     backgroundColor: GreenLight,
-                    color: Green,
+                    color: secondaryDark,
                   },
                 }}
               >
-                <BsPaperclip />
+                <BsEyeFill />
               </IconButton>
               <IconButton
                 onClick={() => {
@@ -494,9 +494,11 @@ const ArgumentCard = ({
                 sx={{
                   backgroundColor: secondaryLight,
                   color: secondaryLighter,
-                  aspectRatio: "1/1",
-                  width: "40px",
+                  // aspectRatio: "1/1",
+                  width: "max-content",
                   justifySelf: "center",
+                  fontSize: "0.7rem",
+                  borderRadius:"0.5rem",
                   "&:hover": {
                     backgroundColor: secondaryLighter,
                     color: secondaryDark,
@@ -504,6 +506,7 @@ const ArgumentCard = ({
                 }}
               >
                 <EditRounded />
+                افزودن/ویرایش پاسخ
               </IconButton>
               {/* <IconButton
                 sx={{

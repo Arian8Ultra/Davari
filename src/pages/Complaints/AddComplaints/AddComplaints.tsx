@@ -38,6 +38,7 @@ import FileBox from "../../../components/FileBox";
 import { QueryWrapper } from "../../../GraphQL/QueryWrapper";
 import { MutationWrapper } from "../../../GraphQL/MutationWrapper";
 import { newStates, newStatesObj } from "../../../static/States";
+import TimeLine from "../../../components/TimeLine";
 
 const AddComplaint = () => {
   const navigate = useNavigate();
@@ -179,6 +180,7 @@ const AddComplaint = () => {
   return (
     <>
       <BackButton />
+      <TimeLine stage={3} />
       <Box
         display={"grid"}
         gridTemplateColumns={"repeat(12, 1fr)"}
@@ -186,6 +188,7 @@ const AddComplaint = () => {
         justifyContent={"center"}
         gap={2}
         padding={"3rem"}
+        my={'3rem'}
         border={`2px solid ${secondary}`}
         borderRadius={"1rem"}
         position={"relative"}

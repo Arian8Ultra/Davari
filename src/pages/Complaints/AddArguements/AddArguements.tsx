@@ -45,7 +45,9 @@ import {
   onSecondary,
   primary,
   secondary,
+  secondaryDark,
 } from "../../../theme/color";
+import TimeLine from "../../../components/TimeLine";
 
 const AddArgument = () => {
   const { complaintId, state } = useParams();
@@ -198,7 +200,8 @@ const AddArgument = () => {
         display={!compaintLoading && noAccess ? "none" : "block"}
         position={"relative"}
       >
-        <Box
+        <TimeLine stage={4}/>
+        {/* <Box
           gridColumn={"span 12"}
           borderRadius={"1rem"}
           sx={{
@@ -211,12 +214,13 @@ const AddArgument = () => {
             userSelect: "none",
             width: "max-content",
             zIndex: 1000,
+            my:'3rem'
           }}
         >
           <FaTypography variant="h6" textAlign={"center"}>
             فرم ثبت دعاوی
           </FaTypography>
-        </Box>
+        </Box> */}
         <Box
           sx={{
             borderRadius: "0.5rem",
@@ -227,6 +231,7 @@ const AddArgument = () => {
             flexDirection: "column",
             alignItems: "flex-start",
             justifyContent: "center",
+            my: "2rem",
           }}
         >
           <Table
@@ -401,8 +406,8 @@ const AddArgument = () => {
         </Box>
         <IconButton
           sx={{
-            background: Green,
-            color: "white",
+            background: primary,
+            color: secondaryDark,
             position: "fixed",
             bottom: 10,
             right: 10,
@@ -410,7 +415,7 @@ const AddArgument = () => {
             borderRadius: "1.5rem",
             "&:hover": {
               backgroundColor: GreenLight,
-              color: Green,
+              color: secondaryDark,
             },
           }}
           onClick={() => {
