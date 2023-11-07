@@ -12,6 +12,7 @@ export const GET_ALL_USERS = gql`
           phoneNumber
           nationalCode
           userType
+          parentId
           childUsers {
             parentId
             fullName
@@ -36,7 +37,7 @@ export const GET_ALL_USERS = gql`
 export const GET_ALL_USERS_WITH_PARENT_ID = gql`
 query GetUsers ($id:String!){
   user_getUsers{
-    result(where: {parentId: {eq: $id}}){
+    result(where: {and:[{parentId: {eq: $id}},{userRoles: {none: {roleType: {eq: SENIOR_USER}}}}]}){
       items {
           id
           userName
@@ -45,6 +46,7 @@ query GetUsers ($id:String!){
           phoneNumber
           nationalCode
           userType
+          parentId
           childUsers {
             parentId
             fullName

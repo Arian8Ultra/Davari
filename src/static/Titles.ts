@@ -1,5 +1,5 @@
 export const Titles = {
-    mainTitle:'سامانه داوری',
+    mainTitle:'سامانه هوشمند داوری',
     send:'ارسال',
     cancel:'انصراف',
     save:'ذخیره',

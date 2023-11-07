@@ -10,6 +10,7 @@ export type User = {
   id: string;
   users?: User[];
   parent?: User | null;
+  parentId?:string
   userType?:"INDIVIDUAL" | "ORGANIZATION" | "CONTRACTOR_OR_CONSULTANT";
 };
 

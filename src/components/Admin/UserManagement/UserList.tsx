@@ -82,10 +82,10 @@ const UserList = () => {
           // },
           gap: 1,
           gridTemplateAreas: {
-            xs: `"fullName department userName type" "operation operation operation"`,
-            md: `"fullName department userName type" "operation operation operation"`,
-            lg: `"fullName  department userName type operation"`,
-            xl: `"fullName department userName type operation"`,
+            xs: `"fullName department role userName type" "operation operation operation"`,
+            md: `"fullName department role userName type" "operation operation operation"`,
+            lg: `"fullName  department role userName type operation"`,
+            xl: `"fullName department role userName type operation"`,
           },
           gridAutoColumns: "1fr",
         }}
@@ -94,10 +94,10 @@ const UserList = () => {
           gridArea={"fullName"}
           textAlign={"center"}
           fontSize={{
-            xs: 11,
-            sm: 12,
-            md: 14,
-            lg: 16,
+            xs: 10,
+            sm: 11,
+            md: 12,
+            lg: 14,
           }}
         >
           نام
@@ -108,10 +108,10 @@ const UserList = () => {
           textAlign={"center"}
           gridArea={"department"}
           fontSize={{
-            xs: 11,
-            sm: 12,
-            md: 14,
-            lg: 16,
+            xs: 10,
+            sm: 11,
+            md: 12,
+            lg: 14,
           }}
         >
           بخش
@@ -122,10 +122,10 @@ const UserList = () => {
           textAlign={"center"}
           gridArea={"userName"}
           fontSize={{
-            xs: 11,
-            sm: 12,
-            md: 14,
-            lg: 16,
+            xs: 10,
+            sm: 11,
+            md: 12,
+            lg: 14,
           }}
         >
           نام کاربری
@@ -133,12 +133,25 @@ const UserList = () => {
         <Typography
           display={{ xs: "none", md: "block" }}
           textAlign={"center"}
+          gridArea={"role"}
+          fontSize={{
+            xs: 10,
+            sm: 11,
+            md: 12,
+            lg: 14,
+          }}
+        >
+          نقش کاربر
+        </Typography>
+        <Typography
+          display={{ xs: "none", md: "block" }}
+          textAlign={"center"}
           gridArea={"type"}
           fontSize={{
-            xs: 11,
-            sm: 12,
-            md: 14,
-            lg: 16,
+            xs: 10,
+            sm: 11,
+            md: 12,
+            lg: 14,
           }}
         >
           نوع کاربر
@@ -147,10 +160,10 @@ const UserList = () => {
           gridArea={"operation"}
           textAlign={"center"}
           fontSize={{
-            xs: 11,
-            sm: 12,
-            md: 14,
-            lg: 16,
+            xs: 10,
+            sm: 11,
+            md: 12,
+            lg: 14,
           }}
         >
           ...
@@ -170,8 +183,9 @@ const UserList = () => {
               userName={user.userName}
               refetch={refetch}
               userRoles={user.userRoles}
+              parentId={user.parentId}
               userType={
-                user.userType == "INDIVIDUAL" ? "حقیقی" : user.userType == "CONTRACTOR_OR_CONSULTANT" ? "مشاور یا پیمانکار" : "دستگاه"              }
+                user.userType == "INDIVIDUAL" ? "حقیقی" : user.userType == "CONTRACTOR_OR_CONSULTANT" ? "پیمانکار / مشاور" : "دستگاه"              }
             />
           ))
         : parentData?.user_getUsers?.result?.items?.map(
@@ -184,8 +198,9 @@ const UserList = () => {
                 userName={user.userName}
                 refetch={refetch}
                 userRoles={user.userRoles}
+                parentId={user.parentId}
                 userType={
-                  user.userType == "INDIVIDUAL" ? "حقیقی" : user.userType == "CONTRACTOR_OR_CONSULTANT" ? "مشاور یا پیمانکار" : "دستگاه"
+                  user.userType == "INDIVIDUAL" ? "حقیقی" : user.userType == "CONTRACTOR_OR_CONSULTANT" ? "پیمانکار / مشاور" : "دستگاه"
                 }
               />
             )

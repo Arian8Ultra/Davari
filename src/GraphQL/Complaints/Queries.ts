@@ -3,11 +3,12 @@ import { gql } from "@apollo/client";
 export const GET_COMPLAINTS = gql`
   query GET_COMPLAINTS {
     complaint_getComplaints {
-      result {
+      result (take: 2000){
         items {
           userId
           id
           contractId
+          createdDate
           isApprovedByChief
           arbitrationTermsForms {
             firstCondition
@@ -30,9 +31,13 @@ export const GET_COMPLAINTS = gql`
             contractNumberByAccuser
             contractDateByAccuser
             initialBudgetByAccuser
+            accusedDepartmentUserId
+            accuserDepartmentUserId
           }
         }
       }
+      status
+      __typename
     }
   }
 `;

@@ -141,7 +141,7 @@ const UserManagement = () => {
         >
           افزودن کاربر
         </Button> */}
-        <Button
+        {/* <Button
           variant="contained"
           endIcon={<BsPersonAdd />}
           onClick={() => [
@@ -173,7 +173,7 @@ const UserManagement = () => {
           }}
         >
           افزودن کارشناس
-        </Button>
+        </Button> */}
         <Button
           variant="contained"
           endIcon={<BsPersonAdd />}
@@ -521,7 +521,7 @@ const UserManagement = () => {
             open: false,
           })
         }
-        name={"افزودن کارشناس به دستگاه"}
+        name={"افزودن کاربر به دستگاه"}
         width={{
           xs: "90%",
           sm: "60%",

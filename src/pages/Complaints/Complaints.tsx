@@ -9,6 +9,9 @@ import {
   Yellow,
   YellowLight,
   background,
+  primary,
+  secondary,
+  secondaryDark,
 } from "../../theme/color";
 import { AiFillFileAdd } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
@@ -53,8 +56,8 @@ const Complaints = () => {
           endIcon={<AiFillFileAdd />}
           onClick={() => [setAddModal({ ...addModal, open: true })]}
           sx={{
-            borderRadius: 5,
-            backgroundColor: Green,
+            borderRadius: '0.7rem',
+            backgroundColor: primary,
             fontWeight: 400,
             fontStyle: "normal",
             fontSize: "1.2rem",
@@ -62,9 +65,11 @@ const Complaints = () => {
             position: "fixed",
             top: theme.spacing(10),
             right: 20,
+            color:secondaryDark,
             "&:hover": {
               backgroundColor: GreenLight,
-              color: Green,
+              color: secondary,
+              boxShadow:'none'
             },
             display: user?.userRoles?.some(
               (role) => role.roleType === "SENIOR_USER" || role.roleType === "EXPERT"
@@ -113,6 +118,13 @@ const Complaints = () => {
             userId={user.id}
           />
         )}
+        {user?.userRoles?.some(
+          (role) => role.roleType === "SUPER_ADMIN"
+        ) && (
+          <ComplaintsList
+            type="all"
+          />
+        )}
       </Box>
 
       <NewModal
@@ -155,15 +167,16 @@ const Complaints = () => {
             variant="contained"
             sx={{
               borderRadius: 2,
-              backgroundColor: Yellow,
+              backgroundColor: primary,
               fontWeight: 400,
               fontStyle: "normal",
               fontSize: "1rem",
               boxShadow: "none",
               // height: "max-content",
-              color: "black",
+              color: secondaryDark,
               "&:hover": {
-                backgroundColor: YellowLight,
+                backgroundColor: GreenLight,
+                boxShadow:'none'
               },
             }}
             onClick={() => {
@@ -189,6 +202,7 @@ const Complaints = () => {
               "&:hover": {
                 backgroundColor: GreenLight,
                 color: Green,
+                boxShadow:'none'
               },
             }}
             onClick={() => {

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unused-vars */
@@ -17,7 +19,7 @@ import {
   Typography,
 } from "@mui/material";
 import { grey } from "@mui/material/colors";
-import { useState } from "react";
+import React, { useState } from "react";
 import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
 import { BsFillCaretDownFill, BsKey } from "react-icons/bs";
 import { VscPreview } from "react-icons/vsc";
@@ -27,7 +29,10 @@ import {
   UserDelete,
   UserUpdate,
 } from "../../../GraphQL/Users/Mutations";
-import { UserRole } from "../../../GraphQL/Users/Queries";
+import {
+  GET_ALL_ORGANIZATION_USERS,
+  UserRole,
+} from "../../../GraphQL/Users/Queries";
 import { convertRoleToPersian } from "../../../functions/Functions";
 import {
   Blue,
@@ -51,6 +56,7 @@ interface Props {
   refetch: () => void;
   userRoles?: UserRole[];
   userType?: string;
+  parentId?: string;
 }
 const UserCard = (props: Props) => {
   // alijh state for modal
@@ -130,6 +136,43 @@ const UserCard = (props: Props) => {
     },
   });
 
+  const [departments, setDepartments] = React.useState<
+    {
+      label: string;
+      id: string;
+      type:
+        | "INDIVIDUAL"
+        | "ORGANIZATION"
+        | "CONTRACTOR_OR_CONSULTANT";
+    }[]
+  >([]);
+  useQuery(GET_ALL_ORGANIZATION_USERS, {
+    onCompleted(data) {
+      console.log(data);
+      // remove department that id is e7a85297-91d4-4f27-a4b2-ff394fe71dd3
+      setDepartments(
+        data?.user_getUsers?.result?.items?.map(
+          (item: {
+            id: number;
+            fullName: string;
+            userType:
+              | "INDIVIDUAL"
+              | "ORGANIZATION"
+              | "CONTRACTOR_OR_CONSULTANT";
+          }) => ({
+            label: item.fullName,
+            id: item.id,
+            type: item.userType,
+          })
+        )
+      );
+    },
+    onError(error) {
+      console.log(error);
+    },
+  });
+
+
   return (
     <Box
       sx={{
@@ -141,11 +184,11 @@ const UserCard = (props: Props) => {
         display: "grid",
         alignItems: "center",
         gap: 1,
-        gridTemplateAreas:{
-          xs: `"fullName department userName type" "operation operation operation"`,
-          md: `"fullName department userName type" "operation operation operation"`,
-          lg: `"fullName  department userName type operation"`,
-          xl: `"fullName department userName type operation"`,
+        gridTemplateAreas: {
+          xs: `"fullName department role userName type" "operation operation operation"`,
+          md: `"fullName department role userName  type" "operation operation operation"`,
+          lg: `"fullName  department role userName type operation"`,
+          xl: `"fullName department role userName type operation"`,
         },
         gridAutoColumns: "1fr",
         "&:hover": {
@@ -157,10 +200,10 @@ const UserCard = (props: Props) => {
         gridArea={"fullName"}
         textAlign={"center"}
         fontSize={{
-          xs: 11,
-          sm: 12,
-          md: 14,
-          lg: 16,
+          xs: 10,
+          sm: 11,
+          md: 12,
+          lg: 14,
         }}
       >
         {props.fullName && props.fullName}
@@ -171,16 +214,20 @@ const UserCard = (props: Props) => {
         display={{ xs: "none", md: "block" }}
         textAlign={"center"}
         fontSize={{
-          xs: 11,
-          sm: 12,
-          md: 14,
-          lg: 16,
+          xs: 10,
+          sm: 11,
+          md: 12,
+          lg: 14,
         }}
         // sx={{
         //   outline:'2px solid red'
         // }}
       >
-        {props.department ? props.department : "ندارد"}
+        {props.parentId
+          ? departments.find((d) => {
+              return d.id === props.parentId;
+            })?.label
+          : "---"}
       </Typography>
 
       <Typography
@@ -188,10 +235,10 @@ const UserCard = (props: Props) => {
         display={{ xs: "none", md: "block" }}
         textAlign={"center"}
         fontSize={{
-          xs: 11,
-          sm: 12,
-          md: 14,
-          lg: 16,
+          xs: 10,
+          sm: 11,
+          md: 12,
+          lg: 14,
         }}
         // sx={{
         //   outline:'2px solid red'
@@ -200,14 +247,36 @@ const UserCard = (props: Props) => {
         {props.userName && props.userName}
       </Typography>
       <Typography
+        gridArea={"role"}
+        display={{ xs: "none", md: "flex" }}
+        textAlign={"center"}
+        fontSize={{
+          xs: 9,
+          sm: 10,
+          md: 11,
+          lg: 12,
+        }}
+        sx={{
+          justifyContent:'center',
+          alignItems:'center'
+        }}
+      >
+        {props.userRoles && props.userRoles?.length>0?
+          props.userRoles.map((role,index) => (
+            <Typography>
+              {convertRoleToPersian(role.roleType) + (props.userRoles && index!=props.userRoles?.length-1 ? "، " : "")}
+            </Typography>
+          )): "---"}
+      </Typography>
+      <Typography
         gridArea={"type"}
         display={{ xs: "none", md: "block" }}
         textAlign={"center"}
         fontSize={{
-          xs: 11,
-          sm: 12,
-          md: 14,
-          lg: 16,
+          xs: 10,
+          sm: 11,
+          md: 12,
+          lg: 14,
         }}
         // sx={{
         //   outline:'2px solid red'
@@ -404,7 +473,7 @@ const UserCard = (props: Props) => {
             </Tooltip>
             <Typography>تغییر دسترسی ها</Typography>
           </MenuItem>
-          <MenuItem
+          {/* <MenuItem
             onClick={handleCloseAnchor}
             sx={{
               gap: 1,
@@ -434,7 +503,7 @@ const UserCard = (props: Props) => {
               </IconButton>
             </Tooltip>
             <Typography>تغییر رمز عبور</Typography>
-          </MenuItem>
+          </MenuItem> */}
         </Menu>
       </Box>
 

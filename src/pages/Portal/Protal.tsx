@@ -15,6 +15,15 @@ const Protal = () => {
         />
       )}
       {user?.userRoles?.find(
+        (role) => role.roleType === "SENIOR_USER"
+      ) && (
+        <ComplaintsList
+          type="all"
+          userId={user.id}
+          departmentId={user.parentId}
+        />
+      )}
+      {user?.userRoles?.find(
         (role) => role.roleType === "EXPERT"
       ) && (
         <ComplaintsList

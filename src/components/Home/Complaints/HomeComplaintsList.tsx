@@ -31,7 +31,7 @@ const HomeComplaintsList = ({ columns, rows }: Props) => {
     refetch: accuserRefetch,
   } = useQuery(GET_ACCUSER_COMPLAINTS, {
     variables: {
-        departmentId: user.id,
+        departmentId: user.userType == "ORGANIZATION" || user.userType == "CONTRACTOR_OR_CONSULTANT" ? user.id : user.parentId,
     },
     onCompleted(data) {
       console.log("accuser data", data);
@@ -44,7 +44,7 @@ const HomeComplaintsList = ({ columns, rows }: Props) => {
     refetch: accusedRefetch,
   } = useQuery(GET_ACCUSED_COMPLAINTS, {
     variables: {
-        departmentId: user.id,
+        departmentId: user.userType == "ORGANIZATION" || user.userType == "CONTRACTOR_OR_CONSULTANT" ? user.id : user.parentId,
     },
     onCompleted(data) {
       console.log("accused data", data);
@@ -101,7 +101,7 @@ const HomeComplaintsList = ({ columns, rows }: Props) => {
                 />
               )
             )}
-        {accusedData?.complaint_getComplaints?.result.items.map(
+        {(user.userRoles?.some((role)=>role.roleType=="SENIOR_USER") || user.userType=="ORGANIZATION" || user.userType=="CONTRACTOR_OR_CONSULTANT" )&& accusedData?.complaint_getComplaints?.result.items.map(
               (complaint: Complaint) => (
                 <ComplaintCardNew
                   key={complaint.id}
@@ -115,7 +115,7 @@ const HomeComplaintsList = ({ columns, rows }: Props) => {
                 />
               )
             )}
-        {accuserData?.complaint_getComplaints?.result.items.map(
+        {(user.userRoles?.some((role)=>role.roleType=="SENIOR_USER") || user.userType=="ORGANIZATION" || user.userType=="CONTRACTOR_OR_CONSULTANT" )&& accuserData?.complaint_getComplaints?.result.items.map(
               (complaint: Complaint) => (
                 <ComplaintCardNew
                   key={complaint.id}

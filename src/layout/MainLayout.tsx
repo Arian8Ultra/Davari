@@ -685,6 +685,7 @@ export default function MainLayout() {
                     flexGrow: 1,
                     color: secondary,
                     marginRight: 2,
+                    display: user.userType === "CONTRACTOR_OR_CONSULTANT" ? "none" : "block",
                   }}
                 >
                   {user.userType != "CONTRACTOR_OR_CONSULTANT" &&

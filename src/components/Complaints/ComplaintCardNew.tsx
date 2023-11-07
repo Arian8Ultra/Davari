@@ -76,7 +76,8 @@ interface Props {
     | "accuser"
     | "assigned"
     | "chief"
-    | "mainRoomExpert";
+    | "mainRoomExpert"
+    | 'all';
   departmentId?: string;
   refetch?: () => void;
 }
