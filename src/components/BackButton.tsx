@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { primary } from "../theme/color";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
-const BackButton = (props: { steps?: number; to?: string }) => {
+const BackButton = (props: { steps?: number; to?: string; label?:string; }) => {
   const navigate = useNavigate();
   return (
     <Button
@@ -32,7 +32,7 @@ const BackButton = (props: { steps?: number; to?: string }) => {
       }}
     >
       <ChevronRightIcon />
-      بازگشت
+      بازگشت {props.label}
     </Button>
   );
 };
