@@ -3,7 +3,7 @@ import { gql } from "@apollo/client";
 export const GET_COMPLAINTS = gql`
   query GET_COMPLAINTS {
     complaint_getComplaints {
-      result (take: 2000){
+      result(take: 2000, order: { createdDate: DESC }) {
         items {
           userId
           id
@@ -85,6 +85,7 @@ export const GET_ACCUSED_COMPLAINTS = gql`
         where: {
           contract: { accusedDepartmentUserId: { eq: $departmentId } }
         }
+        order: { createdDate: DESC }
       ) {
         items {
           userId
@@ -129,6 +130,7 @@ export const GET_ACCUSER_COMPLAINTS = gql`
         where: {
           contract: { accuserDepartmentUserId: { eq: $departmentId } }
         }
+        order: { createdDate: DESC }
       ) {
         items {
           userId
@@ -171,10 +173,15 @@ export const GET_CHIEF_COMPLAINTS = gql`
       result(
         where: {
           or: [
-            { complaintState: { eq: WAITING_FOR_CHIEF_TO_ASSIGN  } },
-            { complaintState: { eq: WAITING_FOR_CHIEF_TO_APPROVE_EXPERTS_ANSWERS_TO_ARGUMENTS } }
+            { complaintState: { eq: WAITING_FOR_CHIEF_TO_ASSIGN } }
+            {
+              complaintState: {
+                eq: WAITING_FOR_CHIEF_TO_APPROVE_EXPERTS_ANSWERS_TO_ARGUMENTS
+              }
+            }
           ]
         }
+        order: { createdDate: DESC }
       ) {
         items {
           userId
@@ -284,7 +291,7 @@ export const GET_COMPLAINT_ASSIGNED = gql`
 
 export const GET_ARBITRATION_TERMS_FORM_BY_COMPLAINT_ID = gql`
   query GET_ARBITRATION_TERMS_FORM($id: Int!) {
-    arbitrationTermsForm_getArbitrationTermsForms{
+    arbitrationTermsForm_getArbitrationTermsForms {
       result(where: { complaintId: { eq: $id } }) {
         items {
           id

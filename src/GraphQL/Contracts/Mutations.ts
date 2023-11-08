@@ -140,6 +140,85 @@ export const UPDATE_CONTRACT_BY_ACCUSED = gql`
     }
   }
 `;
+
+
+
+
+export const UPDATE_CONTRACT_BY_ACCUSER = gql`
+  mutation UPDATE_CONTRACT_BY_ACCUSER(
+    $AccuserRelatedPeople: String
+    $AccusedRelatedPeople: String
+    $AccuserNationality: String
+    $ContractType: [String!]
+    $CircularNumber: String
+    $CircularDate: Date
+    $ContractSubject: String
+    $ContractNumber: String
+    $ContractDate: Date
+    $InitialBudget: Decimal
+    $InitialTimePeriod: Int
+    $PriceListOfBasicUnitOfField: String
+    $IsSpecialPriceListAttachedToContract: String
+    $RecommendedCoefficient: Float
+    $CoefficientType: String
+    $AssigningType: String
+    $DoesContainAdjustment: String
+    $BaseIndexPeriod: String
+    $OperationStartDateAccuser: Date
+    $PhysicalProgressInArbitrationDateAccuser: Int
+    $FinancialProgressInArbitrationDateAccuser: Int
+    $ContractStatusInArbitration: [String!]
+    $SupervisionDepartment: String
+    $AuthorizedDelaysAccuser: Int
+    $UnauthorizedDelaysAccuser: Int
+    $id: Int!
+    $AccusedDepartmentId: String
+    $AccuserDepartmentId: String
+  ) {
+    contract_updateContract(
+      input: {
+        id: $id
+        accuserRelatedPeopleByAccuser: $AccuserRelatedPeople
+        accusedRelatedPeopleByAccuser: $AccusedRelatedPeople
+        accuserNationality: $AccuserNationality
+        contractTypeByAccuser: $ContractType
+        circularNumberByAccuser: $CircularNumber
+        circularDateByAccuser: $CircularDate
+        contractSubjectByAccuser: $ContractSubject
+        contractNumberByAccuser: $ContractNumber
+        contractDateByAccuser: $ContractDate
+        initialBudgetByAccuser: $InitialBudget
+        initialTimePeriodByAccuser: $InitialTimePeriod
+        priceListOfBasicUnitOfFieldByAccuser: $PriceListOfBasicUnitOfField
+        isSpecialPriceListAttachedToContractByAccuser: $IsSpecialPriceListAttachedToContract
+        recommendedCoefficientByAccuser: $RecommendedCoefficient
+        coefficientTypeByAccuser: $CoefficientType
+        assigningTypeByAccuser: $AssigningType
+        doesContainAdjustmentByAccuser: $DoesContainAdjustment
+        baseIndexPeriodByAccuser: $BaseIndexPeriod
+        operationStartDateByAccuser: $OperationStartDateAccuser
+        physicalProgressInArbitrationDateByAccuser: $PhysicalProgressInArbitrationDateAccuser
+        financialProgressInArbitrationDateByAccuser: $FinancialProgressInArbitrationDateAccuser
+        contractStatusAndDateInArbitrationByAccuser: $ContractStatusInArbitration
+        supervisionDepartmentByAccuser: $SupervisionDepartment
+        authorizedDelaysByAccuser: $AuthorizedDelaysAccuser
+        unauthorizedDelaysByAccuser: $UnauthorizedDelaysAccuser
+        accusedDepartmentUserId: $AccusedDepartmentId
+        accuserDepartmentUserId: $AccuserDepartmentId
+      }
+    ) {
+      result {
+        id
+      }
+      status {
+        code
+        value
+      }
+    }
+  }
+`;
+
+
 export const UPDATE_CONTRACT_BY_EXPERT= gql`
   mutation UPDATE_CONTRACT_BY_ACCUSED(
     $isExecutive: Boolean!

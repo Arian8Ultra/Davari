@@ -1,3 +1,4 @@
+/* eslint-disable no-mixed-spaces-and-tabs */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
@@ -240,35 +241,37 @@ const ArgumentCard = ({
               borderLeft: `1px solid ${secondary}`,
             }}
           >
-            <Button
-              variant="contained"
-              endIcon={<AiFillFileAdd />}
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-              onClick={() => {
-                // download file with url in fileName
-                window.open(
-                  "http://172.16.23.50:7030/files/" +
-                    arguement.fileName
-                );
-              }}
-              sx={{
-                borderRadius: 2,
-                backgroundColor: Green,
-                fontWeight: 700,
-                fontStyle: "normal",
-                fontSize: "0.7rem",
-                boxShadow: "none",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                "&:hover": {
-                  backgroundColor: GreenLight,
-                  color: Green,
-                },
-              }}
-            >
-              {arguement.fileName}
-            </Button>
+            {arguement.fileName && arguement.fileName?.length > 0 && (
+              <Button
+                variant="contained"
+                endIcon={<AiFillFileAdd />}
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+                onClick={() => {
+                  // download file with url in fileName
+                  window.open(
+                    "http://172.16.23.50:7030/files/" +
+                      arguement.fileName
+                  );
+                }}
+                sx={{
+                  borderRadius: 2,
+                  backgroundColor: Green,
+                  fontWeight: 700,
+                  fontStyle: "normal",
+                  fontSize: "0.7rem",
+                  boxShadow: "none",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  "&:hover": {
+                    backgroundColor: GreenLight,
+                    color: Green,
+                  },
+                }}
+              >
+                {arguement.fileName}
+              </Button>
+            )}
           </TableCell>
           <TableCell
             width={"250px"}
@@ -498,7 +501,7 @@ const ArgumentCard = ({
                   width: "max-content",
                   justifySelf: "center",
                   fontSize: "0.7rem",
-                  borderRadius:"0.5rem",
+                  borderRadius: "0.5rem",
                   "&:hover": {
                     backgroundColor: secondaryLighter,
                     color: secondaryDark,
@@ -792,7 +795,7 @@ const ArgumentCard = ({
             )}
           </TableCell>
           <TableCell
-            width={'50px'}
+            width={"50px"}
             sx={{
               borderLeft: `1px solid ${secondary}`,
               padding: 1,

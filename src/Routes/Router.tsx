@@ -38,6 +38,7 @@ const AddArgument = lazy(
 );
 import "../index.css";
 import ContractPage from "../pages/Contracts/ContractPage";
+import UpdateContractAccuserPage from "../pages/Complaints/AddContract/UpdateContractAccuserPage";
 const UpdateContractPage = lazy(
   () => import("../pages/Complaints/AddContract/UpdateContractPage")
 );
@@ -67,6 +68,10 @@ const router = createBrowserRouter(
         <Route
           path="complaints/:contractId/:complaintId/UpdateContractPage"
           element={<UpdateContractPage />}
+        />
+        <Route
+          path="complaints/:contractId/:complaintId/UpdateContractAccuserPage"
+          element={<UpdateContractAccuserPage />}
         />
         <Route
           path="complaints/:contractId/:complaintId/addComplaint"

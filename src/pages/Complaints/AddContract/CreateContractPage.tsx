@@ -62,8 +62,11 @@ const CreateContractPage = () => {
   const navigate = useNavigate();
   const [stage, setStage] = useState(1);
   const { contractId } = useParams<{ contractId?: string }>();
-  const [ hasIncOrDec, setHasIncOrDec ] = useState(false);
+  const [hasIncOrDec, setHasIncOrDec] = useState(false);
   const [finalAmount, setFinalAmount] = useState<number>();
+  const [hasBeenDirected, setHasBeenDirected] = useState(false);
+  const [newEmployer, setNewEmployer] = useState<string>();
+
   const [RelatedPeopleByAccusser, setRelatedPeopleByAccusser] =
     React.useState<
       [
@@ -1020,8 +1023,22 @@ const CreateContractPage = () => {
               gridColumn: "span 6",
             }}
           />
+          <FormControlLabel
+            label={"ابلاغ افزایش / کاهش مبلغ"}
+            sx={{
+              gridColumn: "span 3",
+            }}
+            control={
+              <Checkbox
+                checked={hasIncOrDec}
+                onChange={(e) => {
+                  setHasIncOrDec(e.target.checked);
+                }}
+              />
+            }
+          />
           <FaTextField
-            label="مبلغ اوليه/ حق‌الزحمه قرارداد: "
+            label="مبلغ نهایی قرارداد"
             variant="outlined"
             type="number"
             InputProps={{
@@ -1030,30 +1047,105 @@ const CreateContractPage = () => {
             sx={{
               gridColumn: "span 3",
             }}
-            value={InitialBudget}
+            value={finalAmount}
             onChange={(e) => {
-              setInitialBudget(parseInt(e.target.value));
+              setFinalAmount(parseInt(e.target.value));
             }}
-            error={InitialBudgetError.error}
-            helperText={InitialBudgetError.text}
+            disabled={!hasIncOrDec}
           />
-          <FaTextField
-            label="مدت اوليه قرارداد: "
-            variant="outlined"
-            type="text"
-            InputProps={{
-              endAdornment: "ماه",
+
+          {/* check box ابلاغ افزایش / کاهش مبلغ => وقتی انتخاب کرد یه باکس به اسم مبلغ نهایی قرارداد اضاف بشه */}
+
+          <div
+            style={{
+              gridColumn: "span 6",
             }}
+          />
+          <FormControlLabel
+            label={"قرارداد دارای انتقال میباشد"}
             sx={{
               gridColumn: "span 3",
             }}
-            value={InitialTimePeriod}
-            onChange={(e) => {
-              setInitialTimePeriod(parseInt(e.target.value));
-            }}
-            error={InitialTimePeriodError.error}
-            helperText={InitialTimePeriodError.text}
+            control={
+              <Checkbox
+                checked={hasBeenDirected}
+                onChange={(e) => {
+                  setHasBeenDirected(e.target.checked);
+                }}
+                disabled={
+                  user.userType == "ORGANIZATION" ||
+                  departments.find((d) => {
+                    return d.id === user.parentId;
+                  })?.type === "ORGANIZATION"
+                    ? true
+                    : false
+                }
+              />
+            }
           />
+          <FaTextField
+            label="کارفرمای جدید"
+            variant="outlined"
+            sx={{
+              gridColumn: "span 3",
+            }}
+            value={finalAmount}
+            onChange={(e) => {
+              setNewEmployer(e.target.value);
+              {
+                setEmployer(e.target.value);
+                if (e) {
+                  console.log(e.target.value);
+                  setAccusedDepartmentId(e.target.value);
+                  void getUser({
+                    variables: {
+                      id: e.target.value,
+                    },
+                    onCompleted(data) {
+                      console.log(data);
+                      if (
+                        data?.user_getUserQueryable?.result?.items[0]
+                          ?.parent
+                      ) {
+                        handleParent(
+                          data?.user_getUserQueryable?.result
+                            ?.items[0]?.parent,
+                          {
+                            fullName:
+                              data?.user_getUserQueryable?.result
+                                ?.items[0]?.fullName,
+                            id: data?.user_getUserQueryable?.result
+                              .items[0]?.id,
+                          }
+                        );
+                      } else {
+                        setTreeViewObject({
+                          fullName:
+                            data?.user_getUserQueryable?.result
+                              ?.items[0]?.fullName,
+                          id: data?.user_getUserQueryable?.result
+                            .items[0]?.id,
+                        });
+                      }
+                    },
+                  });
+                }
+              }
+            }}
+            select={
+              user.userType == "ORGANIZATION" ||
+              departments.find((d) => {
+                return d.id === user.parentId;
+              })?.type === "ORGANIZATION"
+                ? false
+                : true
+            }
+            disabled={!hasBeenDirected}
+          >
+            {departments.map((item) => (
+              <MenuItem value={item.id}>{item.label}</MenuItem>
+            ))}
+          </FaTextField>
 
           {/* check box ابلاغ افزایش / کاهش مبلغ => وقتی انتخاب کرد یه باکس به اسم مبلغ نهایی قرارداد اضاف بشه */}
 
@@ -2096,12 +2188,14 @@ const CreateContractPage = () => {
                     label="سال"
                     variant="outlined"
                     autoComplete="name"
-                    type="text"
+                    // type="text"
                     sx={{
                       gridColumn: "span 1",
                     }}
                     value={item.year}
                     onChange={(e) => {
+                      console.log(e);
+
                       const newPeoples = [
                         ...PriceListOfBasicUnitOfField,
                       ] as [
@@ -2114,7 +2208,7 @@ const CreateContractPage = () => {
                       setPriceListOfBasicUnitOfField(newPeoples);
                       console.log(PriceListOfBasicUnitOfField);
                     }}
-                    select
+                    // select
                     SelectProps={{
                       MenuProps: {
                         sx: {
@@ -2123,7 +2217,7 @@ const CreateContractPage = () => {
                       },
                     }}
                   >
-                    {[
+                    {/* {[
                       "1370",
                       "1371",
                       "1372",
@@ -2160,7 +2254,7 @@ const CreateContractPage = () => {
                       "1403",
                     ].map((y) => (
                       <MenuItem value={y}>{y}</MenuItem>
-                    ))}
+                    ))} */}
                   </FaTextField>
                   <TextField
                     label="فهرست بهاي واحد پايه رشته"
@@ -2433,7 +2527,7 @@ const CreateContractPage = () => {
             }}
           />
 
-          <FaTypography variant="h6" gridColumn={"span 4"}>
+          <FaTypography variant="h6" gridColumn={"span 3"}>
             {RecommendedCoefficient
               ? RecommendedCoefficient > 1
                 ? (RecommendedCoefficient * 100 - 100).toPrecision(

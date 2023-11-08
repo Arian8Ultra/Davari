@@ -2035,16 +2035,16 @@ const UpdateContractPage = () => {
                       setPriceListOfBasicUnitOfField(newPeoples);
                       console.log(PriceListOfBasicUnitOfField);
                     }}
-                    select
-                    SelectProps={{
-                      MenuProps: {
-                        sx: {
-                          maxHeight: "20rem",
-                        },
-                      },
-                    }}
+                    // select
+                    // SelectProps={{
+                    //   MenuProps: {
+                    //     sx: {
+                    //       maxHeight: "20rem",
+                    //     },
+                    //   },
+                    // }}
                   >
-                    {[
+                    {/* {[
                       "1370",
                       "1371",
                       "1372",
@@ -2081,7 +2081,7 @@ const UpdateContractPage = () => {
                       "1403",
                     ].map((y) => (
                       <MenuItem value={y}>{y}</MenuItem>
-                    ))}
+                    ))} */}
                   </FaTextField>
                   <TextField
                     label="فهرست بهاي واحد پايه رشته"

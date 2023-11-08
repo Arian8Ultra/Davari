@@ -305,6 +305,15 @@ export const DELETE_COMPLAINT = gql`
     }
   }
 `;
+
+
+// export const test = gql `
+// mutation {
+//   adjustmentStatement_addAdjustmentStatement(input: {
+
+//   })
+// }
+// `
 export type CreateComplaintInput = {
   accusedDepartmentId: number;
   accuserDepartmentId: number;
