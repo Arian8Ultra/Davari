@@ -141,9 +141,6 @@ export const UPDATE_CONTRACT_BY_ACCUSED = gql`
   }
 `;
 
-
-
-
 export const UPDATE_CONTRACT_BY_ACCUSER = gql`
   mutation UPDATE_CONTRACT_BY_ACCUSER(
     $AccuserRelatedPeople: String
@@ -218,17 +215,13 @@ export const UPDATE_CONTRACT_BY_ACCUSER = gql`
   }
 `;
 
-
-export const UPDATE_CONTRACT_BY_EXPERT= gql`
+export const UPDATE_CONTRACT_BY_EXPERT = gql`
   mutation UPDATE_CONTRACT_BY_ACCUSED(
     $isExecutive: Boolean!
     $id: Int!
   ) {
     contract_updateContract(
-      input: {
-        id: $id
-        isExecutive: $isExecutive
-      }
+      input: { id: $id, isExecutive: $isExecutive }
     ) {
       result {
         id
@@ -255,6 +248,8 @@ export const DELETE_CONTRACT = gql`
     }
   }
 `;
+
+
 
 export type Contract = {
   AccuserDepartmentId: number;

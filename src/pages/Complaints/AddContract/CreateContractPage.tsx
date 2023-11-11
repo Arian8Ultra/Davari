@@ -56,6 +56,7 @@ import { Calendar, CalendarProvider } from "zaman";
 import DateButton from "../../../components/DateButton";
 import fehrestbaha from "../../../static/fehrestbaha.json";
 import TimeLine from "../../../components/TimeLine";
+import InstallmentTable from "../../../components/Tables/Installment/InstallmentTable";
 
 const CreateContractPage = () => {
   const user = useUserStore((state) => state.user);
@@ -3505,7 +3506,8 @@ const CreateContractPage = () => {
                       console.log("data", d);
                       console.log("clientOptions", clientOptions);
                       navigate(
-                        `/complaints/${data?.contract_addContract?.result.id}/${d?.complaint_addComplaint?.result?.id}/addComplaint`
+                        `/complaints/${data?.contract_addContract?.result.id}/${d?.complaint_addComplaint?.result?.id}/tablesPage`
+                        // `/complaints/${data?.contract_addContract?.result.id}/${d?.complaint_addComplaint?.result?.id}/addComplaint`
                       );
                     },
                   });
@@ -3517,6 +3519,7 @@ const CreateContractPage = () => {
           )}
         </Box>
       </Box>
+      <InstallmentTable/>
     </>
   );
 };

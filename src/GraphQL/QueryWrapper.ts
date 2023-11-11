@@ -272,7 +272,7 @@ export const QueryWrapper = (
   variables?: any,
   options?: QueryFunctionOptions<any, any>
 ) => {
-  const { data, loading, error } = useQuery(query, {
+  const { data, loading, error,refetch } = useQuery(query, {
     variables,
     ...options,
     onCompleted(data) {
@@ -290,7 +290,7 @@ export const QueryWrapper = (
     },
   });
 
-  const result = { data: data ? data[queryName].result : null, loading, error };
+  const result = { data: data ? data[queryName].result : null, loading, error ,refetch};
 
   return result;
 };
