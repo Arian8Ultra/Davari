@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import {
@@ -11,6 +14,7 @@ import {
 import {
   CREATE_INSTALLMENT_PART,
   DELETE_INSTALLMENT,
+  DELETE_INSTALLMENT_PART,
   Installment,
   InstallmentPart,
   InstallmentTable,
@@ -26,24 +30,41 @@ import {
   primaryLight,
   Red,
   RedLight,
+  primaryTransparent,
 } from "../../../theme/color";
 import FaTypography from "../../FaComponents/FaTypography";
 import { MutationWrapper } from "../../../GraphQL/MutationWrapper";
-import { ApolloQueryResult } from "@apollo/client";
-import { useState } from "react";
+import { ApolloQueryResult, useMutation } from "@apollo/client";
+import { useEffect, useState } from "react";
 import FaTextField from "../../FaComponents/FaTextField";
 import DateButton from "../../DateButton";
+import { QueryWrapper } from "../../../GraphQL/QueryWrapper";
+import { GET_INSTALLMENT } from "../../../GraphQL/Tables/Queries";
 
-export default function InstallmentCard(
-  installment: Installment,
+interface InstallmentCardProps {
+  installment: Installment;
   setNewInstallment: React.Dispatch<
     React.SetStateAction<Installment>
-  >,
-  setEditMode: React.Dispatch<React.SetStateAction<boolean>>,
+  >;
+  setEditMode: React.Dispatch<React.SetStateAction<boolean>>;
   refetch: (
     variables?: Partial<any> | undefined
-  ) => Promise<ApolloQueryResult<any>>
-) {
+  ) => Promise<ApolloQueryResult<any>>;
+  setAddInstallmentPartModal: (
+    value: React.SetStateAction<{
+      open: boolean;
+      installmentPart: InstallmentPart;
+      installmentId?: number | undefined;
+    }>
+  ) => void;
+}
+export default function AdjustmentStatementCard({
+  installment,
+  setNewInstallment,
+  setEditMode,
+  refetch,
+  setAddInstallmentPartModal,
+}: InstallmentCardProps) {
   const {
     handleMutation: deleteInstallment,
     loading: loadingDeleteInstallment,
@@ -52,6 +73,9 @@ export default function InstallmentCard(
     DELETE_INSTALLMENT,
     "installment_deleteInstallment"
   );
+  const [installmentParts, setInstallmentParts] = useState<InstallmentPart[]>();
+
+  // const [deleteInstallment,{loading,error}] = useMutation(DELETE_INSTALLMENT)
   const {
     handleMutation: createInstallmentPart,
     loading: loadingCreateInstallmentPart,
@@ -60,131 +84,201 @@ export default function InstallmentCard(
     CREATE_INSTALLMENT_PART,
     "installmentPart_addInstallmentPart"
   );
+  const {
+    handleMutation: deleteInstallmentPart,
+    loading: loadingDeleteInstallmentPart,
+    error: errorDeleteInstallmentPart,
+  } = MutationWrapper(
+    DELETE_INSTALLMENT_PART,
+    "installmentPart_deleteInstallmentPart"
+  );
+
+  const { data, loading, error } = QueryWrapper(
+    GET_INSTALLMENT,
+    "installment_getInstallment",
+    { id: installment.id },
+    {
+      onCompleted(data) {
+        console.log("installment_getInstallment",data);
+        setInstallmentParts(data.installmentParts);
+      },
+    }
+  );
 
   const [newInstallmentPart, setNewInstallmentPart] =
     useState<InstallmentPart>();
   const [open, setOpen] = useState(false);
-  return (
-    <TableRow key={installment.id}>
-      <TableCell>{installment.title}</TableCell>
-      <TableCell>{installment.amount}</TableCell>
-      <TableCell>
-        {new Date(installment?.date).toLocaleDateString("fa-IR")}
-      </TableCell>
-      <TableCell>
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            gap: "1rem",
-          }}
-        >
-          <IconButton
-            sx={{
-              borderRadius: "10px",
-              background: primary,
-              color: secondaryDark,
-              "&:hover": {
-                background: primaryLight,
-              },
-              gap: "0.5rem",
-            }}
-            onClick={() => {
-              setOpen(!open);
-              setNewInstallmentPart({} as InstallmentPart);
-            }}
-          >
-            <FaTypography variant="body2" textAlign={"center"}>
-              افزودن زیرمجموعه
-            </FaTypography>
-            <Add />
-          </IconButton>
-          <IconButton
-            sx={{
-              borderRadius: "10px",
-              background: primary,
-              color: secondaryDark,
-              "&:hover": {
-                background: primaryLight,
-              },
-              gap: "0.5rem",
-            }}
-            onClick={() => {
-              setNewInstallment(installment);
-              setEditMode(true);
-            }}
-          >
-            <FaTypography variant="body2" textAlign={"center"}>
-              ویرایش
-            </FaTypography>
-            <EditOutlined />
-          </IconButton>
 
-          <IconButton
+
+  useEffect(() => {
+    console.log("TESTTEST",data);
+    setInstallmentParts(data?.installmentParts);
+  }, [data]);
+
+  return (
+    <>
+      <TableRow key={installment.id}>
+        <TableCell>{installment.title}</TableCell>
+        <TableCell>{installment.amount}</TableCell>
+        <TableCell>
+          {new Date(installment?.date).toLocaleDateString("fa-IR")}
+        </TableCell>
+        <TableCell>
+          <Box
             sx={{
-              borderRadius: "10px",
-              background: Red,
-              color: "white",
-              "&:hover": {
-                background: RedLight,
-                color: Red,
-              },
-              gap: "0.5rem",
-            }}
-            onClick={() => {
-              void deleteInstallment({
-                variables: {
-                  id: installment.id,
-                },
-              }).then((res) => {
-                setNewInstallment({} as Installment);
-                void refetch();
-              });
+              display: "flex",
+              justifyContent: "center",
+              gap: "1rem",
             }}
           >
-            <FaTypography variant="body2" textAlign={"center"}>
-              حذف
-            </FaTypography>
-            <CancelOutlined />
-          </IconButton>
-        </Box>
-      </TableCell>
-        <Collapse in={open} timeout="auto" unmountOnExit>
-          <Table>
-            <TableRow>
-              <TableCell>
-                <FaTextField
-                  label="مبلغ"
-                  value={newInstallmentPart?.amount}
-                  type="number"
-                  fullWidth
-                  onChange={(e) => {
-                    // @ts-ignore
-                    setNewInstallmentPart({
-                      ...newInstallmentPart,
-                      amount: parseInt(e.target.value),
-                    });
-                  }}
-                />
-              </TableCell>
-              <TableCell>
-                <DateButton
-                  date={newInstallmentPart?.date}
-                  label="تاریخ پرداخت"
-                  setDate={(date) => {
-                    // @ts-ignore
-                    setNewInstallmentPart((prevState) => {
-                      return {
-                        ...prevState,
-                        date: date,
-                      };
-                    });
-                  }}
-                />
-              </TableCell>
-            </TableRow>
-          </Table>
-        </Collapse>
-    </TableRow>
+            <IconButton
+              sx={{
+                borderRadius: "10px",
+                background: primary,
+                color: secondaryDark,
+                "&:hover": {
+                  background: primaryLight,
+                },
+                gap: "0.5rem",
+              }}
+              onClick={() => {
+                setAddInstallmentPartModal({
+                  open: true,
+                  installmentPart: {} as InstallmentPart,
+                  installmentId: installment.id,
+                });
+              }}
+            >
+              <FaTypography variant="body2" textAlign={"center"}>
+                افزودن زیرمجموعه
+              </FaTypography>
+              <Add />
+            </IconButton>
+            <IconButton
+              sx={{
+                borderRadius: "10px",
+                background: primary,
+                color: secondaryDark,
+                "&:hover": {
+                  background: primaryLight,
+                },
+                gap: "0.5rem",
+              }}
+              onClick={() => {
+                setNewInstallment(installment);
+                setEditMode(true);
+              }}
+            >
+              <FaTypography variant="body2" textAlign={"center"}>
+                ویرایش
+              </FaTypography>
+              <EditOutlined />
+            </IconButton>
+
+            <IconButton
+              sx={{
+                borderRadius: "10px",
+                background: Red,
+                color: "white",
+                "&:hover": {
+                  background: RedLight,
+                  color: Red,
+                },
+                gap: "0.5rem",
+              }}
+              onClick={() => {
+                void deleteInstallment({
+                  variables: {
+                    id: installment.id,
+                  },
+                }).then((res) => {
+                  setNewInstallment({} as Installment);
+                  void refetch();
+                });
+              }}
+            >
+              <FaTypography variant="body2" textAlign={"center"}>
+                حذف
+              </FaTypography>
+              <CancelOutlined />
+            </IconButton>
+          </Box>
+        </TableCell>
+      </TableRow>
+      {installmentParts?.map((installmentPart: InstallmentPart) => (
+        <TableRow key={installmentPart.id} sx={{
+          backgroundColor: primaryTransparent,
+          borderLeft: `2px solid ${primary}`,
+        }}>
+          <TableCell></TableCell>
+          <TableCell>{installmentPart.amount}</TableCell>
+          <TableCell>
+            {new Date(installmentPart?.date).toLocaleDateString(
+              "fa-IR"
+            )}
+          </TableCell>
+          <TableCell>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                gap: "1rem",
+              }}
+            >
+              <IconButton
+                sx={{
+                  borderRadius: "10px",
+                  background: primary,
+                  color: secondaryDark,
+                  "&:hover": {
+                    background: primaryLight,
+                  },
+                  gap: "0.5rem",
+                }}
+                onClick={() => {
+                  setAddInstallmentPartModal({
+                    open: true,
+                    installmentPart: installmentPart,
+                    installmentId: installment.id,
+                  });
+                }}
+              >
+                <FaTypography variant="body2" textAlign={"center"}>
+                  ویرایش
+                </FaTypography>
+                <EditOutlined />
+              </IconButton>
+              <IconButton
+                sx={{
+                  borderRadius: "10px",
+                  background: Red,
+                  color: "white",
+                  "&:hover": {
+                    background: RedLight,
+                    color: Red,
+                  },
+                  gap: "0.5rem",
+                }}
+                onClick={() => {
+                  void deleteInstallmentPart({
+                    variables: {
+                      id: installmentPart.id,
+                    },
+                  }).then((res) => {
+                    setNewInstallment({} as Installment);
+                    void refetch();
+                  });
+                }}
+              >
+                <FaTypography variant="body2" textAlign={"center"}>
+                  حذف
+                </FaTypography>
+                <CancelOutlined />
+              </IconButton>
+            </Box>
+          </TableCell>
+        </TableRow>
+      ))}
+    </>
   );
 }

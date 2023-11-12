@@ -3519,7 +3519,7 @@ const CreateContractPage = () => {
           )}
         </Box>
       </Box>
-      <InstallmentTable/>
+      {/* <InstallmentTable/> */}
     </>
   );
 };

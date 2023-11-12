@@ -42,7 +42,7 @@ export const GET_INSTALLMENT_TABLE = gql`
 export const GET_INSTALLMENT_TABLE_BY_CONTRACT_ID = gql`
   query GetInstallmentTables($id: Int!) {
     installmentTable_getInstallmentTables{
-      result (where: {contractId: {eq: $id}}){
+      result (where: {contractId: {eq: $id}},take: 20000){
         items{
         id
         createdDate
@@ -163,6 +163,45 @@ export const GET_ADJUSTMENT_STATEMENT_TABLE = gql`
         code
         value
       }
+    }
+  }
+`;
+
+export const GET_ADJUSTMENT_STATEMENT_TABLE_BY_CONTRACT_ID = gql`
+  query GetAdjustmentStatementTables($id: Int!) {
+    adjustmentStatementTable_getAdjustmentStatementTables{
+      result (where: {contractId: {eq: $id}},take: 20000){
+        items{
+        id
+        createdDate
+        lastModifiedDate
+        contractId
+        filledBy
+        user {
+          parentId
+          id
+          userType
+        }
+        userId
+        adjustmentStatements {
+          id
+          adjustmentStatementTableId
+          amountApprovedByEmployer
+          amountConfirmedByConsultant
+          amountPaid
+          amountProvidedByContractor
+          dateApprovedByEmployer
+          dateConfirmedByConsultant
+          datePaid
+          dateProvidedByContractor
+          operationPeriodEndDate
+          operationPeriodStartDate
+          filledBy
+          title
+        }
+        }
+      }
+      status
     }
   }
 `;

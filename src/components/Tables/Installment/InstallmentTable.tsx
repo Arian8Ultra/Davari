@@ -12,6 +12,7 @@ import {
   TableContainerProps,
   TableHead,
   TableRow,
+  Typography,
 } from "@mui/material";
 import React from "react";
 import { useParams } from "react-router-dom";
@@ -26,9 +27,11 @@ import {
 } from "../../../theme/color";
 import {
   CREATE_INSTALLMENT,
+  CREATE_INSTALLMENT_PART,
   CREATE_INSTALLMENT_TABLE,
   DELETE_INSTALLMENT,
   Installment,
+  InstallmentPart,
   UPDATE_INSTALLMENT,
 } from "../../../GraphQL/Tables/Mutations";
 import FaTypography from "../../FaComponents/FaTypography";
@@ -46,8 +49,9 @@ import {
 } from "@mui/icons-material";
 import { Errors } from "../../../GraphQL/Errors";
 import { useUserStore } from "../../../Context/UserStore";
-import InstallmentCard from "./InstallmentCard";
+import AdjustmentStatementTable from "./InstallmentCard";
 import { GET_CONTRACT } from "../../../GraphQL/Contracts/Queries";
+import NewModal from "../../Modals";
 
 interface Props extends TableContainerProps {
   InstallmentTableId?: number;
@@ -60,17 +64,26 @@ const InstallmentTable = (props: Props) => {
   const [installments, setInstallments] = React.useState<
     Installment[]
   >([
-    {
-      amount: 100000,
-      filledBy: "ACCUSED",
-      id: 1,
-      date: new Date(),
-      title: "قسط اول",
-      installmentTableId: 1,
-    },
+    // {
+    //   amount: 100000,
+    //   filledBy: "ACCUSED",
+    //   id: 1,
+    //   date: new Date(),
+    //   title: "قسط اول",
+    //   installmentTableId: 1,
+    // },
   ]);
-
+  const [pageError, setPageError] = React.useState<string>();
   const [tableId, setTableId] = React.useState<number>();
+  const [addInstallmentPartModal, setAddInstallmentPartModal] =
+    React.useState<{
+      open: boolean;
+      installmentPart: InstallmentPart;
+      installmentId?: number;
+    }>({
+      open: false,
+      installmentPart: {} as InstallmentPart,
+    });
 
   const [newInstallment, setNewInstallment] =
     React.useState<Installment>({} as Installment);
@@ -126,16 +139,26 @@ const InstallmentTable = (props: Props) => {
     }
   );
 
-  const { data:contractData, loading:contractLoading, error:contractError } = QueryWrapper(
-    GET_CONTRACT,
-    "contract_getContracts",
-    { id: contractId && parseInt(contractId) }
+  const {
+    data: contractData,
+    loading: contractLoading,
+    error: contractError,
+  } = QueryWrapper(GET_CONTRACT, "contract_getContracts", {
+    id: contractId && parseInt(contractId),
+  });
+
+  const {
+    handleMutation: createInstallmentPart,
+    loading: loadingCreateInstallmentPart,
+    error: errorCreateInstallmentPart,
+  } = MutationWrapper(
+    CREATE_INSTALLMENT_PART,
+    "installmentPart_addInstallmentPart"
   );
-  console.log(data);
 
   React.useEffect(() => {
-    if (data) {
-      console.log("data", data);
+    if (data?.items?.length > 0 && loading == false) {
+      console.log("GET_INSTALLMENT_TABLE_BY_CONTRACT_ID", data);
 
       setInstallments(data?.items[0]?.installments);
       // setNewInstallment({
@@ -145,7 +168,7 @@ const InstallmentTable = (props: Props) => {
 
       setTableId(data?.items[0]?.id);
     } else {
-      if (data instanceof Error)
+      if (data instanceof Error) {
         void addInstallmentTable({
           variables: {
             contractId: contractId && parseInt(contractId),
@@ -158,8 +181,54 @@ const InstallmentTable = (props: Props) => {
             },
           },
         });
+      } else {
+        if (data?.items?.length > 0) {
+          void addInstallmentTable({
+            variables: {
+              contractId: contractId && parseInt(contractId),
+              userId: user.id,
+            },
+            options: {
+              onCompleted(data, clientOptions) {
+                console.log("addInstallmentTable", data);
+                void refetch();
+              },
+            },
+          });
+        }
+      }
+
+      // void addInstallmentTable({
+      //   variables: {
+      //     contractId: contractId && parseInt(contractId),
+      //     userId: user.id,
+      //   },
+      //   options: {
+      //     onCompleted(data, clientOptions) {
+      //       console.log("addInstallmentTable", data);
+      //       void refetch();
+      //     },
+      //   },
+      // });
     }
   }, [data]);
+
+  const handleEmptyFields = () => {
+    if (!newInstallment.title) {
+      setPageError("عنوان را وارد کنید");
+      return true;
+    }
+    if (!newInstallment.amount) {
+      setPageError("مبلغ را وارد کنید");
+      return true;
+    }
+    if (!newInstallment.date) {
+      setPageError("تاریخ را وارد کنید");
+      return true;
+    }
+
+    return false;
+  };
 
   return (
     <TableContainer
@@ -219,7 +288,7 @@ const InstallmentTable = (props: Props) => {
                 }}
               >
                 <FaTypography variant="h6" textAlign={"center"}>
-                  جدول اقصات
+                  جدول اقساط
                 </FaTypography>
               </Box>
             </TableCell>
@@ -267,6 +336,7 @@ const InstallmentTable = (props: Props) => {
                   })
                 }
                 value={newInstallment.title}
+                focused={newInstallment.title ? true : false}
                 fullWidth
               />
             </TableCell>
@@ -281,6 +351,7 @@ const InstallmentTable = (props: Props) => {
                 }
                 value={newInstallment.amount}
                 fullWidth
+                focused={newInstallment.amount ? true : false}
                 type="number"
               />
             </TableCell>
@@ -314,53 +385,19 @@ const InstallmentTable = (props: Props) => {
                           amount: newInstallment.amount,
                           date: newInstallment.date,
                           title: newInstallment.title,
-                          registrarType: data?.items[0]?.accuserDepartmentUserId == user.id ||
-                          data?.items[0]?.accuserDepartmentUserId == user.parentId
-                            ? "ACCUSER"
-                            : "ACCUSED",
+                          registrarType:
+                            data?.items[0]?.accuserDepartmentUserId ==
+                              user.id ||
+                            data?.items[0]?.accuserDepartmentUserId ==
+                              user.parentId
+                              ? "ACCUSER"
+                              : "ACCUSED",
                           id: newInstallment.id,
                         },
                       }).then((res) => {
                         void refetch();
                         setEditMode(false);
                         setNewInstallment({} as Installment);
-                      });
-                    }}
-                    sx={{
-                      borderRadius: "10px",
-                      background: primary,
-                      color: secondaryDark,
-                      "&:hover": {
-                        background: primaryLight,
-                      },
-                      gap: "0.5rem",
-                    }}
-                  >
-                    <FaTypography
-                      variant="body2"
-                      textAlign={"center"}
-                    >
-                      ویرایش
-                    </FaTypography>
-                    <EditOutlined />
-                  </IconButton>
-                ) : (
-                  <IconButton
-                    onClick={() => {
-                      void addInstallment({
-                        variables: {
-                          installmentTableId: tableId && tableId,
-                          amount: newInstallment.amount,
-                          date: newInstallment.date,
-                          title: newInstallment.title,
-                          registrarType: data?.items[0]?.accuserDepartmentUserId == user.id ||
-                          data?.items[0]?.accuserDepartmentUserId == user.parentId
-                            ? "ACCUSER"
-                            : "ACCUSED",
-                        },
-                      }).then((res) => {
-                        setNewInstallment({} as Installment);
-                        void refetch();
                       });
                     }}
                     sx={{
@@ -378,6 +415,54 @@ const InstallmentTable = (props: Props) => {
                       variant="body2"
                       textAlign={"center"}
                     >
+                      ویرایش
+                    </FaTypography>
+                    <EditOutlined />
+                  </IconButton>
+                ) : (
+                  <IconButton
+                    onClick={() => {
+                      if(handleEmptyFields()) return;
+                      void addInstallment({
+                        variables: {
+                          installmentTableId: tableId && tableId,
+                          amount: newInstallment.amount,
+                          date: newInstallment.date,
+                          title: newInstallment.title,
+                          registrarType:
+                            data?.items[0]?.accuserDepartmentUserId ==
+                              user.id ||
+                            data?.items[0]?.accuserDepartmentUserId ==
+                              user.parentId
+                              ? "ACCUSER"
+                              : "ACCUSED",
+                        },
+                      })
+                        .then((res) => {
+                          setNewInstallment({} as Installment);
+                          void refetch();
+                          setPageError('');
+                        })
+                        .catch((err) => {
+                          alert("خطا در افزودن قسط");
+                        });
+                    }}
+                    sx={{
+                      borderRadius: "10px",
+                      background: primary,
+                      color: secondaryDark,
+                      "&:hover": {
+                        background: primaryLight,
+                      },
+                      gap: "0.5rem",
+                      width: "100%",
+                    }}
+                  >
+                    {/* {tableId} */}
+                    <FaTypography
+                      variant="body2"
+                      textAlign={"center"}
+                    >
                       ثبت
                     </FaTypography>
                     <BsPlusCircle />
@@ -386,15 +471,125 @@ const InstallmentTable = (props: Props) => {
               </Box>
             </TableCell>
           </TableRow>
-          {installments.map((installment) => (
-            InstallmentCard(installment, setNewInstallment, setEditMode, refetch)
-          ))}
+          {pageError && <Typography color={Red}>{pageError}</Typography>}
+          {installments &&
+            installments.length > 0 &&
+            installments.map((installment) => (
+              <AdjustmentStatementTable
+                installment={installment}
+                refetch={refetch}
+                setEditMode={setEditMode}
+                setNewInstallment={setNewInstallment}
+                key={installment.id}
+                setAddInstallmentPartModal={
+                  setAddInstallmentPartModal
+                }
+              />
+            ))}
         </TableBody>
+        <NewModal
+          title="افزودن زیرمجموعه"
+          open={addInstallmentPartModal.open}
+          onClose={() => {
+            setAddInstallmentPartModal({
+              ...addInstallmentPartModal,
+              open: false,
+            });
+          }}
+          isCloseable={true}
+          background={background}
+          width={"40%"}
+        >
+          <Box
+            display={"grid"}
+            gridTemplateColumns={"1fr 1fr"}
+            gap={"1rem"}
+            width={"100%"}
+          >
+            <FaTextField
+              label="مبلغ"
+              onChange={(e) =>
+                setAddInstallmentPartModal({
+                  ...addInstallmentPartModal,
+                  installmentPart: {
+                    ...addInstallmentPartModal.installmentPart,
+                    amount: parseInt(e.target.value),
+                  },
+                })
+              }
+              value={addInstallmentPartModal.installmentPart.amount}
+              fullWidth
+              type="number"
+            />
+            <DateButton
+              label="تاریخ پرداخت"
+              setDate={(date) =>
+                setAddInstallmentPartModal({
+                  ...addInstallmentPartModal,
+                  installmentPart: {
+                    ...addInstallmentPartModal.installmentPart,
+                    // @ts-ignore
+                    date: date || new Date(),
+                  },
+                })
+              }
+              date={addInstallmentPartModal.installmentPart.date}
+            />
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                gap: "1rem",
+              }}
+            >
+              <IconButton
+                onClick={() => {
+                  void createInstallmentPart({
+                    variables: {
+                      installmentId:
+                        addInstallmentPartModal.installmentId,
+                      amount:
+                        addInstallmentPartModal.installmentPart
+                          .amount,
+                      date: addInstallmentPartModal.installmentPart
+                        .date,
+                    },
+                  })
+                    .then((res) => {
+                      alert("زیرمجموعه با موفقیت افزوده شد");
+                      setAddInstallmentPartModal({
+                        ...addInstallmentPartModal,
+                        installmentPart: {} as InstallmentPart,
+                        open: false,
+                      });
+                      void refetch();
+                    })
+                    .catch((err) => {
+                      alert("خطا در افزودن زیرمجموعه");
+                    });
+                }}
+                sx={{
+                  borderRadius: "10px",
+                  background: primary,
+                  color: secondaryDark,
+                  "&:hover": {
+                    background: primaryLight,
+                  },
+                  gap: "0.5rem",
+                  width: "100%",
+                }}
+              >
+                <FaTypography variant="body2" textAlign={"center"}>
+                  ثبت
+                </FaTypography>
+                <BsPlusCircle />
+              </IconButton>
+            </Box>
+          </Box>
+        </NewModal>
       </Table>
     </TableContainer>
   );
 };
-
-
 
 export default InstallmentTable;
