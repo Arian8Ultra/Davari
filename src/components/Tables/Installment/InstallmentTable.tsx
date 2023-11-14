@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
@@ -157,18 +158,39 @@ const InstallmentTable = (props: Props) => {
   );
 
   React.useEffect(() => {
-    if (data?.items?.length > 0 && loading == false) {
-      console.log("GET_INSTALLMENT_TABLE_BY_CONTRACT_ID", data);
+    console.log("GET_INSTALLMENT_TABLE_BY_CONTRACT_ID",data);
+    const userType = data?.items[0]?.accuserDepartmentUserId ==
+    user.parentId
+    ? "ACCUSER"
+    : "ACCUSED"
+    console.warn("userType",userType);
 
-      setInstallments(data?.items[0]?.installments);
+    if (data?.items?.length > 0 ) {
+      console.log("GET_INSTALLMENT_TABLE_BY_CONTRACT_ID", data);
+      const userType = data?.items[0]?.accuserDepartmentUserId ==
+      user.parentId
+      ? "ACCUSER"
+      : "ACCUSED"
+      console.warn("userType",userType);
+      
+      
+      setInstallments(data?.items[0]?.installments.filter((installment:Installment)=> installment.filledBy == userType ));
       // setNewInstallment({
       //   ...newInstallment,
       //   installmentTableId: data?.items[0]?.id,
+      // data?.items[0]?.accuserDepartmentUserId ==
+      //                         user.id ||
+      //                       data?.items[0]?.accuserDepartmentUserId ==
+      //                         user.parentId
+      //                         ? "ACCUSER"
+      //                         : "ACCUSED"
       // })
 
       setTableId(data?.items[0]?.id);
     } else {
+      // console.log("else",data?.items?.length);
       if (data instanceof Error) {
+        console.log("adding");
         void addInstallmentTable({
           variables: {
             contractId: contractId && parseInt(contractId),
@@ -177,12 +199,14 @@ const InstallmentTable = (props: Props) => {
           options: {
             onCompleted(data, clientOptions) {
               console.log("addInstallmentTable", data);
+              setTableId(data?.id);
               void refetch();
             },
           },
         });
       } else {
-        if (data?.items?.length > 0) {
+        if (data?.items?.length == 0) {
+          console.log("adding");
           void addInstallmentTable({
             variables: {
               contractId: contractId && parseInt(contractId),
@@ -191,6 +215,7 @@ const InstallmentTable = (props: Props) => {
             options: {
               onCompleted(data, clientOptions) {
                 console.log("addInstallmentTable", data);
+                setTableId(data?.id);
                 void refetch();
               },
             },
@@ -211,7 +236,7 @@ const InstallmentTable = (props: Props) => {
       //   },
       // });
     }
-  }, [data]);
+  }, [addInstallmentTable, contractId, data, refetch, user.id]);
 
   const handleEmptyFields = () => {
     if (!newInstallment.title) {
@@ -236,6 +261,7 @@ const InstallmentTable = (props: Props) => {
       sx={{
         borderRadius: "10px",
         background: background,
+        my:'1rem',
         // change the color of header to grey
         "& thead": {
           "& tr": {
@@ -297,6 +323,7 @@ const InstallmentTable = (props: Props) => {
             <TableCell
               sx={{
                 textAlign: "center",
+                borderRight:"1px solid white"
               }}
             >
               عنوان
@@ -304,6 +331,7 @@ const InstallmentTable = (props: Props) => {
             <TableCell
               sx={{
                 textAlign: "center",
+                borderRight:"1px solid white"
               }}
             >
               مبلغ(ریال)
@@ -311,6 +339,7 @@ const InstallmentTable = (props: Props) => {
             <TableCell
               sx={{
                 textAlign: "center",
+                borderRight:"1px solid white"
               }}
             >
               تاریخ پرداخت
@@ -335,7 +364,7 @@ const InstallmentTable = (props: Props) => {
                     title: e.target.value,
                   })
                 }
-                value={newInstallment.title}
+                value={newInstallment.title ? newInstallment.title : ''}
                 focused={newInstallment.title ? true : false}
                 fullWidth
               />
@@ -349,7 +378,7 @@ const InstallmentTable = (props: Props) => {
                     amount: parseInt(e.target.value),
                   })
                 }
-                value={newInstallment.amount}
+                value={newInstallment.amount ? newInstallment.amount : ''}
                 fullWidth
                 focused={newInstallment.amount ? true : false}
                 type="number"

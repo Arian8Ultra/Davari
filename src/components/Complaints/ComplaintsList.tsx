@@ -238,6 +238,7 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
                   state={complaint?.complaintState}
                   type="accused"
                   refetch={accusedRefetch}
+                  contractNumber={complaint?.contract?.contractNumberByAccuser}
                 />
               )
             )
@@ -259,6 +260,8 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
                   type="accuser"
                   state={complaint?.complaintState}
                   refetch={accuserRefetch}
+                  contractNumber={complaint?.contract?.contractNumberByAccuser}
+
                 />
               )
             )
@@ -280,6 +283,7 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
                   type="assigned"
                   state={complaint?.complaintState}
                   refetch={assignedRefetch}
+                  contractNumber={complaint?.contract?.contractNumberByAccuser}
                 />
               )
             )
@@ -301,6 +305,8 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
                   type="chief"
                   state={complaint?.complaintState}
                   refetch={assignedRefetch}
+                  contractNumber={complaint?.contract?.contractNumberByAccuser}
+
                 />
               )
             )
@@ -322,6 +328,8 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
                   type="mainRoomExpert"
                   state={complaint?.complaintState}
                   refetch={assignedRefetch}
+                  contractNumber={complaint?.contract?.contractNumberByAccuser}
+
                 />
               )
             )
@@ -343,6 +351,7 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
                   type="mainRoomExpert"
                   state={complaint?.complaintState}
                   refetch={assignedRefetch}
+                  contractNumber={complaint?.contract?.contractNumberByAccuser}
                 />
               )
             )

@@ -260,6 +260,12 @@ const ArgumentInfoModal = (props: Props) => {
                   </TableCell>
                 </TableRow>
                 <TableRow>
+                  <TableCell>پاسخ خواهان :</TableCell>
+                  <TableCell>
+                    {props.argument.accuserAnswerToAccusedResponse}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
                   <TableCell>مستندات خوانده :</TableCell>
                   <TableCell>
                     <Button

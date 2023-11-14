@@ -9,14 +9,18 @@ export const ComplaintTimeLineStages = [
     },
     {
         id:3,
-        title:"احراز شرایط داوری"
+        title:"تکمیل جداول"
     },
     {
         id:4,
-        title:"ثبت دعاوی"
+        title:"احراز شرایط داوری"
     },
     {
         id:5,
+        title:"ثبت دعاوی"
+    },
+    {
+        id:6,
         title:"تایید و ثبت نهایی"
     },
 ]

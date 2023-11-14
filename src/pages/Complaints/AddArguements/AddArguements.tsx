@@ -200,7 +200,7 @@ const AddArgument = () => {
         display={!compaintLoading && noAccess ? "none" : "block"}
         position={"relative"}
       >
-        <TimeLine stage={4}/>
+        <TimeLine stage={5}/>
         {/* <Box
           gridColumn={"span 12"}
           borderRadius={"1rem"}

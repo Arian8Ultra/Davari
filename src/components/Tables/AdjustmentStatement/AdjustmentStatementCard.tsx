@@ -10,6 +10,7 @@ import {
   Table,
   TableCell,
   TableRow,
+  Tooltip,
 } from "@mui/material";
 import {
   CREATE_ADJUSTMENT_STATEMENT_PART,
@@ -31,6 +32,8 @@ import {
   Red,
   RedLight,
   primaryTransparent,
+  secondaryLight,
+  secondaryLighter,
 } from "../../../theme/color";
 import FaTypography from "../../FaComponents/FaTypography";
 import { MutationWrapper } from "../../../GraphQL/MutationWrapper";
@@ -40,6 +43,7 @@ import FaTextField from "../../FaComponents/FaTextField";
 import DateButton from "../../DateButton";
 import { QueryWrapper } from "../../../GraphQL/QueryWrapper";
 import { GET_ADJUSTMENT_STATEMENT } from "../../../GraphQL/Tables/Queries";
+import { convertToPersianDigits } from "../../../functions/Functions";
 
 interface AdjustmentStatementCardProps {
   AdjustmentStatement: AdjustmentStatement;
@@ -73,7 +77,8 @@ export default function AdjustmentStatementCard({
     DELETE_ADJUSTMENT_STATEMENT,
     "AdjustmentStatement_deleteAdjustmentStatement"
   );
-  const [AdjustmentStatementParts, setAdjustmentStatementParts] = useState<AdjustmentStatementPart[]>();
+  const [AdjustmentStatementParts, setAdjustmentStatementParts] =
+    useState<AdjustmentStatementPart[]>();
 
   // const [deleteAdjustmentStatement,{loading,error}] = useMutation(DELETE_AdjustmentStatement)
   const {
@@ -93,13 +98,16 @@ export default function AdjustmentStatementCard({
     "AdjustmentStatementPart_deleteAdjustmentStatementPart"
   );
 
-  const { data, loading, error } = QueryWrapper(
+  const { data, loading, error,refetch:AdjustmentStatementRefetch } = QueryWrapper(
     GET_ADJUSTMENT_STATEMENT,
-    "AdjustmentStatement_getAdjustmentStatement",
+    "adjustmentStatement_getAdjustmentStatement",
     { id: AdjustmentStatement.id },
     {
       onCompleted(data) {
-        console.log("AdjustmentStatement_getAdjustmentStatement",data);
+        console.log(
+          "AdjustmentStatement_getAdjustmentStatement",
+          data
+        );
         setAdjustmentStatementParts(data.AdjustmentStatementParts);
       },
     }
@@ -109,126 +117,70 @@ export default function AdjustmentStatementCard({
     useState<AdjustmentStatementPart>();
   const [open, setOpen] = useState(false);
 
-
   useEffect(() => {
-    console.log("TESTTEST",data);
-    setAdjustmentStatementParts(data?.AdjustmentStatementParts);
+    setAdjustmentStatementParts(data?.adjustmentStatementParts);
   }, [data]);
 
   return (
     <>
       <TableRow key={AdjustmentStatement.id}>
         <TableCell>{AdjustmentStatement.title}</TableCell>
-        <TableCell>{AdjustmentStatement.amountProvidedByContractor}</TableCell>
-        <TableCell>{new Date(AdjustmentStatement?.dateProvidedByContractor).toLocaleDateString("fa-IR")}</TableCell>
-        <TableCell>{AdjustmentStatement.amountConfirmedByConsultant}</TableCell>
-        <TableCell>{new Date(AdjustmentStatement?.dateConfirmedByConsultant).toLocaleDateString("fa-IR")}</TableCell>
-        <TableCell>{AdjustmentStatement.amountApprovedByEmployer}</TableCell>
-        <TableCell>{new Date(AdjustmentStatement?.dateApprovedByEmployer).toLocaleDateString("fa-IR")}</TableCell>
-        <TableCell>{AdjustmentStatement.amountPaid}</TableCell>
-        <TableCell>{new Date(AdjustmentStatement?.datePaid).toLocaleDateString("fa-IR")}</TableCell>
+        <TableCell>
+          {convertToPersianDigits(
+            AdjustmentStatement.amountProvidedByContractor
+          )
+            ?.toString()
+            .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+        </TableCell>
+        <TableCell>
+          {new Date(
+            AdjustmentStatement?.dateProvidedByContractor
+          ).toLocaleDateString("fa-IR")}
+        </TableCell>
+        <TableCell>
+          {convertToPersianDigits(
+            AdjustmentStatement.amountConfirmedByConsultant
+          )
+            ?.toString()
+            .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+        </TableCell>
+        <TableCell>
+          {new Date(
+            AdjustmentStatement?.dateConfirmedByConsultant
+          ).toLocaleDateString("fa-IR")}
+        </TableCell>
+        <TableCell>
+          {convertToPersianDigits(
+            AdjustmentStatement.amountApprovedByEmployer
+          )
+            ?.toString()
+            .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+        </TableCell>
+        <TableCell>
+          {new Date(
+            AdjustmentStatement?.dateApprovedByEmployer
+          ).toLocaleDateString("fa-IR")}
+        </TableCell>
+        <TableCell>
+          {convertToPersianDigits(AdjustmentStatement.amountPaid)
+            ?.toString()
+            .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+        </TableCell>
+        <TableCell>
+          {new Date(AdjustmentStatement?.datePaid).toLocaleDateString(
+            "fa-IR"
+          )}
+        </TableCell>
         <TableCell>
           <Box
             sx={{
               display: "flex",
-              justifyContent: "center",
+              justifyContent: "flex-end",
               gap: "1rem",
+              // flexWrap:'wrap'
             }}
           >
-            <IconButton
-              sx={{
-                borderRadius: "10px",
-                background: primary,
-                color: secondaryDark,
-                "&:hover": {
-                  background: primaryLight,
-                },
-                gap: "0.5rem",
-              }}
-              onClick={() => {
-                setAddAdjustmentStatementPartModal({
-                  open: true,
-                  AdjustmentStatementPart: {} as AdjustmentStatementPart,
-                  AdjustmentStatementId: AdjustmentStatement.id,
-                });
-              }}
-            >
-              <FaTypography variant="body2" textAlign={"center"}>
-                افزودن زیرمجموعه
-              </FaTypography>
-              <Add />
-            </IconButton>
-            <IconButton
-              sx={{
-                borderRadius: "10px",
-                background: primary,
-                color: secondaryDark,
-                "&:hover": {
-                  background: primaryLight,
-                },
-                gap: "0.5rem",
-              }}
-              onClick={() => {
-                setNewAdjustmentStatement(AdjustmentStatement);
-                setEditMode(true);
-              }}
-            >
-              <FaTypography variant="body2" textAlign={"center"}>
-                ویرایش
-              </FaTypography>
-              <EditOutlined />
-            </IconButton>
-
-            <IconButton
-              sx={{
-                borderRadius: "10px",
-                background: Red,
-                color: "white",
-                "&:hover": {
-                  background: RedLight,
-                  color: Red,
-                },
-                gap: "0.5rem",
-              }}
-              onClick={() => {
-                void deleteAdjustmentStatement({
-                  variables: {
-                    id: AdjustmentStatement.id,
-                  },
-                }).then((res) => {
-                  setNewAdjustmentStatement({} as AdjustmentStatement);
-                  void refetch();
-                });
-              }}
-            >
-              <FaTypography variant="body2" textAlign={"center"}>
-                حذف
-              </FaTypography>
-              <CancelOutlined />
-            </IconButton>
-          </Box>
-        </TableCell>
-      </TableRow>
-      {/* {AdjustmentStatementParts?.map((AdjustmentStatementPart: AdjustmentStatementPart) => (
-        <TableRow key={AdjustmentStatementPart.id} sx={{
-          backgroundColor: primaryTransparent,
-          borderLeft: `2px solid ${primary}`,
-        }}>
-          <TableCell></TableCell>
-          <TableCell>{AdjustmentStatementPart.amount}</TableCell>
-          <TableCell>
-            {new Date(AdjustmentStatementPart?.date).toLocaleDateString(
-              "fa-IR"
-            )}
-          </TableCell>
-          <TableCell>
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                gap: "1rem",
-              }}
-            >
+            <Tooltip title={"افزودن زیرمجموعه"}>
               <IconButton
                 sx={{
                   borderRadius: "10px",
@@ -242,16 +194,39 @@ export default function AdjustmentStatementCard({
                 onClick={() => {
                   setAddAdjustmentStatementPartModal({
                     open: true,
-                    AdjustmentStatementPart: AdjustmentStatementPart,
+                    AdjustmentStatementPart:
+                      {} as AdjustmentStatementPart,
                     AdjustmentStatementId: AdjustmentStatement.id,
                   });
                 }}
               >
-                <FaTypography variant="body2" textAlign={"center"}>
+                <Add />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title={"ویرایش"}>
+              <IconButton
+                sx={{
+                  borderRadius: "10px",
+                  background: secondaryLighter,
+                  color: secondaryDark,
+                  "&:hover": {
+                    background: primaryLight,
+                  },
+                  gap: "0.5rem",
+                }}
+                onClick={() => {
+                  setNewAdjustmentStatement(AdjustmentStatement);
+                  setEditMode(true);
+                }}
+              >
+                {/* <FaTypography variant="body2" textAlign={"center"}>
                   ویرایش
-                </FaTypography>
+                </FaTypography> */}
                 <EditOutlined />
               </IconButton>
+            </Tooltip>
+
+            <Tooltip title={"حذف"}>
               <IconButton
                 sx={{
                   borderRadius: "10px",
@@ -264,25 +239,161 @@ export default function AdjustmentStatementCard({
                   gap: "0.5rem",
                 }}
                 onClick={() => {
-                  void deleteAdjustmentStatementPart({
+                  void deleteAdjustmentStatement({
                     variables: {
-                      id: AdjustmentStatementPart.id,
+                      id: AdjustmentStatement.id,
                     },
                   }).then((res) => {
-                    setNewAdjustmentStatement({} as AdjustmentStatement);
+                    setNewAdjustmentStatement(
+                      {} as AdjustmentStatement
+                    );
                     void refetch();
                   });
                 }}
               >
-                <FaTypography variant="body2" textAlign={"center"}>
+                {/* <FaTypography variant="body2" textAlign={"center"}>
                   حذف
-                </FaTypography>
+                </FaTypography> */}
                 <CancelOutlined />
               </IconButton>
-            </Box>
-          </TableCell>
-        </TableRow>
-      ))} */}
+            </Tooltip>
+          </Box>
+        </TableCell>
+      </TableRow>
+      {/* {JSON.stringify(AdjustmentStatementParts)} */}
+      {AdjustmentStatementParts?.map(
+        (AdjustmentStatementPart: AdjustmentStatementPart) => (
+          <TableRow
+            key={AdjustmentStatementPart.id}
+            sx={{
+              backgroundColor: primaryTransparent,
+              borderLeft: `2px solid ${primary}`,
+            }}
+          >
+            <TableCell></TableCell>
+
+            <TableCell>
+              {convertToPersianDigits(
+                AdjustmentStatementPart.amountProvidedByContractor
+              )
+                ?.toString()
+                .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+            </TableCell>
+            <TableCell>
+              {new Date(
+                AdjustmentStatementPart?.dateProvidedByContractor
+              ).toLocaleDateString("fa-IR")}
+            </TableCell>
+            <TableCell>
+              {convertToPersianDigits(
+                AdjustmentStatementPart.amountConfirmedByConsultant
+              )
+                ?.toString()
+                .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+            </TableCell>
+            <TableCell>
+              {new Date(
+                AdjustmentStatementPart?.dateConfirmedByConsultant
+              ).toLocaleDateString("fa-IR")}
+            </TableCell>
+            <TableCell>
+              {convertToPersianDigits(
+                AdjustmentStatementPart.amountApprovedByEmployer
+              )
+                ?.toString()
+                .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+            </TableCell>
+            <TableCell>
+              {new Date(
+                AdjustmentStatementPart?.dateApprovedByEmployer
+              ).toLocaleDateString("fa-IR")}
+            </TableCell>
+            <TableCell>
+              {convertToPersianDigits(
+                AdjustmentStatementPart.amountPaid
+              )
+                ?.toString()
+                .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+            </TableCell>
+            <TableCell>
+              {new Date(
+                AdjustmentStatementPart?.datePaid
+              ).toLocaleDateString("fa-IR")}
+            </TableCell>
+
+            <TableCell>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  gap: "1rem",
+                  // flexWrap:'wrap'
+                }}
+              >
+                <Tooltip title={"ویرایش"}>
+                  <IconButton
+                    sx={{
+                      borderRadius: "10px",
+                      background: secondaryLighter,
+                      color: secondaryDark,
+                      "&:hover": {
+                        background: primaryLight,
+                      },
+                      gap: "0.5rem",
+                    }}
+                    onClick={() => {
+                      setAddAdjustmentStatementPartModal({
+                        open: true,
+                        AdjustmentStatementPart:
+                          AdjustmentStatementPart,
+                        AdjustmentStatementId: AdjustmentStatement.id,
+                      });
+                    }}
+                  >
+                    {/* <FaTypography variant="body2" textAlign={"center"}>
+                  ویرایش
+                </FaTypography> */}
+                    <EditOutlined />
+                  </IconButton>
+                </Tooltip>
+
+                <Tooltip title={"حذف"}>
+                  <IconButton
+                    sx={{
+                      borderRadius: "10px",
+                      background: Red,
+                      color: "white",
+                      "&:hover": {
+                        background: RedLight,
+                        color: Red,
+                      },
+                      gap: "0.5rem",
+                    }}
+                    onClick={() => {
+                      void deleteAdjustmentStatementPart({
+                        variables: {
+                          id: AdjustmentStatementPart.id,
+                        },
+                      }).then((res) => {
+                        setNewAdjustmentStatement(
+                          {} as AdjustmentStatement
+                        );
+                        void refetch();
+                        void AdjustmentStatementRefetch()
+                      });
+                    }}
+                  >
+                    {/* <FaTypography variant="body2" textAlign={"center"}>
+                  حذف
+                </FaTypography> */}
+                    <CancelOutlined />
+                  </IconButton>
+                </Tooltip>
+              </Box>
+            </TableCell>
+          </TableRow>
+        )
+      )}
     </>
   );
 }

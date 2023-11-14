@@ -112,6 +112,72 @@ const ArgumentModal = (props: Props) => {
   }, [data, props.argumentId]);
 
   switch (props.state) {
+    case -1:
+      return (
+        <NewModal
+          open={props.open}
+          onClose={props.onClose}
+          title={"ثبت ادعا"}
+          width={"50vw"}
+          height={"80vh"}
+          isCloseable={true}
+          backgroundColor={background}
+        >
+          <Box
+            display={"grid"}
+            gridTemplateColumns={"1fr 1fr"}
+            gap={"1rem"}
+            width={"100%"}
+            justifyContent={"center"}
+            alignItems={"center"}
+          >
+            <TextField
+              label={"پاسخ"}
+              variant={"outlined"}
+              focused={Argument?.accuserAnswerToAccusedResponse != ""}
+              sx={{
+                borderRadius: "1rem",
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "0.5rem",
+                },
+              }}
+              fullWidth
+              multiline
+              rows={4}
+              value={Argument?.accuserAnswerToAccusedResponse}
+              onChange={(e) => {
+                setArgument({
+                  ...Argument,
+                  accuserAnswerToAccusedResponse: e.target.value,
+                });
+              }}
+            />
+
+            <Button
+              onClick={() => {
+                void UpdateArgument({
+                  variables: {
+                    id: props.argumentId,
+                    accuserAnswerToAccusedResponse: Argument?.accuserAnswerToAccusedResponse,
+                  },
+                });
+              }}
+              sx={{
+                background: primary,
+                color: secondaryDark,
+                borderRadius: "0.5rem",
+                width: "100%",
+                "&:hover": {
+                  background:GreenLight
+                }
+              }}
+              variant={"contained"}
+            >
+              ثبت
+            </Button>
+          </Box>
+        </NewModal>
+      );
     case 0:
       return (
         <NewModal

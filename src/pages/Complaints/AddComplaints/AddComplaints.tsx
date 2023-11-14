@@ -180,7 +180,7 @@ const AddComplaint = () => {
   return (
     <>
       <BackButton to={`/complaints/${contractId}/${complaintId}/UpdateContractAccuserPage`} label=" و ویرایش"/>
-      <TimeLine stage={3} />
+      <TimeLine stage={4} />
       <Box
         display={"grid"}
         gridTemplateColumns={"repeat(12, 1fr)"}

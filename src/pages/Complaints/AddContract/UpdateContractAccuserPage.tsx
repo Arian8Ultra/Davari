@@ -808,7 +808,7 @@ const UpdateContractAccuserPage = () => {
       console.log(data);
       alert("ثبت شد");
       navigate(
-        `/complaints/${contractId}/${complaintId}/addComplaint`
+        `/complaints/${contractId}/${complaintId}/tablesPage`
       );
     },
   });

@@ -10,6 +10,7 @@ import {
   Table,
   TableCell,
   TableRow,
+  Tooltip,
 } from "@mui/material";
 import {
   CREATE_INSTALLMENT_PART,
@@ -31,6 +32,7 @@ import {
   Red,
   RedLight,
   primaryTransparent,
+  secondaryLighter,
 } from "../../../theme/color";
 import FaTypography from "../../FaComponents/FaTypography";
 import { MutationWrapper } from "../../../GraphQL/MutationWrapper";
@@ -73,7 +75,8 @@ export default function AdjustmentStatementCard({
     DELETE_INSTALLMENT,
     "installment_deleteInstallment"
   );
-  const [installmentParts, setInstallmentParts] = useState<InstallmentPart[]>();
+  const [installmentParts, setInstallmentParts] =
+    useState<InstallmentPart[]>();
 
   // const [deleteInstallment,{loading,error}] = useMutation(DELETE_INSTALLMENT)
   const {
@@ -99,7 +102,7 @@ export default function AdjustmentStatementCard({
     { id: installment.id },
     {
       onCompleted(data) {
-        console.log("installment_getInstallment",data);
+        console.log("installment_getInstallment", data);
         setInstallmentParts(data.installmentParts);
       },
     }
@@ -109,9 +112,8 @@ export default function AdjustmentStatementCard({
     useState<InstallmentPart>();
   const [open, setOpen] = useState(false);
 
-
   useEffect(() => {
-    console.log("TESTTEST",data);
+    // console.log("TESTTEST", data);
     setInstallmentParts(data?.installmentParts);
   }, [data]);
 
@@ -127,89 +129,90 @@ export default function AdjustmentStatementCard({
           <Box
             sx={{
               display: "flex",
-              justifyContent: "center",
+              justifyContent: "flex-end",
               gap: "1rem",
             }}
           >
-            <IconButton
-              sx={{
-                borderRadius: "10px",
-                background: primary,
-                color: secondaryDark,
-                "&:hover": {
-                  background: primaryLight,
-                },
-                gap: "0.5rem",
-              }}
-              onClick={() => {
-                setAddInstallmentPartModal({
-                  open: true,
-                  installmentPart: {} as InstallmentPart,
-                  installmentId: installment.id,
-                });
-              }}
-            >
-              <FaTypography variant="body2" textAlign={"center"}>
-                افزودن زیرمجموعه
-              </FaTypography>
-              <Add />
-            </IconButton>
-            <IconButton
-              sx={{
-                borderRadius: "10px",
-                background: primary,
-                color: secondaryDark,
-                "&:hover": {
-                  background: primaryLight,
-                },
-                gap: "0.5rem",
-              }}
-              onClick={() => {
-                setNewInstallment(installment);
-                setEditMode(true);
-              }}
-            >
-              <FaTypography variant="body2" textAlign={"center"}>
-                ویرایش
-              </FaTypography>
-              <EditOutlined />
-            </IconButton>
-
-            <IconButton
-              sx={{
-                borderRadius: "10px",
-                background: Red,
-                color: "white",
-                "&:hover": {
-                  background: RedLight,
-                  color: Red,
-                },
-                gap: "0.5rem",
-              }}
-              onClick={() => {
-                void deleteInstallment({
-                  variables: {
-                    id: installment.id,
+            <Tooltip title={"افزودن زیرمجموعه"}>
+              <IconButton
+                sx={{
+                  borderRadius: "10px",
+                  background: primary,
+                  color: secondaryDark,
+                  "&:hover": {
+                    background: primaryLight,
                   },
-                }).then((res) => {
-                  setNewInstallment({} as Installment);
-                  void refetch();
-                });
-              }}
-            >
-              <FaTypography variant="body2" textAlign={"center"}>
-                حذف
-              </FaTypography>
-              <CancelOutlined />
-            </IconButton>
+                  gap: "0.5rem",
+                }}
+                onClick={() => {
+                  setAddInstallmentPartModal({
+                    open: true,
+                    installmentPart: {} as InstallmentPart,
+                    installmentId: installment.id,
+                  });
+                }}
+              >
+                <Add />
+              </IconButton>
+            </Tooltip>
+
+            <Tooltip title={"ویرایش"}>
+              <IconButton
+                sx={{
+                  borderRadius: "10px",
+                  background: secondaryLighter,
+                  color: secondaryDark,
+                  "&:hover": {
+                    background: primaryLight,
+                  },
+                  gap: "0.5rem",
+                }}
+                onClick={() => {
+                  setNewInstallment(installment);
+                  setEditMode(true);
+                }}
+              >
+                <EditOutlined />
+              </IconButton>
+            </Tooltip>
+
+            <Tooltip title={"حذف"}>
+              <IconButton
+                sx={{
+                  borderRadius: "10px",
+                  background: Red,
+                  color: "white",
+                  "&:hover": {
+                    background: RedLight,
+                    color: Red,
+                  },
+                  gap: "0.5rem",
+                }}
+                onClick={() => {
+                  void deleteInstallment({
+                    variables: {
+                      id: installment.id,
+                    },
+                  }).then((res) => {
+                    setNewInstallment({} as Installment);
+                    void refetch();
+                  });
+                }}
+              >
+                <CancelOutlined />
+              </IconButton>
+            </Tooltip>
           </Box>
         </TableCell>
       </TableRow>
       {installmentParts?.map((installmentPart: InstallmentPart) => (
-        <TableRow key={installmentPart.id} sx={{
-          backgroundColor: primaryTransparent,
-          borderLeft: `2px solid ${primary}`,
-        }}>
+        <TableRow
+          key={installmentPart.id}
+          sx={{
+            backgroundColor: primaryTransparent,
+            borderLeft: `2px solid ${primary}`,
+          }}
+        >
           <TableCell></TableCell>
           <TableCell>{installmentPart.amount}</TableCell>
           <TableCell>

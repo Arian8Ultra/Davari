@@ -1,10 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import {
-  EditOutlined
-} from "@mui/icons-material";
+import { EditOutlined } from "@mui/icons-material";
 import {
   Box,
   IconButton,
@@ -30,7 +29,7 @@ import {
   CREATE_ADJUSTMENT_STATEMENT,
   CREATE_ADJUSTMENT_STATEMENT_PART,
   CREATE_ADJUSTMENT_STATEMENT_TABLE,
-  UPDATE_ADJUSTMENT_STATEMENT
+  UPDATE_ADJUSTMENT_STATEMENT,
 } from "../../../GraphQL/Tables/Mutations";
 import { GET_ADJUSTMENT_STATEMENT_TABLE_BY_CONTRACT_ID } from "../../../GraphQL/Tables/Queries";
 import {
@@ -39,7 +38,9 @@ import {
   primary,
   primaryLight,
   secondary,
-  secondaryDark
+  secondaryDark,
+  secondaryLight,
+  secondaryLighter,
 } from "../../../theme/color";
 import DateButton from "../../DateButton";
 import FaTextField from "../../FaComponents/FaTextField";
@@ -55,29 +56,30 @@ const AdjustmentStatementTable = (props: Props) => {
   const { contractId } = useParams<{ contractId: string }>();
   const user = useUserStore((state) => state.user);
   const [editMode, setEditMode] = React.useState<boolean>(false);
-  const [AdjustmentStatement, setAdjustmentStatements] = React.useState<
-    AdjustmentStatement[]
-  >([
-    // {
-    //   amount: 100000,
-    //   filledBy: "ACCUSED",
-    //   id: 1,
-    //   date: new Date(),
-    //   title: "قسط اول",
-    //   AdjustmentStatementTableId: 1,
-    // },
-  ]);
+  const [AdjustmentStatement, setAdjustmentStatements] =
+    React.useState<AdjustmentStatement[]>([
+      // {
+      //   amount: 100000,
+      //   filledBy: "ACCUSED",
+      //   id: 1,
+      //   date: new Date(),
+      //   title: "قسط اول",
+      //   AdjustmentStatementTableId: 1,
+      // },
+    ]);
   const [pageError, setPageError] = React.useState<string>();
   const [tableId, setTableId] = React.useState<number>();
-  const [addAdjustmentStatementPartModal, setAddAdjustmentStatementPartModal] =
-    React.useState<{
-      open: boolean;
-      AdjustmentStatementPart: AdjustmentStatementPart;
-      adjustmentStatementId?: number;
-    }>({
-      open: false,
-      AdjustmentStatementPart: {} as AdjustmentStatementPart,
-    });
+  const [
+    addAdjustmentStatementPartModal,
+    setAddAdjustmentStatementPartModal,
+  ] = React.useState<{
+    open: boolean;
+    AdjustmentStatementPart: AdjustmentStatementPart;
+    AdjustmentStatementId?: number;
+  }>({
+    open: false,
+    AdjustmentStatementPart: {} as AdjustmentStatementPart,
+  });
 
   const [newAdjustmentStatement, setNewAdjustmentStatement] =
     React.useState<AdjustmentStatement>({} as AdjustmentStatement);
@@ -99,7 +101,6 @@ const AdjustmentStatementTable = (props: Props) => {
     "adjustmentStatementTable_addAdjustmentStatementTable"
   );
 
-
   const {
     handleMutation: editAdjustmentStatement,
     loading: loadingEditAdjustmentStatement,
@@ -117,7 +118,18 @@ const AdjustmentStatementTable = (props: Props) => {
     },
     {
       onCompleted(data) {
-        console.log("GET_ADJUSTMENT_STATEMENT_TABLE_BY_CONTRACT_ID", data);
+        console.log("OnComplete", data);
+        const userType =
+          data?.items[0]?.accuserDepartmentUserId == user.parentId
+            ? "ACCUSER"
+            : "ACCUSED";
+
+        setAdjustmentStatements(
+          data.items[0].adjustmentStatements.filter(
+            (adjustmentStatement: AdjustmentStatement) =>
+              adjustmentStatement.filledBy == userType
+          )
+        );
       },
       onError(error) {
         console.log("error", error);
@@ -143,91 +155,159 @@ const AdjustmentStatementTable = (props: Props) => {
   );
 
   React.useEffect(() => {
-    if (data?.items?.length > 0 && loading == false) {
-      console.log("GET_AdjustmentStatement_TABLE_BY_CONTRACT_ID", data);
-      setAdjustmentStatements(data?.items[0]?.AdjustmentStatements);
-      // setNewAdjustmentStatement({
-      //   ...newAdjustmentStatement,
-      //   AdjustmentStatementTableId: data?.items[0]?.id,
+    console.log("GET_AdjustmentStatement_TABLE_BY_CONTRACT_ID", data);
+    const userType =
+      data?.items[0]?.accuserDepartmentUserId == user.parentId
+        ? "ACCUSER"
+        : "ACCUSED";
+    console.warn("userType", userType);
+    if (data?.items?.length > 0) {
+      console.log("TestNew", data);
+      const userType =
+        data?.items[0]?.accuserDepartmentUserId == user.parentId
+          ? "ACCUSER"
+          : "ACCUSED";
+      setAdjustmentStatements(
+        data.items[0].adjustmentStatements.filter(
+          (adjustmentStatement: AdjustmentStatement) =>
+            adjustmentStatement.filledBy == userType
+        )
+      );
+      // setAdjustmentStatements(data?.items[0]?.adjustmentStatements && data?.items[0]?.adjustmentStatements);
+      // setNewInstallment({
+      //   ...newInstallment,
+      //   installmentTableId: data?.items[0]?.id,
       // })
 
       setTableId(data?.items[0]?.id);
     } else {
-      console.log("GET_AdjustmentStatement_TABLE_BY_CONTRACT_ID", data);
-
+      // console.log("else",data?.items?.length);
       if (data instanceof Error) {
+        console.log("adding");
         void addAdjustmentStatementTable({
           variables: {
             contractId: contractId && parseInt(contractId),
             userId: user.id,
-            filledBy:
-              contractData?.items[0]?.accuserDepartmentUserId == user.id ||
-              contractData?.items[0]?.accuserDepartmentUserId == user.parentId
-                ? "ACCUSER"
-                : "ACCUSED",
           },
           options: {
             onCompleted(data, clientOptions) {
               console.log("addAdjustmentStatementTable", data);
+              setTableId(data?.id);
               void refetch();
             },
           },
         });
       } else {
-        if(!data) {
+        if (data?.items?.length == 0) {
+          console.log("adding");
           void addAdjustmentStatementTable({
             variables: {
               contractId: contractId && parseInt(contractId),
               userId: user.id,
-              filledBy:
-              contractData?.items[0]?.accuserDepartmentUserId == user.id ||
-              contractData?.items[0]?.accuserDepartmentUserId == user.parentId
-                ? "ACCUSER"
-                : "ACCUSED",
             },
             options: {
               onCompleted(data, clientOptions) {
                 console.log("addAdjustmentStatementTable", data);
-                void refetch();
-              },
-            },
-          });
-        }
-        if (data?.items?.length > 0) {
-          void addAdjustmentStatementTable({
-            variables: {
-              contractId: contractId && parseInt(contractId),
-              userId: user.id,
-              filledBy:
-              contractData?.items[0]?.accuserDepartmentUserId == user.id ||
-              contractData?.items[0]?.accuserDepartmentUserId == user.parentId
-                ? "ACCUSER"
-                : "ACCUSED",
-            },
-            options: {
-              onCompleted(data, clientOptions) {
-                console.log("addAdjustmentStatementTable", data);
+                setTableId(data?.id);
                 void refetch();
               },
             },
           });
         }
       }
-
-      // void addAdjustmentStatementTable({
-      //   variables: {
-      //     contractId: contractId && parseInt(contractId),
-      //     userId: user.id,
-      //   },
-      //   options: {
-      //     onCompleted(data, clientOptions) {
-      //       console.log("addAdjustmentStatementTable", data);
-      //       void refetch();
-      //     },
-      //   },
-      // });
     }
-  }, [data]);
+  }, [
+    addAdjustmentStatementTable,
+    contractId,
+    data,
+    refetch,
+    user.id,
+  ]);
+  //   if (data?.items?.length > 0 && loading == false) {
+  //     console.log("GET_AdjustmentStatement_TABLE_BY_CONTRACT_ID", data);
+  //     setAdjustmentStatements(data?.items[0]?.AdjustmentStatements);
+  //     // setNewAdjustmentStatement({
+  //     //   ...newAdjustmentStatement,
+  //     //   AdjustmentStatementTableId: data?.items[0]?.id,
+  //     // })
+
+  //     setTableId(data?.items[0]?.id);
+  //   } else {
+  //     console.log("GET_AdjustmentStatement_TABLE_BY_CONTRACT_ID", data);
+
+  //     if (data instanceof Error) {
+  //       void addAdjustmentStatementTable({
+  //         variables: {
+  //           contractId: contractId && parseInt(contractId),
+  //           userId: user.id,
+  //           filledBy:
+  //             contractData?.items[0]?.accuserDepartmentUserId == user.id ||
+  //             contractData?.items[0]?.accuserDepartmentUserId == user.parentId
+  //               ? "ACCUSER"
+  //               : "ACCUSED",
+  //         },
+  //         options: {
+  //           onCompleted(data, clientOptions) {
+  //             console.log("addAdjustmentStatementTable", data);
+  //             void refetch();
+  //           },
+  //         },
+  //       });
+  //     } else {
+  //       if(!data) {
+  //         void addAdjustmentStatementTable({
+  //           variables: {
+  //             contractId: contractId && parseInt(contractId),
+  //             userId: user.id,
+  //             filledBy:
+  //             contractData?.items[0]?.accuserDepartmentUserId == user.id ||
+  //             contractData?.items[0]?.accuserDepartmentUserId == user.parentId
+  //               ? "ACCUSER"
+  //               : "ACCUSED",
+  //           },
+  //           options: {
+  //             onCompleted(data, clientOptions) {
+  //               console.log("addAdjustmentStatementTable", data);
+  //               void refetch();
+  //             },
+  //           },
+  //         });
+  //       }
+  //       if (data?.items?.length > 0) {
+  //         void addAdjustmentStatementTable({
+  //           variables: {
+  //             contractId: contractId && parseInt(contractId),
+  //             userId: user.id,
+  //             filledBy:
+  //             contractData?.items[0]?.accuserDepartmentUserId == user.id ||
+  //             contractData?.items[0]?.accuserDepartmentUserId == user.parentId
+  //               ? "ACCUSER"
+  //               : "ACCUSED",
+  //           },
+  //           options: {
+  //             onCompleted(data, clientOptions) {
+  //               console.log("addAdjustmentStatementTable", data);
+  //               void refetch();
+  //             },
+  //           },
+  //         });
+  //       }
+  //     }
+
+  //     // void addAdjustmentStatementTable({
+  //     //   variables: {
+  //     //     contractId: contractId && parseInt(contractId),
+  //     //     userId: user.id,
+  //     //   },
+  //     //   options: {
+  //     //     onCompleted(data, clientOptions) {
+  //     //       console.log("addAdjustmentStatementTable", data);
+  //     //       void refetch();
+  //     //     },
+  //     //   },
+  //     // });
+  //   }
+  // }, [data]);
 
   const handleEmptyFields = () => {
     if (!newAdjustmentStatement.title) {
@@ -268,6 +348,7 @@ const AdjustmentStatementTable = (props: Props) => {
       sx={{
         borderRadius: "10px",
         background: background,
+        my: "1rem",
         // change the color of header to grey
         "& thead": {
           "& tr": {
@@ -320,7 +401,7 @@ const AdjustmentStatementTable = (props: Props) => {
                 }}
               >
                 <FaTypography variant="h6" textAlign={"center"}>
-                جدول صورت وضعیت تعدیل 
+                  جدول صورت وضعیت تعدیل
                 </FaTypography>
               </Box>
             </TableCell>
@@ -329,6 +410,7 @@ const AdjustmentStatementTable = (props: Props) => {
             <TableCell
               sx={{
                 textAlign: "center",
+                borderRight: "1px solid white",
               }}
               rowSpan={2}
             >
@@ -337,6 +419,7 @@ const AdjustmentStatementTable = (props: Props) => {
             <TableCell
               sx={{
                 textAlign: "center",
+                borderRight: "1px solid white",
               }}
               colSpan={2}
             >
@@ -345,27 +428,27 @@ const AdjustmentStatementTable = (props: Props) => {
             <TableCell
               sx={{
                 textAlign: "center",
+                borderRight: "1px solid white",
               }}
               colSpan={2}
-
             >
               تایید شده توسط مشاور
             </TableCell>
             <TableCell
               sx={{
                 textAlign: "center",
+                borderRight: "1px solid white",
               }}
               colSpan={2}
-
             >
               تایید شده توسط کارفرما
             </TableCell>
             <TableCell
               sx={{
                 textAlign: "center",
+                borderRight: "1px solid white",
               }}
               colSpan={2}
-
             >
               پرداخت
             </TableCell>
@@ -381,6 +464,7 @@ const AdjustmentStatementTable = (props: Props) => {
             <TableCell
               sx={{
                 textAlign: "center",
+                borderRight: "1px solid white",
               }}
             >
               مبلغ
@@ -388,6 +472,7 @@ const AdjustmentStatementTable = (props: Props) => {
             <TableCell
               sx={{
                 textAlign: "center",
+                borderRight: "1px solid white",
               }}
             >
               تاريخ
@@ -395,6 +480,7 @@ const AdjustmentStatementTable = (props: Props) => {
             <TableCell
               sx={{
                 textAlign: "center",
+                borderRight: "1px solid white",
               }}
             >
               مبلغ
@@ -402,6 +488,7 @@ const AdjustmentStatementTable = (props: Props) => {
             <TableCell
               sx={{
                 textAlign: "center",
+                borderRight: "1px solid white",
               }}
             >
               تاريخ
@@ -409,6 +496,7 @@ const AdjustmentStatementTable = (props: Props) => {
             <TableCell
               sx={{
                 textAlign: "center",
+                borderRight: "1px solid white",
               }}
             >
               مبلغ
@@ -416,6 +504,7 @@ const AdjustmentStatementTable = (props: Props) => {
             <TableCell
               sx={{
                 textAlign: "center",
+                borderRight: "1px solid white",
               }}
             >
               تاريخ
@@ -423,6 +512,7 @@ const AdjustmentStatementTable = (props: Props) => {
             <TableCell
               sx={{
                 textAlign: "center",
+                borderRight: "1px solid white",
               }}
             >
               مبلغ
@@ -430,10 +520,11 @@ const AdjustmentStatementTable = (props: Props) => {
             <TableCell
               sx={{
                 textAlign: "center",
+                borderRight: "1px solid white",
               }}
             >
               تاريخ
-            </TableCell>  
+            </TableCell>
             <TableCell
               sx={{
                 textAlign: "center",
@@ -454,7 +545,21 @@ const AdjustmentStatementTable = (props: Props) => {
                     title: e.target.value,
                   })
                 }
-                value={newAdjustmentStatement.title}
+                InputLabelProps={{
+                  sx: {
+                    fontSize: "12px",
+                  },
+                }}
+                InputProps={{
+                  sx: {
+                    fontSize: "12px",
+                  },
+                }}
+                value={
+                  newAdjustmentStatement.title
+                    ? newAdjustmentStatement.title
+                    : ""
+                }
                 focused={newAdjustmentStatement.title ? true : false}
                 fullWidth
               />
@@ -465,18 +570,39 @@ const AdjustmentStatementTable = (props: Props) => {
                 onChange={(e) =>
                   setNewAdjustmentStatement({
                     ...newAdjustmentStatement,
-                    amountProvidedByContractor: parseInt(e.target.value),
+                    amountProvidedByContractor: parseInt(
+                      e.target.value
+                    ),
                   })
                 }
-                value={newAdjustmentStatement.amountProvidedByContractor}
+                value={
+                  newAdjustmentStatement.amountProvidedByContractor
+                    ? newAdjustmentStatement.amountProvidedByContractor
+                    : ""
+                }
                 fullWidth
-                focused={newAdjustmentStatement.amountProvidedByContractor ? true : false}
+                focused={
+                  newAdjustmentStatement.amountProvidedByContractor
+                    ? true
+                    : false
+                }
+                InputLabelProps={{
+                  sx: {
+                    fontSize: "12px",
+                  },
+                }}
+                InputProps={{
+                  sx: {
+                    fontSize: "12px",
+                  },
+                }}
                 type="number"
               />
             </TableCell>
             <TableCell>
               <DateButton
                 label="تاریخ پرداخت"
+                fontSize={"12px"}
                 setDate={(date) =>
                   setNewAdjustmentStatement({
                     ...newAdjustmentStatement,
@@ -484,6 +610,7 @@ const AdjustmentStatementTable = (props: Props) => {
                     dateProvidedByContractor: date || new Date(),
                   })
                 }
+                direction="column"
                 date={newAdjustmentStatement.dateProvidedByContractor}
               />
             </TableCell>
@@ -493,18 +620,39 @@ const AdjustmentStatementTable = (props: Props) => {
                 onChange={(e) =>
                   setNewAdjustmentStatement({
                     ...newAdjustmentStatement,
-                    amountConfirmedByConsultant: parseInt(e.target.value),
+                    amountConfirmedByConsultant: parseInt(
+                      e.target.value
+                    ),
                   })
                 }
-                value={newAdjustmentStatement.amountConfirmedByConsultant}
+                InputLabelProps={{
+                  sx: {
+                    fontSize: "12px",
+                  },
+                }}
+                InputProps={{
+                  sx: {
+                    fontSize: "12px",
+                  },
+                }}
+                value={
+                  newAdjustmentStatement.amountConfirmedByConsultant
+                    ? newAdjustmentStatement.amountConfirmedByConsultant
+                    : ""
+                }
                 fullWidth
-                focused={newAdjustmentStatement.amountConfirmedByConsultant ? true : false}
+                focused={
+                  newAdjustmentStatement.amountConfirmedByConsultant
+                    ? true
+                    : false
+                }
                 type="number"
               />
             </TableCell>
             <TableCell>
               <DateButton
                 label="تاریخ پرداخت"
+                fontSize={"12px"}
                 setDate={(date) =>
                   setNewAdjustmentStatement({
                     ...newAdjustmentStatement,
@@ -512,7 +660,10 @@ const AdjustmentStatementTable = (props: Props) => {
                     dateConfirmedByConsultant: date || new Date(),
                   })
                 }
-                date={newAdjustmentStatement.dateConfirmedByConsultant}
+                direction="column"
+                date={
+                  newAdjustmentStatement.dateConfirmedByConsultant
+                }
               />
             </TableCell>
             <TableCell>
@@ -521,18 +672,39 @@ const AdjustmentStatementTable = (props: Props) => {
                 onChange={(e) =>
                   setNewAdjustmentStatement({
                     ...newAdjustmentStatement,
-                    amountConfirmedByConsultant: parseInt(e.target.value),
+                    amountApprovedByEmployer: parseInt(
+                      e.target.value
+                    ),
                   })
                 }
-                value={newAdjustmentStatement.amountApprovedByEmployer}
+                value={
+                  newAdjustmentStatement.amountApprovedByEmployer
+                    ? newAdjustmentStatement.amountApprovedByEmployer
+                    : ""
+                }
                 fullWidth
-                focused={newAdjustmentStatement.amountApprovedByEmployer ? true : false}
+                focused={
+                  newAdjustmentStatement.amountApprovedByEmployer
+                    ? true
+                    : false
+                }
+                InputLabelProps={{
+                  sx: {
+                    fontSize: "12px",
+                  },
+                }}
+                InputProps={{
+                  sx: {
+                    fontSize: "12px",
+                  },
+                }}
                 type="number"
               />
             </TableCell>
             <TableCell>
               <DateButton
                 label="تاریخ پرداخت"
+                fontSize={"12px"}
                 setDate={(date) =>
                   setNewAdjustmentStatement({
                     ...newAdjustmentStatement,
@@ -540,6 +712,7 @@ const AdjustmentStatementTable = (props: Props) => {
                     dateApprovedByEmployer: date || new Date(),
                   })
                 }
+                direction="column"
                 date={newAdjustmentStatement.dateApprovedByEmployer}
               />
             </TableCell>
@@ -552,15 +725,32 @@ const AdjustmentStatementTable = (props: Props) => {
                     amountPaid: parseInt(e.target.value),
                   })
                 }
-                value={newAdjustmentStatement.amountPaid}
+                value={
+                  newAdjustmentStatement.amountPaid
+                    ? newAdjustmentStatement.amountPaid
+                    : ""
+                }
                 fullWidth
-                focused={newAdjustmentStatement.amountPaid ? true : false}
+                focused={
+                  newAdjustmentStatement.amountPaid ? true : false
+                }
+                InputLabelProps={{
+                  sx: {
+                    fontSize: "12px",
+                  },
+                }}
+                InputProps={{
+                  sx: {
+                    fontSize: "12px",
+                  },
+                }}
                 type="number"
               />
             </TableCell>
             <TableCell>
               <DateButton
                 label="تاریخ پرداخت"
+                fontSize={"12px"}
                 setDate={(date) =>
                   setNewAdjustmentStatement({
                     ...newAdjustmentStatement,
@@ -568,6 +758,7 @@ const AdjustmentStatementTable = (props: Props) => {
                     datePaid: date || new Date(),
                   })
                 }
+                direction="column"
                 date={newAdjustmentStatement.datePaid}
               />
             </TableCell>
@@ -584,17 +775,25 @@ const AdjustmentStatementTable = (props: Props) => {
                     onClick={() => {
                       void editAdjustmentStatement({
                         variables: {
-                          AdjustmentStatementTableId: tableId && tableId,
-                          amountApprovedByEmployer: newAdjustmentStatement.amountApprovedByEmployer,
-                          dateApprovedByEmployer: newAdjustmentStatement.dateApprovedByEmployer,
-                          amountConfirmedByConsultant: newAdjustmentStatement.amountConfirmedByConsultant,
-                          dateConfirmedByConsultant: newAdjustmentStatement.dateConfirmedByConsultant,
-                          amountPaid: newAdjustmentStatement.amountPaid,
+                          adjustmentStatementTableId:
+                            tableId && tableId,
+                          amountApprovedByEmployer:
+                            newAdjustmentStatement.amountApprovedByEmployer,
+                          dateApprovedByEmployer:
+                            newAdjustmentStatement.dateApprovedByEmployer,
+                          amountConfirmedByConsultant:
+                            newAdjustmentStatement.amountConfirmedByConsultant,
+                          dateConfirmedByConsultant:
+                            newAdjustmentStatement.dateConfirmedByConsultant,
+                          amountPaid:
+                            newAdjustmentStatement.amountPaid,
                           datePaid: newAdjustmentStatement.datePaid,
-                          amountProvidedByContractor: newAdjustmentStatement.amountProvidedByContractor,
-                          dateProvidedByContractor: newAdjustmentStatement.dateProvidedByContractor,
+                          amountProvidedByContractor:
+                            newAdjustmentStatement.amountProvidedByContractor,
+                          dateProvidedByContractor:
+                            newAdjustmentStatement.dateProvidedByContractor,
                           title: newAdjustmentStatement.title,
-                          registrarType:
+                          filledBy:
                             data?.items[0]?.accuserDepartmentUserId ==
                               user.id ||
                             data?.items[0]?.accuserDepartmentUserId ==
@@ -606,7 +805,9 @@ const AdjustmentStatementTable = (props: Props) => {
                       }).then((res) => {
                         void refetch();
                         setEditMode(false);
-                        setNewAdjustmentStatement({} as AdjustmentStatement);
+                        setNewAdjustmentStatement(
+                          {} as AdjustmentStatement
+                        );
                       });
                     }}
                     sx={{
@@ -634,15 +835,23 @@ const AdjustmentStatementTable = (props: Props) => {
                       // if(handleEmptyFields()) return;
                       void addAdjustmentStatement({
                         variables: {
-                          adjustmentStatementTableId: tableId && tableId,
-                          amountApprovedByEmployer: newAdjustmentStatement.amountApprovedByEmployer,
-                          dateApprovedByEmployer: newAdjustmentStatement.dateApprovedByEmployer,
-                          amountConfirmedByConsultant: newAdjustmentStatement.amountConfirmedByConsultant,
-                          dateConfirmedByConsultant: newAdjustmentStatement.dateConfirmedByConsultant,
-                          amountPaid: newAdjustmentStatement.amountPaid,
+                          adjustmentStatementTableId:
+                            tableId && tableId,
+                          amountApprovedByEmployer:
+                            newAdjustmentStatement.amountApprovedByEmployer,
+                          dateApprovedByEmployer:
+                            newAdjustmentStatement.dateApprovedByEmployer,
+                          amountConfirmedByConsultant:
+                            newAdjustmentStatement.amountConfirmedByConsultant,
+                          dateConfirmedByConsultant:
+                            newAdjustmentStatement.dateConfirmedByConsultant,
+                          amountPaid:
+                            newAdjustmentStatement.amountPaid,
                           datePaid: newAdjustmentStatement.datePaid,
-                          amountProvidedByContractor: newAdjustmentStatement.amountProvidedByContractor,
-                          dateProvidedByContractor: newAdjustmentStatement.dateProvidedByContractor,
+                          amountProvidedByContractor:
+                            newAdjustmentStatement.amountProvidedByContractor,
+                          dateProvidedByContractor:
+                            newAdjustmentStatement.dateProvidedByContractor,
                           title: newAdjustmentStatement.title,
                           filledBy:
                             data?.items[0]?.accuserDepartmentUserId ==
@@ -654,9 +863,11 @@ const AdjustmentStatementTable = (props: Props) => {
                         },
                       })
                         .then((res) => {
-                          setNewAdjustmentStatement({} as AdjustmentStatement);
+                          setNewAdjustmentStatement(
+                            {} as AdjustmentStatement
+                          );
                           void refetch();
-                          setPageError('');
+                          setPageError("");
                         })
                         .catch((err) => {
                           alert("خطا در افزودن قسط");
@@ -687,7 +898,9 @@ const AdjustmentStatementTable = (props: Props) => {
             </TableCell>
           </TableRow>
           {/* {tableId} */}
-          {pageError && <Typography color={Red}>{pageError}</Typography>}
+          {pageError && (
+            <Typography color={Red}>{pageError}</Typography>
+          )}
           {AdjustmentStatement &&
             AdjustmentStatement.length > 0 &&
             AdjustmentStatement.map((AdjustmentStatement) => (
@@ -714,43 +927,240 @@ const AdjustmentStatementTable = (props: Props) => {
           }}
           isCloseable={true}
           background={background}
-          width={"40%"}
+          width={"60%"}
         >
           <Box
             display={"grid"}
-            gridTemplateColumns={"1fr 1fr"}
+            gridTemplateColumns={"1fr 1fr 1fr 1fr"}
             gap={"1rem"}
             width={"100%"}
           >
-            <FaTextField
-              label="مبلغ"
-              onChange={(e) =>
-                setAddAdjustmentStatementPartModal({
-                  ...addAdjustmentStatementPartModal,
-                  AdjustmentStatementPart: {
-                    ...addAdjustmentStatementPartModal.AdjustmentStatementPart,
-                    amount: parseInt(e.target.value),
-                  },
-                })
-              }
-              value={addAdjustmentStatementPartModal.AdjustmentStatementPart.amount}
-              fullWidth
-              type="number"
-            />
-            <DateButton
-              label="تاریخ پرداخت"
-              setDate={(date) =>
-                setAddAdjustmentStatementPartModal({
-                  ...addAdjustmentStatementPartModal,
-                  AdjustmentStatementPart: {
-                    ...addAdjustmentStatementPartModal.AdjustmentStatementPart,
-                    // @ts-ignore
-                    date: date || new Date(),
-                  },
-                })
-              }
-              date={addAdjustmentStatementPartModal.AdjustmentStatementPart.date}
-            />
+            <Box
+              display={"grid"}
+              gridTemplateColumns={"1fr"}
+              gap={"1rem"}
+              width={"100%"}
+              gridColumn={"span 1"}
+              sx={{
+                borderRadius: "10px",
+                outline: `2px solid ${secondary}`,
+                padding: "0.5rem",
+              }}
+            >
+              <FaTypography textAlign={"center"}>
+                ارائه شده توسط پیمانکار
+              </FaTypography>
+              <FaTextField
+                label="مبلغ"
+                onChange={(e) =>
+                  setAddAdjustmentStatementPartModal({
+                    ...addAdjustmentStatementPartModal,
+                    AdjustmentStatementPart: {
+                      ...addAdjustmentStatementPartModal.AdjustmentStatementPart,
+                      amountProvidedByContractor: parseInt(
+                        e.target.value
+                      ),
+                    },
+                  })
+                }
+                value={
+                  addAdjustmentStatementPartModal
+                    .AdjustmentStatementPart
+                    .amountProvidedByContractor
+                }
+                fullWidth
+                type="number"
+              />
+              <DateButton
+                label="تاریخ پرداخت"
+                setDate={(date) =>
+                  setAddAdjustmentStatementPartModal({
+                    ...addAdjustmentStatementPartModal,
+                    AdjustmentStatementPart: {
+                      ...addAdjustmentStatementPartModal.AdjustmentStatementPart,
+                      // @ts-ignore
+                      dateProvidedByContractor: date || new Date(),
+                    },
+                  })
+                }
+                date={
+                  addAdjustmentStatementPartModal
+                    .AdjustmentStatementPart.dateProvidedByContractor
+                }
+              />
+            </Box>
+            <Box
+              display={"grid"}
+              gridTemplateColumns={"1fr"}
+              gap={"1rem"}
+              width={"100%"}
+              gridColumn={"span 1"}
+              sx={{
+                borderRadius: "10px",
+                outline: `2px solid ${secondary}`,
+                padding: "0.5rem",
+              }}
+            >
+              <FaTypography
+                gridColumn={"span 1"}
+                textAlign={"center"}
+              >
+                تایید شده توسط مشاور
+              </FaTypography>
+              <FaTextField
+                label="مبلغ"
+                onChange={(e) =>
+                  setAddAdjustmentStatementPartModal({
+                    ...addAdjustmentStatementPartModal,
+                    AdjustmentStatementPart: {
+                      ...addAdjustmentStatementPartModal.AdjustmentStatementPart,
+                      amountConfirmedByConsultant: parseInt(
+                        e.target.value
+                      ),
+                    },
+                  })
+                }
+                value={
+                  addAdjustmentStatementPartModal
+                    .AdjustmentStatementPart
+                    .amountConfirmedByConsultant
+                }
+                fullWidth
+                type="number"
+              />
+              <DateButton
+                label="تاریخ پرداخت"
+                setDate={(date) =>
+                  setAddAdjustmentStatementPartModal({
+                    ...addAdjustmentStatementPartModal,
+                    AdjustmentStatementPart: {
+                      ...addAdjustmentStatementPartModal.AdjustmentStatementPart,
+                      // @ts-ignore
+                      dateConfirmedByConsultant: date || new Date(),
+                    },
+                  })
+                }
+                date={
+                  addAdjustmentStatementPartModal
+                    .AdjustmentStatementPart.dateConfirmedByConsultant
+                }
+              />
+            </Box>
+            <Box
+              display={"grid"}
+              gridTemplateColumns={"1fr"}
+              gap={"1rem"}
+              width={"100%"}
+              gridColumn={"span 1"}
+              sx={{
+                borderRadius: "10px",
+                outline: `2px solid ${secondary}`,
+                padding: "0.5rem",
+              }}
+            >
+              <FaTypography
+                gridColumn={"span 1"}
+                textAlign={"center"}
+              >
+                تایید شده توسط کارفرما
+              </FaTypography>
+              <FaTextField
+                label="مبلغ"
+                onChange={(e) =>
+                  setAddAdjustmentStatementPartModal({
+                    ...addAdjustmentStatementPartModal,
+                    AdjustmentStatementPart: {
+                      ...addAdjustmentStatementPartModal.AdjustmentStatementPart,
+                      amountApprovedByEmployer: parseInt(
+                        e.target.value
+                      ),
+                    },
+                  })
+                }
+                value={
+                  addAdjustmentStatementPartModal
+                    .AdjustmentStatementPart.amountApprovedByEmployer
+                }
+                fullWidth
+                type="number"
+              />
+              <DateButton
+                label="تاریخ پرداخت"
+                setDate={(date) =>
+                  setAddAdjustmentStatementPartModal({
+                    ...addAdjustmentStatementPartModal,
+                    AdjustmentStatementPart: {
+                      ...addAdjustmentStatementPartModal.AdjustmentStatementPart,
+                      // @ts-ignore
+                      dateApprovedByEmployer: date || new Date(),
+                    },
+                  })
+                }
+                date={
+                  addAdjustmentStatementPartModal
+                    .AdjustmentStatementPart.dateApprovedByEmployer
+                }
+              />
+            </Box>
+            <Box
+              display={"grid"}
+              gridTemplateColumns={"1fr"}
+              gap={"1rem"}
+              width={"100%"}
+              gridColumn={"span 1"}
+              sx={{
+                borderRadius: "10px",
+                outline: `2px solid ${secondary}`,
+                padding: "0.5rem",
+              }}
+            >
+              <FaTypography
+                gridColumn={"span 1"}
+                textAlign={"center"}
+                sx={
+                  {
+                    // background: primary,
+                  }
+                }
+              >
+                پرداخت
+              </FaTypography>
+              <FaTextField
+                label="مبلغ"
+                onChange={(e) =>
+                  setAddAdjustmentStatementPartModal({
+                    ...addAdjustmentStatementPartModal,
+                    AdjustmentStatementPart: {
+                      ...addAdjustmentStatementPartModal.AdjustmentStatementPart,
+                      amountPaid: parseInt(e.target.value),
+                    },
+                  })
+                }
+                value={
+                  addAdjustmentStatementPartModal
+                    .AdjustmentStatementPart.amountPaid
+                }
+                fullWidth
+                type="number"
+              />
+              <DateButton
+                label="تاریخ پرداخت"
+                setDate={(date) =>
+                  setAddAdjustmentStatementPartModal({
+                    ...addAdjustmentStatementPartModal,
+                    AdjustmentStatementPart: {
+                      ...addAdjustmentStatementPartModal.AdjustmentStatementPart,
+                      // @ts-ignore
+                      datePaid: date || new Date(),
+                    },
+                  })
+                }
+                date={
+                  addAdjustmentStatementPartModal
+                    .AdjustmentStatementPart.datePaid
+                }
+              />
+            </Box>
             <Box
               sx={{
                 display: "flex",
@@ -762,26 +1172,69 @@ const AdjustmentStatementTable = (props: Props) => {
                 onClick={() => {
                   void createAdjustmentStatementPart({
                     variables: {
-                      AdjustmentStatementId:
+                      adjustmentStatementId:
                         addAdjustmentStatementPartModal.AdjustmentStatementId,
-                      amount:
-                        addAdjustmentStatementPartModal.AdjustmentStatementPart
-                          .amount,
-                      date: addAdjustmentStatementPartModal.AdjustmentStatementPart
-                        .date,
+                      amountApprovedByEmployer:
+                        addAdjustmentStatementPartModal
+                          .AdjustmentStatementPart
+                          .amountApprovedByEmployer,
+                      amountConfirmedByConsultant:
+                        addAdjustmentStatementPartModal
+                          .AdjustmentStatementPart
+                          .amountConfirmedByConsultant,
+                      amountPaid:
+                        addAdjustmentStatementPartModal
+                          .AdjustmentStatementPart.amountPaid,
+                      amountProvidedByContractor:
+                        addAdjustmentStatementPartModal
+                          .AdjustmentStatementPart
+                          .amountProvidedByContractor,
+                      dateApprovedByEmployer:
+                        addAdjustmentStatementPartModal
+                          .AdjustmentStatementPart
+                          .dateApprovedByEmployer,
+                      dateConfirmedByConsultant:
+                        addAdjustmentStatementPartModal
+                          .AdjustmentStatementPart
+                          .dateConfirmedByConsultant,
+                      datePaid:
+                        addAdjustmentStatementPartModal
+                          .AdjustmentStatementPart.datePaid,
+                      dateProvidedByContractor:
+                        addAdjustmentStatementPartModal
+                          .AdjustmentStatementPart
+                          .dateProvidedByContractor,
+                      operationPeriodEndDate:
+                        addAdjustmentStatementPartModal
+                          .AdjustmentStatementPart
+                          .operationPeriodEndDate,
+                      operationPeriodStartDate:
+                        addAdjustmentStatementPartModal
+                          .AdjustmentStatementPart
+                          .operationPeriodStartDate,
+                      filledBy:
+                        data?.items[0]?.accuserDepartmentUserId ==
+                          user.id ||
+                        data?.items[0]?.accuserDepartmentUserId ==
+                          user.parentId
+                          ? "ACCUSER"
+                          : "ACCUSED",
                     },
                   })
                     .then((res) => {
                       alert("زیرمجموعه با موفقیت افزوده شد");
                       setAddAdjustmentStatementPartModal({
                         ...addAdjustmentStatementPartModal,
-                        AdjustmentStatementPart: {} as AdjustmentStatementPart,
+                        AdjustmentStatementPart:
+                          {} as AdjustmentStatementPart,
                         open: false,
                       });
+                      window.location.reload();
                       void refetch();
                     })
                     .catch((err) => {
                       alert("خطا در افزودن زیرمجموعه");
+                      void refetch();
                     });
                 }}
                 sx={{

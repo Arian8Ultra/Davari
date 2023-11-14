@@ -165,7 +165,7 @@ const ContractPage = () => {
             gridColumn: "span 6",
           }}
         >
-          عنوان قرارداد: {contract?.contractSubjectByAccuser}(خواهان)
+          عنوان قرارداد:(خواهان) {contract?.contractSubjectByAccuser}
         </Typography>
         <Typography
           variant="h6"
@@ -174,7 +174,7 @@ const ContractPage = () => {
             gridColumn: "span 6",
           }}
         >
-          عنوان قرارداد: {contract?.contractSubjectByAccused}(خوانده)
+          عنوان قرارداد:(خوانده) {contract?.contractSubjectByAccused}
         </Typography>
         {/* 
         <TextField
@@ -194,7 +194,7 @@ const ContractPage = () => {
             gridColumn: "span 6",
           }}
         >
-          شماره قرارداد: {contract?.contractNumberByAccuser || ""}(خواهان)
+          شماره قرارداد:(خواهان) {contract?.contractNumberByAccuser || ""}
         </Typography>
 
         <Typography
@@ -204,7 +204,7 @@ const ContractPage = () => {
             gridColumn: "span 6",
           }}
         >
-          شماره قرارداد: {contract?.contractNumberByAccused || ""}(خوانده)
+          شماره قرارداد:(خوانده) {contract?.contractNumberByAccused || ""}
         </Typography>
         <Typography
           variant="body1"

@@ -48,6 +48,7 @@ export type OptionalArgument = {
   CouncilApprovedAmount?: number;
   ContractId?: number;
   Files?: File[];
+  AccuserAnswerToAccusedResponse?: string;
 };
 
 export type OptionalArgumentSamll = {
@@ -67,6 +68,7 @@ export type OptionalArgumentSamll = {
   councilApprovedAmount?: number;
   contractId?: number;
   Files?: File[];
+  accuserAnswerToAccusedResponse?: string;
 };
 
 

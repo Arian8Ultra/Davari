@@ -584,11 +584,10 @@ const UpdateContractPage = () => {
         AccuserRelatedPeople: JSON.stringify(RelatedPeopleByAccusser),
         AccusedRelatedPeople: JSON.stringify(RelatedPeopleByAccussed),
         AccuserNationality: Nationality,
-        ContractType: contratDetails && contratDetails.contratTypes,
-        CircularNumber:
-          contratDetails && contratDetails.CircularNumber,
-        CircularDate: contratDetails && contratDetails.CircularDate,
-        ContractSubject: ContractSubject && ContractSubject,
+        ContractType: contratDetails.contratTypes,
+        CircularNumber:contratDetails.CircularNumber,
+        CircularDate: contratDetails.CircularDate,
+        ContractSubject: ContractSubject,
         // ContractNumber: ContractNumber,
         ContractDate: ContractDate,
         InitialBudget: InitialBudget,
@@ -749,7 +748,7 @@ const UpdateContractPage = () => {
       console.log(data);
       alert("ثبت شد");
       navigate(
-        `/complaints/${contractId}/${complaintId}/addComplaint`
+        `/complaints/${contractId}/${complaintId}/tablesPage`
       );
     },
   });
@@ -3289,6 +3288,50 @@ const UpdateContractPage = () => {
             onClick={() => {
               if (handleErrors()) {
                 void createContractMutation({
+                  variables: {
+                    AccuserRelatedPeople: JSON.stringify(RelatedPeopleByAccusser),
+                    AccusedRelatedPeople: JSON.stringify(RelatedPeopleByAccussed),
+                    AccuserNationality: Nationality,
+                    ContractType: contratDetails.contratTypes,
+                    CircularNumber:contratDetails.CircularNumber,
+                    CircularDate: contratDetails.CircularDate,
+                    ContractSubject: ContractSubject,
+                    // ContractNumber: ContractNumber,
+                    ContractDate: ContractDate,
+                    InitialBudget: InitialBudget,
+                    InitialTimePeriod: InitialTimePeriod,
+                    PriceListOfBasicUnitOfField: JSON.stringify(
+                      PriceListOfBasicUnitOfField
+                    ),
+                    IsSpecialPriceListAttachedToContract: String(
+                      IsSpecialPriceListAttachedToContract
+                    ),
+                    RecommendedCoefficient: RecommendedCoefficient,
+                    CoefficientType:
+                      RecommendedCoefficient && RecommendedCoefficient > 1
+                        ? "پلوس"
+                        : "مینوس",
+                    AssigningType: AssigningType,
+                    DoesContainAdjustment: String(DoesContainAdjustment),
+                    BaseIndexPeriod: JSON.stringify(BaseIndexPeriod),
+                    OperationStartDateAccuser: OperationStartDateAccuser,
+                    PhysicalProgressInArbitrationDateAccuser:
+                      PhysicalProgressInArbitrationDate,
+                    FinancialProgressInArbitrationDateAccuser:
+                      FinancialProgressInArbitrationDateAccuser,
+                    ContractStatusInArbitration: [
+                      JSON.stringify([
+                        ContractStatusInArbitration,
+                        ContractStatusInArbitrationDate,
+                      ]),
+                      JSON.stringify({ "تحویل موقت": TemporaryDelivery }),
+                      JSON.stringify({ "تحویل قطعی": FinalDelivery }),
+                    ],
+                    SupervisionDepartment: SupervisionDepartment,
+                    AuthorizedDelaysAccuser: AuthorizedDelays,
+                    UnauthorizedDelaysAccuser: UnauthorizedDelays || undefined,
+                    id: contractId ? parseInt(contractId) : 0,
+                  },
                   onCompleted(data, clientOptions) {
                     alert("قرارداد با موفقیت ثبت شد");
                   },
@@ -3299,6 +3342,50 @@ const UpdateContractPage = () => {
                 });
               } else {
                 void createContractMutation({
+                  variables: {
+                    AccuserRelatedPeople: JSON.stringify(RelatedPeopleByAccusser),
+                    AccusedRelatedPeople: JSON.stringify(RelatedPeopleByAccussed),
+                    AccuserNationality: Nationality,
+                    ContractType: contratDetails.contratTypes,
+                    CircularNumber:contratDetails.CircularNumber,
+                    CircularDate: contratDetails.CircularDate,
+                    ContractSubject: ContractSubject,
+                    // ContractNumber: ContractNumber,
+                    ContractDate: ContractDate,
+                    InitialBudget: InitialBudget,
+                    InitialTimePeriod: InitialTimePeriod,
+                    PriceListOfBasicUnitOfField: JSON.stringify(
+                      PriceListOfBasicUnitOfField
+                    ),
+                    IsSpecialPriceListAttachedToContract: String(
+                      IsSpecialPriceListAttachedToContract
+                    ),
+                    RecommendedCoefficient: RecommendedCoefficient,
+                    CoefficientType:
+                      RecommendedCoefficient && RecommendedCoefficient > 1
+                        ? "پلوس"
+                        : "مینوس",
+                    AssigningType: AssigningType,
+                    DoesContainAdjustment: String(DoesContainAdjustment),
+                    BaseIndexPeriod: JSON.stringify(BaseIndexPeriod),
+                    OperationStartDateAccuser: OperationStartDateAccuser,
+                    PhysicalProgressInArbitrationDateAccuser:
+                      PhysicalProgressInArbitrationDate,
+                    FinancialProgressInArbitrationDateAccuser:
+                      FinancialProgressInArbitrationDateAccuser,
+                    ContractStatusInArbitration: [
+                      JSON.stringify([
+                        ContractStatusInArbitration,
+                        ContractStatusInArbitrationDate,
+                      ]),
+                      JSON.stringify({ "تحویل موقت": TemporaryDelivery }),
+                      JSON.stringify({ "تحویل قطعی": FinalDelivery }),
+                    ],
+                    SupervisionDepartment: SupervisionDepartment,
+                    AuthorizedDelaysAccuser: AuthorizedDelays,
+                    UnauthorizedDelaysAccuser: UnauthorizedDelays || undefined,
+                    id: contractId ? parseInt(contractId) : 0,
+                  },
                   onCompleted(data, clientOptions) {
                     console.log(data);
                     alert("قرارداد با موفقیت تکمیل شد");

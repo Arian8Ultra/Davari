@@ -63,6 +63,7 @@ interface Props {
   id: number;
   complaintId?: number;
   contractId?: number;
+  contractNumber?:string;
   date?: string;
   acussed?: string;
   acussedId?: string;
@@ -1323,7 +1324,7 @@ const ComplaintCardNew = (props: Props) => {
           شماره درخواست :{convertToPersianDigits(props.id)}
         </Typography>
         <Typography>
-          شماره قرارداد :{convertToPersianDigits(props.contractId)}
+          شماره قرارداد :{convertToPersianDigits(props.contractNumber)}
         </Typography>
         <Typography>
           خواهان : {accuser?.user_getUser?.result?.fullName}
@@ -1537,7 +1538,7 @@ const ComplaintCardNew = (props: Props) => {
                         color: secondaryDark,
                       }}
                     >
-                      {convertToPersianDigits(props.contractId)}
+                      {convertToPersianDigits(props.contractNumber)}
                     </TableCell>
                   </TableRow>
                   {/* <TableRow
