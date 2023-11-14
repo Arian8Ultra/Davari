@@ -230,6 +230,7 @@ export const UPDATE_ARGUMENT = gql`
     $suggestedAmount: Decimal
     $summary: String
     $userId: String
+    $accuserAnswerToAccusedResponse: String
   ) {
     complaintArgument_updateComplaintArgument(
       input: {
@@ -250,6 +251,7 @@ export const UPDATE_ARGUMENT = gql`
         suggestedAmount: $suggestedAmount
         summary: $summary
         userId: $userId
+        accuserAnswerToAccusedResponse: $accuserAnswerToAccusedResponse
         id: $id
       }
     ) {

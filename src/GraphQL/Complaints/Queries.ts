@@ -239,6 +239,7 @@ export const GET_COMPLAINT_ARGUMENTS = gql`
           filledBy
           mailRoomChiefSuggestedAmount
           mailRoomExpertApprovedAmount
+          accuserAnswerToAccusedResponse
           suggestedAmount
           summary
           userId
@@ -334,6 +335,7 @@ export type Complaint = {
     accusedDepartmentUserId: string;
     accuserDepartmentUserId: string;
     department: Department;
+    contractNumberByAccuser: string;
   };
 };
 
@@ -379,6 +381,7 @@ export type ComplaintArgument = {
   suggestedAmount: number;
   summary: string;
   userId: number;
+  accuserAnswerToAccusedResponse: string;
 };
 
 export type ComplaintArgumentOptional = {
@@ -400,4 +403,5 @@ export type ComplaintArgumentOptional = {
   suggestedAmount?: number;
   summary?: string;
   userId?: number;
+  accuserAnswerToAccusedResponse?: string;
 };

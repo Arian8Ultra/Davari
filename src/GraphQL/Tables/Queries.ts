@@ -41,36 +41,36 @@ export const GET_INSTALLMENT_TABLE = gql`
 `;
 export const GET_INSTALLMENT_TABLE_BY_CONTRACT_ID = gql`
   query GetInstallmentTables($id: Int!) {
-    installmentTable_getInstallmentTables{
-      result (where: {contractId: {eq: $id}},take: 20000){
-        items{
-        id
-        createdDate
-        lastModifiedDate
-        contractId
-        paymentTotal
-        remainingPayment
-        filledBy
-        user {
-          parentId
+    installmentTable_getInstallmentTables {
+      result(where: { contractId: { eq: $id } }, take: 20000) {
+        items {
           id
-          userType
-        }
-        userId
-        installments {
-          installmentTableId
-          title
-          amount
-          date
+          createdDate
+          lastModifiedDate
+          contractId
+          paymentTotal
+          remainingPayment
           filledBy
-          id
-          installmentParts {
+          user {
+            parentId
+            id
+            userType
+          }
+          userId
+          installments {
+            installmentTableId
+            title
             amount
             date
             filledBy
             id
+            installmentParts {
+              amount
+              date
+              filledBy
+              id
+            }
           }
-        }
         }
       }
       status
@@ -169,36 +169,36 @@ export const GET_ADJUSTMENT_STATEMENT_TABLE = gql`
 
 export const GET_ADJUSTMENT_STATEMENT_TABLE_BY_CONTRACT_ID = gql`
   query GetAdjustmentStatementTables($id: Int!) {
-    adjustmentStatementTable_getAdjustmentStatementTables{
-      result (where: {contractId: {eq: $id}},take: 20000){
-        items{
-        id
-        createdDate
-        lastModifiedDate
-        contractId
-        filledBy
-        user {
-          parentId
+    adjustmentStatementTable_getAdjustmentStatementTables {
+      result(where: { contractId: { eq: $id } }, take: 20000) {
+        items {
           id
-          userType
-        }
-        userId
-        adjustmentStatements {
-          id
-          adjustmentStatementTableId
-          amountApprovedByEmployer
-          amountConfirmedByConsultant
-          amountPaid
-          amountProvidedByContractor
-          dateApprovedByEmployer
-          dateConfirmedByConsultant
-          datePaid
-          dateProvidedByContractor
-          operationPeriodEndDate
-          operationPeriodStartDate
+          createdDate
+          lastModifiedDate
+          contractId
           filledBy
-          title
-        }
+          user {
+            parentId
+            id
+            userType
+          }
+          userId
+          adjustmentStatements {
+            id
+            adjustmentStatementTableId
+            amountApprovedByEmployer
+            amountConfirmedByConsultant
+            amountPaid
+            amountProvidedByContractor
+            dateApprovedByEmployer
+            dateConfirmedByConsultant
+            datePaid
+            dateProvidedByContractor
+            operationPeriodEndDate
+            operationPeriodStartDate
+            filledBy
+            title
+          }
         }
       }
       status
@@ -226,6 +226,22 @@ export const GET_ADJUSTMENT_STATEMENT = gql`
         operationPeriodStartDate
         filledBy
         title
+        adjustmentStatementParts {
+          id
+          createdDate
+          lastModifiedDate
+          adjustmentStatementId
+          amountApprovedByEmployer
+          amountConfirmedByConsultant
+          amountPaid
+          amountProvidedByContractor
+          dateApprovedByEmployer
+          dateConfirmedByConsultant
+          datePaid
+          dateProvidedByContractor
+          operationPeriodEndDate
+          operationPeriodStartDate
+        }
       }
       status {
         code
@@ -304,6 +320,45 @@ export const GET_WORK_CONDITION_STATEMENT_TABLE = gql`
   }
 `;
 
+export const GET_WORK_CONDITION_STATEMENT_TABLE_BY_CONTRACT_ID = gql`
+  query GetWorkConditionStatementTable($id: Int!) {
+    workConditionStatementTable_getWorkConditionStatementTables {
+      result(where: { contractId: { eq: $id } }, take: 20000) {
+        items {
+          id
+          createdDate
+          lastModifiedDate
+          contractId
+          filledBy
+          user {
+            parentId
+            id
+            userType
+          }
+          userId
+          workConditionStatements {
+            id
+            workConditionStatementTableId
+            amountApprovedByEmployer
+            amountConfirmedByConsultant
+            amountPaid
+            amountProvidedByContractor
+            dateApprovedByEmployer
+            dateConfirmedByConsultant
+            datePaid
+            dateProvidedByContractor
+            operationPeriodEndDate
+            operationPeriodStartDate
+            filledBy
+            title
+          }
+        }
+      }
+      status
+    }
+  }
+`;
+
 export const GET_WORK_CONDITION_STATEMENT = gql`
   query GetWorkConditionStatement($id: Int!) {
     workConditionStatement_getWorkConditionStatement(entityId: $id) {
@@ -324,6 +379,23 @@ export const GET_WORK_CONDITION_STATEMENT = gql`
         operationPeriodStartDate
         filledBy
         title
+        workConditionStatementParts {
+          id
+          createdDate
+          lastModifiedDate
+          workConditionStatementId
+          amountApprovedByEmployer
+          amountConfirmedByConsultant
+          amountPaid
+          amountProvidedByContractor
+          dateApprovedByEmployer
+          dateConfirmedByConsultant
+          datePaid
+          dateProvidedByContractor
+          operationPeriodEndDate
+          operationPeriodStartDate
+          filledBy
+        }
       }
       status {
         code

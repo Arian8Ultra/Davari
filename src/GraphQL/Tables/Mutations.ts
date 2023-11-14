@@ -739,6 +739,7 @@ export const CREATE_WORK_CONDITION_STATEMENT = gql`
     $operationPeriodEndDate: Date
     $operationPeriodStartDate: Date
     $filledBy: RegistrarType
+    $title: String
   ) {
     workConditionStatement_addWorkConditionStatement(
       input: {
@@ -754,6 +755,7 @@ export const CREATE_WORK_CONDITION_STATEMENT = gql`
         operationPeriodEndDate: $operationPeriodEndDate
         operationPeriodStartDate: $operationPeriodStartDate
         filledBy: $filledBy
+        title: $title
       }
     ) {
       result {
@@ -850,6 +852,7 @@ export const DELETE_WORK_CONDITION_STATEMENT = gql`
 `;
 
 export type WorkConditionStatement = {
+  title: string;
   workConditionStatementTableId: number;
   amountApprovedByEmployer: number;
   amountConfirmedByConsultant: number;

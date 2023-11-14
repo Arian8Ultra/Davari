@@ -290,7 +290,7 @@ export const QueryWrapper = (
     },
   });
 
-  const result = { data: data ? data[queryName].result : null, loading, error ,refetch};
+  const result = { data: data ? data[queryName].result : undefined, loading, error ,refetch};
 
   return result;
 };
