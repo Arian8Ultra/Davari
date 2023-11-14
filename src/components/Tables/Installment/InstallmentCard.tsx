@@ -1,47 +1,42 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
+import { ApolloQueryResult } from "@apollo/client";
+import {
+  Add,
+  CancelOutlined,
+  EditOutlined,
+} from "@mui/icons-material";
 import {
   Box,
-  Collapse,
   IconButton,
-  Table,
   TableCell,
   TableRow,
-  Tooltip,
+  Tooltip
 } from "@mui/material";
+import { useEffect, useState } from "react";
+import { MutationWrapper } from "../../../GraphQL/MutationWrapper";
+import { QueryWrapper } from "../../../GraphQL/QueryWrapper";
 import {
-  CREATE_INSTALLMENT_PART,
   DELETE_INSTALLMENT,
   DELETE_INSTALLMENT_PART,
   Installment,
-  InstallmentPart,
-  InstallmentTable,
+  InstallmentPart
 } from "../../../GraphQL/Tables/Mutations";
+import { GET_INSTALLMENT } from "../../../GraphQL/Tables/Queries";
 import {
-  Add,
-  EditOutlined,
-  CancelOutlined,
-} from "@mui/icons-material";
-import {
-  primary,
-  secondaryDark,
-  primaryLight,
   Red,
   RedLight,
+  primary,
+  primaryLight,
   primaryTransparent,
+  secondaryDark,
   secondaryLighter,
 } from "../../../theme/color";
 import FaTypography from "../../FaComponents/FaTypography";
-import { MutationWrapper } from "../../../GraphQL/MutationWrapper";
-import { ApolloQueryResult, useMutation } from "@apollo/client";
-import { useEffect, useState } from "react";
-import FaTextField from "../../FaComponents/FaTextField";
-import DateButton from "../../DateButton";
-import { QueryWrapper } from "../../../GraphQL/QueryWrapper";
-import { GET_INSTALLMENT } from "../../../GraphQL/Tables/Queries";
 
 interface InstallmentCardProps {
   installment: Installment;
@@ -69,8 +64,6 @@ export default function AdjustmentStatementCard({
 }: InstallmentCardProps) {
   const {
     handleMutation: deleteInstallment,
-    loading: loadingDeleteInstallment,
-    error: errorDeleteInstallment,
   } = MutationWrapper(
     DELETE_INSTALLMENT,
     "installment_deleteInstallment"
@@ -78,25 +71,14 @@ export default function AdjustmentStatementCard({
   const [installmentParts, setInstallmentParts] =
     useState<InstallmentPart[]>();
 
-  // const [deleteInstallment,{loading,error}] = useMutation(DELETE_INSTALLMENT)
-  const {
-    handleMutation: createInstallmentPart,
-    loading: loadingCreateInstallmentPart,
-    error: errorCreateInstallmentPart,
-  } = MutationWrapper(
-    CREATE_INSTALLMENT_PART,
-    "installmentPart_addInstallmentPart"
-  );
   const {
     handleMutation: deleteInstallmentPart,
-    loading: loadingDeleteInstallmentPart,
-    error: errorDeleteInstallmentPart,
   } = MutationWrapper(
     DELETE_INSTALLMENT_PART,
     "installmentPart_deleteInstallmentPart"
   );
 
-  const { data, loading, error } = QueryWrapper(
+  const { data} = QueryWrapper(
     GET_INSTALLMENT,
     "installment_getInstallment",
     { id: installment.id },
@@ -107,10 +89,6 @@ export default function AdjustmentStatementCard({
       },
     }
   );
-
-  const [newInstallmentPart, setNewInstallmentPart] =
-    useState<InstallmentPart>();
-  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     // console.log("TESTTEST", data);
@@ -193,7 +171,7 @@ export default function AdjustmentStatementCard({
                     variables: {
                       id: installment.id,
                     },
-                  }).then((res) => {
+                  }).then(() => {
                     setNewInstallment({} as Installment);
                     void refetch();
                   });
@@ -267,7 +245,7 @@ export default function AdjustmentStatementCard({
                     variables: {
                       id: installmentPart.id,
                     },
-                  }).then((res) => {
+                  }).then(() => {
                     setNewInstallment({} as Installment);
                     void refetch();
                   });

@@ -1,49 +1,44 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
-import {
-  Box,
-  Collapse,
-  IconButton,
-  Table,
-  TableCell,
-  TableRow,
-  Tooltip,
-} from "@mui/material";
-import {
-  CREATE_ADJUSTMENT_STATEMENT_PART,
-  DELETE_ADJUSTMENT_STATEMENT,
-  DELETE_ADJUSTMENT_STATEMENT_PART,
-  AdjustmentStatement,
-  AdjustmentStatementPart,
-  AdjustmentStatementTable,
-} from "../../../GraphQL/Tables/Mutations";
+import { ApolloQueryResult } from "@apollo/client";
 import {
   Add,
-  EditOutlined,
   CancelOutlined,
+  EditOutlined,
 } from "@mui/icons-material";
 import {
-  primary,
-  secondaryDark,
-  primaryLight,
-  Red,
-  RedLight,
-  primaryTransparent,
-  secondaryLight,
-  secondaryLighter,
-} from "../../../theme/color";
-import FaTypography from "../../FaComponents/FaTypography";
-import { MutationWrapper } from "../../../GraphQL/MutationWrapper";
-import { ApolloQueryResult, useMutation } from "@apollo/client";
+  Box,
+  IconButton,
+  TableCell,
+  TableRow,
+  Tooltip
+} from "@mui/material";
 import { useEffect, useState } from "react";
-import FaTextField from "../../FaComponents/FaTextField";
-import DateButton from "../../DateButton";
+import { MutationWrapper } from "../../../GraphQL/MutationWrapper";
 import { QueryWrapper } from "../../../GraphQL/QueryWrapper";
+import {
+  AdjustmentStatement,
+  AdjustmentStatementPart,
+  CREATE_ADJUSTMENT_STATEMENT_PART,
+  DELETE_ADJUSTMENT_STATEMENT,
+  DELETE_ADJUSTMENT_STATEMENT_PART
+} from "../../../GraphQL/Tables/Mutations";
 import { GET_ADJUSTMENT_STATEMENT } from "../../../GraphQL/Tables/Queries";
 import { convertToPersianDigits } from "../../../functions/Functions";
+import {
+  Red,
+  RedLight,
+  primary,
+  primaryLight,
+  primaryTransparent,
+  secondaryDark,
+  secondaryLighter
+} from "../../../theme/color";
 
 interface AdjustmentStatementCardProps {
   AdjustmentStatement: AdjustmentStatement;
@@ -71,8 +66,6 @@ export default function AdjustmentStatementCard({
 }: AdjustmentStatementCardProps) {
   const {
     handleMutation: deleteAdjustmentStatement,
-    loading: loadingDeleteAdjustmentStatement,
-    error: errorDeleteAdjustmentStatement,
   } = MutationWrapper(
     DELETE_ADJUSTMENT_STATEMENT,
     "AdjustmentStatement_deleteAdjustmentStatement"
@@ -80,25 +73,14 @@ export default function AdjustmentStatementCard({
   const [AdjustmentStatementParts, setAdjustmentStatementParts] =
     useState<AdjustmentStatementPart[]>();
 
-  // const [deleteAdjustmentStatement,{loading,error}] = useMutation(DELETE_AdjustmentStatement)
-  const {
-    handleMutation: createAdjustmentStatementPart,
-    loading: loadingCreateAdjustmentStatementPart,
-    error: errorCreateAdjustmentStatementPart,
-  } = MutationWrapper(
-    CREATE_ADJUSTMENT_STATEMENT_PART,
-    "AdjustmentStatementPart_addAdjustmentStatementPart"
-  );
   const {
     handleMutation: deleteAdjustmentStatementPart,
-    loading: loadingDeleteAdjustmentStatementPart,
-    error: errorDeleteAdjustmentStatementPart,
   } = MutationWrapper(
     DELETE_ADJUSTMENT_STATEMENT_PART,
     "AdjustmentStatementPart_deleteAdjustmentStatementPart"
   );
 
-  const { data, loading, error,refetch:AdjustmentStatementRefetch } = QueryWrapper(
+  const { data,refetch:AdjustmentStatementRefetch } = QueryWrapper(
     GET_ADJUSTMENT_STATEMENT,
     "adjustmentStatement_getAdjustmentStatement",
     { id: AdjustmentStatement.id },
@@ -112,10 +94,6 @@ export default function AdjustmentStatementCard({
       },
     }
   );
-
-  const [newAdjustmentStatementPart, setNewAdjustmentStatementPart] =
-    useState<AdjustmentStatementPart>();
-  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     setAdjustmentStatementParts(data?.adjustmentStatementParts);

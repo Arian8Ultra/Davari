@@ -20,31 +20,24 @@ import React from "react";
 import { BsPlusCircle } from "react-icons/bs";
 import { useParams } from "react-router-dom";
 import { useUserStore } from "../../../Context/UserStore";
-import { GET_CONTRACT } from "../../../GraphQL/Contracts/Queries";
 import { MutationWrapper } from "../../../GraphQL/MutationWrapper";
 import { QueryWrapper } from "../../../GraphQL/QueryWrapper";
 import {
-  WorkConditionStatement,
-  WorkConditionStatementPart,
-  CREATE_ADJUSTMENT_STATEMENT,
-  CREATE_ADJUSTMENT_STATEMENT_PART,
-  CREATE_ADJUSTMENT_STATEMENT_TABLE,
-  UPDATE_ADJUSTMENT_STATEMENT,
   CREATE_WORK_CONDITION_STATEMENT,
+  CREATE_WORK_CONDITION_STATEMENT_PART,
   CREATE_WORK_CONDITION_STATEMENT_TABLE,
   UPDATE_WORK_CONDITION_STATEMENT,
-  CREATE_WORK_CONDITION_STATEMENT_PART,
+  WorkConditionStatement,
+  WorkConditionStatementPart
 } from "../../../GraphQL/Tables/Mutations";
-import { GET_ADJUSTMENT_STATEMENT_TABLE_BY_CONTRACT_ID, GET_WORK_CONDITION_STATEMENT_TABLE_BY_CONTRACT_ID } from "../../../GraphQL/Tables/Queries";
+import { GET_WORK_CONDITION_STATEMENT_TABLE_BY_CONTRACT_ID } from "../../../GraphQL/Tables/Queries";
 import {
   Red,
   background,
   primary,
   primaryLight,
   secondary,
-  secondaryDark,
-  secondaryLight,
-  secondaryLighter,
+  secondaryDark
 } from "../../../theme/color";
 import DateButton from "../../DateButton";
 import FaTextField from "../../FaComponents/FaTextField";
@@ -90,16 +83,12 @@ const WorkConditionStatementTable = (props: Props) => {
 
   const {
     handleMutation: addWorkConditionStatement,
-    loading: loadingAddWorkConditionStatement,
-    error: errorAddWorkConditionStatement,
   } = MutationWrapper(
     CREATE_WORK_CONDITION_STATEMENT,
     "workConditionStatement_addWorkConditionStatement"
   );
   const {
     handleMutation: addWorkConditionStatementTable,
-    loading: loadingAddWorkConditionStatementTable,
-    error: errorAddWorkConditionStatementTable,
   } = MutationWrapper(
     CREATE_WORK_CONDITION_STATEMENT_TABLE,
     "workConditionStatementTable_addWorkConditionStatementTable"
@@ -107,14 +96,12 @@ const WorkConditionStatementTable = (props: Props) => {
 
   const {
     handleMutation: editWorkConditionStatement,
-    loading: loadingEditWorkConditionStatement,
-    error: errorEditWorkConditionStatement,
   } = MutationWrapper(
     UPDATE_WORK_CONDITION_STATEMENT,
     "workConditionStatement_updateWorkConditionStatement"
   );
 
-  const { data, loading, error, refetch } = QueryWrapper(
+  const { data, loading, refetch } = QueryWrapper(
     GET_WORK_CONDITION_STATEMENT_TABLE_BY_CONTRACT_ID,
     "workConditionStatementTable_getWorkConditionStatementTables",
     {
@@ -131,18 +118,9 @@ const WorkConditionStatementTable = (props: Props) => {
     }
   );
 
-  const {
-    data: contractData,
-    loading: contractLoading,
-    error: contractError,
-  } = QueryWrapper(GET_CONTRACT, "contract_getContracts", {
-    id: contractId && parseInt(contractId),
-  });
 
   const {
     handleMutation: createWorkConditionStatementPart,
-    loading: loadingCreateWorkConditionStatementPart,
-    error: errorCreateWorkConditionStatementPart,
   } = MutationWrapper(
     CREATE_WORK_CONDITION_STATEMENT_PART,
     "workConditionStatementPart_addWorkConditionStatementPart"
@@ -176,7 +154,7 @@ const WorkConditionStatementTable = (props: Props) => {
             userId: user.id,
           },
           options: {
-            onCompleted(data, clientOptions) {
+            onCompleted(data) {
               console.log("addWorkConditionStatementTable", data);
               setTableId(data?.id);
               void refetch();
@@ -192,7 +170,7 @@ const WorkConditionStatementTable = (props: Props) => {
               userId: user.id,
             },
             options: {
-              onCompleted(data, clientOptions) {
+              onCompleted(data) {
                 console.log("addWorkConditionStatementTable", data);
                 setTableId(data?.id);
                 void refetch();
@@ -202,13 +180,7 @@ const WorkConditionStatementTable = (props: Props) => {
         }
       }
     }
-  }, [
-    addWorkConditionStatementTable,
-    contractId,
-    data,
-    refetch,
-    user.id,
-  ]);
+  }, [addWorkConditionStatementTable, contractId, data, loading, refetch, user.id, user.parentId]);
   //   if (data?.items?.length > 0 && loading == false) {
   //     console.log("GET_WorkConditionStatement_TABLE_BY_CONTRACT_ID", data);
   //     setWorkConditionStatements(data?.items[0]?.WorkConditionStatements);
@@ -295,38 +267,38 @@ const WorkConditionStatementTable = (props: Props) => {
   //   }
   // }, [data]);
 
-  const handleEmptyFields = () => {
-    if (!newWorkConditionStatement.title) {
-      setPageError("عنوان را وارد کنید");
-      return true;
-    }
-    if (!newWorkConditionStatement.amountProvidedByContractor) {
-      setPageError("مبلغ ارائه شده توسط پیمانکار را وارد کنید");
-      return true;
-    }
-    if (!newWorkConditionStatement.dateProvidedByContractor) {
-      setPageError("تاریخ ارائه شده توسط پیمانکار را وارد کنید");
-      return true;
-    }
-    if (!newWorkConditionStatement.amountConfirmedByConsultant) {
-      setPageError("مبلغ تایید شده توسط مشاور را وارد کنید");
-      return true;
-    }
-    if (!newWorkConditionStatement.dateConfirmedByConsultant) {
-      setPageError("تاریخ تایید شده توسط مشاور را وارد کنید");
-      return true;
-    }
-    if (!newWorkConditionStatement.amountApprovedByEmployer) {
-      setPageError("مبلغ تایید شده توسط کارفرما را وارد کنید");
-      return true;
-    }
-    if (!newWorkConditionStatement.dateApprovedByEmployer) {
-      setPageError("تاریخ تایید شده توسط کارفرما را وارد کنید");
-      return true;
-    }
+  // const handleEmptyFields = () => {
+  //   if (!newWorkConditionStatement.title) {
+  //     setPageError("عنوان را وارد کنید");
+  //     return true;
+  //   }
+  //   if (!newWorkConditionStatement.amountProvidedByContractor) {
+  //     setPageError("مبلغ ارائه شده توسط پیمانکار را وارد کنید");
+  //     return true;
+  //   }
+  //   if (!newWorkConditionStatement.dateProvidedByContractor) {
+  //     setPageError("تاریخ ارائه شده توسط پیمانکار را وارد کنید");
+  //     return true;
+  //   }
+  //   if (!newWorkConditionStatement.amountConfirmedByConsultant) {
+  //     setPageError("مبلغ تایید شده توسط مشاور را وارد کنید");
+  //     return true;
+  //   }
+  //   if (!newWorkConditionStatement.dateConfirmedByConsultant) {
+  //     setPageError("تاریخ تایید شده توسط مشاور را وارد کنید");
+  //     return true;
+  //   }
+  //   if (!newWorkConditionStatement.amountApprovedByEmployer) {
+  //     setPageError("مبلغ تایید شده توسط کارفرما را وارد کنید");
+  //     return true;
+  //   }
+  //   if (!newWorkConditionStatement.dateApprovedByEmployer) {
+  //     setPageError("تاریخ تایید شده توسط کارفرما را وارد کنید");
+  //     return true;
+  //   }
 
-    return false;
-  };
+  //   return false;
+  // };
 
   return (
     <TableContainer
@@ -788,7 +760,7 @@ const WorkConditionStatementTable = (props: Props) => {
                               : "ACCUSED",
                           id: newWorkConditionStatement.id,
                         },
-                      }).then((res) => {
+                      }).then(() => {
                         void refetch();
                         setEditMode(false);
                         setNewWorkConditionStatement(
@@ -848,14 +820,14 @@ const WorkConditionStatementTable = (props: Props) => {
                               : "ACCUSED",
                         },
                       })
-                        .then((res) => {
+                        .then(() => {
                           setNewWorkConditionStatement(
                             {} as WorkConditionStatement
                           );
                           void refetch();
                           setPageError("");
                         })
-                        .catch((err) => {
+                        .catch(() => {
                           alert("خطا در افزودن قسط");
                         });
                     }}
@@ -1219,7 +1191,7 @@ const WorkConditionStatementTable = (props: Props) => {
                       window.location.reload()
                       void refetch();
                     })
-                    .catch((err) => {
+                    .catch(() => {
                       alert("خطا در افزودن زیرمجموعه");
                       void refetch();
                     });

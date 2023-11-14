@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { MutationOptions, QueryFunctionOptions, useLazyQuery, useQuery } from "@apollo/client";
-import { DocumentNode, TypedQueryDocumentNode } from "graphql";
+import { QueryFunctionOptions, useQuery } from "@apollo/client";
+import { DocumentNode } from "graphql";
 
 export const errors: Record<string, ErrorType> = {
   IncorrectPassword: {

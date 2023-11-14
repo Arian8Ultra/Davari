@@ -1,52 +1,42 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
+import { ApolloQueryResult } from "@apollo/client";
 import {
-    Box,
-    Collapse,
-    IconButton,
-    Table,
-    TableCell,
-    TableRow,
-    Tooltip,
-  } from "@mui/material";
-  import {
-    CREATE_ADJUSTMENT_STATEMENT_PART,
-    CREATE_WORK_CONDITION_STATEMENT_PART,
-    DELETE_ADJUSTMENT_STATEMENT,
-    DELETE_ADJUSTMENT_STATEMENT_PART,
-    DELETE_WORK_CONDITION_STATEMENT,
-    DELETE_WORK_CONDITION_STATEMENT_PART,
-    WorkConditionStatement,
-    WorkConditionStatementPart,
-    WorkConditionStatementTable,
-  } from "../../../GraphQL/Tables/Mutations";
-  import {
-    Add,
-    EditOutlined,
-    CancelOutlined,
-  } from "@mui/icons-material";
-  import {
-    primary,
-    secondaryDark,
-    primaryLight,
-    Red,
-    RedLight,
-    primaryTransparent,
-    secondaryLight,
-    secondaryLighter,
-  } from "../../../theme/color";
-  import FaTypography from "../../FaComponents/FaTypography";
-  import { MutationWrapper } from "../../../GraphQL/MutationWrapper";
-  import { ApolloQueryResult, useMutation } from "@apollo/client";
-  import { useEffect, useState } from "react";
-  import FaTextField from "../../FaComponents/FaTextField";
-  import DateButton from "../../DateButton";
-  import { QueryWrapper } from "../../../GraphQL/QueryWrapper";
-  import { GET_ADJUSTMENT_STATEMENT, GET_WORK_CONDITION_STATEMENT } from "../../../GraphQL/Tables/Queries";
-  import { convertToPersianDigits } from "../../../functions/Functions";
+  Add,
+  CancelOutlined,
+  EditOutlined,
+} from "@mui/icons-material";
+import {
+  Box,
+  IconButton,
+  TableCell,
+  TableRow,
+  Tooltip
+} from "@mui/material";
+import { useEffect, useState } from "react";
+import { MutationWrapper } from "../../../GraphQL/MutationWrapper";
+import { QueryWrapper } from "../../../GraphQL/QueryWrapper";
+import {
+  DELETE_WORK_CONDITION_STATEMENT,
+  DELETE_WORK_CONDITION_STATEMENT_PART,
+  WorkConditionStatement,
+  WorkConditionStatementPart
+} from "../../../GraphQL/Tables/Mutations";
+import { GET_WORK_CONDITION_STATEMENT } from "../../../GraphQL/Tables/Queries";
+import { convertToPersianDigits } from "../../../functions/Functions";
+import {
+  Red,
+  RedLight,
+  primary,
+  primaryLight,
+  primaryTransparent,
+  secondaryDark,
+  secondaryLighter
+} from "../../../theme/color";
   
   interface WorkConditionStatementCard {
     WorkConditionStatement: WorkConditionStatement;
@@ -74,8 +64,6 @@ import {
   }: WorkConditionStatementCard) {
     const {
       handleMutation: deleteWorkConditionStatement,
-      loading: loadingDeleteWorkConditionStatement,
-      error: errorDeleteWorkConditionStatement,
     } = MutationWrapper(
       DELETE_WORK_CONDITION_STATEMENT,
       "workConditionStatement_deleteWorkConditionStatement"
@@ -83,25 +71,14 @@ import {
     const [WorkConditionStatementParts, setWorkConditionStatementParts] =
       useState<WorkConditionStatementPart[]>();
   
-    // const [deleteWorkConditionStatement,{loading,error}] = useMutation(DELETE_WorkConditionStatement)
-    const {
-      handleMutation: createWorkConditionStatementPart,
-      loading: loadingCreateWorkConditionStatementPart,
-      error: errorCreateWorkConditionStatementPart,
-    } = MutationWrapper(
-      CREATE_WORK_CONDITION_STATEMENT_PART,
-      "workConditionStatementPart_addWorkConditionStatementPart"
-    );
     const {
       handleMutation: deleteWorkConditionStatementPart,
-      loading: loadingDeleteWorkConditionStatementPart,
-      error: errorDeleteWorkConditionStatementPart,
     } = MutationWrapper(
       DELETE_WORK_CONDITION_STATEMENT_PART,
       "workConditionStatementPart_deleteWorkConditionStatementPart"
     );
   
-    const { data, loading, error,refetch:WorkConditionStatementRefetch } = QueryWrapper(
+    const { data,refetch:WorkConditionStatementRefetch } = QueryWrapper(
       GET_WORK_CONDITION_STATEMENT,
       "workConditionStatement_getWorkConditionStatement",
       { id: WorkConditionStatement.id },
@@ -115,10 +92,6 @@ import {
         },
       }
     );
-  
-    const [newWorkConditionStatementPart, setNewWorkConditionStatementPart] =
-      useState<WorkConditionStatementPart>();
-    const [open, setOpen] = useState(false);
   
     useEffect(() => {
       setWorkConditionStatementParts(data?.workConditionStatementParts);
@@ -246,7 +219,7 @@ import {
                       variables: {
                         id: WorkConditionStatement.id,
                       },
-                    }).then((res) => {
+                    }).then(() => {
                       setNewWorkConditionStatement(
                         {} as WorkConditionStatement
                       );
@@ -377,7 +350,7 @@ import {
                           variables: {
                             id: WorkConditionStatementPart.id,
                           },
-                        }).then((res) => {
+                        }).then(() => {
                           setNewWorkConditionStatement(
                             {} as WorkConditionStatement
                           );

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
@@ -86,16 +87,12 @@ const AdjustmentStatementTable = (props: Props) => {
 
   const {
     handleMutation: addAdjustmentStatement,
-    loading: loadingAddAdjustmentStatement,
-    error: errorAddAdjustmentStatement,
   } = MutationWrapper(
     CREATE_ADJUSTMENT_STATEMENT,
     "adjustmentStatement_addAdjustmentStatement"
   );
   const {
     handleMutation: addAdjustmentStatementTable,
-    loading: loadingAddAdjustmentStatementTable,
-    error: errorAddAdjustmentStatementTable,
   } = MutationWrapper(
     CREATE_ADJUSTMENT_STATEMENT_TABLE,
     "adjustmentStatementTable_addAdjustmentStatementTable"
@@ -103,14 +100,12 @@ const AdjustmentStatementTable = (props: Props) => {
 
   const {
     handleMutation: editAdjustmentStatement,
-    loading: loadingEditAdjustmentStatement,
-    error: errorEditAdjustmentStatement,
   } = MutationWrapper(
     UPDATE_ADJUSTMENT_STATEMENT,
     "adjustmentStatement_updateAdjustmentStatement"
   );
 
-  const { data, loading, error, refetch } = QueryWrapper(
+  const { data, refetch } = QueryWrapper(
     GET_ADJUSTMENT_STATEMENT_TABLE_BY_CONTRACT_ID,
     "adjustmentStatementTable_getAdjustmentStatementTables",
     {
@@ -137,18 +132,9 @@ const AdjustmentStatementTable = (props: Props) => {
     }
   );
 
-  const {
-    data: contractData,
-    loading: contractLoading,
-    error: contractError,
-  } = QueryWrapper(GET_CONTRACT, "contract_getContracts", {
-    id: contractId && parseInt(contractId),
-  });
 
   const {
     handleMutation: createAdjustmentStatementPart,
-    loading: loadingCreateAdjustmentStatementPart,
-    error: errorCreateAdjustmentStatementPart,
   } = MutationWrapper(
     CREATE_ADJUSTMENT_STATEMENT_PART,
     "adjustmentStatementPart_addAdjustmentStatementPart"
@@ -216,13 +202,7 @@ const AdjustmentStatementTable = (props: Props) => {
         }
       }
     }
-  }, [
-    addAdjustmentStatementTable,
-    contractId,
-    data,
-    refetch,
-    user.id,
-  ]);
+  }, [addAdjustmentStatementTable, contractId, data, refetch, user.id, user.parentId]);
   //   if (data?.items?.length > 0 && loading == false) {
   //     console.log("GET_AdjustmentStatement_TABLE_BY_CONTRACT_ID", data);
   //     setAdjustmentStatements(data?.items[0]?.AdjustmentStatements);

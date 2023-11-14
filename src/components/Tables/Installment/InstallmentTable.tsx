@@ -4,6 +4,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import {
+  EditOutlined
+} from "@mui/icons-material";
+import {
   Box,
   IconButton,
   Table,
@@ -16,43 +19,33 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
+import { BsPlusCircle } from "react-icons/bs";
 import { useParams } from "react-router-dom";
-import {
-  Red,
-  RedLight,
-  background,
-  primary,
-  primaryLight,
-  secondary,
-  secondaryDark,
-} from "../../../theme/color";
+import { useUserStore } from "../../../Context/UserStore";
+import { MutationWrapper } from "../../../GraphQL/MutationWrapper";
+import { QueryWrapper } from "../../../GraphQL/QueryWrapper";
 import {
   CREATE_INSTALLMENT,
   CREATE_INSTALLMENT_PART,
   CREATE_INSTALLMENT_TABLE,
-  DELETE_INSTALLMENT,
   Installment,
   InstallmentPart,
-  UPDATE_INSTALLMENT,
+  UPDATE_INSTALLMENT
 } from "../../../GraphQL/Tables/Mutations";
-import FaTypography from "../../FaComponents/FaTypography";
-import { MutationWrapper } from "../../../GraphQL/MutationWrapper";
-import FaTextField from "../../FaComponents/FaTextField";
-import DateButton from "../../DateButton";
-import { BsPlusCircle } from "react-icons/bs";
-import { QueryWrapper, errors } from "../../../GraphQL/QueryWrapper";
 import { GET_INSTALLMENT_TABLE_BY_CONTRACT_ID } from "../../../GraphQL/Tables/Queries";
 import {
-  Add,
-  CancelOutlined,
-  Edit,
-  EditOutlined,
-} from "@mui/icons-material";
-import { Errors } from "../../../GraphQL/Errors";
-import { useUserStore } from "../../../Context/UserStore";
-import AdjustmentStatementTable from "./InstallmentCard";
-import { GET_CONTRACT } from "../../../GraphQL/Contracts/Queries";
+  Red,
+  background,
+  primary,
+  primaryLight,
+  secondary,
+  secondaryDark
+} from "../../../theme/color";
+import DateButton from "../../DateButton";
+import FaTextField from "../../FaComponents/FaTextField";
+import FaTypography from "../../FaComponents/FaTypography";
 import NewModal from "../../Modals";
+import AdjustmentStatementTable from "./InstallmentCard";
 
 interface Props extends TableContainerProps {
   InstallmentTableId?: number;
@@ -91,40 +84,27 @@ const InstallmentTable = (props: Props) => {
 
   const {
     handleMutation: addInstallment,
-    loading: loadingAddInstallment,
-    error: errorAddInstallment,
   } = MutationWrapper(
     CREATE_INSTALLMENT,
     "installment_addInstallment"
   );
   const {
     handleMutation: addInstallmentTable,
-    loading: loadingAddInstallmentTable,
-    error: errorAddInstallmentTable,
   } = MutationWrapper(
     CREATE_INSTALLMENT_TABLE,
     "installmentTable_addInstallmentTable"
   );
 
-  const {
-    handleMutation: deleteInstallment,
-    loading: loadingDeleteInstallment,
-    error: errorDeleteInstallment,
-  } = MutationWrapper(
-    DELETE_INSTALLMENT,
-    "installment_deleteInstallment"
-  );
 
   const {
     handleMutation: editInstallment,
-    loading: loadingEditInstallment,
-    error: errorEditInstallment,
+
   } = MutationWrapper(
     UPDATE_INSTALLMENT,
     "installment_updateInstallment"
   );
 
-  const { data, loading, error, refetch } = QueryWrapper(
+  const { data, refetch } = QueryWrapper(
     GET_INSTALLMENT_TABLE_BY_CONTRACT_ID,
     "installmentTable_getInstallmentTables",
     {
@@ -141,17 +121,7 @@ const InstallmentTable = (props: Props) => {
   );
 
   const {
-    data: contractData,
-    loading: contractLoading,
-    error: contractError,
-  } = QueryWrapper(GET_CONTRACT, "contract_getContracts", {
-    id: contractId && parseInt(contractId),
-  });
-
-  const {
     handleMutation: createInstallmentPart,
-    loading: loadingCreateInstallmentPart,
-    error: errorCreateInstallmentPart,
   } = MutationWrapper(
     CREATE_INSTALLMENT_PART,
     "installmentPart_addInstallmentPart"
@@ -197,7 +167,7 @@ const InstallmentTable = (props: Props) => {
             userId: user.id,
           },
           options: {
-            onCompleted(data, clientOptions) {
+            onCompleted(data) {
               console.log("addInstallmentTable", data);
               setTableId(data?.id);
               void refetch();
@@ -213,7 +183,7 @@ const InstallmentTable = (props: Props) => {
               userId: user.id,
             },
             options: {
-              onCompleted(data, clientOptions) {
+              onCompleted(data) {
                 console.log("addInstallmentTable", data);
                 setTableId(data?.id);
                 void refetch();
@@ -236,7 +206,7 @@ const InstallmentTable = (props: Props) => {
       //   },
       // });
     }
-  }, [addInstallmentTable, contractId, data, refetch, user.id]);
+  }, [addInstallmentTable, contractId, data, refetch, user.id, user.parentId]);
 
   const handleEmptyFields = () => {
     if (!newInstallment.title) {
@@ -423,7 +393,7 @@ const InstallmentTable = (props: Props) => {
                               : "ACCUSED",
                           id: newInstallment.id,
                         },
-                      }).then((res) => {
+                      }).then(() => {
                         void refetch();
                         setEditMode(false);
                         setNewInstallment({} as Installment);
@@ -467,12 +437,12 @@ const InstallmentTable = (props: Props) => {
                               : "ACCUSED",
                         },
                       })
-                        .then((res) => {
+                        .then(() => {
                           setNewInstallment({} as Installment);
                           void refetch();
                           setPageError('');
                         })
-                        .catch((err) => {
+                        .catch(() => {
                           alert("خطا در افزودن قسط");
                         });
                     }}
@@ -584,7 +554,7 @@ const InstallmentTable = (props: Props) => {
                         .date,
                     },
                   })
-                    .then((res) => {
+                    .then(() => {
                       alert("زیرمجموعه با موفقیت افزوده شد");
                       setAddInstallmentPartModal({
                         ...addInstallmentPartModal,
@@ -593,7 +563,7 @@ const InstallmentTable = (props: Props) => {
                       });
                       void refetch();
                     })
-                    .catch((err) => {
+                    .catch(() => {
                       alert("خطا در افزودن زیرمجموعه");
                     });
                 }}
