@@ -122,6 +122,16 @@ const ArgumentCard = ({
               : "ندارد"}
           </TableCell>
           <TableCell
+            sx={{
+              borderInline:
+                id % 2 == 0
+                  ? `1px solid ${secondary}`
+                  : `1px solid ${secondary}`,
+            }}
+          >
+            {arguement.accuserAnswerToAccusedResponse}
+          </TableCell>
+          <TableCell
             width={"250px"}
             sx={{
               borderLeft: `1px solid ${secondary}`,
@@ -136,28 +146,29 @@ const ArgumentCard = ({
                 gap: 1,
               }}
             >
-              {/* <IconButton
-                // onClick={() => {
-                //   setSelectedArgument(arguement);
-                //   setAddModal({
-                //     ...addModal,
-                //     open: true,
-                //   });
-                // }}
+              <IconButton
+                onClick={() => {
+                  setSelectedArgument(arguement);
+                  setAddModal({
+                    ...addModal,
+                    open: true,
+                    editMode: true,
+                  });
+                }}
                 sx={{
-                  backgroundColor: Green,
-                  color: "white",
+                  backgroundColor: secondaryLight,
+                  color: onPrimary,
                   aspectRatio: "1/1",
                   width: "40px",
                   justifySelf: "center",
                   "&:hover": {
-                    backgroundColor: GreenLight,
-                    color: Green,
+                    backgroundColor: secondaryLighter,
+                    color: secondaryDark,
                   },
                 }}
               >
-                <BsPaperclip />
-              </IconButton> */}
+                <EditRounded />
+              </IconButton>
               <IconButton
                 onClick={() => {
                   console.log(arguement);

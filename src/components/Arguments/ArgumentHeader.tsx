@@ -47,14 +47,14 @@ const ArgumentHeader = (props: Props) => {
             >
               مبلغ خواسته شده ادعا(ریال)
             </TableCell>
-            {/* <TableCell
+            <TableCell
               sx={{
                 fontWeight: "bold",
                 color: "white",
               }}
             >
-              مستندات و نامه ادعا
-            </TableCell> */}
+              پاسخ خواهان
+            </TableCell>
             <TableCell
               sx={{
                 fontWeight: "bold",

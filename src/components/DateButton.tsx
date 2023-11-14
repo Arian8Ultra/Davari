@@ -19,6 +19,7 @@ interface DateButtonProps extends BoxProps {
   date?: Date;
   setDate?: React.Dispatch<React.SetStateAction<Date | undefined>>;
   label?: string;
+  direction?:"column" | "row" | "row-reverse" | "column-reverse"
 }
 const DateButton = (props: DateButtonProps) => {
   const [open, setOpen] = React.useState(false);
@@ -31,13 +32,15 @@ const DateButton = (props: DateButtonProps) => {
           borderRadius: 1,
           fontWeight: 400,
           fontStyle: "normal",
-          fontSize: "1rem",
+          fontSize: props.fontSize ? props.fontSize : "1rem",
           boxShadow: "none",
           color: secondary,
           width: "100%",
           height: "100%",
           display: "flex",
           justifyContent: "space-between",
+          flexDirection: props.direction ? props.direction : undefined,
+          flexWrap:'wrap',
           outline: props.date ? `2px solid ${secondary}` : undefined,
           // change color of outline
           "& .MuiButton-outlined .MuiButton-outlined": {
