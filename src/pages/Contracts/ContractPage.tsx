@@ -6,12 +6,42 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { useMutation, useQuery } from "@apollo/client";
 import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import {
+  useLocation,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
 import { GET_CONTRACT } from "../../GraphQL/Contracts/Queries";
-import { ContractSmall, UPDATE_CONTRACT_BY_EXPERT } from "../../GraphQL/Contracts/Mutations";
+import {
+  ContractSmall,
+  UPDATE_CONTRACT_BY_EXPERT,
+} from "../../GraphQL/Contracts/Mutations";
 import BackButton from "../../components/BackButton";
-import { Box, Button, Checkbox, Divider, FormControl, FormControlLabel, FormGroup, FormLabel, IconButton, List, MenuItem, Radio, RadioGroup, TextField, Typography } from "@mui/material";
-import { Green, GreenLight, Red, RedLight, primary, secondary } from "../../theme/color";
+import {
+  Box,
+  Button,
+  Checkbox,
+  Divider,
+  FormControl,
+  FormControlLabel,
+  FormGroup,
+  FormLabel,
+  IconButton,
+  List,
+  MenuItem,
+  Radio,
+  RadioGroup,
+  TextField,
+  Typography,
+} from "@mui/material";
+import {
+  Green,
+  GreenLight,
+  Red,
+  RedLight,
+  primary,
+  secondary,
+} from "../../theme/color";
 import FaTypography from "../../components/FaComponents/FaTypography";
 import FaTextField from "../../components/FaComponents/FaTextField";
 import FileBox from "../../components/FileBox";
@@ -30,7 +60,10 @@ const ContractPage = () => {
     complaintId: string;
   }>();
   const [contract, setContract] = useState<ContractSmall>();
-  const [arbitrationTermsFormAccuser, setArbitrationTermsFormAccuser] = useState<{
+  const [
+    arbitrationTermsFormAccuser,
+    setArbitrationTermsFormAccuser,
+  ] = useState<{
     firstCondition: string;
     firstConditionFileName: string;
     secondCondition: string;
@@ -41,7 +74,10 @@ const ContractPage = () => {
     fourthConditionFileName: string;
     filledBy: "ACCUSER" | "ACCUSED";
   }>();
-  const [arbitrationTermsFormAccused, setArbitrationTermsFormAccused] = useState<{
+  const [
+    arbitrationTermsFormAccused,
+    setArbitrationTermsFormAccused,
+  ] = useState<{
     firstCondition: string;
     firstConditionFileName: string;
     secondCondition: string;
@@ -59,9 +95,13 @@ const ContractPage = () => {
       id: contractId ? parseInt(contractId) : undefined,
     },
     onCompleted(data) {
-      console.log("Contract", data.contract_getContracts.result.items[0]);
+      console.log(
+        "Contract",
+        data.contract_getContracts.result.items[0]
+      );
 
-      const contract = data.contract_getContracts.result.items[0] as ContractSmall;
+      const contract = data.contract_getContracts.result
+        .items[0] as ContractSmall;
       setContract(contract);
     },
   });
@@ -73,23 +113,40 @@ const ContractPage = () => {
     },
     {
       onCompleted(data) {
-        console.log("GET_ARBITRATION_TERMS_FORM_BY_COMPLAINT_ID", data);
+        console.log(
+          "GET_ARBITRATION_TERMS_FORM_BY_COMPLAINT_ID",
+          data
+        );
       },
     }
   );
 
-  console.log("GET_ARBITRATION_TERMS_FORM_BY_COMPLAINT_ID", arbitrationTermsData);
+  console.log(
+    "GET_ARBITRATION_TERMS_FORM_BY_COMPLAINT_ID",
+    arbitrationTermsData
+  );
 
   useEffect(() => {
-    setArbitrationTermsFormAccused(arbitrationTermsData?.items?.find((item: { filledBy: string }) => item.filledBy === "ACCUSED"));
-    setArbitrationTermsFormAccuser(arbitrationTermsData?.items?.find((item: { filledBy: string }) => item.filledBy === "ACCUSER"));
+    setArbitrationTermsFormAccused(
+      arbitrationTermsData?.items?.find(
+        (item: { filledBy: string }) => item.filledBy === "ACCUSED"
+      )
+    );
+    setArbitrationTermsFormAccuser(
+      arbitrationTermsData?.items?.find(
+        (item: { filledBy: string }) => item.filledBy === "ACCUSER"
+      )
+    );
   }, [arbitrationTermsData]);
 
   const [departments, setDepartments] = React.useState<
     {
       label: string;
       id: string;
-      type: "INDIVIDUAL" | "ORGANIZATION" | "CONTRACTOR_OR_CONSULTANT";
+      type:
+        | "INDIVIDUAL"
+        | "ORGANIZATION"
+        | "CONTRACTOR_OR_CONSULTANT";
     }[]
   >([]);
   useQuery(GET_ALL_ORGANIZATION_USERS, {
@@ -97,11 +154,20 @@ const ContractPage = () => {
       console.log(data);
       // remove department that id is e7a85297-91d4-4f27-a4b2-ff394fe71dd3
       setDepartments(
-        data?.user_getUsers?.result?.items?.map((item: { id: number; fullName: string; userType: "INDIVIDUAL" | "ORGANIZATION" | "CONTRACTOR_OR_CONSULTANT" }) => ({
-          label: item.fullName,
-          id: item.id,
-          type: item.userType,
-        }))
+        data?.user_getUsers?.result?.items?.map(
+          (item: {
+            id: number;
+            fullName: string;
+            userType:
+              | "INDIVIDUAL"
+              | "ORGANIZATION"
+              | "CONTRACTOR_OR_CONSULTANT";
+          }) => ({
+            label: item.fullName,
+            id: item.id,
+            type: item.userType,
+          })
+        )
       );
     },
     onError(error) {
@@ -127,17 +193,47 @@ const ContractPage = () => {
     },
   });
 
-  const firstConditionItems = ["عمرانی (تملک دارایی سرمایه ای)", "غیرعمرانی"];
-  const secondConditionItems = ["در ماده حل اختلاف قرارداد، داوری شورای عالی فنی درج شده است.", "طرفین پس از عقد قرارداد، بر داوری شورا تراضی نموده اند.", "فاقد تراضی روی داوری شورا در حین قرارداد یا پس از آن."];
+  const firstConditionItems = [
+    "عمرانی (تملک دارایی سرمایه ای)",
+    "غیرعمرانی",
+  ];
+  const secondConditionItems = [
+    "در ماده حل اختلاف قرارداد، داوری شورای عالی فنی درج شده است.",
+    "طرفین پس از عقد قرارداد، بر داوری شورا تراضی نموده اند.",
+    "فاقد تراضی روی داوری شورا در حین قرارداد یا پس از آن.",
+  ];
 
-  const thirdConditionItems = ["صورتحساب نهایی توسط پیمانکار امضا نشده است.", "صورتحساب نهایی بدون امضای پیمانکار، به پیمانکار ابلاغ شده است؛ اما پیمانکار ظرف مهلت مقرر در قرارداد به آن اعتراض نموده است.", "صورتحساب نهایی توسط پیمانکار امضا شده است اما صرفا دعاوی مربوط به آزادسازی ضمانتنامه ها مورد درخواست است.", "هیچ یک از موارد فوق."];
+  const thirdConditionItems = [
+    "صورتحساب نهایی توسط پیمانکار امضا نشده است.",
+    "صورتحساب نهایی بدون امضای پیمانکار، به پیمانکار ابلاغ شده است؛ اما پیمانکار ظرف مهلت مقرر در قرارداد به آن اعتراض نموده است.",
+    "صورتحساب نهایی توسط پیمانکار امضا شده است اما صرفا دعاوی مربوط به آزادسازی ضمانتنامه ها مورد درخواست است.",
+    "هیچ یک از موارد فوق.",
+  ];
 
-  const fourthConditionItems = ["رای قطعی در خصوص دعاوی مورد درخواست توسط مراجع قضایی و شورا صادر نشده است.", "رای قطعی در خصوص دعاوی مورد درخواست توسط مراجع قضایی صادر شده است.", "رای قطعی در خصوص دعاوی مورد درخواست توسط شورا صادر شده است.", "قرار عدم صلاحیت (استماع) توسط مراجع قضایی صادر شده است."];
+  const fourthConditionItems = [
+    "رای قطعی در خصوص دعاوی مورد درخواست توسط مراجع قضایی و شورا صادر نشده است.",
+    "رای قطعی در خصوص دعاوی مورد درخواست توسط مراجع قضایی صادر شده است.",
+    "رای قطعی در خصوص دعاوی مورد درخواست توسط شورا صادر شده است.",
+    "قرار عدم صلاحیت (استماع) توسط مراجع قضایی صادر شده است.",
+  ];
 
   return (
     <>
       <BackButton to="/complaints" />
-      <Box display={"grid"} gridTemplateColumns={"repeat(12, 1fr)"} alignItems={"center"} justifyContent={"center"} gap={2} padding={"2rem"} paddingTop={"0"} border={`2px solid ${secondary}`} borderRadius={"1rem"} position={"relative"} marginY={"3rem"} paddingX={"25%"}>
+      <Box
+        display={"grid"}
+        gridTemplateColumns={"repeat(12, 1fr)"}
+        alignItems={"center"}
+        justifyContent={"center"}
+        gap={2}
+        padding={"2rem"}
+        paddingTop={"0"}
+        border={`2px solid ${secondary}`}
+        borderRadius={"1rem"}
+        position={"relative"}
+        marginY={"3rem"}
+        paddingX={"25%"}
+      >
         <Box
           gridColumn={"span 12"}
           borderRadius={"1rem"}
@@ -194,7 +290,8 @@ const ContractPage = () => {
             gridColumn: "span 6",
           }}
         >
-          شماره قرارداد:(خواهان) {contract?.contractNumberByAccuser || ""}
+          شماره قرارداد:(خواهان){" "}
+          {contract?.contractNumberByAccuser || ""}
         </Typography>
 
         <Typography
@@ -204,7 +301,8 @@ const ContractPage = () => {
             gridColumn: "span 6",
           }}
         >
-          شماره قرارداد:(خوانده) {contract?.contractNumberByAccused || ""}
+          شماره قرارداد:(خوانده){" "}
+          {contract?.contractNumberByAccused || ""}
         </Typography>
         <Typography
           variant="body1"
@@ -213,7 +311,12 @@ const ContractPage = () => {
             gridColumn: "span 6",
           }}
         >
-          تاریخ انعقاد قرارداد(خواهان) :{contract?.contractDateByAccuser ? new Date(contract.contractDateByAccuser).toLocaleDateString("fa-IR") : ""}
+          تاریخ انعقاد قرارداد(خواهان) :
+          {contract?.contractDateByAccuser
+            ? new Date(
+                contract.contractDateByAccuser
+              ).toLocaleDateString("fa-IR")
+            : ""}
         </Typography>
         <Typography
           variant="body1"
@@ -222,7 +325,12 @@ const ContractPage = () => {
             gridColumn: "span 6",
           }}
         >
-          تاریخ انعقاد قرارداد(خوانده) :{contract?.contractDateByAccused ? new Date(contract.contractDateByAccused).toLocaleDateString("fa-IR") : ""}
+          تاریخ انعقاد قرارداد(خوانده) :
+          {contract?.contractDateByAccused
+            ? new Date(
+                contract.contractDateByAccused
+              ).toLocaleDateString("fa-IR")
+            : ""}
         </Typography>
         <Typography
           variant="body1"
@@ -231,7 +339,8 @@ const ContractPage = () => {
             gridColumn: "span 6",
           }}
         >
-          مبلغ اوليه/ حق‌الزحمه قرارداد: (خواهان) {contract?.initialBudgetByAccuser}
+          مبلغ اوليه/ حق‌الزحمه قرارداد: (خواهان){" "}
+          {contract?.initialBudgetByAccuser}
         </Typography>
         <Typography
           variant="body1"
@@ -240,7 +349,8 @@ const ContractPage = () => {
             gridColumn: "span 6",
           }}
         >
-          مبلغ اوليه/ حق‌الزحمه قرارداد: (خوانده) {contract?.initialBudgetByAccused}
+          مبلغ اوليه/ حق‌الزحمه قرارداد: (خوانده){" "}
+          {contract?.initialBudgetByAccused}
         </Typography>
         <Typography
           variant="body1"
@@ -249,7 +359,8 @@ const ContractPage = () => {
             gridColumn: "span 6",
           }}
         >
-          مدت اوليه قرارداد: (خواهان) {contract?.initialTimePeriodByAccuser || ""}
+          مدت اوليه قرارداد: (خواهان){" "}
+          {contract?.initialTimePeriodByAccuser || ""}
         </Typography>
 
         <Typography
@@ -259,7 +370,8 @@ const ContractPage = () => {
             gridColumn: "span 6",
           }}
         >
-          مدت اوليه قرارداد: (خوانده) {contract?.initialTimePeriodByAccused || ""}
+          مدت اوليه قرارداد: (خوانده){" "}
+          {contract?.initialTimePeriodByAccused || ""}
         </Typography>
         <div
           style={{
@@ -267,7 +379,19 @@ const ContractPage = () => {
           }}
         />
       </Box>
-      <Box display={"grid"} gridTemplateColumns={"repeat(12, 1fr)"} alignItems={"center"} justifyContent={"center"} gap={2} padding={"2rem"} paddingTop={"0rem"} border={`2px solid ${secondary}`} borderRadius={"1rem"} position={"relative"} marginY={"1rem"}>
+      <Box
+        display={"grid"}
+        gridTemplateColumns={"repeat(12, 1fr)"}
+        alignItems={"center"}
+        justifyContent={"center"}
+        gap={2}
+        padding={"2rem"}
+        paddingTop={"0rem"}
+        border={`2px solid ${secondary}`}
+        borderRadius={"1rem"}
+        position={"relative"}
+        marginY={"1rem"}
+      >
         <Box
           gridColumn={"span 12"}
           borderRadius={"1rem"}
@@ -305,7 +429,13 @@ const ContractPage = () => {
             width: "100%",
             gridColumn: "span 3",
           }}
-          value={departments.find((item) => contract?.accuserDepartmentUserId && item.id === contract?.accuserDepartmentUserId)?.label}
+          value={
+            departments.find(
+              (item) =>
+                contract?.accuserDepartmentUserId &&
+                item.id === contract?.accuserDepartmentUserId
+            )?.label
+          }
           focused
           //   disabled
         />
@@ -320,7 +450,13 @@ const ContractPage = () => {
             width: "100%",
             gridColumn: "span 3",
           }}
-          value={departments.find((item) => contract?.accusedDepartmentUserId && item.id === contract?.accusedDepartmentUserId)?.label}
+          value={
+            departments.find(
+              (item) =>
+                contract?.accusedDepartmentUserId &&
+                item.id === contract?.accusedDepartmentUserId
+            )?.label
+          }
           focused
           // disabled
         />
@@ -366,93 +502,160 @@ const ContractPage = () => {
         <FaTypography variant="h5" gridColumn={"span 12"}>
           {"افراد مطلع و مرتبط با پروژه: "}
         </FaTypography>
-        <Box gridColumn={"span 6"} display={"grid"} gridTemplateColumns={"repeat(1,1fr)"} rowGap={2}>
+        <Box
+          gridColumn={"span 6"}
+          display={"grid"}
+          gridTemplateColumns={"repeat(1,1fr)"}
+          rowGap={2}
+        >
           <FaTypography variant="body1" gridColumn={"span 12"}>
-            اسامی و تلفن (ثابت و همراه) افراد مطلع و مرتبط با پروژه از طرف خواهان:
+            اسامی و تلفن (ثابت و همراه) افراد مطلع و مرتبط با پروژه از
+            طرف خواهان:
           </FaTypography>
           {contract?.accuserRelatedPeopleByAccuser &&
-            JSON.parse(contract?.accuserRelatedPeopleByAccuser).map((item: { name: string }, index: React.Key | null | undefined) => (
-              <Box key={index} display={"grid"} gridTemplateColumns={"repeat(12,1fr)"}>
+            JSON.parse(contract?.accuserRelatedPeopleByAccuser).map(
+              (
+                item: { name: string },
+                index: React.Key | null | undefined
+              ) => (
                 <Box
-                  gridColumn={{
-                    xs: "span 12",
-                    lg: "span 8",
-                  }}
+                  key={index}
                   display={"grid"}
-                  gridTemplateColumns={"repeat(2,1fr)"}
-                  columnGap={"2rem"}
-                  padding={"0rem 0rem"}
+                  gridTemplateColumns={"repeat(12,1fr)"}
                 >
-                  <FaTypography>{item.name}</FaTypography>
+                  <Box
+                    gridColumn={{
+                      xs: "span 12",
+                      lg: "span 8",
+                    }}
+                    display={"grid"}
+                    gridTemplateColumns={"repeat(2,1fr)"}
+                    columnGap={"2rem"}
+                    padding={"0rem 0rem"}
+                  >
+                    <FaTypography>{item.name}</FaTypography>
+                  </Box>
                 </Box>
-              </Box>
-            ))}
+              )
+            )}
         </Box>
-        <Box gridColumn={"span 6"} display={"flex"} flexDirection={"column"} justifyContent={"start"} alignItems={"flex-start"} rowGap={2}>
+        <Box
+          gridColumn={"span 6"}
+          display={"flex"}
+          flexDirection={"column"}
+          justifyContent={"start"}
+          alignItems={"flex-start"}
+          rowGap={2}
+        >
           <FaTypography variant="body1" gridColumn={"span 12"}>
-            اسامی و تلفن (ثابت و همراه) افراد مطلع و مرتبط با پروژه از طرف خوانده:
+            اسامی و تلفن (ثابت و همراه) افراد مطلع و مرتبط با پروژه از
+            طرف خوانده:
           </FaTypography>
           {contract?.accusedRelatedPeopleByAccuser &&
-            JSON.parse(contract?.accusedRelatedPeopleByAccuser).map((item: { name: string }, index: React.Key | null | undefined) => (
-              <Box key={index} display={"grid"} gridTemplateColumns={"repeat(12,1fr)"}>
+            JSON.parse(contract?.accusedRelatedPeopleByAccuser).map(
+              (
+                item: {
+                  name: string;
+                  phone: string;
+                },
+                index: React.Key | null | undefined
+              ) => (
                 <Box
-                  gridColumn={{
-                    xs: "span 12",
-                    lg: "span 8",
-                  }}
+                  key={index}
                   display={"grid"}
-                  gridTemplateColumns={"repeat(2,1fr)"}
-                  columnGap={"2rem"}
-                  padding={"0rem 0rem"}
+                  gridTemplateColumns={"repeat(12,1fr)"}
                 >
-                  <FaTypography>{item.name}</FaTypography>
+                  <Box
+                    gridColumn={{
+                      xs: "span 12",
+                      lg: "span 8",
+                    }}
+                    display={"grid"}
+                    gridTemplateColumns={"repeat(2,1fr)"}
+                    columnGap={"2rem"}
+                    padding={"0rem 0rem"}
+                  >
+                    <FaTypography>{item.name}</FaTypography>
+                  </Box>
                 </Box>
-              </Box>
-            ))}
+              )
+            )}
         </Box>
-        <Box gridColumn={"span 6"} display={"grid"} gridTemplateColumns={"repeat(1,1fr)"} rowGap={2}>
+        <Box
+          gridColumn={"span 6"}
+          display={"grid"}
+          gridTemplateColumns={"repeat(1,1fr)"}
+          rowGap={2}
+        >
           <FaTypography variant="body1" gridColumn={"span 12"}>
-            اسامی و تلفن (ثابت و همراه) افراد مطلع و مرتبط با پروژه از طرف خواهان:
+            اسامی و تلفن (ثابت و همراه) افراد مطلع و مرتبط با پروژه از
+            طرف خواهان:
           </FaTypography>
           {contract?.accuserRelatedPeopleByAccused &&
-            JSON.parse(contract?.accuserRelatedPeopleByAccused).map((item: { name: string }, index: React.Key | null | undefined) => (
-              <Box key={index} display={"grid"} gridTemplateColumns={"repeat(12,1fr)"}>
+            JSON.parse(contract?.accuserRelatedPeopleByAccused).map(
+              (
+                item: { name: string },
+                index: React.Key | null | undefined
+              ) => (
                 <Box
-                  gridColumn={{
-                    xs: "span 12",
-                    lg: "span 8",
-                  }}
+                  key={index}
                   display={"grid"}
-                  gridTemplateColumns={"repeat(2,1fr)"}
-                  columnGap={"2rem"}
-                  padding={"0rem 0rem"}
+                  gridTemplateColumns={"repeat(12,1fr)"}
                 >
-                  <FaTypography>{item.name}</FaTypography>
+                  <Box
+                    gridColumn={{
+                      xs: "span 12",
+                      lg: "span 8",
+                    }}
+                    display={"grid"}
+                    gridTemplateColumns={"repeat(2,1fr)"}
+                    columnGap={"2rem"}
+                    padding={"0rem 0rem"}
+                  >
+                    <FaTypography>{item.name}</FaTypography>
+                  </Box>
                 </Box>
-              </Box>
-            ))}
+              )
+            )}
         </Box>
-        <Box gridColumn={"span 6"} display={"flex"} flexDirection={"column"} justifyContent={"start"} alignItems={"flex-start"} rowGap={2}>
+        <Box
+          gridColumn={"span 6"}
+          display={"flex"}
+          flexDirection={"column"}
+          justifyContent={"start"}
+          alignItems={"flex-start"}
+          rowGap={2}
+        >
           <FaTypography variant="body1" gridColumn={"span 12"}>
-            اسامی و تلفن (ثابت و همراه) افراد مطلع و مرتبط با پروژه از طرف خوانده:
+            اسامی و تلفن (ثابت و همراه) افراد مطلع و مرتبط با پروژه از
+            طرف خوانده:
           </FaTypography>
           {contract?.accusedRelatedPeopleByAccused &&
-            JSON.parse(contract?.accusedRelatedPeopleByAccused).map((item: { name: string }, index: React.Key | null | undefined) => (
-              <Box key={index} display={"grid"} gridTemplateColumns={"repeat(12,1fr)"}>
+            JSON.parse(contract?.accusedRelatedPeopleByAccused).map(
+              (
+                item: { name: string },
+                index: React.Key | null | undefined
+              ) => (
                 <Box
-                  gridColumn={{
-                    xs: "span 12",
-                    lg: "span 8",
-                  }}
+                  key={index}
                   display={"grid"}
-                  gridTemplateColumns={"repeat(2,1fr)"}
-                  columnGap={"2rem"}
-                  padding={"0rem 0rem"}
+                  gridTemplateColumns={"repeat(12,1fr)"}
                 >
-                  <FaTypography>{item.name}</FaTypography>
+                  <Box
+                    gridColumn={{
+                      xs: "span 12",
+                      lg: "span 8",
+                    }}
+                    display={"grid"}
+                    gridTemplateColumns={"repeat(2,1fr)"}
+                    columnGap={"2rem"}
+                    padding={"0rem 0rem"}
+                  >
+                    <FaTypography>{item.name}</FaTypography>
+                  </Box>
                 </Box>
-              </Box>
-            ))}
+              )
+            )}
         </Box>
 
         <Divider
@@ -500,11 +703,31 @@ const ContractPage = () => {
         */}
         <Typography variant="h6" gridColumn={"span 6"}>
           ضريب پيشنهادي خواهان:
-          {contract?.recommendedCoefficientByAccuser ? (contract?.recommendedCoefficientByAccuser > 1 ? (contract?.recommendedCoefficientByAccuser * 100 - 100).toPrecision(2) + "% پلوس" : (100 - contract?.recommendedCoefficientByAccuser * 100).toPrecision(2) + "% مینوس") : ""}
+          {contract?.recommendedCoefficientByAccuser
+            ? contract?.recommendedCoefficientByAccuser > 1
+              ? (
+                  contract?.recommendedCoefficientByAccuser * 100 -
+                  100
+                ).toPrecision(2) + "% پلوس"
+              : (
+                  100 -
+                  contract?.recommendedCoefficientByAccuser * 100
+                ).toPrecision(2) + "% مینوس"
+            : ""}
         </Typography>
         <Typography variant="h6" gridColumn={"span 6"}>
           ضريب پيشنهادي خوانده:
-          {contract?.recommendedCoefficientByAccused ? (contract?.recommendedCoefficientByAccused > 1 ? (contract?.recommendedCoefficientByAccused * 100 - 100).toPrecision(2) + "% پلوس" : (100 - contract?.recommendedCoefficientByAccused * 100).toPrecision(2) + "% مینوس") : ""}
+          {contract?.recommendedCoefficientByAccused
+            ? contract?.recommendedCoefficientByAccused > 1
+              ? (
+                  contract?.recommendedCoefficientByAccused * 100 -
+                  100
+                ).toPrecision(2) + "% پلوس"
+              : (
+                  100 -
+                  contract?.recommendedCoefficientByAccused * 100
+                ).toPrecision(2) + "% مینوس"
+            : ""}
         </Typography>
         {/* <RadioGroup defaultValue={CoefficientType} row>
             <FormControlLabel
@@ -610,7 +833,11 @@ const ContractPage = () => {
           }}
         >
           از نظر خواهان:
-          {contract?.operationStartDateByAccuser ? new Date(contract.operationStartDateByAccuser).toLocaleDateString("fa-IR") : ""}
+          {contract?.operationStartDateByAccuser
+            ? new Date(
+                contract.operationStartDateByAccuser
+              ).toLocaleDateString("fa-IR")
+            : ""}
         </Typography>
 
         <Typography
@@ -621,7 +848,11 @@ const ContractPage = () => {
           }}
         >
           از نظر خوانده:
-          {contract?.operationStartDateByAccused ? new Date(contract.operationStartDateByAccused).toLocaleDateString("fa-IR") : ""}
+          {contract?.operationStartDateByAccused
+            ? new Date(
+                contract.operationStartDateByAccused
+              ).toLocaleDateString("fa-IR")
+            : ""}
         </Typography>
         <div
           style={{
@@ -733,10 +964,35 @@ const ContractPage = () => {
             gridColumn: "span 12",
           }}
         >
-          <RadioGroup row aria-labelledby="demo-row-radio-buttons-group-label" name="row-radio-buttons-group">
-            <FormControlLabel value="ابلاغ خاتمه" control={<Radio />} label="ابلاغ خاتمه" checked={contract?.contractStatusAndDateInArbitrationByAccused?.includes("ابلاغ خاتمه")} />
-            <FormControlLabel value="ابلاغ فسخ" control={<Radio />} label="ابلاغ فسخ" checked={contract?.contractStatusAndDateInArbitrationByAccused?.includes("ابلاغ فسخ")} />
-            <FormControlLabel value="جاری" control={<Radio />} label="جاری" checked={contract?.contractStatusAndDateInArbitrationByAccused?.includes("جاری")} />
+          <RadioGroup
+            row
+            aria-labelledby="demo-row-radio-buttons-group-label"
+            name="row-radio-buttons-group"
+          >
+            <FormControlLabel
+              value="ابلاغ خاتمه"
+              control={<Radio />}
+              label="ابلاغ خاتمه"
+              checked={contract?.contractStatusAndDateInArbitrationByAccused?.includes(
+                "ابلاغ خاتمه"
+              )}
+            />
+            <FormControlLabel
+              value="ابلاغ فسخ"
+              control={<Radio />}
+              label="ابلاغ فسخ"
+              checked={contract?.contractStatusAndDateInArbitrationByAccused?.includes(
+                "ابلاغ فسخ"
+              )}
+            />
+            <FormControlLabel
+              value="جاری"
+              control={<Radio />}
+              label="جاری"
+              checked={contract?.contractStatusAndDateInArbitrationByAccused?.includes(
+                "جاری"
+              )}
+            />
           </RadioGroup>
         </FormControl>
 
@@ -848,10 +1104,19 @@ const ContractPage = () => {
     
         
         */}
-        <FaTypography variant="h5" fontWeight={800} gridColumn={"span 12"}>
-          توجه مهم: چنانچه در خصوص تاخیرات و یا تبعات ناشی از آن اختلافی وجود دارد، لازم است موارد زیر ارسال شوند:
+        <FaTypography
+          variant="h5"
+          fontWeight={800}
+          gridColumn={"span 12"}
+        >
+          توجه مهم: چنانچه در خصوص تاخیرات و یا تبعات ناشی از آن
+          اختلافی وجود دارد، لازم است موارد زیر ارسال شوند:
         </FaTypography>
-        <FaTypography variant="h6" fontWeight={800} gridColumn={"span 12"}>
+        <FaTypography
+          variant="h6"
+          fontWeight={800}
+          gridColumn={"span 12"}
+        >
           گزارش توجیهی تاخیرات قرارداد شامل:
         </FaTypography>
         <List
@@ -859,20 +1124,46 @@ const ContractPage = () => {
             gridColumn: "span 6",
           }}
         >
-          <Box display={"flex"} justifyContent={"space-between"} paddingY={"1rem"}>
-            <FaTypography variant="body1">برنامه های زمان‏بندی اولیه و اصلاحی ابلاغ شده</FaTypography>
+          <Box
+            display={"flex"}
+            justifyContent={"space-between"}
+            paddingY={"1rem"}
+          >
+            <FaTypography variant="body1">
+              برنامه های زمان‏بندی اولیه و اصلاحی ابلاغ شده
+            </FaTypography>
             <FileBox />
           </Box>
-          <Box display={"flex"} justifyContent={"space-between"} paddingY={"1rem"}>
-            <FaTypography variant="body1">گزارش تهیه شده توسط پیمانکار (به همراه کلیه مستندات و پیوست‏ها)</FaTypography>
+          <Box
+            display={"flex"}
+            justifyContent={"space-between"}
+            paddingY={"1rem"}
+          >
+            <FaTypography variant="body1">
+              گزارش تهیه شده توسط پیمانکار (به همراه کلیه مستندات و
+              پیوست‏ها)
+            </FaTypography>
             <FileBox />
           </Box>
-          <Box display={"flex"} justifyContent={"space-between"} paddingY={"1rem"}>
-            <FaTypography variant="body1">گزارش رسیدگی به تاخیرات توسط مهندس مشاور</FaTypography>
+          <Box
+            display={"flex"}
+            justifyContent={"space-between"}
+            paddingY={"1rem"}
+          >
+            <FaTypography variant="body1">
+              گزارش رسیدگی به تاخیرات توسط مهندس مشاور
+            </FaTypography>
             <FileBox />
           </Box>
-          <Box display={"flex"} justifyContent={"space-between"} paddingY={"1rem"}>
-            <FaTypography variant="body1">مستندات ابلاغ نتایج رسیدگی به تاخیرات به پیمانکار توسط کارفرما</FaTypography>
+          <Box
+            display={"flex"}
+            justifyContent={"space-between"}
+            paddingY={"1rem"}
+          >
+            <FaTypography variant="body1">
+              مستندات ابلاغ نتایج رسیدگی به تاخیرات به پیمانکار توسط
+              کارفرما
+            </FaTypography>
             <FileBox />
           </Box>
         </List>
@@ -881,7 +1172,12 @@ const ContractPage = () => {
             gridColumn: "span 12",
           }}
         />
-        <Box gridColumn={"span 12"} display={"grid"} gridTemplateColumns={"repeat(12, 1fr)"} gap={"2rem"}>
+        <Box
+          gridColumn={"span 12"}
+          display={"grid"}
+          gridTemplateColumns={"repeat(12, 1fr)"}
+          gap={"2rem"}
+        >
           <Typography
             variant="h6"
             textAlign={"center"}
@@ -891,177 +1187,190 @@ const ContractPage = () => {
           >
             احراز شرایط داوری
           </Typography>
-          <Box gridColumn={"span 6"} display={"grid"} gridTemplateColumns={"repeat(12, 1fr)"} gap={"2rem"}>
-          <Typography
-            variant="h6"
-            textAlign={"center"}
-            sx={{
-              gridColumn: "span 12",
-            }}
+          <Box
+            gridColumn={"span 6"}
+            display={"grid"}
+            gridTemplateColumns={"repeat(12, 1fr)"}
+            gap={"2rem"}
           >
-            خواهان
-          </Typography>
-          <Typography
-            variant="subtitle1"
-            textAlign={"start"}
-            sx={{
-              gridColumn: "span 6",
-            }}
-          >
-            شرط اول (عمرانی بودن محل اعتبار طرح)
-          </Typography>
-          <Typography
-            variant="subtitle2"
-            textAlign={"start"}
-            sx={{
-              gridColumn: "span 6",
-            }}
-          >
-            {arbitrationTermsFormAccuser?.firstCondition }
-          </Typography>
-          <Typography
-            variant="subtitle1"
-            textAlign={"start"}
-            sx={{
-              gridColumn: "span 6",
-            }}
-          >
-            شرط دوم (تراضی بر داوری شورا)
-          </Typography>
-          <Typography
-            variant="subtitle2"
-            textAlign={"start"}
-            sx={{
-              gridColumn: "span 6",
-            }}
-          >
-            {arbitrationTermsFormAccuser?.secondCondition }
-          </Typography>
-          <Typography
-            variant="subtitle1"
-            textAlign={"start"}
-            sx={{
-              gridColumn: "span 6",
-            }}
-          >
-            شرط سوم (عدم تسویه حساب)
-          </Typography>
-          <Typography
-            variant="subtitle2"
-            textAlign={"start"}
-            sx={{
-              gridColumn: "span 6",
-            }}
-          >
-            {arbitrationTermsFormAccuser?.thirdCondition }
-          </Typography>
-          <Typography
-            variant="subtitle1"
-            textAlign={"start"}
-            sx={{
-              gridColumn: "span 6",
-            }}
-          >
-            شرط چهارم (عدم طرح در مراجع قضایی یا داوری)
-          </Typography>
-          <Typography
-            variant="subtitle2"
-            textAlign={"start"}
-            sx={{
-              gridColumn: "span 6",
-            }}
-          >
-            {arbitrationTermsFormAccuser?.fourthCondition }
-          </Typography>
-
+            <Typography
+              variant="h6"
+              textAlign={"center"}
+              sx={{
+                gridColumn: "span 12",
+              }}
+            >
+              خواهان
+            </Typography>
+            <Typography
+              variant="subtitle1"
+              textAlign={"start"}
+              sx={{
+                gridColumn: "span 6",
+              }}
+            >
+              شرط اول (عمرانی بودن محل اعتبار طرح)
+            </Typography>
+            <Typography
+              variant="subtitle2"
+              textAlign={"start"}
+              sx={{
+                gridColumn: "span 6",
+              }}
+            >
+              {arbitrationTermsFormAccuser?.firstCondition}
+            </Typography>
+            <Typography
+              variant="subtitle1"
+              textAlign={"start"}
+              sx={{
+                gridColumn: "span 6",
+              }}
+            >
+              شرط دوم (تراضی بر داوری شورا)
+            </Typography>
+            <Typography
+              variant="subtitle2"
+              textAlign={"start"}
+              sx={{
+                gridColumn: "span 6",
+              }}
+            >
+              {arbitrationTermsFormAccuser?.secondCondition}
+            </Typography>
+            <Typography
+              variant="subtitle1"
+              textAlign={"start"}
+              sx={{
+                gridColumn: "span 6",
+              }}
+            >
+              شرط سوم (عدم تسویه حساب)
+            </Typography>
+            <Typography
+              variant="subtitle2"
+              textAlign={"start"}
+              sx={{
+                gridColumn: "span 6",
+              }}
+            >
+              {arbitrationTermsFormAccuser?.thirdCondition}
+            </Typography>
+            <Typography
+              variant="subtitle1"
+              textAlign={"start"}
+              sx={{
+                gridColumn: "span 6",
+              }}
+            >
+              شرط چهارم (عدم طرح در مراجع قضایی یا داوری)
+            </Typography>
+            <Typography
+              variant="subtitle2"
+              textAlign={"start"}
+              sx={{
+                gridColumn: "span 6",
+              }}
+            >
+              {arbitrationTermsFormAccuser?.fourthCondition}
+            </Typography>
           </Box>
-          <Box gridColumn={"span 6"} display={"grid"} gridTemplateColumns={"repeat(12, 1fr)"} gap={"2rem"}>
-          <Typography
-            variant="h6"
-            textAlign={"center"}
-            sx={{
-              gridColumn: "span 12",
-            }}
+          <Box
+            gridColumn={"span 6"}
+            display={"grid"}
+            gridTemplateColumns={"repeat(12, 1fr)"}
+            gap={"2rem"}
           >
-            خوانده
-          </Typography>
-          <Typography
-            variant="subtitle1"
-            textAlign={"start"}
-            sx={{
-              gridColumn: "span 6",
-            }}
-          >
-            شرط اول (عمرانی بودن محل اعتبار طرح)
-          </Typography>
-          <Typography
-            variant="subtitle2"
-            textAlign={"start"}
-            sx={{
-              gridColumn: "span 6",
-            }}
-          >
-            {arbitrationTermsFormAccused?.firstCondition }
-          </Typography>
-          <Typography
-            variant="subtitle1"
-            textAlign={"start"}
-            sx={{
-              gridColumn: "span 6",
-            }}
-          >
-            شرط دوم (تراضی بر داوری شورا)
-          </Typography>
-          <Typography
-            variant="subtitle2"
-            textAlign={"start"}
-            sx={{
-              gridColumn: "span 6",
-            }}
-          >
-            {arbitrationTermsFormAccused?.secondCondition }
-          </Typography>
-          <Typography
-            variant="subtitle1"
-            textAlign={"start"}
-            sx={{
-              gridColumn: "span 6",
-            }}
-          >
-            شرط سوم (عدم تسویه حساب)
-          </Typography>
-          <Typography
-            variant="subtitle2"
-            textAlign={"start"}
-            sx={{
-              gridColumn: "span 6",
-            }}
-          >
-            {arbitrationTermsFormAccused?.thirdCondition }
-          </Typography>
-          <Typography
-            variant="subtitle1"
-            textAlign={"start"}
-            sx={{
-              gridColumn: "span 6",
-            }}
-          >
-            شرط چهارم (عدم طرح در مراجع قضایی یا داوری)
-          </Typography>
-          <Typography
-            variant="subtitle2"
-            textAlign={"start"}
-            sx={{
-              gridColumn: "span 6",
-            }}
-          >
-            {arbitrationTermsFormAccused?.fourthCondition }
-          </Typography>
-
+            <Typography
+              variant="h6"
+              textAlign={"center"}
+              sx={{
+                gridColumn: "span 12",
+              }}
+            >
+              خوانده
+            </Typography>
+            <Typography
+              variant="subtitle1"
+              textAlign={"start"}
+              sx={{
+                gridColumn: "span 6",
+              }}
+            >
+              شرط اول (عمرانی بودن محل اعتبار طرح)
+            </Typography>
+            <Typography
+              variant="subtitle2"
+              textAlign={"start"}
+              sx={{
+                gridColumn: "span 6",
+              }}
+            >
+              {arbitrationTermsFormAccused?.firstCondition}
+            </Typography>
+            <Typography
+              variant="subtitle1"
+              textAlign={"start"}
+              sx={{
+                gridColumn: "span 6",
+              }}
+            >
+              شرط دوم (تراضی بر داوری شورا)
+            </Typography>
+            <Typography
+              variant="subtitle2"
+              textAlign={"start"}
+              sx={{
+                gridColumn: "span 6",
+              }}
+            >
+              {arbitrationTermsFormAccused?.secondCondition}
+            </Typography>
+            <Typography
+              variant="subtitle1"
+              textAlign={"start"}
+              sx={{
+                gridColumn: "span 6",
+              }}
+            >
+              شرط سوم (عدم تسویه حساب)
+            </Typography>
+            <Typography
+              variant="subtitle2"
+              textAlign={"start"}
+              sx={{
+                gridColumn: "span 6",
+              }}
+            >
+              {arbitrationTermsFormAccused?.thirdCondition}
+            </Typography>
+            <Typography
+              variant="subtitle1"
+              textAlign={"start"}
+              sx={{
+                gridColumn: "span 6",
+              }}
+            >
+              شرط چهارم (عدم طرح در مراجع قضایی یا داوری)
+            </Typography>
+            <Typography
+              variant="subtitle2"
+              textAlign={"start"}
+              sx={{
+                gridColumn: "span 6",
+              }}
+            >
+              {arbitrationTermsFormAccused?.fourthCondition}
+            </Typography>
           </Box>
         </Box>
 
-        <Box gridColumn={"span 12"} display={"grid"} gridTemplateColumns={"1fr 1fr"} gap={"2rem"}>
+        <Box
+          gridColumn={"span 12"}
+          display={"grid"}
+          gridTemplateColumns={"1fr 1fr"}
+          gap={"2rem"}
+        >
           <Button
             variant="contained"
             sx={{
@@ -1081,8 +1390,12 @@ const ContractPage = () => {
                 onCompleted(data, clientOptions) {
                   void updateCompaint({
                     variables: {
-                      complaintState: newStatesObj.notAcceptedForBeingConstructive.cap,
-                      id: complaintId ? parseInt(complaintId) : undefined,
+                      complaintState:
+                        newStatesObj.notAcceptedForBeingConstructive
+                          .cap,
+                      id: complaintId
+                        ? parseInt(complaintId)
+                        : undefined,
                     },
                     onCompleted(data, clientOptions) {
                       console.log(data);
@@ -1116,8 +1429,11 @@ const ContractPage = () => {
                 onCompleted(data, clientOptions) {
                   void updateCompaint({
                     variables: {
-                      complaintState: newStatesObj.acceptedForBeingConstructive.cap,
-                      id: complaintId ? parseInt(complaintId) : undefined,
+                      complaintState:
+                        newStatesObj.acceptedForBeingConstructive.cap,
+                      id: complaintId
+                        ? parseInt(complaintId)
+                        : undefined,
                     },
                     onCompleted(data, clientOptions) {
                       console.log(data);

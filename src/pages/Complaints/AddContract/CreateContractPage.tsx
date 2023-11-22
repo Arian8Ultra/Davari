@@ -1078,7 +1078,7 @@ const CreateContractPage = () => {
                   departments.find((d) => {
                     return d.id === user.parentId;
                   })?.type === "ORGANIZATION"
-                    ? true
+                    ? false
                     : false
                 }
               />
@@ -1090,7 +1090,7 @@ const CreateContractPage = () => {
             sx={{
               gridColumn: "span 3",
             }}
-            value={finalAmount}
+            value={newEmployer}
             onChange={(e) => {
               setNewEmployer(e.target.value);
               {
@@ -1138,7 +1138,7 @@ const CreateContractPage = () => {
               departments.find((d) => {
                 return d.id === user.parentId;
               })?.type === "ORGANIZATION"
-                ? false
+                ? true
                 : true
             }
             disabled={!hasBeenDirected}

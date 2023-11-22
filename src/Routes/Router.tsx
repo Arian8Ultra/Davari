@@ -40,6 +40,7 @@ import "../index.css";
 import ContractPage from "../pages/Contracts/ContractPage";
 import UpdateContractAccuserPage from "../pages/Complaints/AddContract/UpdateContractAccuserPage";
 import TablesPage from "../pages/Complaints/Tabels/TablesPage";
+import ContractDetailsPage from "../pages/Contracts/ContractDetailsPage";
 const UpdateContractPage = lazy(
   () => import("../pages/Complaints/AddContract/UpdateContractPage")
 );
@@ -101,6 +102,10 @@ const router = createBrowserRouter(
         <Route
           path="contract/:contractId/:complaintId"
           element={<ContractPage />}
+        />
+        <Route
+          path="contract/:contractId/:complaintId/details"
+          element={<ContractDetailsPage />}
         />
         <Route
           path="admin/usermanagement"

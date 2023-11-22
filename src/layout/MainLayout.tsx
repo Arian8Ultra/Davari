@@ -11,8 +11,19 @@ import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import MenuIcon from "@mui/icons-material/Menu";
-import { Button, CssBaseline, InputAdornment, LinearProgress, Menu, MenuItem, Modal, TextField } from "@mui/material";
-import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
+import {
+  Button,
+  CssBaseline,
+  InputAdornment,
+  LinearProgress,
+  Menu,
+  MenuItem,
+  Modal,
+  TextField,
+} from "@mui/material";
+import MuiAppBar, {
+  AppBarProps as MuiAppBarProps,
+} from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import MuiDrawer from "@mui/material/Drawer";
@@ -21,19 +32,35 @@ import List from "@mui/material/List";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { red } from "@mui/material/colors";
-import { CSSObject, Theme, styled, useTheme } from "@mui/material/styles";
+import {
+  CSSObject,
+  Theme,
+  styled,
+  useTheme,
+} from "@mui/material/styles";
 import React, { useEffect, useRef, useState } from "react";
 import { BsEye, BsEyeSlash } from "react-icons/bs";
 import { VscAccount } from "react-icons/vsc";
-import { Outlet, ScrollRestoration, useLocation, useNavigate } from "react-router-dom";
+import {
+  Outlet,
+  ScrollRestoration,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import useLayoutStore from "../Context/LayoutStore";
 import { useUserStore } from "../Context/UserStore";
-import { UserLogin, UserUpdatePassword } from "../GraphQL/Users/Mutations";
+import {
+  UserLogin,
+  UserUpdatePassword,
+} from "../GraphQL/Users/Mutations";
 // @ts-ignore
 import pboLogo from "../assets/PboLogo.png";
 // @ts-ignore
 import { FaBalanceScale } from "react-icons/fa";
-import { GET_ALL_ORGANIZATION_USERS, TOKEN_CHECK } from "../GraphQL/Users/Queries";
+import {
+  GET_ALL_ORGANIZATION_USERS,
+  TOKEN_CHECK,
+} from "../GraphQL/Users/Queries";
 import sazmanImage from "../assets/Sazman.jpeg";
 import Pattern from "../assets/pattern_hexagon-7_1_3_0-0_0_2__a8575700_787878.png";
 import ListItemLink from "../components/ListItemLink";
@@ -43,7 +70,15 @@ import { convertRoleToPersian } from "../functions/Functions";
 import { SideBarLinkType, SideBarMenu } from "../static/SideBar";
 import { Titles } from "../static/Titles";
 import { User } from "../static/Types";
-import { Green, background, primary, primaryGrey, primaryLight, secondary, secondaryDark } from "../theme/color";
+import {
+  Green,
+  background,
+  primary,
+  primaryGrey,
+  primaryLight,
+  secondary,
+  secondaryDark,
+} from "../theme/color";
 import { MutationWrapper } from "../GraphQL/MutationWrapper";
 
 const drawerWidth = 230;
@@ -152,9 +187,13 @@ export default function MainLayout() {
     showPassword: false,
   });
   const ref = useRef(null);
-  const [isSmallScreen, setIsSmallScreen] = React.useState(matchMedia("(max-width: 600px)").matches);
+  const [isSmallScreen, setIsSmallScreen] = React.useState(
+    matchMedia("(max-width: 600px)").matches
+  );
 
-  const [, setIsMediumScreen] = React.useState(matchMedia("(max-width: 960px)").matches);
+  const [, setIsMediumScreen] = React.useState(
+    matchMedia("(max-width: 960px)").matches
+  );
 
   const path = useLocation().pathname;
 
@@ -210,16 +249,30 @@ export default function MainLayout() {
     const handler = (e: MediaQueryListEvent) => {
       setIsSmallScreen(e.matches);
     };
-    matchMedia("(max-width: 600px)").addEventListener("change", handler);
-    return () => matchMedia("(max-width: 600px)").removeEventListener("change", handler);
+    matchMedia("(max-width: 600px)").addEventListener(
+      "change",
+      handler
+    );
+    return () =>
+      matchMedia("(max-width: 600px)").removeEventListener(
+        "change",
+        handler
+      );
   }, []);
 
   React.useEffect(() => {
     const handler = (e: MediaQueryListEvent) => {
       setIsMediumScreen(e.matches);
     };
-    matchMedia("(max-width: 960px)").addEventListener("change", handler);
-    return () => matchMedia("(max-width: 960px)").removeEventListener("change", handler);
+    matchMedia("(max-width: 960px)").addEventListener(
+      "change",
+      handler
+    );
+    return () =>
+      matchMedia("(max-width: 960px)").removeEventListener(
+        "change",
+        handler
+      );
   }, []);
 
   const handleDrawerOpen = () => {
@@ -230,7 +283,11 @@ export default function MainLayout() {
     setOpen(false);
   };
 
-  const { handleMutation, loading: loadingMutation, error } = MutationWrapper(UserLogin, "user_signIn");
+  const {
+    handleMutation,
+    loading: loadingMutation,
+    error,
+  } = MutationWrapper(UserLogin, "user_signIn");
 
   const [userLogin, { loading }] = useMutation(UserLogin, {
     variables: {
@@ -240,15 +297,30 @@ export default function MainLayout() {
     onCompleted(data) {
       console.log(data);
       if (data.user_signIn.status.code === 1) {
-        const expireDate = new Date(data.user_signIn.result.expireDate);
+        const expireDate = new Date(
+          data.user_signIn.result.expireDate
+        );
         const now = new Date();
         const diff = expireDate.getTime() - now.getTime();
         const expiresIn = diff / 1000;
         console.log(expiresIn);
-        if ((data.user_signIn.result.user as User) && data.user_signIn.result.token) {
-          setUser(data.user_signIn.result.user, data.user_signIn.result.token, expireDate);
-          localStorage.setItem("token", data.user_signIn.result.token);
-          setIsMailRoom(data.user_signIn.result.user.parentId === "e7a85297-91d4-4f27-a4b2-ff394fe71dd3");
+        if (
+          (data.user_signIn.result.user as User) &&
+          data.user_signIn.result.token
+        ) {
+          setUser(
+            data.user_signIn.result.user,
+            data.user_signIn.result.token,
+            expireDate
+          );
+          localStorage.setItem(
+            "token",
+            data.user_signIn.result.token
+          );
+          setIsMailRoom(
+            data.user_signIn.result.user.parentId ===
+              "e7a85297-91d4-4f27-a4b2-ff394fe71dd3"
+          );
         }
       }
     },
@@ -284,7 +356,10 @@ export default function MainLayout() {
     {
       label: string;
       id: string;
-      type: "INDIVIDUAL" | "ORGANIZATION" | "CONTRACTOR_OR_CONSULTANT";
+      type:
+        | "INDIVIDUAL"
+        | "ORGANIZATION"
+        | "CONTRACTOR_OR_CONSULTANT";
     }[]
   >([]);
   useQuery(GET_ALL_ORGANIZATION_USERS, {
@@ -292,11 +367,20 @@ export default function MainLayout() {
       console.log(data);
       // remove department that id is e7a85297-91d4-4f27-a4b2-ff394fe71dd3
       setDepartments(
-        data?.user_getUsers?.result?.items?.map((item: { id: number; fullName: string; userType: "INDIVIDUAL" | "ORGANIZATION" | "CONTRACTOR_OR_CONSULTANT" }) => ({
-          label: item.fullName,
-          id: item.id,
-          type: item.userType,
-        }))
+        data?.user_getUsers?.result?.items?.map(
+          (item: {
+            id: number;
+            fullName: string;
+            userType:
+              | "INDIVIDUAL"
+              | "ORGANIZATION"
+              | "CONTRACTOR_OR_CONSULTANT";
+          }) => ({
+            label: item.fullName,
+            id: item.id,
+            type: item.userType,
+          })
+        )
       );
     },
     onError(error) {
@@ -345,11 +429,18 @@ export default function MainLayout() {
                 alt="logo"
                 style={{
                   position: "absolute",
-                  top: "10%",
+                  // top: "50%",
+                  // left: "65%",
+                  top: "0%",
                   left: "50%",
-                  width: "10%",
-                  transform: "translate(-50%, -50%)",
-                  filter: "drop-shadow(0px 0px 5px rgba(0,0,0,0.5)) contrast(1.5) saturate(0) brightness(10)",
+                  // width: "20%",
+                  width: "15%",
+                  transform: "translate(-50%, 5%)",
+                  // transform: "translate(-50%, -50%)",
+                  filter:
+                    "drop-shadow(0px 0px 5px rgba(0,0,0,0.1)) contrast(1.5) saturate(0) brightness(0)",
+                  // filter:
+                  //   "drop-shadow(0px 0px 5px rgba(0,0,0,0.5)) contrast(1.5) saturate(0) brightness(10)",
                 }}
               />
               <Box
@@ -359,9 +450,14 @@ export default function MainLayout() {
                 alignItems={"center"}
                 sx={{
                   backgroundColor: background,
-                  transform: "translate(-50%, -50%)",
+                  // transform: "translate(0%, -50%)",
+                  // top: "0%",
+                  // right: "0%",
+                  // height: "100%",
+                  // position: "absolute",
+                  transform: "translate(50%, -50%)",
                   top: "50%",
-                  left: "50%",
+                  right: "50%",
                   position: "absolute",
                   borderRadius: "15px",
                 }}
@@ -373,7 +469,7 @@ export default function MainLayout() {
                   xl: "30%",
                 }}
                 height={"max-content"}
-                padding={4}
+                padding={5}
               >
                 <Box
                   display={"flex"}
@@ -387,11 +483,12 @@ export default function MainLayout() {
                   gap={2}
                   sx={{
                     // backgroundColor: secondary,
-                    color: secondary,
+                    // color: secondary,
                     fontSize: "2rem",
                   }}
                 >
-                  <FaBalanceScale />
+                  <FaBalanceScale size="3rem" />
+                  {/* <FaBalanceScale size="5rem" /> */}
                   سامانه هوشمند داوری
                 </Box>
                 <Typography
@@ -425,7 +522,10 @@ export default function MainLayout() {
                         setUser(data.user, data.token, expireDate);
                         localStorage.setItem("token", data.token);
                         setLoginError(undefined);
-                        setIsMailRoom(data.user.parentId === "e7a85297-91d4-4f27-a4b2-ff394fe71dd3");
+                        setIsMailRoom(
+                          data.user.parentId ===
+                            "e7a85297-91d4-4f27-a4b2-ff394fe71dd3"
+                        );
                       }
                     });
                   }}
@@ -447,7 +547,7 @@ export default function MainLayout() {
                         userName: e.target.value,
                       })
                     }
-                    helperText={loginError?.message}
+                    // helperText={loginError?.message}
                     error={loginError ? true : false}
                     value={signInModal.userName}
                     InputProps={{
@@ -457,16 +557,19 @@ export default function MainLayout() {
                     }}
                     sx={{
                       width: "80%",
-                      "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-                        borderRadius: "15px",
-                      },
+                      "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
+                        {
+                          borderRadius: "15px",
+                        },
                     }}
                   />
                   <TextField
                     label="رمز عبور"
                     variant="outlined"
                     autoComplete="password"
-                    type={signInModal.showPassword ? "text" : "password"}
+                    type={
+                      signInModal.showPassword ? "text" : "password"
+                    }
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position="end">
@@ -474,11 +577,16 @@ export default function MainLayout() {
                             onClick={() =>
                               setSignInModal({
                                 ...signInModal,
-                                showPassword: !signInModal.showPassword,
+                                showPassword:
+                                  !signInModal.showPassword,
                               })
                             }
                           >
-                            {!signInModal.showPassword ? <BsEye /> : <BsEyeSlash />}
+                            {!signInModal.showPassword ? (
+                              <BsEye />
+                            ) : (
+                              <BsEyeSlash />
+                            )}
                           </IconButton>
                         </InputAdornment>
                       ),
@@ -498,9 +606,10 @@ export default function MainLayout() {
                     sx={{
                       width: "80%",
                       marginTop: "1rem",
-                      "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-                        borderRadius: "15px",
-                      },
+                      "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
+                        {
+                          borderRadius: "15px",
+                        },
                     }}
                   />
 
@@ -508,7 +617,9 @@ export default function MainLayout() {
                     variant="contained"
                     sx={{
                       marginTop: "1rem",
-                      backgroundColor: error?.message ? red[500] : primary,
+                      backgroundColor: error?.message
+                        ? red[500]
+                        : primary,
                       color: "white",
                       width: "80%",
                       borderRadius: "10px",
@@ -535,7 +646,14 @@ export default function MainLayout() {
                     //     })
                     // }}
                   >
-                    {loading ? <LinearProgress variant="indeterminate" color="secondary" /> : ""}
+                    {loading ? (
+                      <LinearProgress
+                        variant="indeterminate"
+                        color="secondary"
+                      />
+                    ) : (
+                      ""
+                    )}
                     ورود
                   </Button>
                   <Button
@@ -675,17 +793,33 @@ export default function MainLayout() {
               }}
               onClick={() => setMenuOpen(!menuOpen)}
             >
-              <Box display={"flex"} flexDirection={"column"} justifyContent={"center"} alignItems={"center"}>
+              <Box
+                display={"flex"}
+                flexDirection={"column"}
+                justifyContent={"center"}
+                alignItems={"center"}
+              >
                 <Typography
-                  variant={user.userType != "CONTRACTOR_OR_CONSULTANT" ? "subtitle1" : "body1"}
+                  variant={
+                    user.userType != "CONTRACTOR_OR_CONSULTANT"
+                      ? "subtitle1"
+                      : "body1"
+                  }
                   noWrap
                   component="div"
-                  fontSize={user.userType != "CONTRACTOR_OR_CONSULTANT" ? "12px" : "14px"}
+                  fontSize={
+                    user.userType != "CONTRACTOR_OR_CONSULTANT"
+                      ? "12px"
+                      : "14px"
+                  }
                   sx={{
                     flexGrow: 1,
                     color: secondary,
                     marginRight: 2,
-                    display: user.userType === "CONTRACTOR_OR_CONSULTANT" ? "none" : "block",
+                    display:
+                      user.userType === "CONTRACTOR_OR_CONSULTANT"
+                        ? "none"
+                        : "block",
                   }}
                 >
                   {user.userType != "CONTRACTOR_OR_CONSULTANT" &&
@@ -693,10 +827,18 @@ export default function MainLayout() {
                     user.userRoles.map((role, index) => (
                       <span key={role.id}>
                         {convertRoleToPersian(role.roleType)}
-                        {user.userRoles && index !== user.userRoles.length - 1 ? " - " : ""}
+                        {user.userRoles &&
+                        index !== user.userRoles.length - 1
+                          ? " - "
+                          : ""}
                       </span>
                     ))}
-                  {" " + user.userType != "CONTRACTOR_OR_CONSULTANT" && " " +departments.find((item) => item.id === user.parentId)?.label}
+                  {" " + user.userType !=
+                    "CONTRACTOR_OR_CONSULTANT" &&
+                    " " +
+                      departments.find(
+                        (item) => item.id === user.parentId
+                      )?.label}
                 </Typography>
                 <Typography
                   variant="subtitle1"
@@ -889,7 +1031,11 @@ export default function MainLayout() {
                   color: "white",
                 }}
               >
-                {theme.direction === "rtl" ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+                {theme.direction === "rtl" ? (
+                  <ChevronRightIcon />
+                ) : (
+                  <ChevronLeftIcon />
+                )}
               </IconButton>
             </Box>
           </DrawerHeader>
@@ -902,15 +1048,61 @@ export default function MainLayout() {
             }}
           >
             {SideBarMenu.map((item, index) =>
-              user.userType === "CONTRACTOR_OR_CONSULTANT" && item.primary === Titles.adminPanel || isMailRoom && item.primary === Titles.complaints ? null : (
-                <ListItemLink key={index} to={item.to} primary={item.primary} icon={item.icon} hasLink={item.hasLink} hasCollapse={item.hasCollapse} open={open} display={item.mailRoom == isMailRoom ? "block" : (user.userRoles && user.userRoles.some((role) => item.accessNeeded?.includes(role.roleType))) || (isMailRoom && item.accessNeeded.includes("MAIL_ROOM")) ? "block" : "none"}>
-                  {item.children?.map((child: SideBarLinkType, index: number) => (
-                    <ListItemLink key={index} to={child.to && child.to} primary={child.primary} icon={child.icon} hasLink={child.hasLink} hasCollapse={child.hasCollapse} open={open}>
-                      {child.children?.map((subChild: SideBarLinkType, subIndex: number) => (
-                        <ListItemLink key={subIndex} to={subChild.to && subChild.to} primary={subChild.primary} icon={subChild.icon} hasLink={subChild.hasLink} hasCollapse={subChild.hasCollapse} open={open} />
-                      ))}
-                    </ListItemLink>
-                  ))}
+              (user.userType === "CONTRACTOR_OR_CONSULTANT" &&
+                item.primary === Titles.adminPanel) ||
+              (isMailRoom &&
+                item.primary === Titles.complaints) ? null : (
+                <ListItemLink
+                  key={index}
+                  to={item.to}
+                  primary={item.primary}
+                  icon={item.icon}
+                  hasLink={item.hasLink}
+                  hasCollapse={item.hasCollapse}
+                  open={open}
+                  display={
+                    item.mailRoom == isMailRoom
+                      ? "block"
+                      : (user.userRoles &&
+                          user.userRoles.some((role) =>
+                            item.accessNeeded?.includes(role.roleType)
+                          )) ||
+                        (isMailRoom &&
+                          item.accessNeeded.includes("MAIL_ROOM"))
+                      ? "block"
+                      : "none"
+                  }
+                >
+                  {item.children?.map(
+                    (child: SideBarLinkType, index: number) => (
+                      <ListItemLink
+                        key={index}
+                        to={child.to && child.to}
+                        primary={child.primary}
+                        icon={child.icon}
+                        hasLink={child.hasLink}
+                        hasCollapse={child.hasCollapse}
+                        open={open}
+                      >
+                        {child.children?.map(
+                          (
+                            subChild: SideBarLinkType,
+                            subIndex: number
+                          ) => (
+                            <ListItemLink
+                              key={subIndex}
+                              to={subChild.to && subChild.to}
+                              primary={subChild.primary}
+                              icon={subChild.icon}
+                              hasLink={subChild.hasLink}
+                              hasCollapse={subChild.hasCollapse}
+                              open={open}
+                            />
+                          )
+                        )}
+                      </ListItemLink>
+                    )
+                  )}
                 </ListItemLink>
               )
             )}
@@ -950,14 +1142,50 @@ export default function MainLayout() {
           <DrawerHeader />
           <List>
             {SideBarMenu.map((item, index) => (
-              <ListItemLink key={index} to={item.to} primary={item.primary} icon={item.icon} hasLink={item.hasLink} hasCollapse={item.hasCollapse} open={open} display={user.userRoles && user.userRoles.some((role) => item.accessNeeded?.includes(role.roleType)) ? "block" : "none"}>
-                {item.children?.map((child: SideBarLinkType, index) => (
-                  <ListItemLink key={index} to={child.to && child.to} primary={child.primary} icon={child.icon} hasLink={child.hasLink} hasCollapse={child.hasCollapse} open={open}>
-                    {child.children?.map((child: SideBarLinkType, index) => (
-                      <ListItemLink key={index} to={child.to && child.to} primary={child.primary} icon={child.icon} hasLink={child.hasLink} hasCollapse={child.hasCollapse} open={open} />
-                    ))}
-                  </ListItemLink>
-                ))}
+              <ListItemLink
+                key={index}
+                to={item.to}
+                primary={item.primary}
+                icon={item.icon}
+                hasLink={item.hasLink}
+                hasCollapse={item.hasCollapse}
+                open={open}
+                display={
+                  user.userRoles &&
+                  user.userRoles.some((role) =>
+                    item.accessNeeded?.includes(role.roleType)
+                  )
+                    ? "block"
+                    : "none"
+                }
+              >
+                {item.children?.map(
+                  (child: SideBarLinkType, index) => (
+                    <ListItemLink
+                      key={index}
+                      to={child.to && child.to}
+                      primary={child.primary}
+                      icon={child.icon}
+                      hasLink={child.hasLink}
+                      hasCollapse={child.hasCollapse}
+                      open={open}
+                    >
+                      {child.children?.map(
+                        (child: SideBarLinkType, index) => (
+                          <ListItemLink
+                            key={index}
+                            to={child.to && child.to}
+                            primary={child.primary}
+                            icon={child.icon}
+                            hasLink={child.hasLink}
+                            hasCollapse={child.hasCollapse}
+                            open={open}
+                          />
+                        )
+                      )}
+                    </ListItemLink>
+                  )
+                )}
               </ListItemLink>
             ))}
           </List>
@@ -1001,7 +1229,14 @@ export default function MainLayout() {
         isCloseable={true}
         backgroundColor={background}
       >
-        <Box display={"grid"} gridTemplateColumns={"1fr 1fr"} gap={1} width={"100%"} justifyContent={"center"} alignItems={"stretch"}>
+        <Box
+          display={"grid"}
+          gridTemplateColumns={"1fr 1fr"}
+          gap={1}
+          width={"100%"}
+          justifyContent={"center"}
+          alignItems={"stretch"}
+        >
           <TextField
             label={"رمز عبور قبلی"}
             variant={"outlined"}
@@ -1069,8 +1304,8 @@ export default function MainLayout() {
             variant={"contained"}
             sx={{
               // gridColumn: "1/3",
-              backgroundColor: primaryGrey,
-              color: "white",
+              backgroundColor: primary,
+              color: secondaryDark,
               "&:hover": {
                 backgroundColor: Green,
               },
