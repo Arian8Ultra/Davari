@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const getFile = gql`
-  query getFileQuey($id: Int!) {
+  query getFileQuery($id: Int!) {
     fileGallery_getFile(entityId: $id) {
       result {
         id

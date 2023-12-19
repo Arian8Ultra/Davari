@@ -313,10 +313,26 @@ export const GET_ARBITRATION_TERMS_FORM_BY_COMPLAINT_ID = gql`
 `;
 
 
-export const getContractFiles = gql`
-query getContractFilesQuery{
+export const getContractsFiles = gql`
+query getContractsFilesQuery{
   complaintFile_getComplaintFiles{
     result{
+      items{
+        complaintId
+        title
+        description
+        fileGallery{
+          name
+        }
+        id
+      }
+    }
+  }
+}`
+export const getContractFiles = gql`
+query getContractFilesQuery($id:Int!){
+  complaintFile_getComplaintFiles{
+    result(where: {complaintId:{eq:$id}}){
       items{
         complaintId
         title
