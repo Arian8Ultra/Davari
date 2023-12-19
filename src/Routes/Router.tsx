@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-refresh/only-export-components */
 import { lazy } from "react";
@@ -44,6 +45,8 @@ import ContractDetailsPage from "../pages/Contracts/ContractDetailsPage";
 import SignUp from "../pages/Login/SignUp/SignUp";
 import PersonInfo from "../pages/Login/SignUp/PersonInfo";
 import ConfirmUser from "../pages/Login/SignUp/ConfirmUser";
+import FilePage from "../pages/Complaints/Files/FilesPage";
+import CouncilListPage from "../pages/Complaints/CouncilList/CouncilListPage";
 const UpdateContractPage = lazy(
   () => import("../pages/Complaints/AddContract/UpdateContractPage")
 );
@@ -107,6 +110,10 @@ const router = createBrowserRouter(
           path="complaints/:contractId/:complaintId/tablesPage"
           element={<TablesPage />}
         />
+        <Route
+          path="complaints/:complaintId/files"
+          element={<FilePage />}
+        />
 
         <Route path="contracts" element={<Contracts />} />
         <Route path="portal" element={<Protal />} />
@@ -114,6 +121,10 @@ const router = createBrowserRouter(
         <Route
           path="portal/employee_management"
           element={<Protal />}
+        />
+        <Route
+          path="portal/council_List"
+          element={<CouncilListPage />}
         />
         <Route
           path="portal/complain_answers"
@@ -139,7 +150,13 @@ const router = createBrowserRouter(
         <Route path="test" element={<Test />} />
       </Route>
     </Route>
-  )
+  ),
+  {
+    future: {
+      v7_normalizeFormMethod: true,
+    },
+    basename: "/",
+  }
 );
 
 export default router;
