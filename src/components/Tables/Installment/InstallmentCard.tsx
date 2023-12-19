@@ -55,7 +55,7 @@ interface InstallmentCardProps {
     }>
   ) => void;
 }
-export default function AdjustmentStatementCard({
+export default function InstallmentStatementCard({
   installment,
   setNewInstallment,
   setEditMode,

@@ -27,6 +27,7 @@ import {
   RadioGroup,
   TextField,
   Typography,
+  colors,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -57,6 +58,8 @@ import DateButton from "../../../components/DateButton";
 import fehrestbaha from "../../../static/fehrestbaha.json";
 import TimeLine from "../../../components/TimeLine";
 import InstallmentTable from "../../../components/Tables/Installment/InstallmentTable";
+import { convertToPersianDigits } from "../../../functions/Functions";
+import { title } from "process";
 
 const CreateContractPage = () => {
   const user = useUserStore((state) => state.user);
@@ -126,7 +129,7 @@ const CreateContractPage = () => {
     });
   const [contratDetails, setContratDetails] = React.useState<{
     contratTypes: string[];
-    other: boolean;
+    other?: boolean;
     CircularTitle?: string;
     CircularNumber?: string;
     CircularDate?: Date;
@@ -712,6 +715,66 @@ const CreateContractPage = () => {
   //
   //
 
+  const contract_details_items = [
+    {
+      id: 1,
+      title:
+        "موافقتنامه و شرایط عمومی و شرایط خصوصی پیمان‌ها- نشریه شماره ۴۳۱۱ – بخشنامه شماره ۸۴۲/۵۴-۱۰۸۸/۱۰۲ مورخ ۱۳۷۸/۰۳/۰۳",
+      children: [
+        {
+          id: 2,
+          title:
+            "انعقاد پیمان اجرای کارهای ساختمانی به صورت سرجمع- بخشنامه شماره ۹۶/۱۲۹۹۱۸۸ مورخ ۱۳۹۶/۰۵/۰۴",
+        },
+        {
+          id: 3,
+          title:
+            "انعقاد پیمان اجرای کارهای ساختمانی به صورت سرجمع- بخشنامه شماره ۱۰۰/۶۴۰۵ مورخ ۱۳۸۹/۰۲/۰۴",
+        },
+        {
+          id: 4,
+          title:
+            "انعقاد پیمان بر اساس فهرست بهای تجمیع شده راه، باند فرودگاه و زیرسازی راه آهن – شماره ۶۵۶۳۷/۱۰۰ مورخ ۱۳۹۱/۰۸/۱۴",
+        },
+      ],
+    },
+    {
+      id: 5,
+      title:
+        "موافقتنامه و شرایط عمومی همسان قراردادهای خدمات مشاوره - نشریه شماره ۴۳۱۸- بخشنامه شماره ۱۰۵/۸۴۲-۵۴/۲۴۶۰- مورخ ۱۳۷۹/۰۴/۲۹",
+    },
+    {
+      id: 6,
+      title:
+        "موافقتنامه و شرایط عمومی همسان قراردادهای خدمات مشاوره پژوهشی - نشریه شماره ۳۴۱۹- بخشنامه شماره ۲۷۵۳/۵۴-۱۶۷۰/۱۰۲ مورخ ۱۳۷۹/۰۵/۲۴",
+    },
+    {
+      id: 7,
+      title:
+        "موافقتنامه و شرایط عمومی همسان قراردادهای خدمات مدیریت طرح- نشریه شماره ۲۴۱۲۱ مورخ ۱۳۸۰/۰۱/۲۸",
+    },
+    {
+      id: 8,
+      title:
+        "موافقتنامه، پیوست‌ها، شرایط عمومی و شرایط خصوصی پیمان‌های تامین کالا و تجهیزات، ساختمان و نصب به صورت توام (PC)، برای کارهای صنعتی مورخ ۱۸/۱۲/۱۳۸۳",
+    },
+    {
+      id: 9,
+      title:
+        "قرارداد همسان طرح و ساخت (EPC غیر صنعتی)- 85428/101 مورخ ۱۵/۰۵/۱۳۸۴",
+    },
+    {
+      id: 10,
+      title:
+        "موافقت‌نامه مشارکت عمومی- خصوصی (PPP) بخشنامه شماره ۹۳/۱۷۲۸۰۴-مورخ ۲۶/۱۲/۱۳۹۳",
+    },
+    {
+      id: 10,
+      title:
+        "موافقتنامه ساخت، بهره‌برداری، واگذاری (BOT)- نشریه شماره ۴۶۹ مورخ ۲۴/۱۰/۱۳۸۷",
+    },
+  ];
+
   const [createComplaint] = useMutation(CREATE_COMPLAINT, {
     variables: {
       contractId: data?.contract_addContract?.result.id,
@@ -756,14 +819,19 @@ const CreateContractPage = () => {
           borderRadius={"1rem"}
           position={"relative"}
           marginY={"3rem"}
-          paddingX={"25%"}
+          width={"66%"}
+          sx={{
+            background: colors.grey[50],
+            display: stage == 1 ? "grid" : "none",
+          }}
+          marginX={"auto"}
         >
           <Box
             gridColumn={"span 6"}
             borderRadius={"1rem"}
             sx={{
-              position: "sticky",
-              top: 100,
+              position: "absolute",
+              top: "0",
               left: "50%",
               transform: "translateY(-50%) translateX(-50%)",
               background: primary,
@@ -782,6 +850,7 @@ const CreateContractPage = () => {
             variant="outlined"
             sx={{
               gridColumn: "span 6",
+              mt: "50px",
             }}
             value={ContractSubject}
             onChange={(e) => {
@@ -1184,20 +1253,22 @@ const CreateContractPage = () => {
           borderRadius={"1rem"}
           position={"relative"}
           marginY={"3rem"}
-          paddingX={"25%"}
+          width={"66%"}
+          marginX={"auto"}
           sx={{
             opacity: stage == 2 ? "100%" : 0,
             height: stage == 2 ? "max-content" : 0,
             overflow: stage == 2 ? "unset" : "hidden",
             transition: "all 0.2s ease-in-out",
+            background: colors.grey[50],
           }}
         >
           <Box
-            gridColumn={"span 12"}
+            gridColumn={"span 6"}
             borderRadius={"1rem"}
             sx={{
-              position: "sticky",
-              top: 100,
+              position: "absolute",
+              top: "0",
               left: "50%",
               transform: "translateY(-50%) translateX(-50%)",
               background: primary,
@@ -1220,10 +1291,35 @@ const CreateContractPage = () => {
 
     
     */}
+          <Button
+            sx={{
+              color: secondary,
+              backgroundColor: primary,
+              borderRadius: "0.75rem",
+              gridColumn: "span 2",
+              display: stage == 2 ? "flex" : "none",
+              position: "absolute",
+              top: "0",
+              left: "1%",
+              transform: "translateY(-50%)",
+              padding: "0.5rem 1rem",
+              userSelect: "none",
+              width: "max-content",
+              zIndex: 1000,
+            }}
+            onClick={() => {
+              setStage(1);
+            }}
+          >
+            بازگشت به مرحله قبل
+          </Button>
           <FaTypography
             variant="h5"
             gridColumn={"span 12"}
             textAlign={"center"}
+            sx={{
+              mt: "50px",
+            }}
           >
             طرفین قرارداد
           </FaTypography>
@@ -1693,6 +1789,73 @@ const CreateContractPage = () => {
             }
           </FaTypography>
 
+          <TextField
+            onChange={(e) => {
+              setContratDetails({
+                ...contratDetails,
+                contratTypes: [e.target.value],
+              });
+            }}
+            select
+            label={"نوع قرارداد"}
+            sx={{
+              gridColumn: "span 12",
+              display: contratDetails.other ? "none" : "grid",
+            }}
+            SelectProps={{
+              MenuProps: {
+                sx: {
+                  maxHeight: "20rem",
+                },
+              },
+            }}
+          >
+            {contract_details_items.map((item, index) => (
+              <MenuItem key={index} value={item.title}>
+                {item.title}
+              </MenuItem>
+            ))}
+          </TextField>
+          {contract_details_items.find(
+            (item) => item.title === contratDetails.contratTypes?.[0]
+          )?.children && (
+            <TextField
+              label={"نوع قرارداد"}
+              onChange={(e) => {
+                setContratDetails({
+                  ...contratDetails,
+                  // @ts-ignore
+                  contratTypes: [
+                    ...contratDetails.contratTypes,
+                    e.target.value,
+                  ],
+                });
+              }}
+              select
+              sx={{
+                gridColumn: "span 12",
+                display: contratDetails.other ? "none" : "grid",
+              }}
+              SelectProps={{
+                MenuProps: {
+                  sx: {
+                    maxHeight: "20rem",
+                  },
+                },
+              }}
+            >
+              {contract_details_items
+                .find(
+                  (item) =>
+                    item.title === contratDetails.contratTypes?.[0]
+                )
+                ?.children?.map((item, index) => (
+                  <MenuItem key={index} value={item.title}>
+                    {item.title}
+                  </MenuItem>
+                ))}
+            </TextField>
+          )}
           <FormGroup
             sx={{
               gridColumn: "span 12",
@@ -1701,260 +1864,12 @@ const CreateContractPage = () => {
           >
             <FormControlLabel
               control={<Checkbox />}
-              label={
-                <FaTypography>
-                  موافقتنامه و شرایط عمومی و شرایط خصوصی پیمان‌ها-
-                  نشریه شماره ۴۳۱۱ – بخشنامه شماره 842/54-1088/102
-                  مورخ ۱۳۷۸/۰۳/۰۳
-                </FaTypography>
-              }
-              onChange={(e) => {
-                setContratDetails({
-                  ...contratDetails,
-                  // @ts-ignore
-                  contratTypes: e.target.checked
-                    ? // @ts-ignore
-                      [...contratDetails.contratTypes, e.target.value]
-                    : contratDetails &&
-                      contratDetails.contratTypes.filter(
-                        // @ts-ignore
-                        (item) => item !== e.target.value
-                      ),
-                });
-              }}
-            />
-            <FormControlLabel
-              control={<Checkbox />}
-              label={
-                <FaTypography>
-                  انعقاد پیمان اجرای کارهای ساختمانی به صورت سرجمع-
-                  بخشنامه شماره ۹۶/۱۲۹۹۱۸۸ مورخ 1396/05/04
-                </FaTypography>
-              }
-              onChange={(e) => {
-                // @ts-ignore
-                setContratDetails({
-                  ...contratDetails,
-                  // @ts-ignore
-                  contratTypes: e.target.checked
-                    ? // @ts-ignore
-                      [...contratDetails.contratTypes, e.target.value]
-                    : contratDetails &&
-                      contratDetails.contratTypes.filter(
-                        // @ts-ignore
-                        (item) => item !== e.target.value
-                      ),
-                });
-              }}
-            />
-            <FormControlLabel
-              control={<Checkbox />}
-              label={
-                <FaTypography>
-                  انعقاد پیمان اجرای کارهای ساختمانی به صورت سرجمع-
-                  بخشنامه شماره 100/6405 مورخ 1389/02/04
-                </FaTypography>
-              }
-              onChange={(e) => {
-                // @ts-ignore
-                setContratDetails({
-                  ...contratDetails,
-                  // @ts-ignore
-                  contratTypes: e.target.checked
-                    ? // @ts-ignore
-                      [...contratDetails.contratTypes, e.target.value]
-                    : contratDetails &&
-                      contratDetails.contratTypes.filter(
-                        // @ts-ignore
-                        (item) => item !== e.target.value
-                      ),
-                });
-              }}
-            />
-            <FormControlLabel
-              control={<Checkbox />}
-              label={
-                <FaTypography>
-                  انعقاد پیمان بر اساس فهرست بهای تجمیع شده راه، باند
-                  فرودگاه و زیرسازی راه آهن – شماره 65637/100 مورخ
-                  1391/08/14
-                </FaTypography>
-              }
-              onChange={(e) => {
-                // @ts-ignore
-                setContratDetails({
-                  ...contratDetails,
-                  // @ts-ignore
-                  contratTypes: e.target.checked
-                    ? // @ts-ignore
-                      [...contratDetails.contratTypes, e.target.value]
-                    : contratDetails &&
-                      contratDetails.contratTypes.filter(
-                        // @ts-ignore
-                        (item) => item !== e.target.value
-                      ),
-                });
-              }}
-            />
-            <FormControlLabel
-              control={<Checkbox />}
-              label="	موافقتنامه و شرایط عمومی همسان قراردادهای خدمات مشاوره - نشریه شماره ۴۳۱۸- بخشنامه شماره ۱۰۵/۸۴۲-۵۴/۲۴۶۰- مورخ ۱۳۷۹/۰۴/۲۹ "
-              onChange={(e) => {
-                // @ts-ignore
-                setContratDetails({
-                  ...contratDetails,
-                  // @ts-ignore
-                  contratTypes: e.target.checked
-                    ? // @ts-ignore
-                      [...contratDetails.contratTypes, e.target.value]
-                    : contratDetails &&
-                      contratDetails.contratTypes.filter(
-                        // @ts-ignore
-                        (item) => item !== e.target.value
-                      ),
-                });
-              }}
-            />
-            <FormControlLabel
-              control={<Checkbox />}
-              label="	موافقتنامه و شرایط عمومی همسان قراردادهای خدمات مشاوره پژوهشی - نشریه شماره 3419- بخشنامه شماره 2753/54-1670/102 مورخ ۱۳۷۹/۰5/۲۴ "
-              onChange={(e) => {
-                // @ts-ignore
-                setContratDetails({
-                  ...contratDetails,
-                  // @ts-ignore
-                  contratTypes: e.target.checked
-                    ? // @ts-ignore
-                      [...contratDetails.contratTypes, e.target.value]
-                    : contratDetails &&
-                      contratDetails.contratTypes.filter(
-                        // @ts-ignore
-                        (item) => item !== e.target.value
-                      ),
-                });
-              }}
-            />
-            <FormControlLabel
-              control={<Checkbox />}
-              label="	موافقتنامه و شرایط عمومی همسان قراردادهای خدمات مدیریت طرح- نشریه شماره ۲۴۱۲۱ مورخ ۱۳۸۰/۰۱/۲۸ "
-              onChange={(e) => {
-                // @ts-ignore
-                setContratDetails({
-                  ...contratDetails,
-                  // @ts-ignore
-                  contratTypes: e.target.checked
-                    ? // @ts-ignore
-                      [...contratDetails.contratTypes, e.target.value]
-                    : contratDetails &&
-                      contratDetails.contratTypes.filter(
-                        // @ts-ignore
-                        (item) => item !== e.target.value
-                      ),
-                });
-              }}
-            />
-            <FormControlLabel
-              control={<Checkbox />}
-              label="	موافقتنامه، پیوست‌ها، شرایط عمومی و شرایط خصوصی پیمان‌های مهندسی، تأمین کالا و تجهیزات، ساختمان و نصب به صورت توأم (EPC) برای کارهای صنعتی - نشریه شماره ۵۴۹۰ مورخ ۰۱/۰۳/۱۳۸۱ "
-              onChange={(e) => {
-                // @ts-ignore
-                setContratDetails({
-                  ...contratDetails,
-                  // @ts-ignore
-                  contratTypes: e.target.checked
-                    ? // @ts-ignore
-                      [...contratDetails.contratTypes, e.target.value]
-                    : contratDetails &&
-                      contratDetails.contratTypes.filter(
-                        // @ts-ignore
-                        (item) => item !== e.target.value
-                      ),
-                });
-              }}
-            />
-            <FormControlLabel
-              control={<Checkbox />}
-              label="	موافقتنامه، پیوست‌ها، شرایط عمومی و شرایط خصوصی پیمان‌های تامین کالا و تجهیزات، ساختمان و نصب به صورت توام  (PC)، برای کارهای صنعتی مورخ  ۱۸/۱۲/۱۳۸۳ "
-              onChange={(e) => {
-                // @ts-ignore
-                setContratDetails({
-                  ...contratDetails,
-                  // @ts-ignore
-                  contratTypes: e.target.checked
-                    ? // @ts-ignore
-                      [...contratDetails.contratTypes, e.target.value]
-                    : contratDetails &&
-                      contratDetails.contratTypes.filter(
-                        // @ts-ignore
-                        (item) => item !== e.target.value
-                      ),
-                });
-              }}
-            />
-            <FormControlLabel
-              control={<Checkbox />}
-              label="	قرارداد همسان طرح و ساخت (EPC غیر صنعتی)- 85428/101 مورخ ۱۵/۰۵/۱۳۸۴ "
-              onChange={(e) => {
-                // @ts-ignore
-                setContratDetails({
-                  ...contratDetails,
-                  // @ts-ignore
-                  contratTypes: e.target.checked
-                    ? // @ts-ignore
-                      [...contratDetails.contratTypes, e.target.value]
-                    : contratDetails &&
-                      contratDetails.contratTypes.filter(
-                        // @ts-ignore
-                        (item) => item !== e.target.value
-                      ),
-                });
-              }}
-            />
-            <FormControlLabel
-              control={<Checkbox />}
-              label="	موافقت‌نامه مشارکت عمومی- خصوصی (PPP) بخشنامه شماره ۹۳/۱۷۲۸۰۴-مورخ ۲۶/۱۲/۱۳۹۳ "
-              onChange={(e) => {
-                // @ts-ignore
-                setContratDetails({
-                  ...contratDetails,
-                  // @ts-ignore
-                  contratTypes: e.target.checked
-                    ? // @ts-ignore
-                      [...contratDetails.contratTypes, e.target.value]
-                    : contratDetails &&
-                      contratDetails.contratTypes.filter(
-                        // @ts-ignore
-                        (item) => item !== e.target.value
-                      ),
-                });
-              }}
-            />
-            <FormControlLabel
-              control={<Checkbox />}
-              label="	موافقتنامه ساخت، بهره‌برداری، واگذاری  (BOT)- نشریه شماره ۴۶۹ مورخ ۲۴/۱۰/۱۳۸۷ "
-              onChange={(e) => {
-                // @ts-ignore
-                setContratDetails({
-                  ...contratDetails,
-                  // @ts-ignore
-                  contratTypes: e.target.checked
-                    ? // @ts-ignore
-                      [...contratDetails.contratTypes, e.target.value]
-                    : contratDetails &&
-                      contratDetails.contratTypes.filter(
-                        // @ts-ignore
-                        (item) => item !== e.target.value
-                      ),
-                });
-              }}
-            />
-            <FormControlLabel
-              control={<Checkbox />}
               label="   سایر "
               onChange={(e) => {
                 // @ts-ignore
                 setContratDetails({
                   ...contratDetails,
+                  contratTypes: [""],
                   // @ts-ignore
                   other: e.target.checked,
                 });
@@ -3394,7 +3309,7 @@ const CreateContractPage = () => {
               <FaTypography variant="body1">
                 برنامه های زمان‏بندی اولیه و اصلاحی ابلاغ شده
               </FaTypography>
-              <FileBox />
+              <FileBox fileTypes={["pdf","jpeg"]}/>
             </Box>
             <Box
               display={"flex"}
@@ -3405,7 +3320,7 @@ const CreateContractPage = () => {
                 گزارش تهیه شده توسط پیمانکار (به همراه کلیه مستندات و
                 پیوست‏ها)
               </FaTypography>
-              <FileBox />
+              <FileBox fileTypes={["pdf","jpeg"]}/>
             </Box>
             <Box
               display={"flex"}
@@ -3415,7 +3330,7 @@ const CreateContractPage = () => {
               <FaTypography variant="body1">
                 گزارش رسیدگی به تاخیرات توسط مهندس مشاور
               </FaTypography>
-              <FileBox />
+              <FileBox fileTypes={["pdf","jpeg"]}/>
             </Box>
             <Box
               display={"flex"}
@@ -3426,7 +3341,7 @@ const CreateContractPage = () => {
                 مستندات ابلاغ نتایج رسیدگی به تاخیرات به پیمانکار توسط
                 کارفرما
               </FaTypography>
-              <FileBox />
+              <FileBox fileTypes={["pdf","jpeg"]}/>
             </Box>
           </List>
 

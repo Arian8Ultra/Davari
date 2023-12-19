@@ -202,7 +202,7 @@ const AdjustmentStatementTable = (props: Props) => {
         }
       }
     }
-  }, [addAdjustmentStatementTable, contractId, data, refetch, user.id, user.parentId]);
+  }, [data, refetch]);
   //   if (data?.items?.length > 0 && loading == false) {
   //     console.log("GET_AdjustmentStatement_TABLE_BY_CONTRACT_ID", data);
   //     setAdjustmentStatements(data?.items[0]?.AdjustmentStatements);

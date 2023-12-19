@@ -159,7 +159,7 @@ const ArgumentHeader = (props: Props) => {
                 color: "white",
               }}
             >
-              مبلغ پیشنهادی خواهان(ریال)
+              مبلغ ادعا خواهان(ریال)
             </TableCell>
             <TableCell
               sx={{

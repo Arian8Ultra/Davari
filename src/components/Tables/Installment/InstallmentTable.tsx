@@ -45,7 +45,7 @@ import DateButton from "../../DateButton";
 import FaTextField from "../../FaComponents/FaTextField";
 import FaTypography from "../../FaComponents/FaTypography";
 import NewModal from "../../Modals";
-import AdjustmentStatementTable from "./InstallmentCard";
+import InstallmentStatementCard from "./InstallmentCard";
 
 interface Props extends TableContainerProps {
   InstallmentTableId?: number;
@@ -128,6 +128,8 @@ const InstallmentTable = (props: Props) => {
   );
 
   React.useEffect(() => {
+    console.log("USE EFFECT >>>>>>>>>>>>>>>>>>>>>");
+    
     console.log("GET_INSTALLMENT_TABLE_BY_CONTRACT_ID",data);
     const userType = data?.items[0]?.accuserDepartmentUserId ==
     user.parentId
@@ -144,7 +146,7 @@ const InstallmentTable = (props: Props) => {
       console.warn("userType",userType);
       
       
-      setInstallments(data?.items[0]?.installments.filter((installment:Installment)=> installment.filledBy == userType ));
+      setInstallments(data?.items[0]?.installments);
       // setNewInstallment({
       //   ...newInstallment,
       //   installmentTableId: data?.items[0]?.id,
@@ -174,7 +176,8 @@ const InstallmentTable = (props: Props) => {
             },
           },
         });
-      } else {
+      } 
+      else {
         if (data?.items?.length == 0) {
           console.log("adding");
           void addInstallmentTable({
@@ -206,7 +209,7 @@ const InstallmentTable = (props: Props) => {
       //   },
       // });
     }
-  }, [addInstallmentTable, contractId, data, refetch, user.id, user.parentId]);
+  }, [data]);
 
   const handleEmptyFields = () => {
     if (!newInstallment.title) {
@@ -474,7 +477,7 @@ const InstallmentTable = (props: Props) => {
           {installments &&
             installments.length > 0 &&
             installments.map((installment) => (
-              <AdjustmentStatementTable
+              <InstallmentStatementCard
                 installment={installment}
                 refetch={refetch}
                 setEditMode={setEditMode}

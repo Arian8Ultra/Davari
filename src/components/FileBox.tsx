@@ -26,11 +26,13 @@ import { Red } from "../theme/color";
 interface Props extends ButtonProps {
   setFiles?: (files: File[]) => void;
   files?: File[];
+  fileTypes?: string[];
   // multiple?: boolean;
 }
 const FileBox = ({
   setFiles,
   files,
+  fileTypes,
   // multiple = false,
   ...props
 }: Props) => {
@@ -55,6 +57,9 @@ const FileBox = ({
       component="label"
       sx={{
         position: "relative",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
       }}
       {...props}
     >
@@ -63,6 +68,8 @@ const FileBox = ({
         multiple={true}
         onChange={handleFile}
         hidden
+        // just accept image and pdf
+        accept={"image/*,application/pdf"}
         // style={{
         //   position: "absolute",
         //   top: 0,
@@ -127,6 +134,7 @@ const FileBox = ({
             </IconButton>
           </Box>
         )}
+        {fileName == "" && fileTypes?.join(",")}
       </Box>
     </Button>
   );

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
@@ -39,6 +40,8 @@ import { QueryWrapper } from "../../../GraphQL/QueryWrapper";
 import { MutationWrapper } from "../../../GraphQL/MutationWrapper";
 import { newStates, newStatesObj } from "../../../static/States";
 import TimeLine from "../../../components/TimeLine";
+// @ts-ignore
+import {API_FILE_SHIVENAME} from "../../../../config";
 
 const AddComplaint = () => {
   const navigate = useNavigate();
@@ -704,12 +707,14 @@ const AddComplaint = () => {
         />
 
         <Button
-          variant="contained"
+          variant="text"
           sx={{
             gridColumn: "10 / span 3",
             width: "max-content",
             justifySelf: "center",
+            textDecoration: "underline",
           }}
+          href={`${API_FILE_SHIVENAME}`}
         >
           دانلود شیوه نامه داوری شورای عالی فنی
         </Button>

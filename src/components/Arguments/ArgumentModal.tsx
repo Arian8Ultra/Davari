@@ -280,6 +280,7 @@ const ArgumentModal = (props: Props) => {
                   Files: files,
                 });
               }}
+              fileTypes={["pdf","jpeg"]}
               files={Argument?.Files}
             >
               آپلود مستندات
@@ -433,6 +434,7 @@ const ArgumentModal = (props: Props) => {
                 });
               }}
               files={Argument?.Files}
+              fileTypes={["pdf","jpeg"]}
             >
               آپلود مستندات
             </FileBox>
@@ -594,6 +596,7 @@ const ArgumentModal = (props: Props) => {
                 });
               }}
               files={Argument?.Files}
+              fileTypes={["pdf","jpeg"]}
             >
               آپلود مستندات
             </FileBox>

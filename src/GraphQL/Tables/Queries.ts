@@ -321,7 +321,7 @@ export const GET_WORK_CONDITION_STATEMENT_TABLE = gql`
 `;
 
 export const GET_WORK_CONDITION_STATEMENT_TABLE_BY_CONTRACT_ID = gql`
-  query GetWorkConditionStatementTable($id: Int!) {
+  query GetWorkConditionStatementTableByID($id: Int!) {
     workConditionStatementTable_getWorkConditionStatementTables {
       result(where: { contractId: { eq: $id } }, take: 20000) {
         items {

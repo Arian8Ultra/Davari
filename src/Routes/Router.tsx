@@ -41,6 +41,9 @@ import ContractPage from "../pages/Contracts/ContractPage";
 import UpdateContractAccuserPage from "../pages/Complaints/AddContract/UpdateContractAccuserPage";
 import TablesPage from "../pages/Complaints/Tabels/TablesPage";
 import ContractDetailsPage from "../pages/Contracts/ContractDetailsPage";
+import SignUp from "../pages/Login/SignUp/SignUp";
+import PersonInfo from "../pages/Login/SignUp/PersonInfo";
+import ConfirmUser from "../pages/Login/SignUp/ConfirmUser";
 const UpdateContractPage = lazy(
   () => import("../pages/Complaints/AddContract/UpdateContractPage")
 );
@@ -59,6 +62,23 @@ const router = createBrowserRouter(
           path="test"
           element={<Test />}
         />
+        <Route
+          path="login"
+          element={<Test />}
+        />
+        <Route
+          path="signUp"
+          element={<SignUp />}
+        >
+          <Route
+            path=""
+            element={<PersonInfo />}
+          />
+          <Route
+            path=":userName/:password"
+            element={<ConfirmUser />}
+          />
+        </Route>
         <Route
           path="complaints/createContractPage"
           element={<CreateContractPage />}

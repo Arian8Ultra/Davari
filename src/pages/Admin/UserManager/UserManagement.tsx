@@ -121,10 +121,10 @@ const UserManagement = () => {
         paddingY={1}
         gap={1}
       >
-        {/* <Button
+        <Button
           variant="contained"
           endIcon={<BsPersonAdd />}
-          onClick={() => [setAddModal({ ...addModal, open: true })]}
+          href="/signUp"
           sx={{
             borderRadius: 2,
             backgroundColor: Green,
@@ -140,7 +140,7 @@ const UserManagement = () => {
           }}
         >
           افزودن کاربر
-        </Button> */}
+        </Button>
         {/* <Button
           variant="contained"
           endIcon={<BsPersonAdd />}
@@ -235,6 +235,8 @@ const UserManagement = () => {
           افزودن دستگاه
         </Button>
       </Box>
+
+
       <UserList />
 
       <NewModal

@@ -216,7 +216,7 @@ export const UPDATE_CONTRACT_BY_ACCUSER = gql`
 `;
 
 export const UPDATE_CONTRACT_BY_EXPERT = gql`
-  mutation UPDATE_CONTRACT_BY_ACCUSED(
+  mutation UPDATE_CONTRACT_BY_EXPERT(
     $isExecutive: Boolean!
     $id: Int!
   ) {

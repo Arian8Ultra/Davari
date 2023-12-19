@@ -100,6 +100,7 @@ export const CREATE_INSTALLMENT = gql`
         date: $date
         registrarType: $registrarType
         title: $title
+        
       }
     ) {
       result {

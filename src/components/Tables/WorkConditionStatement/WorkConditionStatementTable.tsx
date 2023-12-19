@@ -134,14 +134,9 @@ const WorkConditionStatementTable = (props: Props) => {
     : "ACCUSED"
     console.warn("userType",userType);
 
-    if (data?.items?.length > 0) {
+    if (data?.items?.length >0) {
       console.log("TestNew", data);
       setWorkConditionStatements(data?.items[0]?.workConditionStatements.filter((workConditionStatement:WorkConditionStatement)=> workConditionStatement.filledBy == userType));
-      // setWorkConditionStatements(data?.items[0]?.WorkConditionStatements && data?.items[0]?.WorkConditionStatements);
-      // setNewInstallment({
-      //   ...newInstallment,
-      //   installmentTableId: data?.items[0]?.id,
-      // })
 
       setTableId(data?.items[0]?.id);
     } else {
@@ -180,7 +175,7 @@ const WorkConditionStatementTable = (props: Props) => {
         }
       }
     }
-  }, [addWorkConditionStatementTable, contractId, data, loading, refetch, user.id, user.parentId]);
+  }, [data]);
   //   if (data?.items?.length > 0 && loading == false) {
   //     console.log("GET_WorkConditionStatement_TABLE_BY_CONTRACT_ID", data);
   //     setWorkConditionStatements(data?.items[0]?.WorkConditionStatements);
