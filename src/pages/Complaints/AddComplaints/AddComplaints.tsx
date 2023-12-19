@@ -182,7 +182,7 @@ const AddComplaint = () => {
   });
   return (
     <>
-      <BackButton to={`/complaints/${contractId}/${complaintId}/UpdateContractAccuserPage`} label=" و ویرایش"/>
+      <BackButton to={`/complaints/${contractId}/${complaintId}/tablesPage`} label=" و ویرایش"/>
       <TimeLine stage={4} />
       <Box
         display={"grid"}

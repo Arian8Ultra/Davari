@@ -2,18 +2,10 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import { useQuery } from "@apollo/client";
-import React, { useEffect, useState } from "react";
-import { GET_ALL_ORGANIZATION_USERS } from "../../GraphQL/Users/Queries";
-import { GET_ARBITRATION_TERMS_FORM_BY_COMPLAINT_ID } from "../../GraphQL/Complaints/Queries";
-import { QueryWrapper } from "../../GraphQL/QueryWrapper";
-import { useNavigate, useParams } from "react-router-dom";
-import { ContractSmall } from "../../GraphQL/Contracts/Mutations";
-import { GET_CONTRACT } from "../../GraphQL/Contracts/Queries";
-import BackButton from "../../components/BackButton";
-import { primary, secondary } from "../../theme/color";
+import { useMutation, useQuery } from "@apollo/client";
 import {
   Box,
+  Button,
   Table,
   TableBody,
   TableCell,
@@ -21,7 +13,29 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import FaTypography from "../../components/FaComponents/FaTypography";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { UPDATE_COMPLAINT } from "../../GraphQL/Complaints/Mutations";
+import { GET_ARBITRATION_TERMS_FORM_BY_COMPLAINT_ID } from "../../GraphQL/Complaints/Queries";
+import {
+  ContractSmall,
+  UPDATE_CONTRACT_BY_EXPERT,
+} from "../../GraphQL/Contracts/Mutations";
+import { GET_CONTRACT } from "../../GraphQL/Contracts/Queries";
+import { QueryWrapper } from "../../GraphQL/QueryWrapper";
+import { GET_ALL_ORGANIZATION_USERS } from "../../GraphQL/Users/Queries";
+import BackButton from "../../components/BackButton";
+import { newStatesObj } from "../../static/States";
+import states from "../../static/states.json";
+import {
+  Green,
+  GreenLight,
+  Red,
+  RedLight,
+  primary,
+  secondary,
+} from "../../theme/color";
+import { Cancel, CheckBox } from "@mui/icons-material";
 
 const ContractDetailsPage = () => {
   const { contractId, complaintId } = useParams<{
@@ -168,6 +182,24 @@ const ContractDetailsPage = () => {
     "قرار عدم صلاحیت (استماع) توسط مراجع قضایی صادر شده است.",
   ];
 
+  const [updateByExpert] = useMutation(UPDATE_CONTRACT_BY_EXPERT, {
+    variables: {
+      isExecutive: isApproved,
+      id: contractId ? parseInt(contractId) : undefined,
+    },
+  });
+
+  const [updateCompaint] = useMutation(UPDATE_COMPLAINT, {
+    variables: {
+      id: complaintId ? parseInt(complaintId) : undefined,
+      complaintState: states.AccuserApprovedArguments.cap,
+    },
+    onCompleted(data) {
+      console.log(data);
+      alert("ثبت شد");
+    },
+  });
+
   return (
     <>
       <BackButton to="/complaints" />
@@ -177,20 +209,25 @@ const ContractDetailsPage = () => {
         alignItems={"center"}
         justifyContent={"center"}
         gap={2}
+        width={'66%'}
+        marginX={'auto'}
         // padding={"2rem"}
         // paddingTop={"0"}
         border={`2px solid ${secondary}`}
-        borderRadius={"1rem"}
+        borderRadius={"0.5rem"}
         position={"relative"}
         marginY={"3rem"}
+        padding={'-1px'}
         // paddingX={"25%"}
       >
         <TableContainer
           sx={{
             gridColumn: "1 / span 12",
+            m:0,
             // outline: "2px solid #000",
             // change the table head background color
-            borderRadius: "1rem",
+            borderRadius: "0.5rem",
+            // border:'none',
             "& .MuiTableCell-head": {
               backgroundColor: secondary,
               color: primary,
@@ -857,6 +894,101 @@ const ContractDetailsPage = () => {
             </TableBody>
           </Table>
         </TableContainer>
+      </Box>
+      <Box
+        gridColumn={"span 12"}
+        display={"grid"}
+        gridTemplateColumns={"1fr 1fr"}
+        justifyContent={'center'}
+        alignItems={"center"}
+        gap={"2rem"}
+        my={'2rem'}
+      >
+        <Button
+          variant="contained"
+          sx={{
+            backgroundColor: Red,
+            color: "white",
+            width:'max-content',
+            justifySelf:'end',
+            "&:hover": {
+              backgroundColor: RedLight,
+              color: Red,
+            },
+          }}
+          endIcon={
+            <Cancel/>
+          }
+          onClick={() => {
+            void updateByExpert({
+              variables: {
+                isExecutive: false,
+                id: contractId ? parseInt(contractId) : undefined,
+              },
+              onCompleted(data, clientOptions) {
+                void updateCompaint({
+                  variables: {
+                    complaintState:
+                      newStatesObj.notAcceptedForBeingConstructive
+                        .cap,
+                    id: complaintId
+                      ? parseInt(complaintId)
+                      : undefined,
+                  },
+                  onCompleted(data, clientOptions) {
+                    console.log(data);
+                    alert("ثبت شد");
+                    navigate("/portal");
+                  },
+                });
+              },
+            });
+          }}
+        >
+          عدم تاییدعمرانی بودن
+        </Button>
+
+        <Button
+          variant="contained"
+          sx={{
+            backgroundColor: Green,
+            color: "white",
+            width:'max-content',
+            "&:hover": {
+              backgroundColor: GreenLight,
+              color: Green,
+            },
+          }}
+          endIcon={
+            <CheckBox/>
+          }
+          onClick={() => {
+            void updateByExpert({
+              variables: {
+                isExecutive: true,
+                id: contractId ? parseInt(contractId) : undefined,
+              },
+              onCompleted(data, clientOptions) {
+                void updateCompaint({
+                  variables: {
+                    complaintState:
+                      newStatesObj.acceptedForBeingConstructive.cap,
+                    id: complaintId
+                      ? parseInt(complaintId)
+                      : undefined,
+                  },
+                  onCompleted(data, clientOptions) {
+                    console.log(data);
+                    alert("ثبت شد");
+                    navigate("/portal");
+                  },
+                });
+              },
+            });
+          }}
+        >
+          تایید عمرانی بودن
+        </Button>
       </Box>
     </>
   );

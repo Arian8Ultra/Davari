@@ -312,6 +312,26 @@ export const GET_ARBITRATION_TERMS_FORM_BY_COMPLAINT_ID = gql`
   }
 `;
 
+
+export const getContractFiles = gql`
+query getContractFilesQuery{
+  complaintFile_getComplaintFiles{
+    result{
+      items{
+        complaintId
+        title
+        description
+        fileGallery{
+          name
+        }
+        id
+      }
+    }
+  }
+}`
+
+
+
 export type Complaint = {
   userId: number;
   id: number;
