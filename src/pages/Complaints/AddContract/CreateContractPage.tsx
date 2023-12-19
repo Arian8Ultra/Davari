@@ -736,6 +736,11 @@ const CreateContractPage = () => {
           title:
             "انعقاد پیمان بر اساس فهرست بهای تجمیع شده راه، باند فرودگاه و زیرسازی راه آهن – شماره ۶۵۶۳۷/۱۰۰ مورخ ۱۳۹۱/۰۸/۱۴",
         },
+        {
+          id: 0,
+          title:
+            "هیچکدام",
+        },
       ],
     },
     {
@@ -1820,7 +1825,7 @@ const CreateContractPage = () => {
             (item) => item.title === contratDetails.contratTypes?.[0]
           )?.children && (
             <TextField
-              label={"نوع قرارداد"}
+              label={"نوع قرارداد به صورت خاص"}
               onChange={(e) => {
                 setContratDetails({
                   ...contratDetails,

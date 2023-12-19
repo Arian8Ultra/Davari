@@ -230,9 +230,11 @@ const PersonInfo = () => {
                   gender: res?.gender,
                 }));
               } else {
+                
                 setErrorMessage(
                   "شماره تلفن وارد شده معتبر نیست یا برای این کد ملی نمیباشد"
                 );
+
               }
               console.log(res);
             });
