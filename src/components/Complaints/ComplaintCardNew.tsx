@@ -59,11 +59,12 @@ import {
   GET_USER_QUERIABLE,
 } from "../../GraphQL/Users/Queries";
 import { useUserStore } from "../../Context/UserStore";
+import { FileOpenOutlined } from "@mui/icons-material";
 interface Props {
   id: number;
   complaintId?: number;
   contractId?: number;
-  contractNumber?:string;
+  contractNumber?: string;
   date?: string;
   acussed?: string;
   acussedId?: string;
@@ -78,8 +79,9 @@ interface Props {
     | "assigned"
     | "chief"
     | "mainRoomExpert"
-    | 'all';
+    | "all";
   departmentId?: string;
+  isPortal?: boolean;
   refetch?: () => void;
 }
 const ComplaintCardNew = (props: Props) => {
@@ -472,90 +474,90 @@ const ComplaintCardNew = (props: Props) => {
 
       case newStatesObj.waitingForAccusedToRegisterContract.cap:
         if (props.type == "accused") {
-          if(user.userType == "INDIVIDUAL")
-          return (
-            <Box
-              display={"grid"}
-              gridTemplateColumns={"repeat(2,1fr)"}
-              mt={"1rem"}
-              gap={"6rem"}
-            >
-              <Button
-                sx={{
-                  borderRadius: "0.5rem",
-                  backgroundColor: Red,
-                  color: "white",
-                  "&:hover": {
-                    backgroundColor: red[100],
-                    color: Red,
-                  },
-                }}
-                onClick={handleClose}
-              >
-                انصراف
-              </Button>
-              <Button
-                sx={{
-                  borderRadius: "0.5rem",
-                  backgroundColor: Green,
-                  color: "white",
-                  "&:hover": {
-                    backgroundColor: GreenLight,
-                    color: Green,
-                  },
-                }}
-                onClick={() => {
-                  setAddModal({
-                    open: true,
-                  });
-                }}
-              >
-                ارسال درخواست داوری به کارشناس
-              </Button>
-            </Box>
-          );
-          else{
-            return(
+          if (user.userType == "INDIVIDUAL")
+            return (
               <Box
-              display={"grid"}
-              gridTemplateColumns={"repeat(2,1fr)"}
-              mt={"1rem"}
-              gap={"6rem"}
-            >
-              <Button
-                sx={{
-                  borderRadius: "0.5rem",
-                  backgroundColor: Red,
-                  color: "white",
-                  "&:hover": {
-                    backgroundColor: red[100],
-                    color: Red,
-                  },
-                }}
-                onClick={handleClose}
+                display={"grid"}
+                gridTemplateColumns={"repeat(2,1fr)"}
+                mt={"1rem"}
+                gap={"6rem"}
               >
-                انصراف
-              </Button>
-              <Button
-                sx={{
-                  borderRadius: "0.5rem",
-                  backgroundColor: Green,
-                  color: "white",
-                  "&:hover": {
-                    backgroundColor: GreenLight,
-                    color: Green,
-                  },
-                }}
-                onClick={() => {
-                  navigate(
-                    `/complaints/${props.contractId}/${props.id}/UpdateContractPage`
-                  );
-                }}
+                <Button
+                  sx={{
+                    borderRadius: "0.5rem",
+                    backgroundColor: Red,
+                    color: "white",
+                    "&:hover": {
+                      backgroundColor: red[100],
+                      color: Red,
+                    },
+                  }}
+                  onClick={handleClose}
+                >
+                  انصراف
+                </Button>
+                <Button
+                  sx={{
+                    borderRadius: "0.5rem",
+                    backgroundColor: Green,
+                    color: "white",
+                    "&:hover": {
+                      backgroundColor: GreenLight,
+                      color: Green,
+                    },
+                  }}
+                  onClick={() => {
+                    setAddModal({
+                      open: true,
+                    });
+                  }}
+                >
+                  ارسال درخواست داوری به کارشناس
+                </Button>
+              </Box>
+            );
+          else {
+            return (
+              <Box
+                display={"grid"}
+                gridTemplateColumns={"repeat(2,1fr)"}
+                mt={"1rem"}
+                gap={"6rem"}
               >
-                پاسخ به درخواست داوری
-              </Button>
-            </Box>
-            )
+                <Button
+                  sx={{
+                    borderRadius: "0.5rem",
+                    backgroundColor: Red,
+                    color: "white",
+                    "&:hover": {
+                      backgroundColor: red[100],
+                      color: Red,
+                    },
+                  }}
+                  onClick={handleClose}
+                >
+                  انصراف
+                </Button>
+                <Button
+                  sx={{
+                    borderRadius: "0.5rem",
+                    backgroundColor: Green,
+                    color: "white",
+                    "&:hover": {
+                      backgroundColor: GreenLight,
+                      color: Green,
+                    },
+                  }}
+                  onClick={() => {
+                    navigate(
+                      `/complaints/${props.contractId}/${props.id}/UpdateContractPage`
+                    );
+                  }}
+                >
+                  پاسخ به درخواست داوری
+                </Button>
+              </Box>
+            );
           }
         } else if (props.type == "assigned") {
           return (
@@ -1056,8 +1058,7 @@ const ComplaintCardNew = (props: Props) => {
             </Button>
           </Box>
         );
-      case newStatesObj
-        .acceptedForBeingConstructive.cap:
+      case newStatesObj.acceptedForBeingConstructive.cap:
         if (
           user.parentId == props.acusserId ||
           user.parentId == props.acusser ||
@@ -1099,9 +1100,7 @@ const ComplaintCardNew = (props: Props) => {
             display={
               props.type == "mainRoomExpert" &&
               props.state ==
-                newStatesObj
-                  .acceptedForBeingConstructive
-                  .cap
+                newStatesObj.acceptedForBeingConstructive.cap
                 ? "grid"
                 : "none"
             }
@@ -1184,7 +1183,7 @@ const ComplaintCardNew = (props: Props) => {
                 ? "grid"
                 : "none"
             }
-            gridTemplateColumns={"repeat(2,1fr)"}
+            gridTemplateColumns={"repeat(3,1fr)"}
             mt={"1rem"}
             gap={"6rem"}
           >
@@ -1324,7 +1323,8 @@ const ComplaintCardNew = (props: Props) => {
           شماره درخواست :{convertToPersianDigits(props.id)}
         </Typography>
         <Typography>
-          شماره قرارداد :{convertToPersianDigits(props.contractNumber)}
+          شماره قرارداد :
+          {convertToPersianDigits(props.contractNumber)}
         </Typography>
         <Typography>
           خواهان : {accuser?.user_getUser?.result?.fullName}
@@ -1426,6 +1426,37 @@ const ComplaintCardNew = (props: Props) => {
         }}
       >
         <Box width={"100%"}>
+          <Box display={"flex"} justifyContent={"flex-end"} m={1}>
+            {props.isPortal && (
+              <Button
+                sx={{
+                  borderRadius: "0.5rem",
+                  backgroundColor: grey[700],
+                  color: "white",
+                  "&:hover": {
+                    backgroundColor: grey[600],
+                    color: "white",
+                  },
+                }}
+                onClick={() => {
+                  navigate(
+                    // complaints/:contractId/:complaintId/addArguements/:state
+                    `/complaints/${props.id}/files`,
+                    {
+                      state: {
+                        complaintId: props.id,
+                      },
+                    }
+                  );
+                }}
+                endIcon={
+                  <FileOpenOutlined/>
+                }
+              >
+                مشاهده نامه ها
+              </Button>
+            )}
+          </Box>
           <Box sx={style}>
             <TableContainer>
               <Table>

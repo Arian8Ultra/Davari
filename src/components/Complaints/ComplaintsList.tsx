@@ -296,6 +296,7 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
                   acussed={complaint?.assignedUser?.userName}
                   date={complaint?.createdDate}
                   contractId={complaint?.contractId}
+                  isPortal={true}
                   acussedId={String(
                     complaint?.contract?.accusedDepartmentUserId
                   )}
@@ -319,6 +320,7 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
                   acussed={complaint?.assignedUser?.userName}
                   date={complaint?.createdDate}
                   contractId={complaint?.contractId}
+                  isPortal={true}
                   acussedId={String(
                     complaint?.contract?.accusedDepartmentUserId
                   )}
@@ -342,6 +344,7 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
                   acussed={complaint?.assignedUser?.userName}
                   date={complaint?.createdDate}
                   contractId={complaint?.contractId}
+                  isPortal={true}
                   acussedId={String(
                     complaint?.contract?.accusedDepartmentUserId
                   )}
