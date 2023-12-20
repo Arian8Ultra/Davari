@@ -47,12 +47,17 @@ import PersonInfo from "../pages/Login/SignUp/PersonInfo";
 import ConfirmUser from "../pages/Login/SignUp/ConfirmUser";
 import FilePage from "../pages/Complaints/Files/FilesPage";
 import CouncilListPage from "../pages/Complaints/CouncilList/CouncilListPage";
+import SignIn from "../pages/Login/SignIn";
+import LoginLayout from "../layout/LoginLayout";
 const UpdateContractPage = lazy(
   () => import("../pages/Complaints/AddContract/UpdateContractPage")
 );
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Root />}>
+      <Route path="login" element={<LoginLayout />}>
+        <Route path="signin" element={<SignIn />} />
+      </Route>
       <Route path="" element={<MainLayout />}>
         <Route path="" element={<Home />} />
         <Route path="home" element={<Home />} />
@@ -61,22 +66,12 @@ const router = createBrowserRouter(
           path="complaints/addContract"
           element={<AddContract />}
         />
-        <Route
-          path="test"
-          element={<Test />}
-        />
-        <Route
-          path="login"
-          element={<Test />}
-        />
-        <Route
-          path="signUp"
-          element={<SignUp />}
-        >
-          <Route
-            path=""
-            element={<PersonInfo />}
-          />
+        <Route path="test" element={<Test />} />
+        <Route path="login" element={<Test />} />
+        <Route path="signin/:oldPath" element={<Test />} />
+
+        <Route path="signUp" element={<SignUp />}>
+          <Route path="" element={<PersonInfo />} />
           <Route
             path=":userName/:password"
             element={<ConfirmUser />}

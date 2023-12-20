@@ -80,6 +80,7 @@ import {
   secondaryDark,
 } from "../theme/color";
 import { MutationWrapper } from "../GraphQL/MutationWrapper";
+import { TokenCheckDocument } from "../gql/graphql";
 
 const drawerWidth = 230;
 
@@ -199,21 +200,25 @@ export default function MainLayout() {
 
   useEffect(() => {
     console.log("token" + token);
-
     if (token && token !== "") {
       setSignedIn(true);
       setSignInModal({ ...signInModal, open: true });
     } else {
       setSignedIn(false);
-      setSignInModal({ ...signInModal, open: false });
       navigate("/");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
-  const [TokenCheck] = useLazyQuery(TOKEN_CHECK, {
-    onCompleted() {
-      // console.log("tokenCheck", data);
+  useEffect(() => {
+    if (!signedIn && path !== "/login/signin") {
+      navigate(`/login/signin/?path=${oldLocation}`);
+    }
+  });
+
+  const [TokenCheck] = useLazyQuery(TokenCheckDocument, {
+    onCompleted(data) {
+      console.log("tokenCheck", data.user_isTokenValid);
     },
     // fetchPolicy: "network-only",
     nextFetchPolicy: "network-only",
@@ -224,22 +229,19 @@ export default function MainLayout() {
     if (token && token !== "") {
       void TokenCheck({
         onCompleted(data) {
-          console.log("tokenCheck", data);
+          console.log("tokenCheck", data.user_isTokenValid);
           if (data?.user_isTokenValid) {
             setSignedIn(true);
-            setSignInModal({ ...signInModal, open: true });
           } else {
             setSignedIn(false);
-            setSignInModal({ ...signInModal, open: false });
+            if (!signedIn && path !== "/login/signin") {
+              navigate(`/login/signin/?path=${oldLocation}`);
+            }
           }
         },
         onError(error) {
           console.log(error);
-
-          setSignedIn(true);
-          setSignInModal({ ...signInModal, open: true });
-          // setSignedIn(false);
-          // setSignInModal({ ...signInModal, open: false });
+          navigate("/login/signin");
         },
       });
     }
@@ -345,7 +347,7 @@ export default function MainLayout() {
   }, [navigate, oldLocation]);
 
   // on router navigation log the location
-  React.useEffect(() => {
+  useEffect(() => {
     console.log(location);
     if (location.pathname !== oldLocation) {
       setLocation(location.pathname);
@@ -390,316 +392,6 @@ export default function MainLayout() {
 
   return (
     <Box sx={{ display: "flex" }}>
-      {!signedIn ? (
-        // <NewModal
-        //   name="ورود به سامانه هوشمند داوری"
-        //   backgroundColor={background}
-        //   open={!signedIn}
-        //   isCloseable={false}
-        //   background={`url(${Pattern})`}
-        //   color={primary}
-        //   width={{
-        //     xs: "100%",
-        //     sm: "100%",
-        //     md: "50%",
-        //     lg: "40%",
-        //     xl: "30%",
-        //   }}
-        // >
-        <Modal open={!signedIn}>
-          <Box
-            width={"100%"}
-            height={"100%"}
-            sx={{
-              background: `url(${sazmanImage})`,
-              backgroundRepeat: "no-repeat",
-              backgroundSize: "cover",
-              backgroundPositionX: "center",
-            }}
-          >
-            <Box
-              width={"100%"}
-              height={"100%"}
-              sx={{
-                backdropFilter: "blur(5px) brightness(0.8)",
-              }}
-            >
-              <img
-                src={pboLogo}
-                alt="logo"
-                style={{
-                  position: "absolute",
-                  // top: "50%",
-                  // left: "65%",
-                  top: "0%",
-                  left: "50%",
-                  // width: "20%",
-                  width: "15%",
-                  transform: "translate(-50%, 5%)",
-                  // transform: "translate(-50%, -50%)",
-                  filter:
-                    "drop-shadow(0px 0px 5px rgba(0,0,0,0.1)) contrast(1.5) saturate(0) brightness(0)",
-                  // filter:
-                  //   "drop-shadow(0px 0px 5px rgba(0,0,0,0.5)) contrast(1.5) saturate(0) brightness(10)",
-                }}
-              />
-              <Box
-                display={"flex"}
-                flexDirection={"column"}
-                justifyContent={"center"}
-                alignItems={"center"}
-                sx={{
-                  backgroundColor: background,
-                  // transform: "translate(0%, -50%)",
-                  // top: "0%",
-                  // right: "0%",
-                  // height: "100%",
-                  // position: "absolute",
-                  transform: "translate(50%, -50%)",
-                  top: "50%",
-                  right: "50%",
-                  position: "absolute",
-                  borderRadius: "15px",
-                }}
-                width={{
-                  xs: "100%",
-                  sm: "100%",
-                  md: "50%",
-                  lg: "40%",
-                  xl: "30%",
-                }}
-                height={"max-content"}
-                padding={5}
-              >
-                <Box
-                  display={"flex"}
-                  justifyContent={"center"}
-                  alignItems={"center"}
-                  flexDirection={"column"}
-                  padding={1}
-                  borderRadius={"1rem"}
-                  marginBottom={"1rem"}
-                  width={"100%"}
-                  gap={2}
-                  sx={{
-                    // backgroundColor: secondary,
-                    // color: secondary,
-                    fontSize: "2rem",
-                  }}
-                >
-                  <FaBalanceScale size="3rem" />
-                  {/* <FaBalanceScale size="5rem" /> */}
-                  سامانه هوشمند داوری
-                </Box>
-                <Typography
-                  variant="body1"
-                  sx={{
-                    marginTop: "1rem",
-                    paddingBottom: "1rem",
-                  }}
-                >
-                  برای ورود نام کاربری و رمز عبور خود را وارد کنید
-                </Typography>
-
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    // void userLogin();
-                    void handleMutation({
-                      variables: {
-                        userName: signInModal.userName,
-                        password: signInModal.password,
-                      },
-                    }).then((data) => {
-                      console.log(data);
-                      if (data instanceof Error) {
-                        setLoginError({
-                          message: data.message,
-                          code: data.name === "Error" ? 500 : 400,
-                        });
-                      } else {
-                        const expireDate = new Date(data.expireDate);
-                        setUser(data.user, data.token, expireDate);
-                        localStorage.setItem("token", data.token);
-                        setLoginError(undefined);
-                        setIsMailRoom(
-                          data.user.parentId ===
-                            "e7a85297-91d4-4f27-a4b2-ff394fe71dd3"
-                        );
-                      }
-                    });
-                  }}
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    width: "100%",
-                  }}
-                >
-                  <TextField
-                    label="نام کاربری"
-                    variant="outlined"
-                    autoComplete="username"
-                    onChange={(e) =>
-                      setSignInModal({
-                        ...signInModal,
-                        userName: e.target.value,
-                      })
-                    }
-                    // helperText={loginError?.message}
-                    error={loginError ? true : false}
-                    value={signInModal.userName}
-                    InputProps={{
-                      sx: {
-                        borderRadius: "15px",
-                      },
-                    }}
-                    sx={{
-                      width: "80%",
-                      "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
-                        {
-                          borderRadius: "15px",
-                        },
-                    }}
-                  />
-                  <TextField
-                    label="رمز عبور"
-                    variant="outlined"
-                    autoComplete="password"
-                    type={
-                      signInModal.showPassword ? "text" : "password"
-                    }
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton
-                            onClick={() =>
-                              setSignInModal({
-                                ...signInModal,
-                                showPassword:
-                                  !signInModal.showPassword,
-                              })
-                            }
-                          >
-                            {!signInModal.showPassword ? (
-                              <BsEye />
-                            ) : (
-                              <BsEyeSlash />
-                            )}
-                          </IconButton>
-                        </InputAdornment>
-                      ),
-                      sx: {
-                        borderRadius: "15px",
-                      },
-                    }}
-                    onChange={(e) =>
-                      setSignInModal({
-                        ...signInModal,
-                        password: e.target.value,
-                      })
-                    }
-                    helperText={loginError?.message}
-                    error={loginError ? true : false}
-                    value={signInModal.password}
-                    sx={{
-                      width: "80%",
-                      marginTop: "1rem",
-                      "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
-                        {
-                          borderRadius: "15px",
-                        },
-                    }}
-                  />
-
-                  <Button
-                    variant="contained"
-                    sx={{
-                      marginTop: "1rem",
-                      backgroundColor: error?.message
-                        ? red[500]
-                        : primary,
-                      color: "white",
-                      width: "80%",
-                      borderRadius: "10px",
-                      boxShadow: "none",
-                      padding: "0.5rem",
-                      "&:hover": {
-                        backgroundColor: Green,
-                      },
-                    }}
-                    type="submit"
-                    // onClick={() => {
-                    //   // void userLogin();
-                    //   void handleMutation({
-                    //     variables: {
-                    //       userName: signInModal.userName,
-                    //       password: signInModal.password,
-                    //     },
-                    //   })
-                    //     .then((data) => {
-                    //       // check if the data is an Error
-                    //       if(data instanceof Error){
-                    //         throw data;
-                    //       }
-                    //     })
-                    // }}
-                  >
-                    {loading ? (
-                      <LinearProgress
-                        variant="indeterminate"
-                        color="secondary"
-                      />
-                    ) : (
-                      ""
-                    )}
-                    ورود
-                  </Button>
-                  <Button
-                    variant="text"
-                    sx={{
-                      marginTop: "1rem",
-                      color: primary,
-                      width: "80%",
-                      borderRadius: "15px",
-                      padding: "0.5rem",
-                    }}
-                    type="submit"
-                    // onClick={() => {
-                    //   void userLogin();
-                    // }}
-                  >
-                    {/* {loading ? (
-                      <LinearProgress
-                        variant="indeterminate"
-                        color="secondary"
-                      />
-                    ) : (
-                      ""
-                    )} */}
-                    فراموشی رمز عبور
-                  </Button>
-                </form>
-                {error?.message && (
-                  <Typography
-                    variant="body1"
-                    sx={{
-                      marginTop: "1rem",
-                      paddingBottom: "1rem",
-                      color: red[500],
-                    }}
-                  >
-                    {error?.message}
-                  </Typography>
-                )}
-              </Box>
-            </Box>
-          </Box>
-        </Modal>
-      ) : (
-        ""
-      )}
       <CssBaseline />
       <ScrollRestoration />
       {!isSmallScreen ? (
