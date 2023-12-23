@@ -169,10 +169,6 @@ export default function MainLayout() {
   const fullName = useUserStore((state) => state.user.fullName);
   const user = useUserStore((state) => state.user);
   const logout = useUserStore((state) => state.logout);
-  const [loginError, setLoginError] = useState<{
-    message: string;
-    code: number;
-  }>();
   const [changePasswordModal, setChangePasswordModal] = useState({
     open: false,
     oldPassword: "",
@@ -211,7 +207,7 @@ export default function MainLayout() {
   }, [token]);
 
   useEffect(() => {
-    if (!signedIn && path !== "/login/signin") {
+    if (!signedIn && !path.includes("/login/signin")) {
       navigate(`/login/signin/?path=${oldLocation}`);
     }
   });
@@ -234,7 +230,7 @@ export default function MainLayout() {
             setSignedIn(true);
           } else {
             setSignedIn(false);
-            if (!signedIn && path !== "/login/signin") {
+            if (!signedIn && !path.includes("/login/signin")) {
               navigate(`/login/signin/?path=${oldLocation}`);
             }
           }
@@ -411,32 +407,6 @@ export default function MainLayout() {
               position: "relative",
             }}
           >
-            {/* <Box
-              width={"50%"}
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              position={"absolute"}
-              sx={{
-                top: 0,
-                right: 0,
-                bottom: 0,
-                backgroundImage: `url(${Pattern})`,
-                backgroundRepeat: "repeat-y repeat-x",
-                // outline: "2px solid red",
-              }}
-            >
-              <Box
-                position={"absolute"}
-                sx={{
-                  background: `linear-gradient(90deg, rgba(255, 255, 255,0.6), ${theme.palette.background.default})`,
-                  top: 0,
-                  left: 0,
-                  bottom: 0,
-                  width: "100%",
-                }}
-              />
-            </Box> */}
             <IconButton
               color="inherit"
               aria-label="open drawer"
@@ -818,19 +788,6 @@ export default function MainLayout() {
             },
           }}
         >
-          {/* <img
-            src={sazmanImage}
-            height={"100%"}
-            style={{
-              objectPosition: "right center",
-              filter: "brightness(0.5) contrast(1.2)",
-              opacity: 0.7,
-              position: "absolute",
-              top: 0,
-              left: 0,
-              objectFit: "cover",
-            }}
-          /> */}
           <DrawerHeader />
           <List>
             {SideBarMenu.map((item, index) => (

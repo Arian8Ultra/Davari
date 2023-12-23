@@ -5,7 +5,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import { useMutation, useQuery } from "@apollo/client";
-import { CheckBoxOutlineBlank } from "@mui/icons-material";
 import {
   Alert,
   Box,
@@ -19,23 +18,18 @@ import {
   TableRow,
 } from "@mui/material";
 import React from "react";
+import { BsGearFill } from "react-icons/bs";
+import { useUserStore } from "../../Context/UserStore";
+import { GET_ALL_ORGANIZATION_USERS } from "../../GraphQL/Users/Queries";
 import {
   Get_Complaint_AssignedDocument,
   SetCouncilListMutationDocument,
 } from "../../gql/graphql";
-import { useUserStore } from "../../Context/UserStore";
-import { primary, secondary } from "../../theme/color";
-import { GET_ALL_ORGANIZATION_USERS } from "../../GraphQL/Users/Queries";
 import {
-  States,
-  StatesCap,
-  StatesFa,
-  newStates,
   newStatesCap,
-  newStatesFa,
-  newStatesObj,
+  newStatesFa
 } from "../../static/States";
-import { BsGearFill } from "react-icons/bs";
+import { primary, secondary } from "../../theme/color";
 
 const CouncilList = () => {
   const [selectedList, setSelectedList] = React.useState<number[]>(
@@ -149,6 +143,7 @@ const CouncilList = () => {
                 }}
                 sx={{
                   color: primary,
+                  accentColor: primary,
                   ":checked": {
                     color: primary,
                   },
