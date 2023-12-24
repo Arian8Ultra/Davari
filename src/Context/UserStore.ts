@@ -1,8 +1,8 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { User } from "../static/Types";
 import { UserRole } from "../GraphQL/Users/Queries";
-import { Accesses, AccessesEnum } from "../static/Accesses";
+import { AccessesEnum } from "../static/Accesses";
+import { User } from "../static/Types";
 
 interface UserStore {
   user: {
