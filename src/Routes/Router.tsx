@@ -49,6 +49,9 @@ import FilePage from "../pages/Complaints/Files/FilesPage";
 import CouncilListPage from "../pages/Complaints/CouncilList/CouncilListPage";
 import SignIn from "../pages/Login/SignIn";
 import LoginLayout from "../layout/LoginLayout";
+import ForgetPassword from "../pages/Login/ForgetPassword";
+import OTPpage from "../pages/Login/OTPpage";
+import PaymentPage from "../pages/Complaints/Payment/PaymentPage";
 const UpdateContractPage = lazy(
   () => import("../pages/Complaints/AddContract/UpdateContractPage")
 );
@@ -56,7 +59,10 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Root />}>
       <Route path="login" element={<LoginLayout />}>
+        <Route path="" element={<SignIn />} />
         <Route path="signin" element={<SignIn />} />
+        <Route path="otp" element={<OTPpage />} />
+        <Route path="forgotPassword" element={<ForgetPassword />} />
       </Route>
       <Route path="" element={<MainLayout />}>
         <Route path="" element={<Home />} />
@@ -108,6 +114,10 @@ const router = createBrowserRouter(
         <Route
           path="complaints/:complaintId/files"
           element={<FilePage />}
+        />
+        <Route
+          path="complaints/:complaintId/pay"
+          element={<PaymentPage />}
         />
 
         <Route path="contracts" element={<Contracts />} />

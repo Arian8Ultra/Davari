@@ -10,6 +10,7 @@ export const GET_COMPLAINTS = gql`
           contractId
           createdDate
           isApprovedByChief
+          councilListStatus
           arbitrationTermsForms {
             firstCondition
             firstConditionFileName
@@ -49,6 +50,7 @@ export const GET_COMPLAINT = gql`
         id
         contractId
         isApprovedByChief
+        councilListStatus
         arbitrationTermsForms {
           firstCondition
           firstConditionFileName
@@ -72,6 +74,8 @@ export const GET_COMPLAINT = gql`
           initialBudgetByAccuser
           accuserDepartmentUserId
           accusedDepartmentUserId
+          contractSubjectByAccused
+          contractSubjectByAccuser
         }
       }
     }
@@ -93,6 +97,7 @@ export const GET_ACCUSED_COMPLAINTS = gql`
           contractId
           createdDate
           isApprovedByChief
+          councilListStatus
           arbitrationTermsForms {
             firstCondition
             firstConditionFileName
@@ -138,6 +143,7 @@ export const GET_ACCUSER_COMPLAINTS = gql`
           contractId
           createdDate
           isApprovedByChief
+          councilListStatus
           arbitrationTermsForms {
             firstCondition
             firstConditionFileName
@@ -189,6 +195,7 @@ export const GET_CHIEF_COMPLAINTS = gql`
           contractId
           createdDate
           isApprovedByChief
+          councilListStatus
           arbitrationTermsForms {
             firstCondition
             firstConditionFileName
@@ -260,6 +267,7 @@ export const GET_COMPLAINT_ASSIGNED = gql`
           contractId
           createdDate
           isApprovedByChief
+          councilListStatus
           arbitrationTermsForms {
             firstCondition
             firstConditionFileName

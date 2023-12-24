@@ -2,15 +2,17 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import {
+  DocumentNode,
   MutationFunctionOptions,
   MutationOptions,
+  OperationVariables,
   TypedDocumentNode,
   useMutation,
 } from "@apollo/client";
 import { errors } from "./QueryWrapper";
 
 export const MutationWrapper = (
-  mutation: TypedDocumentNode,
+  mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
   mutationName: string
 ) => {
   const [mutationFunction, { data, loading, error }] =
@@ -20,7 +22,7 @@ export const MutationWrapper = (
     variables,
     ...options
   }: {
-    variables: any;
+    variables:OperationVariables
     options?:MutationFunctionOptions<any, any>;
   }) {
     try {

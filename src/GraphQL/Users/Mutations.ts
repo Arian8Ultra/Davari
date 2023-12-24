@@ -14,7 +14,7 @@ export const UserLogin = gql`
           phoneNumber
           nationalCode
           parentId
-          userRoles{
+          userRoles {
             roleType
             id
           }
@@ -35,6 +35,53 @@ export type UserLoginInput = {
   password: string;
 };
 
+export const ForgetPasswordMutation = gql`
+  mutation ForgetPasswordMutation($input: ForgotPasswordDtoInput!) {
+    user_forgotPassword(input: $input) {
+      code
+      value
+    }
+  }
+`;
+
+export const OTPMutation = gql`
+  mutation UserSignInOTPMutation($input: LoginOTPDtoInput!) {
+    user_signInOTP(input: $input) {
+      result {
+        user {
+          id
+          userName
+          email
+          fullName
+          phoneNumber
+          nationalCode
+          parentId
+          userRoles {
+            roleType
+            id
+          }
+          userType
+        }
+        token
+        expireDate
+      }
+      status {
+        code
+        value
+      }
+    }
+  }
+`;
+
+export const SentOTP = gql`
+  mutation SentOTPMutation($phoneNumber: String!) {
+    user_oneTimePassword(input: { phoneNumber: $phoneNumber }) {
+      code
+      value
+    }
+  }
+`;
+
 // UserSignUp
 export const UserSignUp = gql`
   mutation UserSignUp(
@@ -46,13 +93,13 @@ export const UserSignUp = gql`
     $phoneNumber: String
     $userName: String!
     $birthDate: Date
-    $userType : UserType!
+    $userType: UserType!
     $parentId: String
   ) {
     user_signUp(
       input: {
         userType: $userType
-        birthDate: $birthDate,
+        birthDate: $birthDate
         confirmPassword: $confirmPassword
         email: $email
         fullName: $fullName
@@ -102,7 +149,7 @@ export const UserUpdate = gql`
     $nationalCode: String!
     $userName: String
     $birthDate: Date!
-    $userType : UserType!
+    $userType: UserType!
   ) {
     user_updateProfile(
       input: {

@@ -207,7 +207,7 @@ export default function MainLayout() {
   }, [token]);
 
   useEffect(() => {
-    if (!signedIn && !path.includes("/login/signin")) {
+    if (!signedIn && !path.includes("/login")) {
       navigate(`/login/signin/?path=${oldLocation}`);
     }
   });
@@ -230,7 +230,7 @@ export default function MainLayout() {
             setSignedIn(true);
           } else {
             setSignedIn(false);
-            if (!signedIn && !path.includes("/login/signin")) {
+            if (!signedIn && !path.includes("/login")) {
               navigate(`/login/signin/?path=${oldLocation}`);
             }
           }
@@ -443,8 +443,8 @@ export default function MainLayout() {
               justifyContent={"center"}
               ref={ref}
               sx={{
-                borderRadius: "10px",
-                padding: "0.1rem 0.7rem",
+                borderRadius: "3rem",
+                padding: "0.2rem 1.5rem",
                 background: "rgba(190,190,190,0.4)",
                 zIndex: 100,
                 backdropFilter: "blur(2px)",
