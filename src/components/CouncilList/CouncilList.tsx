@@ -44,6 +44,8 @@ const CouncilList = () => {
     variables: {
       id: user.id,
     },
+    refetchWritePolicy:'overwrite',
+    pollInterval:2000,
     onCompleted(data) {
       console.log("assigned data", data);
     },
