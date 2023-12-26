@@ -9,7 +9,13 @@ interface Props extends BoxProps {
 const TimeLine = (props: Props) => {
   return (
     <Box
-      display={"grid"}
+      display={{
+        xs: "none",
+        sm: "none",
+        md: "grid",
+        lg: "grid",
+        xl: "grid",
+      }}
       gridTemplateColumns={`1fr`}
       justifyContent={"center"}
       alignItems={"center"}

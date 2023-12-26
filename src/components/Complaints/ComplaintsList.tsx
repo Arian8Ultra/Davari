@@ -209,8 +209,18 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
           type === "chief" ||
           type == "mainRoomExpert" ||
           type == "all"
-            ? "repeat(4, 1fr)"
-            : "repeat(2, 1fr)"
+            ? {
+                xs: "repeat(1, 1fr)",
+                sm: "repeat(2, 1fr)",
+                md: "repeat(43 1fr)",
+                lg: "repeat(4, 1fr)",
+            }
+            : {
+                xs: "repeat(1, 1fr)",
+                sm: "repeat(2, 1fr)",
+                md: "repeat(2, 1fr)",
+                lg: "repeat(2, 1fr)",
+            }
         }
         padding={1}
         paddingTop={
