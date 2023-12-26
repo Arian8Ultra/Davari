@@ -5,6 +5,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { gql, useMutation, useQuery } from "@apollo/client";
+import { CheckCircle } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -20,8 +21,7 @@ import {
 import React, { useState } from "react";
 import {
   BsCheck,
-  BsGearFill,
-  BsPlusCircleDotted,
+  BsPlusCircleDotted
 } from "react-icons/bs";
 import { useNavigate, useParams } from "react-router-dom";
 import { useUserStore } from "../../../Context/UserStore";
@@ -34,8 +34,16 @@ import ArgumentCard from "../../../components/Arguments/ArgumentCard";
 import ArgumentHeader from "../../../components/Arguments/ArgumentHeader";
 import ArgumentInfoModal from "../../../components/Arguments/ArgumentInfoModal";
 import ArgumentModal from "../../../components/Arguments/ArgumentModal";
+import FaTextField from "../../../components/FaComponents/FaTextField";
 import FaTypography from "../../../components/FaComponents/FaTypography";
+import NewModal from "../../../components/Modals";
+import TimeLine from "../../../components/TimeLine";
 import { convertToPersianDigits } from "../../../functions/Functions";
+import {
+  AddComplaintNoteDocument,
+  GetComplaintsNotesDocument,
+  NoteType,
+} from "../../../gql/graphql";
 import NoAccess from "../../../layout/NoAccess";
 import { newStatesObj } from "../../../static/States";
 import {
@@ -45,7 +53,6 @@ import {
 } from "../../../static/Types";
 import states from "../../../static/states.json";
 import {
-  Green,
   GreenLight,
   Red,
   RedLight,
@@ -53,17 +60,8 @@ import {
   onSecondary,
   primary,
   secondary,
-  secondaryDark,
+  secondaryDark
 } from "../../../theme/color";
-import TimeLine from "../../../components/TimeLine";
-import NewModal from "../../../components/Modals";
-import FaTextField from "../../../components/FaComponents/FaTextField";
-import { CheckCircle } from "@mui/icons-material";
-import {
-  AddComplaintNoteDocument,
-  GetComplaintsNotesDocument,
-  NoteType,
-} from "../../../gql/graphql";
 
 const AddArgument = () => {
   const { complaintId, state } = useParams();
