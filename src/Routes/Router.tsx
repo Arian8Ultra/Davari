@@ -112,6 +112,10 @@ const router = createBrowserRouter(
           element={<TablesPage />}
         />
         <Route
+          path="complaints/:contractId/:complaintId/tables"
+          element={<TablesPage />}
+        />
+        <Route
           path="complaints/:complaintId/files"
           element={<FilePage />}
         />

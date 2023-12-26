@@ -14,11 +14,15 @@ const Home = () => {
       gridTemplateColumns={"repeat(12,1fr)"}
       gridAutoRows={"35dvh 35dvh"}
       gap={4}
-      height={'100%'}
-      overflow={'hidden'}
+      height={"100%"}
+      overflow={"hidden"}
     >
       <InfoCard
-        columns="span 3"
+        columns={{
+          xs: "span 12",
+          md: "span 6",
+          lg: "span 3",
+        }}
         data={[
           {
             title: "تستی",
@@ -29,7 +33,11 @@ const Home = () => {
         ]}
       />
       <PeopleCard
-        columns="span 5"
+        columns={{
+          xs: "span 12",
+          md: "span 6",
+          lg: "span 5",
+        }}
         people={[
           {
             id: 1,
@@ -117,7 +125,14 @@ const Home = () => {
           },
         ]}
       />
-      <HomeComplaintsList columns="9/span 4" rows="span 2" />
+      <HomeComplaintsList
+        columns={{
+          xs: "span 12",
+          md: "span 6",
+          lg: "9/span 4",
+        }}
+        rows="span 2"
+      />
     </Box>
   );
 };
