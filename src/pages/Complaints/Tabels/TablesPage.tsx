@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
-import React from "react";
+import React, { useEffect } from "react";
 import InstallmentTable from "../../../components/Tables/Installment/InstallmentTable";
 import AdjustmentStatementTable from "../../../components/Tables/AdjustmentStatement/AdjustmentStatementTable";
 import TimeLine from "../../../components/TimeLine";

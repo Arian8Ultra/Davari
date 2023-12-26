@@ -837,7 +837,13 @@ const UpdateContractPage = () => {
           borderRadius={"1rem"}
           position={"relative"}
           marginY={"3rem"}
-          width={"66%"}
+          width={{
+            xs: "100%",
+            sm: "100%",
+            md: "80%",
+            lg: "70%",
+            xl: "66%",
+          }}
           sx={{
             background: colors.grey[50],
             display: stage == 1 ? "grid" : "none",
@@ -1086,7 +1092,13 @@ const UpdateContractPage = () => {
           borderRadius={"1rem"}
           position={"relative"}
           marginY={"3rem"}
-          width={"66%"}
+          width={{
+            xs: "100%",
+            sm: "100%",
+            md: "80%",
+            lg: "70%",
+            xl: "66%",
+          }}
           marginX={"auto"}
           sx={{
             opacity: stage == 2 ? "100%" : 0,
@@ -3130,7 +3142,7 @@ const UpdateContractPage = () => {
               <FaTypography variant="body1">
                 برنامه های زمان‏بندی اولیه و اصلاحی ابلاغ شده
               </FaTypography>
-              <FileBox fileTypes={["pdf","jpeg"]}/>
+              <FileBox fileTypes={["pdf", "jpeg"]} />
             </Box>
             <Box
               display={"flex"}
@@ -3141,7 +3153,7 @@ const UpdateContractPage = () => {
                 گزارش تهیه شده توسط پیمانکار (به همراه کلیه مستندات و
                 پیوست‏ها)
               </FaTypography>
-              <FileBox fileTypes={["pdf","jpeg"]}/>
+              <FileBox fileTypes={["pdf", "jpeg"]} />
             </Box>
             <Box
               display={"flex"}
@@ -3151,7 +3163,7 @@ const UpdateContractPage = () => {
               <FaTypography variant="body1">
                 گزارش رسیدگی به تاخیرات توسط مهندس مشاور
               </FaTypography>
-              <FileBox fileTypes={["pdf","jpeg"]}/>
+              <FileBox fileTypes={["pdf", "jpeg"]} />
             </Box>
             <Box
               display={"flex"}
@@ -3162,7 +3174,7 @@ const UpdateContractPage = () => {
                 مستندات ابلاغ نتایج رسیدگی به تاخیرات به پیمانکار توسط
                 کارفرما
               </FaTypography>
-              <FileBox fileTypes={["pdf","jpeg"]}/>
+              <FileBox fileTypes={["pdf", "jpeg"]} />
             </Box>
           </List>
 

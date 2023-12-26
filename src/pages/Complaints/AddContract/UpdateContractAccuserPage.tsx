@@ -905,7 +905,13 @@ const UpdateContractAccuserPage = () => {
           borderRadius={"1rem"}
           position={"relative"}
           marginY={"3rem"}
-          width={"66%"}
+          width={{
+            xs: "100%",
+            sm: "100%",
+            md: "80%",
+            lg: "70%",
+            xl: "66%",
+          }}
           sx={{
             background: colors.grey[50],
             display: stage == 1 ? "grid" : "none",
@@ -1250,7 +1256,13 @@ const UpdateContractAccuserPage = () => {
           borderRadius={"1rem"}
           position={"relative"}
           marginY={"3rem"}
-          width={"66%"}
+          width={{
+            xs: "100%",
+            sm: "100%",
+            md: "80%",
+            lg: "70%",
+            xl: "66%",
+          }}
           marginX={"auto"}
           sx={{
             opacity: stage == 2 ? "100%" : 0,

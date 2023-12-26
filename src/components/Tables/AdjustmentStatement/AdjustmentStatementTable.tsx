@@ -335,8 +335,14 @@ const AdjustmentStatementTable = (props: Props) => {
             "& th": {
               color: "#fff",
               background: secondary,
+              padding: "0.5rem",
             },
           },
+        },
+
+        // change padding of cells
+        "& td": {
+          padding: "0.75rem",
         },
       }}
     >

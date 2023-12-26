@@ -166,6 +166,7 @@ export default function MainLayout() {
   const isMailRoom = useUserStore((state) => state.isMailRoom);
   const setAccesses = useUserStore((state) => state.setAccesses);
   const token = useUserStore((state) => state.token);
+  const clearToken = useUserStore((state) => state.clearToken);
   const fullName = useUserStore((state) => state.user.fullName);
   const user = useUserStore((state) => state.user);
   const logout = useUserStore((state) => state.logout);
@@ -231,15 +232,19 @@ export default function MainLayout() {
           } else {
             setSignedIn(false);
             if (!signedIn && !path.includes("/login")) {
+              clearToken();
               navigate(`/login/signin/?path=${oldLocation}`);
             }
           }
         },
         onError(error) {
           console.log(error);
+          clearToken();
           navigate("/login/signin");
         },
       });
+    } else {
+      navigate("/login/signin");
     }
   }, [TokenCheck, token, path]);
 
@@ -336,11 +341,11 @@ export default function MainLayout() {
     },
   });
 
-  useEffect(() => {
-    if (oldLocation) {
-      navigate(oldLocation);
-    }
-  }, [navigate, oldLocation]);
+  // useEffect(() => {
+  //   if (oldLocation) {
+  //     navigate(oldLocation);
+  //   }
+  // }, [navigate, oldLocation]);
 
   // on router navigation log the location
   useEffect(() => {

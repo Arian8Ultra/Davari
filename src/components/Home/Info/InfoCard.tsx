@@ -11,7 +11,7 @@ interface InfoCardProps {
     description: string;
     date: string;
   }[];
-  columns?: string;
+  columns?: string | object;
   rows?: string;
 }
 

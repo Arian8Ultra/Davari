@@ -11,7 +11,7 @@ interface PeopleCardProps {
     nationalCode: string;
     email?: string;
   }[];
-  columns?: string;
+  columns?: string | object;
   rows?: string;
 }
 const PeopleCard = ({ people, columns, rows }: PeopleCardProps) => {

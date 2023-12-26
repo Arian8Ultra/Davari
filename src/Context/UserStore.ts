@@ -12,7 +12,10 @@ interface UserStore {
     nationalCode: string;
     phoneNumber: string;
     userRoles?: UserRole[];
-    userType?: "INDIVIDUAL" | "ORGANIZATION" | "CONTRACTOR_OR_CONSULTANT";
+    userType?:
+      | "INDIVIDUAL"
+      | "ORGANIZATION"
+      | "CONTRACTOR_OR_CONSULTANT";
     parent?: User | null;
     parentId?: string;
   };
@@ -23,6 +26,7 @@ interface UserStore {
   setAccesses: (newAccesses: string[]) => void;
   setUser: (user: User, token: string, expireDate: Date) => void;
   setIsMailRoom: (isMailRoom: boolean) => void;
+  clearToken: () => void;
   logout: () => void;
 }
 
@@ -55,6 +59,9 @@ export const useUserStore = create<UserStore>()(
       },
       setIsMailRoom: (isMailRoom: boolean) => {
         set({ isMailRoom: isMailRoom });
+      },
+      clearToken: () => {
+        set({ token: "", expireDate: new Date() });
       },
       logout: () => {
         set({

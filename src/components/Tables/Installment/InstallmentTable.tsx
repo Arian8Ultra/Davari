@@ -1,11 +1,11 @@
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import {
-  EditOutlined
-} from "@mui/icons-material";
+import { EditOutlined } from "@mui/icons-material";
 import {
   Box,
   IconButton,
@@ -30,7 +30,7 @@ import {
   CREATE_INSTALLMENT_TABLE,
   Installment,
   InstallmentPart,
-  UPDATE_INSTALLMENT
+  UPDATE_INSTALLMENT,
 } from "../../../GraphQL/Tables/Mutations";
 import { GET_INSTALLMENT_TABLE_BY_CONTRACT_ID } from "../../../GraphQL/Tables/Queries";
 import {
@@ -39,13 +39,18 @@ import {
   primary,
   primaryLight,
   secondary,
-  secondaryDark
+  secondaryDark,
 } from "../../../theme/color";
 import DateButton from "../../DateButton";
 import FaTextField from "../../FaComponents/FaTextField";
 import FaTypography from "../../FaComponents/FaTypography";
 import NewModal from "../../Modals";
 import InstallmentStatementCard from "./InstallmentCard";
+import {
+  Create_Installment_TableDocument,
+  GetInstallmentTablesDocument,
+} from "../../../gql/graphql";
+import { useMutation, useQuery } from "@apollo/client";
 
 interface Props extends TableContainerProps {
   InstallmentTableId?: number;
@@ -82,140 +87,136 @@ const InstallmentTable = (props: Props) => {
   const [newInstallment, setNewInstallment] =
     React.useState<Installment>({} as Installment);
 
-  const {
-    handleMutation: addInstallment,
-  } = MutationWrapper(
+  const { handleMutation: addInstallment } = MutationWrapper(
     CREATE_INSTALLMENT,
     "installment_addInstallment"
   );
-  const {
-    handleMutation: addInstallmentTable,
-  } = MutationWrapper(
-    CREATE_INSTALLMENT_TABLE,
-    "installmentTable_addInstallmentTable"
+  const [addInstallmentTable] = useMutation(
+    Create_Installment_TableDocument
   );
 
-
-  const {
-    handleMutation: editInstallment,
-
-  } = MutationWrapper(
+  const { handleMutation: editInstallment } = MutationWrapper(
     UPDATE_INSTALLMENT,
     "installment_updateInstallment"
   );
 
-  const { data, refetch } = QueryWrapper(
-    GET_INSTALLMENT_TABLE_BY_CONTRACT_ID,
-    "installmentTable_getInstallmentTables",
-    {
-      id: contractId && parseInt(contractId),
-    },
-    {
-      onCompleted(data) {
-        console.log("GET_INSTALLMENT_TABLE_BY_CONTRACT_ID", data);
-      },
-      onError(error) {
-        console.log("error", error);
-      },
-    }
-  );
+  // const { data, refetch } = QueryWrapper(
+  //   GetInstallmentTablesDocument,
+  //   "installmentTable_getInstallmentTables",
+  //   {
+  //     id: contractId && parseInt(contractId),
+  //   },
+  //   {
+  //     onCompleted(data) {
+  //       console.log("GET_INSTALLMENT_TABLE_BY_CONTRACT_ID", data);
+  //     },
+  //     onError(error) {
+  //       console.log("error", error);
+  //     },
+  //   }
+  // );
 
-  const {
-    handleMutation: createInstallmentPart,
-  } = MutationWrapper(
+  const { data, refetch } = useQuery(GetInstallmentTablesDocument, {
+    variables: {
+      id: contractId ? parseInt(contractId) : 0,
+    },
+    onCompleted(data) {
+      console.log("GET_INSTALLMENT_TABLE_BY_CONTRACT_ID", data);
+    },
+    onError(error) {
+      console.log("error", error);
+    },
+  });
+
+  const { handleMutation: createInstallmentPart } = MutationWrapper(
     CREATE_INSTALLMENT_PART,
     "installmentPart_addInstallmentPart"
   );
 
   React.useEffect(() => {
-    console.log("USE EFFECT >>>>>>>>>>>>>>>>>>>>>");
-    
-    console.log("GET_INSTALLMENT_TABLE_BY_CONTRACT_ID",data);
-    const userType = data?.items[0]?.accuserDepartmentUserId ==
-    user.parentId
-    ? "ACCUSER"
-    : "ACCUSED"
-    console.warn("userType",userType);
-
-    if (data?.items?.length > 0 ) {
-      console.log("GET_INSTALLMENT_TABLE_BY_CONTRACT_ID", data);
-      const userType = data?.items[0]?.accuserDepartmentUserId ==
-      user.parentId
-      ? "ACCUSER"
-      : "ACCUSED"
-      console.warn("userType",userType);
-      
-      
-      setInstallments(data?.items[0]?.installments);
-      // setNewInstallment({
-      //   ...newInstallment,
-      //   installmentTableId: data?.items[0]?.id,
-      // data?.items[0]?.accuserDepartmentUserId ==
-      //                         user.id ||
-      //                       data?.items[0]?.accuserDepartmentUserId ==
-      //                         user.parentId
-      //                         ? "ACCUSER"
-      //                         : "ACCUSED"
-      // })
-
-      setTableId(data?.items[0]?.id);
+    const userType =
+      data?.installmentTable_getInstallmentTables?.result?.items?.[0]
+        ?.contract?.accuserDepartmentUserId == user.parentId
+        ? "ACCUSER"
+        : "ACCUSED";
+    console.warn("userType", userType);
+    if (
+      data?.installmentTable_getInstallmentTables?.result?.items
+        ?.length &&
+      data?.installmentTable_getInstallmentTables?.result?.items
+        ?.length > 0
+    ) {
+      const userType =
+        data?.installmentTable_getInstallmentTables?.result
+          ?.items?.[0]?.contract?.accuserDepartmentUserId ==
+        user.parentId
+          ? "ACCUSER"
+          : "ACCUSED";
+      console.warn("userType", userType);
+      data?.installmentTable_getInstallmentTables?.result?.items?.[0]
+        ?.installments &&
+        setInstallments(
+          // @ts-ignore
+          data?.installmentTable_getInstallmentTables?.result
+            ?.items?.[0]?.installments
+        );
+      setTableId(
+        data?.installmentTable_getInstallmentTables?.result
+          ?.items?.[0]?.id
+      );
     } else {
-      // console.log("else",data?.items?.length);
-      if (data instanceof Error) {
-        console.log("adding");
+      if (
+        data?.installmentTable_getInstallmentTables.status.code != 1
+      ) {
+        console.log("error", data);
         void addInstallmentTable({
           variables: {
-            contractId: contractId && parseInt(contractId),
+            contractId:
+              contractId && parseInt(contractId)
+                ? parseInt(contractId)
+                : 0,
             userId: user.id,
           },
-          options: {
-            onCompleted(data) {
-              console.log("addInstallmentTable", data);
-              setTableId(data?.id);
-              void refetch();
-            },
+          onCompleted(data) {
+            console.log("addInstallmentTable", data);
+            setTableId(
+              data?.installmentTable_addInstallmentTable?.result?.id
+            );
+            void refetch();
           },
         });
-      } 
-      else {
-        if (data?.items?.length == 0) {
-          console.log("adding");
-          void addInstallmentTable({
-            variables: {
-              contractId: contractId && parseInt(contractId),
-              userId: user.id,
-            },
-            options: {
-              onCompleted(data) {
-                console.log("addInstallmentTable", data);
-                setTableId(data?.id);
-                void refetch();
-              },
-            },
-          });
+      } else {
+        if (
+          data?.installmentTable_getInstallmentTables?.result?.items
+            ?.length == 0
+        ) {
+          console.log("adding", data);
+          // void addInstallmentTable({
+          //   variables: {
+          //     contractId: contractId && parseInt(contractId),
+          //     userId: user.id,
+          //   },
+          //   options: {
+          //     onCompleted(data) {
+          //       console.log("addInstallmentTable", data);
+          //       setTableId(data?.id);
+          //       void refetch();
+          //     },
+          //   },
+          // });
         }
       }
-
-      // void addInstallmentTable({
-      //   variables: {
-      //     contractId: contractId && parseInt(contractId),
-      //     userId: user.id,
-      //   },
-      //   options: {
-      //     onCompleted(data, clientOptions) {
-      //       console.log("addInstallmentTable", data);
-      //       void refetch();
-      //     },
-      //   },
-      // });
     }
-  }, [data]);
+  }, [
+    addInstallmentTable,
+    contractId,
+    data,
+    refetch,
+    user.id,
+    user.parentId,
+  ]);
 
   const handleEmptyFields = () => {
-    if (!newInstallment.title) {
-      setPageError("عنوان را وارد کنید");
-      return true;
-    }
     if (!newInstallment.amount) {
       setPageError("مبلغ را وارد کنید");
       return true;
@@ -234,15 +235,21 @@ const InstallmentTable = (props: Props) => {
       sx={{
         borderRadius: "10px",
         background: background,
-        my:'1rem',
+        my: "1rem",
         // change the color of header to grey
         "& thead": {
           "& tr": {
             "& th": {
               color: "#fff",
               background: secondary,
+              padding: "0.75rem",
             },
           },
+        },
+
+        // change padding of cells
+        "& td": {
+          padding: "0.75rem",
         },
       }}
     >
@@ -296,7 +303,7 @@ const InstallmentTable = (props: Props) => {
             <TableCell
               sx={{
                 textAlign: "center",
-                borderRight:"1px solid white"
+                borderRight: "1px solid white",
               }}
             >
               عنوان
@@ -304,7 +311,7 @@ const InstallmentTable = (props: Props) => {
             <TableCell
               sx={{
                 textAlign: "center",
-                borderRight:"1px solid white"
+                borderRight: "1px solid white",
               }}
             >
               مبلغ(ریال)
@@ -312,7 +319,7 @@ const InstallmentTable = (props: Props) => {
             <TableCell
               sx={{
                 textAlign: "center",
-                borderRight:"1px solid white"
+                borderRight: "1px solid white",
               }}
             >
               تاریخ پرداخت
@@ -331,13 +338,22 @@ const InstallmentTable = (props: Props) => {
             <TableCell>
               <FaTextField
                 label="عنوان"
-                onChange={(e) =>
-                  setNewInstallment({
-                    ...newInstallment,
-                    title: e.target.value,
-                  })
+                // onChange={(e) =>
+                //   setNewInstallment({
+                //     ...newInstallment,
+                //     title: e.target.value,
+                //   })
+                // }
+                disabled
+                value={
+                  data?.installmentTable_getInstallmentTables.result
+                    ?.items?.[0]?.installments?.length == 0
+                    ? "قسط اول"
+                    : data?.installmentTable_getInstallmentTables
+                        .result?.items?.[0]?.installments?.length == 1
+                    ? "قسط دوم"
+                    : "قسط سوم"
                 }
-                value={newInstallment.title ? newInstallment.title : ''}
                 focused={newInstallment.title ? true : false}
                 fullWidth
               />
@@ -345,13 +361,22 @@ const InstallmentTable = (props: Props) => {
             <TableCell>
               <FaTextField
                 label="مبلغ"
+                disabled={
+                  (data?.installmentTable_getInstallmentTables.result
+                    ?.items?.[0]?.installments &&
+                    data?.installmentTable_getInstallmentTables.result
+                      ?.items?.[0]?.installments?.length >= 3) ||
+                  false
+                }
                 onChange={(e) =>
                   setNewInstallment({
                     ...newInstallment,
                     amount: parseInt(e.target.value),
                   })
                 }
-                value={newInstallment.amount ? newInstallment.amount : ''}
+                value={
+                  newInstallment.amount ? newInstallment.amount : ""
+                }
                 fullWidth
                 focused={newInstallment.amount ? true : false}
                 type="number"
@@ -388,9 +413,14 @@ const InstallmentTable = (props: Props) => {
                           date: newInstallment.date,
                           title: newInstallment.title,
                           registrarType:
-                            data?.items[0]?.accuserDepartmentUserId ==
-                              user.id ||
-                            data?.items[0]?.accuserDepartmentUserId ==
+                            data
+                              ?.installmentTable_getInstallmentTables
+                              ?.result?.items?.[0]?.contract
+                              ?.accuserDepartmentUserId == user.id ||
+                            data
+                              ?.installmentTable_getInstallmentTables
+                              ?.result?.items?.[0]?.contract
+                              ?.accuserDepartmentUserId ==
                               user.parentId
                               ? "ACCUSER"
                               : "ACCUSED",
@@ -423,18 +453,42 @@ const InstallmentTable = (props: Props) => {
                   </IconButton>
                 ) : (
                   <IconButton
+                    disabled={
+                      (data?.installmentTable_getInstallmentTables
+                        .result?.items?.[0]?.installments &&
+                        data?.installmentTable_getInstallmentTables
+                          .result?.items?.[0]?.installments.length >=
+                          3) ||
+                      false
+                    }
                     onClick={() => {
-                      if(handleEmptyFields()) return;
+                      if (handleEmptyFields()) return;
                       void addInstallment({
                         variables: {
                           installmentTableId: tableId && tableId,
                           amount: newInstallment.amount,
                           date: newInstallment.date,
-                          title: newInstallment.title,
+                          title:
+                            data
+                              ?.installmentTable_getInstallmentTables
+                              .result?.items?.[0]?.installments
+                              ?.length == 0
+                              ? "قسط اول"
+                              : data
+                                  ?.installmentTable_getInstallmentTables
+                                  .result?.items?.[0]?.installments
+                                  ?.length == 1
+                              ? "قسط دوم"
+                              : "قسط سوم",
                           registrarType:
-                            data?.items[0]?.accuserDepartmentUserId ==
-                              user.id ||
-                            data?.items[0]?.accuserDepartmentUserId ==
+                            data
+                              ?.installmentTable_getInstallmentTables
+                              ?.result?.items?.[0]?.contract
+                              ?.accuserDepartmentUserId == user.id ||
+                            data
+                              ?.installmentTable_getInstallmentTables
+                              ?.result?.items?.[0]?.contract
+                              ?.accuserDepartmentUserId ==
                               user.parentId
                               ? "ACCUSER"
                               : "ACCUSED",
@@ -443,7 +497,7 @@ const InstallmentTable = (props: Props) => {
                         .then(() => {
                           setNewInstallment({} as Installment);
                           void refetch();
-                          setPageError('');
+                          setPageError("");
                         })
                         .catch(() => {
                           alert("خطا در افزودن قسط");
@@ -473,10 +527,12 @@ const InstallmentTable = (props: Props) => {
               </Box>
             </TableCell>
           </TableRow>
-          {pageError && <Typography color={Red}>{pageError}</Typography>}
+          {pageError && (
+            <Typography color={Red}>{pageError}</Typography>
+          )}
           {installments &&
-            installments.length > 0 &&
-            installments.map((installment) => (
+            installments?.length > 0 &&
+            installments?.map((installment) => (
               <InstallmentStatementCard
                 installment={installment}
                 refetch={refetch}
@@ -510,15 +566,36 @@ const InstallmentTable = (props: Props) => {
           >
             <FaTextField
               label="مبلغ"
-              onChange={(e) =>
-                setAddInstallmentPartModal({
-                  ...addInstallmentPartModal,
-                  installmentPart: {
-                    ...addInstallmentPartModal.installmentPart,
-                    amount: parseInt(e.target.value),
-                  },
-                })
-              }
+              onChange={(e) => {
+                const remainingAmount =
+                  data?.installmentTable_getInstallmentTables.result
+                    ?.items?.[0].installments?.find(
+                      (a) =>
+                        a.id == addInstallmentPartModal.installmentId
+                    )?.amount -
+                    // @ts-ignore
+                  data?.installmentTable_getInstallmentTables?.result
+                    ?.items?.[0].installments?.find(
+                      (a) =>
+                        a.id == addInstallmentPartModal.installmentId
+                    )?.installmentParts?.reduce((a, b) => {
+                      return a + b.amount;
+                    }, '');
+                if (
+                  parseInt(e.target.value) > remainingAmount
+                ) {
+                  alert("مبلغ وارد شده بیشتر از مبلغ قسط است");
+                  return;
+                } else {
+                  setAddInstallmentPartModal({
+                    ...addInstallmentPartModal,
+                    installmentPart: {
+                      ...addInstallmentPartModal.installmentPart,
+                      amount: parseInt(e.target.value),
+                    },
+                  });
+                }
+              }}
               value={addInstallmentPartModal.installmentPart.amount}
               fullWidth
               type="number"

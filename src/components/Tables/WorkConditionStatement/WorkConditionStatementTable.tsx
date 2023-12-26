@@ -308,8 +308,14 @@ const WorkConditionStatementTable = (props: Props) => {
             "& th": {
               color: "#fff",
               background: secondary,
+              padding: "0.75rem",
             },
           },
+        },
+
+        // change padding of cells
+        "& td": {
+          padding: "0.75rem",
         },
       }}
     >
@@ -554,7 +560,7 @@ const WorkConditionStatementTable = (props: Props) => {
             </TableCell>
             <TableCell>
               <DateButton
-                label="تاریخ پرداخت"
+                label="تاریخ"
                 fontSize={"12px"}
                 setDate={(date) =>
                   setNewWorkConditionStatement({
@@ -604,7 +610,7 @@ const WorkConditionStatementTable = (props: Props) => {
             </TableCell>
             <TableCell>
               <DateButton
-                label="تاریخ پرداخت"
+                label="تاریخ"
                 fontSize={"12px"}
                 setDate={(date) =>
                   setNewWorkConditionStatement({
@@ -656,7 +662,7 @@ const WorkConditionStatementTable = (props: Props) => {
             </TableCell>
             <TableCell>
               <DateButton
-                label="تاریخ پرداخت"
+                label="تاریخ"
                 fontSize={"12px"}
                 setDate={(date) =>
                   setNewWorkConditionStatement({
@@ -702,7 +708,7 @@ const WorkConditionStatementTable = (props: Props) => {
             </TableCell>
             <TableCell>
               <DateButton
-                label="تاریخ پرداخت"
+                label="تاریخ"
                 fontSize={"12px"}
                 setDate={(date) =>
                   setNewWorkConditionStatement({

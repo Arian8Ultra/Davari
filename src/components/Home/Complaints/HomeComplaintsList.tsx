@@ -9,7 +9,7 @@ import { useUserStore } from "../../../Context/UserStore";
 import { Card, Stack, Typography } from "@mui/material";
 import ComplaintCardNew from "../../Complaints/ComplaintCardNew";
 interface Props {
-  columns?: string;
+  columns?: string | object;
   rows?: string;
 }
 const HomeComplaintsList = ({ columns, rows }: Props) => {

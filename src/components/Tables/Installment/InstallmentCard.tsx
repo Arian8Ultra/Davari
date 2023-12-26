@@ -183,7 +183,7 @@ export default function InstallmentStatementCard({
           </Box>
         </TableCell>
       </TableRow>
-      {installmentParts?.map((installmentPart: InstallmentPart) => (
+      {installmentParts?.map((installmentPart: InstallmentPart,i) => (
         <TableRow
           key={installmentPart.id}
           sx={{
@@ -191,7 +191,9 @@ export default function InstallmentStatementCard({
             borderLeft: `2px solid ${primary}`,
           }}
         >
-          <TableCell></TableCell>
+          <TableCell>
+            {installment.title + " - " + String(i + 1)}
+          </TableCell>
           <TableCell>{installmentPart.amount}</TableCell>
           <TableCell>
             {new Date(installmentPart?.date).toLocaleDateString(
