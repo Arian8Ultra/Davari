@@ -320,41 +320,57 @@ export const GET_ARBITRATION_TERMS_FORM_BY_COMPLAINT_ID = gql`
   }
 `;
 
-
 export const getContractsFiles = gql`
-query getContractsFilesQuery{
-  complaintFile_getComplaintFiles{
-    result{
-      items{
-        complaintId
-        title
-        description
-        fileGallery{
-          name
+  query getContractsFilesQuery {
+    complaintFile_getComplaintFiles {
+      result {
+        items {
+          complaintId
+          title
+          description
+          fileGallery {
+            name
+          }
+          id
         }
-        id
       }
     }
   }
-}`
+`;
 export const getContractFiles = gql`
-query getContractFilesQuery($id:Int!){
-  complaintFile_getComplaintFiles{
-    result(where: {complaintId:{eq:$id}}){
-      items{
-        complaintId
-        title
-        description
-        fileGallery{
-          name
+  query getContractFilesQuery($id: Int!) {
+    complaintFile_getComplaintFiles {
+      result(where: { complaintId: { eq: $id } }) {
+        items {
+          complaintId
+          title
+          description
+          fileGallery {
+            name
+          }
+          id
         }
-        id
       }
     }
   }
-}`
+`;
 
-
+export const GET_COMPLAINTS_NOTES = gql`
+  query getComplaintsNotes($id: Int!) {
+    complaintNote_getComplaintNotes {
+      result(where: { complaintId: { eq: $id } }) {
+        items {
+          id
+          complaintId
+          userId
+          content
+          createdDate
+        }
+      }
+      status
+    }
+  }
+`;
 
 export type Complaint = {
   userId: number;

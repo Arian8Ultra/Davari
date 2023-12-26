@@ -3,7 +3,11 @@ import { gql } from "@apollo/client";
 export const CREATE_COMPLAINT = gql`
   mutation CreateComplaint($contractId: Int!, $userId: String!) {
     complaint_addComplaint(
-      input: { contractId: $contractId, userId: $userId,complaintState:WAITING_FOR_ACCUSER_TO_REGISTER_ARBITRATION_TERMS }
+      input: {
+        contractId: $contractId
+        userId: $userId
+        complaintState: WAITING_FOR_ACCUSER_TO_REGISTER_ARBITRATION_TERMS
+      }
     ) {
       result {
         id
@@ -31,51 +35,49 @@ export const CREATE_COMPLAINT = gql`
 
 export const UPDATE_COMPLAINT = gql`
   mutation UpdateComplaint(
-  $id: Int!
-  $assignedUserId: String
-  $contractId: Int
-  $userId: String
-  $complaintState: ComplaintState
-  $isApprovedByChief: Boolean
-) {
-  complaint_updateComplaint(
-    input: {
-      id: $id
-      assignedUserId: $assignedUserId
-      contractId: $contractId
-      userId: $userId
-      complaintState: $complaintState
-      isApprovedByChief: $isApprovedByChief
-      
-    }
+    $id: Int!
+    $assignedUserId: String
+    $contractId: Int
+    $userId: String
+    $complaintState: ComplaintState
+    $isApprovedByChief: Boolean
   ) {
-    result {
-      id
-      assignedUserId
-      complaintState
-      arbitrationTermsForms {
-        userId
-        firstCondition
-        firstConditionFileName
-        secondCondition
-        secondConditionFileName
-        thirdCondition
-        thirdConditionFileName
-        fourthCondition
-        fourthConditionFileName
+    complaint_updateComplaint(
+      input: {
+        id: $id
+        assignedUserId: $assignedUserId
+        contractId: $contractId
+        userId: $userId
+        complaintState: $complaintState
+        isApprovedByChief: $isApprovedByChief
+      }
+    ) {
+      result {
+        id
+        assignedUserId
+        complaintState
+        arbitrationTermsForms {
+          userId
+          firstCondition
+          firstConditionFileName
+          secondCondition
+          secondConditionFileName
+          thirdCondition
+          thirdConditionFileName
+          fourthCondition
+          fourthConditionFileName
+          __typename
+        }
+        __typename
+      }
+      status {
+        code
+        value
         __typename
       }
       __typename
     }
-    status {
-      code
-      value
-      __typename
-    }
-    __typename
   }
-}
-
 `;
 
 export const CREATE_ARBITRATION_TERMS_FORM = gql`
@@ -308,6 +310,19 @@ export const DELETE_COMPLAINT = gql`
   }
 `;
 
+export const ADD_COMPLAINT_NOTE = gql`
+  mutation AddComplaintNote($input: ComplaintNoteInput!) {
+    complaintNote_addComplaintNote(input: $input) {
+      result {
+        content
+        complaintId
+        id
+        noteType
+        createdDate
+      }
+    }
+  }
+`;
 
 // export const test = gql `
 // mutation {

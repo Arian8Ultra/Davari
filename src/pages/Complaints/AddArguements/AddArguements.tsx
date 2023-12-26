@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
@@ -6,7 +7,9 @@
 import { gql, useMutation, useQuery } from "@apollo/client";
 import {
   Box,
+  Button,
   IconButton,
+  Modal,
   Skeleton,
   Table,
   TableBody,
@@ -15,7 +18,11 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
-import { BsCheck, BsPlusCircleDotted } from "react-icons/bs";
+import {
+  BsCheck,
+  BsGearFill,
+  BsPlusCircleDotted,
+} from "react-icons/bs";
 import { useNavigate, useParams } from "react-router-dom";
 import { useUserStore } from "../../../Context/UserStore";
 import { UPDATE_COMPLAINT } from "../../../GraphQL/Complaints/Mutations";
@@ -42,12 +49,21 @@ import {
   GreenLight,
   Red,
   RedLight,
+  background,
   onSecondary,
   primary,
   secondary,
   secondaryDark,
 } from "../../../theme/color";
 import TimeLine from "../../../components/TimeLine";
+import NewModal from "../../../components/Modals";
+import FaTextField from "../../../components/FaComponents/FaTextField";
+import { CheckCircle } from "@mui/icons-material";
+import {
+  AddComplaintNoteDocument,
+  GetComplaintsNotesDocument,
+  NoteType,
+} from "../../../gql/graphql";
 
 const AddArgument = () => {
   const { complaintId, state } = useParams();
@@ -64,6 +80,15 @@ const AddArgument = () => {
     editMode: false as boolean,
   });
   const [noAccess, setNoAccess] = useState(false);
+  const [noteModal, setNoteModal] = useState({
+    open: false,
+    note: "",
+  });
+  const [newNoteModal, setNewNoteModal] = useState({
+    open: false,
+    note: "",
+  });
+
   const [selectedArgument, setSelectedArgument] =
     React.useState<OptionalArgument>({} as OptionalArgument);
 
@@ -81,6 +106,30 @@ const AddArgument = () => {
       console.log("state", states.AccuserApprovedArguments.cap);
       console.log(data);
       alert("ثبت شد");
+    },
+  });
+
+  const { data: notes } = useQuery(GetComplaintsNotesDocument, {
+    variables: {
+      id: parseInt(complaintId || "") || 0,
+    },
+    onCompleted(data) {
+      if(!data?.complaintNote_getComplaintNotes.result?.items?.length) return;
+      setNoteModal({
+        note: data?.complaintNote_getComplaintNotes.result?.items?.[0]?.content || "",
+        open: true,
+      })
+    },
+  });
+
+  const [addNote] = useMutation(AddComplaintNoteDocument, {
+    variables: {
+      input: {
+        complaintId: parseInt(complaintId || "") || 0,
+        content: newNoteModal.note,
+        userId: user.id,
+        noteType: NoteType.MailRoomChiefOpinionOnRejectingComplaint,
+      },
     },
   });
 
@@ -200,7 +249,103 @@ const AddArgument = () => {
         display={!compaintLoading && noAccess ? "none" : "block"}
         position={"relative"}
       >
-        <TimeLine stage={5}/>
+        <NewModal
+          title="ثبت نظر"
+          open={newNoteModal.open}
+          onClose={() =>
+            setNewNoteModal({
+              ...newNoteModal,
+              open: false,
+            })
+          }
+          background={background}
+        >
+          <Box
+            display={"flex"}
+            flexDirection={"column"}
+            width={"100%"}
+            justifyContent={"center"}
+            gap={"1rem"}
+          >
+            <FaTextField
+              label="نظر"
+              fullWidth
+              multiline
+              minRows={4}
+              required
+            />
+            <Button
+              variant="contained"
+              sx={{
+                backgroundColor: secondary,
+                color: primary,
+                paddingX: "3rem",
+              }}
+              endIcon={<CheckCircle />}
+              onClick={() => {
+                void addNote({
+                  onCompleted(data) {
+                    console.log(data);
+                    setNewNoteModal({
+                      ...newNoteModal,
+                      open: false,
+                    });
+                    void updateCompaint({
+                      variables: {
+                        id: complaintIdInt,
+                        complaintState:
+                          newStatesObj.checkingForBeingConstructive
+                            .cap,
+                        isApprovedByChief: false,
+                      } as {
+                        id: number | "" | undefined;
+                        complaintState: string;
+                        isApprovedByChief: boolean;
+                      },
+                      onCompleted() {
+                        alert("ثبت شد");
+                        navigate("/portal");
+                      },
+                    });
+                  },
+                });
+              }}
+            >
+              تایید
+            </Button>
+          </Box>
+        </NewModal>
+
+        <Modal
+          open={noteModal.open}
+          onClose={() =>
+            setNoteModal({
+              ...noteModal,
+              open: false,
+            })
+          }
+          >
+          <Box
+            sx={{
+              position: "absolute",
+              top: "10%",
+              left: "50%",
+              transform: "translateY(-50%) translateX(-50%)",
+              background: background,
+              padding: "1rem",
+              userSelect: "none",
+              width: "20%",
+              zIndex: 1000,
+              borderRadius: "1rem",
+            }}
+            >
+            <FaTypography variant="h6" textAlign={"center"}>
+              {noteModal.note}
+            </FaTypography>
+            </Box>
+          </Modal>
+
+        <TimeLine stage={5} />
         {/* <Box
           gridColumn={"span 12"}
           borderRadius={"1rem"}
@@ -293,7 +438,7 @@ const AddArgument = () => {
                     color: secondary,
                   }}
                 >
-                   جمع کل  مبلغ خواسته شده ادعا:
+                  جمع کل مبلغ خواسته شده ادعا:
                   {convertToPersianDigits(
                     data?.complaintArgument_getComplaintArguments?.result?.items
                       ?.reduce(
@@ -302,8 +447,7 @@ const AddArgument = () => {
                       )
                       .toString()
                       .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                  )
-                  + " ریال"}
+                  ) + " ریال"}
                 </TableCell>
                 <TableCell
                   sx={{
@@ -359,8 +503,7 @@ const AddArgument = () => {
                       )
                         .toString()
                         .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                    )
-                    + " ریال"
+                    ) + " ریال"
                   }
                 </TableCell>
                 <TableCell
@@ -494,7 +637,7 @@ const AddArgument = () => {
                 },
                 onCompleted() {
                   alert("ثبت شد");
-                  navigate("/complaints");
+                  navigate("/portal");
                 },
               });
             }
@@ -526,23 +669,9 @@ const AddArgument = () => {
             },
           }}
           onClick={() => {
-            const agreed = confirm("آیا مطمئن هستید؟");
-            if (!agreed) return;
-            void updateCompaint({
-              variables: {
-                id: complaintIdInt,
-                complaintState:
-                  newStatesObj.waitingForChiefToAssign.cap,
-                isApprovedByChief: false,
-              } as {
-                id: number | "" | undefined;
-                complaintState: string;
-                isApprovedByChief: boolean;
-              },
-              onCompleted() {
-                alert("ثبت شد");
-                navigate("/complaints");
-              },
+            setNewNoteModal({
+              ...newNoteModal,
+              open: true,
             });
           }}
         >
