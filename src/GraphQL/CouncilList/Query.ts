@@ -4,11 +4,11 @@ export const setCouncilList = gql`
   mutation setCouncilListMutation($ids: [Int!]!) {
     complaint_setInCouncilList(entityIds: $ids) {
       result {
-        generateResult {
+        fileNames
+        result{
           key
           value
         }
-        generatedFileNames
       }
       status {
         code

@@ -51,11 +51,16 @@ export const GET_INSTALLMENT_TABLE_BY_CONTRACT_ID = gql`
           paymentTotal
           remainingPayment
           filledBy
+          contract{
+            accuserDepartmentUserId
+            accusedDepartmentUserId
+          }
           user {
             parentId
             id
             userType
           }
+          
           userId
           installments {
             installmentTableId

@@ -18,6 +18,7 @@ export const CREATE_INSTALLMENT_TABLE = gql`
       }
     ) {
       result {
+        id
         userId
         contractId
         paymentTotal
