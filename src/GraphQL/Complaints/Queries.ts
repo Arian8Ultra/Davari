@@ -372,6 +372,47 @@ export const GET_COMPLAINTS_NOTES = gql`
   }
 `;
 
+export const GetComplaintsWithFilter = gql`
+  query GetComplaintsWithFilter($filter: ComplaintFilterInput) {
+    complaint_getComplaints {
+      result(where: $filter, order: { createdDate: DESC }) {
+        items {
+          userId
+          id
+          contractId
+          createdDate
+          isApprovedByChief
+          councilListStatus
+          arbitrationTermsForms {
+            firstCondition
+            firstConditionFileName
+            secondCondition
+            secondConditionFileName
+            thirdCondition
+            thirdConditionFileName
+            fourthCondition
+            fourthConditionFileName
+          }
+          complaintState
+          complaintCode
+          assignedUser {
+            userName
+            fullName
+            phoneNumber
+          }
+          contract {
+            contractNumberByAccuser
+            contractDateByAccuser
+            initialBudgetByAccuser
+            accusedDepartmentUserId
+            accuserDepartmentUserId
+          }
+        }
+      }
+    }
+  }
+`;
+
 export type Complaint = {
   userId: number;
   id: number;
