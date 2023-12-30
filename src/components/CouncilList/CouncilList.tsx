@@ -6,35 +6,42 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import { useMutation, useQuery } from "@apollo/client";
 import {
-  Alert,
   Box,
   Button,
   Checkbox,
+  IconButton,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
-  TableRow,
+  TableRow
 } from "@mui/material";
+import { green } from "@mui/material/colors";
 import React from "react";
-import { BsGearFill } from "react-icons/bs";
+import { BsDownload, BsGearFill } from "react-icons/bs";
 import { useUserStore } from "../../Context/UserStore";
 import { GET_ALL_ORGANIZATION_USERS } from "../../GraphQL/Users/Queries";
 import {
+  ComplaintState,
+  GetComplaintsWithFilterDocument,
   Get_Complaint_AssignedDocument,
   SetCouncilListMutationDocument,
+  UpdateComplaintDocument,
 } from "../../gql/graphql";
+import { newStatesCap, newStatesFa } from "../../static/States";
 import {
-  newStatesCap,
-  newStatesFa
-} from "../../static/States";
-import { primary, secondary } from "../../theme/color";
+  primary,
+  secondary
+} from "../../theme/color";
+import { equal } from "assert";
 
 const CouncilList = () => {
   const [selectedList, setSelectedList] = React.useState<number[]>(
     []
   );
+
+  const [files, setFiles] = React.useState<string[]>([]); // [
   const user = useUserStore((state) => state.user);
   const {
     data: assignedData,
@@ -44,12 +51,39 @@ const CouncilList = () => {
     variables: {
       id: user.id,
     },
-    refetchWritePolicy:'overwrite',
-    pollInterval:2000,
+    refetchWritePolicy: "overwrite",
+    pollInterval: 2000,
     onCompleted(data) {
       console.log("assigned data", data);
     },
   });
+
+
+  const {data :filteredData} = useQuery(GetComplaintsWithFilterDocument,{
+    variables:{
+      filter:{
+        and:[
+          {
+            assignedUserId:{
+              eq:user.id
+            }
+          },
+          {
+            complaintState:{
+              in:[ComplaintState.GivingTrackingCodeToComplaint,ComplaintState.WaitingForFirstPayment,ComplaintState.WaitingForSecondPayment]
+            }
+          }
+        ]
+      }
+    },
+    onCompleted(data) {
+      console.log("filtered data", data);
+    },
+  })
+
+  const [updateComplaint, { data: updateData }] = useMutation(
+    UpdateComplaintDocument
+  );
 
   const [departments, setDepartments] = React.useState<
     {
@@ -117,7 +151,7 @@ const CouncilList = () => {
             fontSize: "1rem",
             padding: "0.2rem",
             textAlign: "center",
-          }
+          },
         }}
       >
         <Table>
@@ -129,13 +163,13 @@ const CouncilList = () => {
             <TableCell>
               <Checkbox
                 checked={
-                  assignedData?.complaint_getComplaints.result?.items
+                  filteredData?.complaint_getComplaints.result?.items
                     ?.length === selectedList.length
                 }
                 onChange={(e) => {
                   if (e.target.checked) {
                     setSelectedList(
-                      assignedData?.complaint_getComplaints.result?.items?.map(
+                      filteredData?.complaint_getComplaints.result?.items?.map(
                         (item) => item.id
                       )!
                     );
@@ -189,7 +223,7 @@ const CouncilList = () => {
             </TableCell>
           </TableHead>
           <TableBody>
-            {assignedData?.complaint_getComplaints.result?.items?.map(
+            {filteredData?.complaint_getComplaints.result?.items?.map(
               (item) => (
                 <TableRow>
                   <TableCell>
@@ -251,17 +285,111 @@ const CouncilList = () => {
           }}
           endIcon={<BsGearFill />}
           onClick={() => {
-            void setCouncilList();
+            void setCouncilList({
+              onCompleted(data, clientOptions) {
+                console.log(data);
+                if (
+                  data.complaint_setInCouncilList.result?.result.some(
+                    (item) => item.value == false
+                  ) ||
+                  data.complaint_setInCouncilList.result?.result
+                    .length === 0
+                ) {
+                  alert("خطا در تولید نامه ها");
+                } else {
+                  setFiles(
+                    data.complaint_setInCouncilList.result?.fileNames!
+                  );
+                  data.complaint_setInCouncilList.result?.result?.map(
+                    (complaint) => {
+                      void updateComplaint({
+                        variables: {
+                          id: complaint.key,
+                          complaintState:
+                            ComplaintState.WaitingForFirstPayment,
+                        },
+                      });
+                    }
+                  );
+                }
+              },
+            });
           }}
         >
           تولید نامه
         </Button>
       </Box>
-      {data?.complaint_setInCouncilList.status.code === 200 && (
-        <Alert severity="success" sx={{ mt: 2 }}>
-          نامه با موفقیت تولید شد
-        </Alert>
-      )}
+      {data?.complaint_setInCouncilList?.result?.result.length !==
+        0 &&
+        data?.complaint_setInCouncilList?.status.code === 1 && (
+          <Box sx={{ mt: 2 }}>
+            <Box
+              display={"flex"}
+              flexDirection={"column"}
+              gap={2}
+              // justifyContent={"space-between"}
+              sx={{
+                backgroundColor: green[100],
+                width: "100%",
+                padding: "1rem",
+                borderRadius: "0.5rem",
+              }}
+            >
+              <Box>نامه های تولید شده:</Box>
+              {files.map((file) =>
+                file.includes("Attachment") ? (
+                  <Box
+                    display={"flex"}
+                    gap={2}
+                    alignItems={"center"}
+                    justifyContent={"space-between"}
+                    onClick={() => {
+                      window.open(
+                        `http://172.16.23.50:7030/files/letters/${file}`
+                      );
+                    }}
+                    sx={{
+                      backgroundColor: green["A100"],
+                      boxShadow: "0 0 0.5rem rgba(0,0,0,0.5)",
+                      borderRadius: "0.5rem",
+                      padding: "0.5rem",
+                      cursor: "pointer",
+                    }}
+                  >
+                    فایل پیوست
+                    <IconButton>
+                      <BsDownload />
+                    </IconButton>
+                  </Box>
+                ) : (
+                  <Box
+                    display={"flex"}
+                    gap={2}
+                    alignItems={"center"}
+                    justifyContent={"space-between"}
+                    onClick={() => {
+                      window.open(
+                        `http://172.16.23.50:7030/files/letters/${file}`
+                      );
+                    }}
+                    sx={{
+                      backgroundColor: green["A100"],
+                      boxShadow: "0 0 0.5rem rgba(0,0,0,0.5)",
+                      borderRadius: "0.5rem",
+                      padding: "0.5rem",
+                      cursor: "pointer",
+                    }}
+                  >
+                    فایل نامه
+                    <IconButton>
+                      <BsDownload />
+                    </IconButton>
+                  </Box>
+                )
+              )}
+            </Box>
+          </Box>
+        )}
     </>
   );
 };
