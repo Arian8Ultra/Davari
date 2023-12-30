@@ -7,6 +7,7 @@
 import { gql, useMutation, useQuery } from "@apollo/client";
 import { CheckCircle } from "@mui/icons-material";
 import {
+  Alert,
   Box,
   Button,
   IconButton,
@@ -19,10 +20,7 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
-import {
-  BsCheck,
-  BsPlusCircleDotted
-} from "react-icons/bs";
+import { BsCheck, BsPlusCircleDotted } from "react-icons/bs";
 import { useNavigate, useParams } from "react-router-dom";
 import { useUserStore } from "../../../Context/UserStore";
 import { UPDATE_COMPLAINT } from "../../../GraphQL/Complaints/Mutations";
@@ -60,7 +58,7 @@ import {
   onSecondary,
   primary,
   secondary,
-  secondaryDark
+  secondaryDark,
 } from "../../../theme/color";
 
 const AddArgument = () => {
@@ -112,11 +110,16 @@ const AddArgument = () => {
       id: parseInt(complaintId || "") || 0,
     },
     onCompleted(data) {
-      if(!data?.complaintNote_getComplaintNotes.result?.items?.length) return;
+      if (
+        !data?.complaintNote_getComplaintNotes.result?.items?.length
+      )
+        return;
       setNoteModal({
-        note: data?.complaintNote_getComplaintNotes.result?.items?.[0]?.content || "",
+        note:
+          data?.complaintNote_getComplaintNotes.result?.items?.[0]
+            ?.content || "",
         open: true,
-      })
+      });
     },
   });
 
@@ -247,6 +250,26 @@ const AddArgument = () => {
         display={!compaintLoading && noAccess ? "none" : "block"}
         position={"relative"}
       >
+        {notes?.complaintNote_getComplaintNotes.result?.items
+          ?.length &&
+          notes?.complaintNote_getComplaintNotes.result?.items?.map(
+            (note) => (
+              <Alert
+                severity="info"
+                sx={{
+                  position: "absolute",
+                  bottom: "10%",
+                  left: "50%",
+                  transform: "translateY(-50%) translateX(-50%)",
+                  width: "20%",
+                  zIndex: 1000,
+                  borderRadius: "1rem",
+                }}
+              >
+                {note.content}
+              </Alert>
+            )
+          )}
         <NewModal
           title="ثبت نظر"
           open={newNoteModal.open}
@@ -322,7 +345,7 @@ const AddArgument = () => {
               open: false,
             })
           }
-          >
+        >
           <Box
             sx={{
               position: "absolute",
@@ -336,12 +359,12 @@ const AddArgument = () => {
               zIndex: 1000,
               borderRadius: "1rem",
             }}
-            >
+          >
             <FaTypography variant="h6" textAlign={"center"}>
               {noteModal.note}
             </FaTypography>
-            </Box>
-          </Modal>
+          </Box>
+        </Modal>
 
         <TimeLine stage={5} />
         {/* <Box

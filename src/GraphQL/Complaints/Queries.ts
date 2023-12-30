@@ -373,9 +373,19 @@ export const GET_COMPLAINTS_NOTES = gql`
 `;
 
 export const GetComplaintsWithFilter = gql`
-  query GetComplaintsWithFilter($filter: ComplaintFilterInput) {
+  query GetComplaintsWithFilter(
+    $filter: ComplaintFilterInput
+    $take: Int
+    $skip: Int
+    $order: [ComplaintSortInput!] = [{ createdDate: DESC }]
+  ) {
     complaint_getComplaints {
-      result(where: $filter, order: { createdDate: DESC }) {
+      result(
+        where: $filter
+        order: $order
+        take: $take
+        skip: $skip
+      ) {
         items {
           userId
           id
@@ -409,6 +419,47 @@ export const GetComplaintsWithFilter = gql`
           }
         }
       }
+    }
+  }
+`;
+
+export const GetArgumentsWithFilter = gql`
+  query GetArgumentsWithFilter(
+    $filter: ComplaintArgumentFilterInput
+    $take: Int
+    $skip: Int
+    $order: [ComplaintArgumentSortInput!] = [{ createdDate: DESC }]
+  ) {
+    complaintArgument_getComplaintArguments {
+      result(
+        where: $filter
+        order: $order
+        take: $take
+        skip: $skip
+      ) {
+        items {
+          id
+          accusedResponse
+          accusedResponseFileName
+          approvedAmount
+          complaintId
+          councilApprovedAmount
+          description
+          expertId
+          expertOpinion
+          expertOpinionFileName
+          expertVerdict
+          fileName
+          filledBy
+          mailRoomChiefSuggestedAmount
+          mailRoomExpertApprovedAmount
+          accuserAnswerToAccusedResponse
+          suggestedAmount
+          summary
+          userId
+        }
+      }
+      status
     }
   }
 `;

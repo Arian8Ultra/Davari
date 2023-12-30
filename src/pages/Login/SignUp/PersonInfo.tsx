@@ -327,7 +327,7 @@ const PersonInfo = () => {
                       birthDate: new Date(),
                     },
                     onCompleted(data, clientOptions) {
-                      if (data.user_signUp.code === 1) {
+                      if (data.user_signUp.status.code === 1) {
                         infos?.nationalCode && password && navigate(`${infos?.nationalCode}/${password}`);
                       }
                     },

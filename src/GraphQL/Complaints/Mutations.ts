@@ -79,6 +79,36 @@ export const UPDATE_COMPLAINT = gql`
     }
   }
 `;
+export const UPDATE_COMPLAINT_FULL = gql`
+  mutation UpdateComplaintFull($input: ComplaintInput!) {
+    complaint_updateComplaint(input: $input) {
+      result {
+        id
+        assignedUserId
+        complaintState
+        arbitrationTermsForms {
+          userId
+          firstCondition
+          firstConditionFileName
+          secondCondition
+          secondConditionFileName
+          thirdCondition
+          thirdConditionFileName
+          fourthCondition
+          fourthConditionFileName
+          __typename
+        }
+        __typename
+      }
+      status {
+        code
+        value
+        __typename
+      }
+      __typename
+    }
+  }
+`;
 
 export const CREATE_ARBITRATION_TERMS_FORM = gql`
   mutation CreateArbitrationTermsForm(

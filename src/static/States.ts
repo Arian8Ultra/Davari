@@ -19,13 +19,14 @@ export const States = [
   "AddingToComplaintList",
   "WaitingForLetterResponseFromMinistersCouncil",
   "WaitingForFirstPayment",
+  "WaitingForMailRoomExpertToDownloadDecree",
+  "DeterminingCaseExpert",
+  "WaitingForExpertsCouncilPayment",
   "DidNotFulfillFirstPayment",
   "WaitingForAccuserAndAccusedToSignDecree",
   "WaitingForAccuserToSignDecree",
   "WaitingForAccusedToSignDecree",
   "CheckingAndUploadingTheSignedDecree",
-  "DeterminingCaseExpert",
-  "WaitingForExpertsCouncilPayment",
   "WaitingForCaseExpertRegistry",
   "UploadingDocumentsAndReviewingComplaint",
   "RedeterminingCaseExpert",
@@ -141,29 +142,29 @@ export const StatesCap = [
   "ACCUSED_NOTIFIED_OF_OFFEROR_CHANGING_RESULT",
   "ACCUSER_NOTIFIED_OF_SUCCESSFUL_CHANGING_OF_THE_OFFEROR",
 ];
-// 
-// 
-// 
-// 
-// 
-// 
-// 
-// 
-// 
-// 
-// 
-// 
-// 
-// 
-// 
-// 
-// 
-// 
-// 
-// 
-// 
-// 
-// 
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 export const newStates = [
   "waitingForAccuserToRegisterContract",
   "waitingForAccuserToRegisterComplaint",
@@ -187,13 +188,14 @@ export const newStates = [
   "waitingForExpertToAddComplaintToComplaintList",
   "waitingForMinistersCouncilToAnswerLetter",
   "waitingForFirstPayment",
+  "waitingForMailRoomExpertToDownloadDecree",
+  "waitingForExpertsCouncilPayment",
+  "determiningCaseExpert",
   "didNotFulfillFirstPayment",
   "waitingForAccuserAndAccusedToSignDecree",
   "waitingForAccuserToSignDecree",
   "waitingForAccusedToSignDecree",
   "checkingAndUploadingTheSignedDecree",
-  "determiningCaseExpert",
-  "waitingForExpertsCouncilPayment",
   "waitingForCaseExpertRegistry",
   "uploadingDocumentsAndReviewingComplaint",
   "redeterminingCaseExpert",
@@ -237,13 +239,14 @@ export const newStatesFa = [
   "در انتظار اضافه شدن به لیست شکایات کارشناس",
   "در انتظار دریافت پاسخ نامه از هیات وزیران",
   "در انتظار پرداخت هزینه اول داوری",
+  "در انتطار دانلود و تایید قرارنامه توسط کارشناس دبیرخانه",
+  "در انتظار واریز هزینه داوری قوه قضایی",
+  "در انتظار تعیین کارشناس پرونده",
   "عدم پرداخت هزینه اول داوری در مهلت مقرر",
   "در انتظار امضای قرارنامه توسط خواهان و خوانده",
   "در انتظار امضای قرارنامه توسط خواهان",
   "در انتظار امضای قرارنامه توسط خوانده",
   "در انتظار بررسی و بارگزاری قرارنامه امضا شده",
-  "در انتظار تعیین کارشناس پرونده",
-  "در انتظار واریز هزینه مرتبط کانون کارشناسان",
   "در انتظار ثبت نام کارشناس پرونده در سامانه",
   "در انتظار ثبت مدارک و مستندات مورد نیاز و بررسی شکایت",
   "در انتظار تعیین کارشناس پرونده پس از انصراف",
@@ -287,13 +290,14 @@ export const newStatesCap = [
   "WAITING_FOR_EXPERT_TO_ADD_COMPLAINT_TO_COMPLAINT_LIST",
   "WAITING_FOR_MINISTERS_COUNCIL_TO_ANSWER_LETTER",
   "WAITING_FOR_FIRST_PAYMENT",
+  "WAITING_FOR_MAIL_ROOM_EXPERT_TO_DOWNLOAD_DECREE",
+  "WAITING_FOR_EXPERTS_COUNCIL_PAYMENT",
+  "DETERMINING_CASE_EXPERT",
   "DID_NOT_FULFILL_FIRST_PAYMENT",
   "WAITING_FOR_ACCUSER_AND_ACCUSED_TO_SIGN_DECREE",
   "WAITING_FOR_ACCUSER_TO_SIGN_DECREE",
   "WAITING_FOR_ACCUSED_TO_SIGN_DECREE",
   "CHECKING_AND_UPLOADING_THE_SIGNED_DECREE",
-  "DETERMINING_CASE_EXPERT",
-  "WAITING_FOR_EXPERTS_COUNCIL_PAYMENT",
   "WAITING_FOR_CASE_EXPERT_REGISTRY",
   "UPLOADING_DOCUMENTS_AND_REVIEWING_COMPLAINT",
   "REDETERMINING_CASE_EXPERT",
@@ -403,6 +407,19 @@ export const newStatesObj = {
     fa: "در انتظار پرداخت هزینه اول داوری",
     cap: "WAITING_FOR_FIRST_PAYMENT",
   },
+  waitingForMailRoomExpertToDownloadDecree: {
+    fa: "در انتظار دانلود و تایید قرارنامه توسط کارشناس دبیرخانه",
+    cap: "WAITING_FOR_MAIL_ROOM_EXPERT_TO_DOWNLOAD_DECREE",
+  },
+  waitingForExpertsCouncilPayment: {
+    fa: "در انتظار واریز هزینه داوری قوه قضایی",
+    cap: "WAITING_FOR_EXPERTS_COUNCIL_PAYMENT",
+  },
+  determiningCaseExpert: {
+    fa: "در انتظار تعیین کارشناس پرونده",
+    cap: "DETERMINING_CASE_EXPERT",
+  },
+
   didNotFulfillFirstPayment: {
     fa: "عدم پرداخت هزینه اول داوری در مهلت مقرر",
     cap: "DID_NOT_FULFILL_FIRST_PAYMENT",
@@ -422,14 +439,6 @@ export const newStatesObj = {
   checkingAndUploadingTheSignedDecree: {
     fa: "در انتظار بررسی و بارگزاری قرارنامه امضا شده",
     cap: "CHECKING_AND_UPLOADING_THE_SIGNED_DECREE",
-  },
-  determiningCaseExpert: {
-    fa: "در انتظار تعیین کارشناس پرونده",
-    cap: "DETERMINING_CASE_EXPERT",
-  },
-  waitingForExpertsCouncilPayment: {
-    fa: "در انتظار واریز هزینه مرتبط کانون کارشناسان",
-    cap: "WAITING_FOR_EXPERTS_COUNCIL_PAYMENT",
   },
   waitingForCaseExpertRegistry: {
     fa: "در انتظار ثبت نام کارشناس پرونده در سامانه",

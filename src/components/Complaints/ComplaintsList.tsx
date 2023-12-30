@@ -19,6 +19,10 @@ import { secondary } from "../../theme/color";
 import theme from "../../theme/theme";
 import ComplaintCardNew from "./ComplaintCardNew";
 import { useEffect } from "react";
+import {
+  GetComplaintsWithFilterDocument,
+  SortEnumType,
+} from "../../gql/graphql";
 interface Props {
   userId?: string;
   departmentId?: string;
@@ -35,9 +39,18 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
     data: assignedData,
     loading,
     refetch: assignedRefetch,
-  } = useQuery(GET_COMPLAINT_ASSIGNED, {
+  } = useQuery(GetComplaintsWithFilterDocument, {
     variables: {
-      id: userId,
+      filter: {
+        and: [
+          {
+            assignedUserId: {
+              eq: userId,
+            },
+          },
+        ],
+      },
+      take: 100,
     },
     onCompleted(data) {
       console.log("assigned data", data);
@@ -47,9 +60,17 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
     data: accuserData,
     loading: accuserLoading,
     refetch: accuserRefetch,
-  } = useQuery(GET_ACCUSER_COMPLAINTS, {
+  } = useQuery(GetComplaintsWithFilterDocument, {
     variables: {
-      departmentId: departmentId,
+      filter: {
+        contract: { accuserDepartmentUserId: { eq: departmentId } },
+      },
+      order: [
+        {
+          complaintState: SortEnumType.Desc,
+        },
+      ],
+      take: 100,
     },
     onCompleted(data) {
       console.log("accuser data", data);
@@ -69,9 +90,17 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
     data: accusedData,
     loading: accusedLoading,
     refetch: accusedRefetch,
-  } = useQuery(GET_ACCUSED_COMPLAINTS, {
+  } = useQuery(GetComplaintsWithFilterDocument, {
     variables: {
-      departmentId: departmentId,
+      filter: {
+        contract: { accusedDepartmentUserId: { eq: departmentId } },
+      },
+      order: [
+        {
+          complaintState: SortEnumType.Desc,
+        },
+      ],
+      take: 100,
     },
     onCompleted(data) {
       console.log("accused data", data);
@@ -102,17 +131,17 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
           chiefData?.complaint_getComplaints?.result.items.length ===
             0) ||
         (type === "mainRoomExpert" &&
-          assignedData?.complaint_getComplaints?.result.items
-            .length === 0) ||
+          assignedData?.complaint_getComplaints?.result?.items
+            ?.length === 0) ||
         (type === "accused" &&
-          accusedData?.complaint_getComplaints?.result.items
-            .length === 0) ||
+          accusedData?.complaint_getComplaints?.result?.items
+            ?.length === 0) ||
         (type === "accuser" &&
-          accuserData?.complaint_getComplaints?.result.items
-            .length === 0) ||
+          accuserData?.complaint_getComplaints?.result?.items
+            ?.length === 0) ||
         (type === "assigned" &&
-          assignedData?.complaint_getComplaints?.result.items
-            .length === 0)
+          assignedData?.complaint_getComplaints?.result?.items
+            ?.length === 0)
           ? "none"
           : "block"
       }
@@ -198,7 +227,9 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
             position: "sticky",
           }}
         >
-          {allLoading ? "در حال دریافت اطلاعات" : "تمامی درخواست های داوری"}
+          {allLoading
+            ? "در حال دریافت اطلاعات"
+            : "تمامی درخواست های داوری"}
         </Typography>
       ) : null}
 
@@ -214,13 +245,13 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
                 sm: "repeat(2, 1fr)",
                 md: "repeat(43 1fr)",
                 lg: "repeat(4, 1fr)",
-            }
+              }
             : {
                 xs: "repeat(1, 1fr)",
                 sm: "repeat(2, 1fr)",
                 md: "repeat(2, 1fr)",
                 lg: "repeat(2, 1fr)",
-            }
+              }
         }
         padding={1}
         paddingTop={
@@ -232,8 +263,8 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
         }
       >
         {type === "accused"
-          ? accusedData?.complaint_getComplaints?.result.items.map(
-              (complaint: Complaint) => (
+          ? accusedData?.complaint_getComplaints?.result?.items?.map(
+              (complaint) => (
                 <ComplaintCardNew
                   key={complaint.id}
                   id={complaint.id}
@@ -248,17 +279,19 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
                   state={complaint?.complaintState}
                   type="accused"
                   refetch={accusedRefetch}
-                  contractNumber={complaint?.contract?.contractNumberByAccuser}
+                  contractNumber={
+                    complaint?.contract?.contractNumberByAccuser ?? ""
+                  }
                 />
               )
             )
           : type === "accuser"
-          ? accuserData?.complaint_getComplaints?.result.items.map(
-              (complaint: Complaint) => (
+          ? accuserData?.complaint_getComplaints?.result?.items?.map(
+              (complaint) => (
                 <ComplaintCardNew
                   key={complaint.id}
                   id={complaint.id}
-                  acussed={complaint?.assignedUser?.userName}
+                  acussed={complaint?.assignedUser?.userName ?? ""}
                   date={complaint?.createdDate}
                   contractId={complaint?.contractId}
                   acussedId={String(
@@ -270,18 +303,19 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
                   type="accuser"
                   state={complaint?.complaintState}
                   refetch={accuserRefetch}
-                  contractNumber={complaint?.contract?.contractNumberByAccuser}
-
+                  contractNumber={
+                    complaint?.contract?.contractNumberByAccuser ?? ""
+                  }
                 />
               )
             )
           : type === "assigned"
-          ? assignedData?.complaint_getComplaints?.result.items.map(
-              (complaint: Complaint) => (
+          ? assignedData?.complaint_getComplaints?.result?.items?.map(
+              (complaint) => (
                 <ComplaintCardNew
                   key={complaint.id}
                   id={complaint.id}
-                  acussed={complaint?.assignedUser?.userName}
+                  acussed={complaint?.assignedUser?.userName ?? ""}
                   date={complaint?.createdDate}
                   contractId={complaint?.contractId}
                   acussedId={String(
@@ -293,7 +327,9 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
                   type="assigned"
                   state={complaint?.complaintState}
                   refetch={assignedRefetch}
-                  contractNumber={complaint?.contract?.contractNumberByAccuser}
+                  contractNumber={
+                    complaint?.contract?.contractNumberByAccuser ?? ""
+                  }
                 />
               )
             )
@@ -316,18 +352,19 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
                   type="chief"
                   state={complaint?.complaintState}
                   refetch={assignedRefetch}
-                  contractNumber={complaint?.contract?.contractNumberByAccuser}
-
+                  contractNumber={
+                    complaint?.contract?.contractNumberByAccuser
+                  }
                 />
               )
             )
           : type === "mainRoomExpert"
-          ? assignedData?.complaint_getComplaints?.result.items.map(
-              (complaint: Complaint) => (
+          ? assignedData?.complaint_getComplaints?.result?.items?.map(
+              (complaint) => (
                 <ComplaintCardNew
                   key={complaint.id}
                   id={complaint.id}
-                  acussed={complaint?.assignedUser?.userName}
+                  acussed={complaint?.assignedUser?.userName ?? ""}
                   date={complaint?.createdDate}
                   contractId={complaint?.contractId}
                   isPortal={true}
@@ -340,8 +377,9 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
                   type="mainRoomExpert"
                   state={complaint?.complaintState}
                   refetch={assignedRefetch}
-                  contractNumber={complaint?.contract?.contractNumberByAccuser}
-
+                  contractNumber={
+                    complaint?.contract?.contractNumberByAccuser ?? ""
+                  }
                 />
               )
             )
@@ -364,7 +402,9 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
                   type="mainRoomExpert"
                   state={complaint?.complaintState}
                   refetch={assignedRefetch}
-                  contractNumber={complaint?.contract?.contractNumberByAccuser}
+                  contractNumber={
+                    complaint?.contract?.contractNumberByAccuser
+                  }
                 />
               )
             )

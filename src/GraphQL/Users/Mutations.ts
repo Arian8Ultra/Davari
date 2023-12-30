@@ -110,10 +110,43 @@ export const UserSignUp = gql`
         parentId: $parentId
       }
     ) {
-      code
-      value
+      result {
+        id
+        userName
+        email
+        fullName
+        phoneNumber
+        nationalCode
+        parentId
+        userRoles {
+          roleType
+          id
+        }
+        userType
+      }
+      status {
+        code
+        value
+      }
       __typename
     }
+  }
+`;
+
+export const SendCallToMeetingSMS = gql`
+  mutation SendCallToMeetingSMS(
+    $input: SendInviteToMeetingSMSDtoInput!
+  ) {
+    test_sendCallToMeetingSMS(input: $input) {
+      code
+      value
+    }
+  }
+`;
+
+export const GenarateDateOfBirth = gql`
+  mutation GenarateDateOfBirth($input: String!) {
+    test_convertToGregorian(input: $input)
   }
 `;
 export type UserSignUpInput = {

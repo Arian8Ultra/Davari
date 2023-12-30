@@ -75,3 +75,4 @@ export const generatePassword = gql`
     test_generatePassword
   }
 `;
+
