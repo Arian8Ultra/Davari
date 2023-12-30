@@ -7,10 +7,25 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
 } from "react-router-dom";
-import Error from "../layout/Error";
+import "../index.css";
+import LoginLayout from "../layout/LoginLayout";
 import MainLayout from "../layout/MainLayout";
 import Root from "../layout/Root";
 import UserManagement from "../pages/Admin/UserManager/UserManagement";
+import UpdateContractAccuserPage from "../pages/Complaints/AddContract/UpdateContractAccuserPage";
+import CouncilListPage from "../pages/Complaints/CouncilList/CouncilListPage";
+import FilePage from "../pages/Complaints/Files/FilesPage";
+import PaymentPage from "../pages/Complaints/Payment/PaymentPage";
+import TablesPage from "../pages/Complaints/Tabels/TablesPage";
+import ContractDetailsPage from "../pages/Contracts/ContractDetailsPage";
+import ContractPage from "../pages/Contracts/ContractPage";
+import ForgetPassword from "../pages/Login/ForgetPassword";
+import OTPpage from "../pages/Login/OTPpage";
+import SignIn from "../pages/Login/SignIn";
+import CaseExpertSignUp from "../pages/Login/SignUp/CaseExpertSignUp";
+import ConfirmUser from "../pages/Login/SignUp/ConfirmUser";
+import PersonInfo from "../pages/Login/SignUp/PersonInfo";
+import SignUp from "../pages/Login/SignUp/SignUp";
 const Complaints = lazy(
   () => import("../pages/Complaints/Complaints")
 );
@@ -37,21 +52,6 @@ const AddComplaint = lazy(
 const AddArgument = lazy(
   () => import("../pages/Complaints/AddArguements/AddArguements")
 );
-import "../index.css";
-import ContractPage from "../pages/Contracts/ContractPage";
-import UpdateContractAccuserPage from "../pages/Complaints/AddContract/UpdateContractAccuserPage";
-import TablesPage from "../pages/Complaints/Tabels/TablesPage";
-import ContractDetailsPage from "../pages/Contracts/ContractDetailsPage";
-import SignUp from "../pages/Login/SignUp/SignUp";
-import PersonInfo from "../pages/Login/SignUp/PersonInfo";
-import ConfirmUser from "../pages/Login/SignUp/ConfirmUser";
-import FilePage from "../pages/Complaints/Files/FilesPage";
-import CouncilListPage from "../pages/Complaints/CouncilList/CouncilListPage";
-import SignIn from "../pages/Login/SignIn";
-import LoginLayout from "../layout/LoginLayout";
-import ForgetPassword from "../pages/Login/ForgetPassword";
-import OTPpage from "../pages/Login/OTPpage";
-import PaymentPage from "../pages/Complaints/Payment/PaymentPage";
 const UpdateContractPage = lazy(
   () => import("../pages/Complaints/AddContract/UpdateContractPage")
 );
@@ -82,6 +82,10 @@ const router = createBrowserRouter(
             path=":userName/:password"
             element={<ConfirmUser />}
           />
+          <Route
+          path="determiningCaseExpert/:complaintId"
+          element={<CaseExpertSignUp />}
+        />
         </Route>
         <Route
           path="complaints/createContractPage"
@@ -118,6 +122,10 @@ const router = createBrowserRouter(
         <Route
           path="complaints/:complaintId/files"
           element={<FilePage />}
+        />
+        <Route
+          path="complaints/:complaintId/pay/:amount"
+          element={<PaymentPage />}
         />
         <Route
           path="complaints/:complaintId/pay"
