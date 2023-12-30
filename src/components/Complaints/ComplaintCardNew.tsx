@@ -8,6 +8,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { useMutation, useQuery } from "@apollo/client";
+import { FileOpenOutlined } from "@mui/icons-material";
 import {
   Autocomplete,
   Box,
@@ -25,16 +26,22 @@ import {
 import { grey, red } from "@mui/material/colors";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useUserStore } from "../../Context/UserStore";
 import {
   DELETE_COMPLAINT,
   UPDATE_COMPLAINT,
 } from "../../GraphQL/Complaints/Mutations";
+import {
+  GET_ALL_ORGANIZATION_USERS,
+  GET_USER,
+  GET_USER_QUERIABLE,
+} from "../../GraphQL/Users/Queries";
 import { convertToPersianDigits } from "../../functions/Functions";
 import {
-  States,
-  StatesCap,
-  StatesFa,
-  newStates,
+  ComplaintState,
+  UpdateComplaintDocument,
+} from "../../gql/graphql";
+import {
   newStatesCap,
   newStatesFa,
   newStatesObj,
@@ -53,13 +60,6 @@ import {
   secondaryDark,
 } from "../../theme/color";
 import NewModal from "../Modals";
-import {
-  GET_ALL_ORGANIZATION_USERS,
-  GET_USER,
-  GET_USER_QUERIABLE,
-} from "../../GraphQL/Users/Queries";
-import { useUserStore } from "../../Context/UserStore";
-import { FileOpenOutlined } from "@mui/icons-material";
 interface Props {
   id: number;
   complaintId?: number;
@@ -108,7 +108,7 @@ const ComplaintCardNew = (props: Props) => {
   const [departmentsUsers, setDepartmentsUsers] = useState<User[]>(
     []
   );
-  const [updateComplaint] = useMutation(UPDATE_COMPLAINT);
+  const [updateComplaint] = useMutation(UpdateComplaintDocument);
   const [deleteComplaint] = useMutation(DELETE_COMPLAINT, {
     variables: {
       id: props.id,
@@ -1254,6 +1254,204 @@ const ComplaintCardNew = (props: Props) => {
         } else {
           break;
         }
+
+      case ComplaintState.WaitingForFirstPayment:
+        if (props.type == "accuser") {
+          return (
+            <Box
+              display={"grid"}
+              gridTemplateColumns={"repeat(2,1fr)"}
+              mt={"1rem"}
+              gap={"6rem"}
+            >
+              <Button
+                sx={{
+                  borderRadius: "0.5rem",
+                  backgroundColor: Red,
+                  color: "white",
+                  "&:hover": {
+                    backgroundColor: red[100],
+                    color: Red,
+                  },
+                }}
+                onClick={() => {
+                  const agree = confirm(
+                    "آیا از انصراف از این درخواست داوری مطمئن هستید؟"
+                  );
+                  if (agree) {
+                    void deleteComplaint();
+                  }
+                }}
+              >
+                انصراف از درخواست داوری
+              </Button>
+              <Button
+                sx={{
+                  borderRadius: "0.5rem",
+                  backgroundColor: primaryDark,
+                  color: "white",
+                  "&:hover": {
+                    backgroundColor: primary,
+                    color: "white",
+                  },
+                }}
+                onClick={() => {
+                  navigate(`/complaints/${props.id}/pay`);
+                }}
+              >
+                پرداخت هزینه اول داوری
+              </Button>
+            </Box>
+          );
+        } else {
+          break;
+        }
+
+      case ComplaintState.WaitingForMailRoomExpertToDownloadDecree:
+        if (props.type == "mainRoomExpert") {
+          return (
+            <Box
+              display={"grid"}
+              gridTemplateColumns={"repeat(2,1fr)"}
+              mt={"1rem"}
+              gap={"6rem"}
+            >
+              <Button
+                sx={{
+                  borderRadius: "0.5rem",
+                  backgroundColor: Red,
+                  color: "white",
+                  "&:hover": {
+                    backgroundColor: red[100],
+                    color: Red,
+                  },
+                }}
+                onClick={() => {
+                  const agree = confirm(
+                    "آیا از انصراف از این درخواست داوری مطمئن هستید؟"
+                  );
+                  if (agree) {
+                    void deleteComplaint();
+                  }
+                }}
+              >
+                انصراف از درخواست داوری
+              </Button>
+              <Button
+                sx={{
+                  borderRadius: "0.5rem",
+                  backgroundColor: primaryDark,
+                  color: "white",
+                  "&:hover": {
+                    backgroundColor: primary,
+                    color: "white",
+                  },
+                }}
+                onClick={() => {
+                  window.open(
+                    `http://172.16.23.50:7030/files/letters/Decree_253645234_0345.docx`
+                  );
+                  void updateComplaint({
+                    variables: {
+                      complaintState:
+                        ComplaintState.WaitingForExpertsCouncilPayment,
+                      id: props.id,
+                    },
+                  });
+                }}
+              >
+                دانلود و تایید قرارنامه
+              </Button>
+            </Box>
+          );
+        } else {
+          break;
+        }
+
+
+        case ComplaintState.WaitingForExpertsCouncilPayment:
+          if (props.type == "accuser") {
+            return (
+              <Box
+                display={"grid"}
+                gridTemplateColumns={"repeat(2,1fr)"}
+                mt={"1rem"}
+                gap={"6rem"}
+              >
+                <Button
+                  sx={{
+                    borderRadius: "0.5rem",
+                    backgroundColor: Red,
+                    color: "white",
+                    "&:hover": {
+                      backgroundColor: red[100],
+                      color: Red,
+                    },
+                  }}
+                  onClick={() => {
+                    const agree = confirm(
+                      "آیا از انصراف از این درخواست داوری مطمئن هستید؟"
+                    );
+                    if (agree) {
+                      void deleteComplaint();
+                    }
+                  }}
+                >
+                  انصراف از درخواست داوری
+                </Button>
+                <Button
+                  sx={{
+                    borderRadius: "0.5rem",
+                    backgroundColor: primaryDark,
+                    color: "white",
+                    "&:hover": {
+                      backgroundColor: primary,
+                      color: "white",
+                    },
+                  }}
+                  onClick={() => {
+                    navigate(`/complaints/${props.id}/pay/100000`);
+                  }}
+                >
+                  پرداخت هزینه قوه قضایی
+                </Button>
+              </Box>
+            );
+          } else {
+            break;
+          }
+        case ComplaintState.DeterminingCaseExpert:
+          if (props.type == "mainRoomExpert" || props.type == "chief") {
+            return (
+              <Box
+                display={"grid"}
+                gridTemplateColumns={"repeat(2,1fr)"}
+                mt={"1rem"}
+                gap={"6rem"}
+              >
+                <div className=""></div>
+                <Button
+                  sx={{
+                    borderRadius: "0.5rem",
+                    backgroundColor: primaryDark,
+                    color: "white",
+                    "&:hover": {
+                      backgroundColor: primary,
+                      color: "white",
+                    },
+                  }}
+                  onClick={() => {
+                    navigate(`/signUp/determiningCaseExpert/${props.id}`);
+                  }}
+                >
+                  تعیین کارشناس پرونده
+                </Button>
+              </Box>
+            );
+          } else {
+            break;
+          }
+
       default:
         if (
           user.parentId == props.acusserId ||
@@ -1998,7 +2196,7 @@ const ComplaintCardNew = (props: Props) => {
                         id: props.id,
                         assignedUserId: assignedUser?.id,
                         complaintState:
-                          states.CheckingForBeingConstructive.cap,
+                          ComplaintState.CheckingForBeingConstructive,
                       },
 
                       onCompleted(data) {

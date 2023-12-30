@@ -17,7 +17,13 @@ import {
   OptionalArgument,
   OptionalArgumentSamll,
 } from "../../static/Types";
-import { Green, GreenLight, background, primary, secondaryDark } from "../../theme/color";
+import {
+  Green,
+  GreenLight,
+  background,
+  primary,
+  secondaryDark,
+} from "../../theme/color";
 import FileBox from "../FileBox";
 import NewModal from "../Modals";
 import { newStatesObj } from "../../static/States";
@@ -59,13 +65,14 @@ const ArgumentModal = (props: Props) => {
       console.log(data);
       props.onClose();
       setArgument({} as OptionalArgumentSamll);
-      props.isFirst &&               void updateCompaint({
-        variables: {
-          id: props.complaintId,
-          complaintState:
-            newStatesObj.waitingForAccuserToApproveArguments.cap,
-        }
-      });
+      props.isFirst &&
+        void updateCompaint({
+          variables: {
+            id: props.complaintId,
+            complaintState:
+              newStatesObj.waitingForAccuserToApproveArguments.cap,
+          },
+        });
       props.refetch && props.refetch();
     },
   });
@@ -158,7 +165,8 @@ const ArgumentModal = (props: Props) => {
                 void UpdateArgument({
                   variables: {
                     id: props.argumentId,
-                    accuserAnswerToAccusedResponse: Argument?.accuserAnswerToAccusedResponse,
+                    accuserAnswerToAccusedResponse:
+                      Argument?.accuserAnswerToAccusedResponse,
                   },
                 });
               }}
@@ -168,8 +176,8 @@ const ArgumentModal = (props: Props) => {
                 borderRadius: "0.5rem",
                 width: "100%",
                 "&:hover": {
-                  background:GreenLight
-                }
+                  background: GreenLight,
+                },
               }}
               variant={"contained"}
             >
@@ -280,7 +288,7 @@ const ArgumentModal = (props: Props) => {
                   Files: files,
                 });
               }}
-              fileTypes={["pdf","jpeg"]}
+              fileTypes={["pdf", "jpeg"]}
               files={Argument?.Files}
             >
               آپلود مستندات
@@ -371,8 +379,8 @@ const ArgumentModal = (props: Props) => {
                 borderRadius: "0.5rem",
                 // width: "50%",
                 "&:hover": {
-                  background:GreenLight
-                }
+                  background: GreenLight,
+                },
               }}
               variant={"contained"}
             >
@@ -434,7 +442,7 @@ const ArgumentModal = (props: Props) => {
                 });
               }}
               files={Argument?.Files}
-              fileTypes={["pdf","jpeg"]}
+              fileTypes={["pdf", "jpeg"]}
             >
               آپلود مستندات
             </FileBox>
@@ -480,8 +488,8 @@ const ArgumentModal = (props: Props) => {
                 borderRadius: "0.5rem",
                 width: "100%",
                 "&:hover": {
-                  background:GreenLight
-                }
+                  background: GreenLight,
+                },
               }}
               variant={"contained"}
             >
@@ -596,7 +604,7 @@ const ArgumentModal = (props: Props) => {
                 });
               }}
               files={Argument?.Files}
-              fileTypes={["pdf","jpeg"]}
+              fileTypes={["pdf", "jpeg"]}
             >
               آپلود مستندات
             </FileBox>
@@ -645,8 +653,8 @@ const ArgumentModal = (props: Props) => {
                 borderRadius: "0.5rem",
                 width: "100%",
                 "&:hover": {
-                  background:GreenLight
-                }
+                  background: GreenLight,
+                },
               }}
               variant={"contained"}
             >
