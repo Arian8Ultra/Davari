@@ -90,6 +90,7 @@ const ComplaintCardNew = (props: Props) => {
   const handleClose = () => setOpen(false);
   const user = useUserStore((state) => state.user);
   const navigate = useNavigate();
+  const [isHover, setIsHover] = useState(false);
   const [addModal, setAddModal] = useState({
     open: false,
   });
@@ -1311,6 +1312,12 @@ const ComplaintCardNew = (props: Props) => {
           background: "rgba(240,240,240)",
         },
       }}
+      onMouseEnter={() => {
+        setIsHover(true);
+      }}
+      onMouseLeave={() => {
+        setIsHover(false);
+      }}
     >
       <Box
         display={"flex"}
@@ -1338,6 +1345,7 @@ const ComplaintCardNew = (props: Props) => {
         height={"100%"}
         display={"flex"}
         justifyContent={"center"}
+        flexDirection={"column"}
         alignItems={"center"}
         onClick={handleOpen}
       >
@@ -1376,10 +1384,12 @@ const ComplaintCardNew = (props: Props) => {
             ).toFixed(2) * 100
           }
           sx={{
-            width: "90%",
             gridColumn: "3",
             padding: "1rem",
-            borderRadius: "1rem",
+            position: "absolute",
+            translate: "-50% -50%",
+            top: "50%",
+            right: "50%",
             // gridRow: "1/3",
             "& .MuiCircularProgress-circle": {
               backgroundColor: "rgba(0,0,0,1)",
@@ -1409,6 +1419,30 @@ const ComplaintCardNew = (props: Props) => {
             )
           ).split(".")[0] + "%"}
         </Typography>
+        <Box
+          sx={{
+            zIndex: 100,
+            translate: "0% 50%",
+            bottom: "50%",
+            // right: "55%",
+            width: "fit-content",
+            opacity: isHover ? 1 : 0,
+            transition: "all 0.3s",
+
+            position: "absolute",
+            backgroundColor: "rgba(255,255,255,0.8)",
+            padding: "0.2rem 0.5rem",
+            backdropFilter: "blur(5px)",
+            borderRadius: "0.5rem",
+            wordWrap: "normal",
+            boxShadow: "0 0 0.5rem rgba(0,0,0,0.5)",
+          }}
+        >
+          <Typography textAlign={"center"} fontSize={"0.8rem"}>
+            {/* @ts-ignore */}
+            {newStatesFa[newStatesCap.indexOf(props.state)]}
+          </Typography>
+        </Box>
       </Box>
 
       <NewModal
@@ -1449,9 +1483,7 @@ const ComplaintCardNew = (props: Props) => {
                     }
                   );
                 }}
-                endIcon={
-                  <FileOpenOutlined/>
-                }
+                endIcon={<FileOpenOutlined />}
               >
                 مشاهده نامه ها
               </Button>
