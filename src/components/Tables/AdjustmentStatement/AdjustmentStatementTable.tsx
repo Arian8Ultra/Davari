@@ -512,7 +512,7 @@ const AdjustmentStatementTable = (props: Props) => {
                   }}
                   type="date"
                 />
-                <FaTextField
+                {/* <FaTextField
                   label="ارزی"
                   sx={{
                     color: primary,
@@ -525,7 +525,6 @@ const AdjustmentStatementTable = (props: Props) => {
                   }}
                   InputProps={{
                     sx: {
-                      // change the color of text in select
                       color: primary,
                       fontSize: "1.3rem",
                     },
@@ -537,7 +536,7 @@ const AdjustmentStatementTable = (props: Props) => {
                       {option.label} {option.value}
                     </MenuItem>
                   ))}
-                </FaTextField>
+                </FaTextField> */}
               </Box>
             </TableCell>
           </TableRow>
