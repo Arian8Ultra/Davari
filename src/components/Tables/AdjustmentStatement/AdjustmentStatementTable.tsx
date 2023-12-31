@@ -8,6 +8,7 @@ import { EditOutlined } from "@mui/icons-material";
 import {
   Box,
   IconButton,
+  MenuItem,
   Table,
   TableBody,
   TableCell,
@@ -49,6 +50,33 @@ import FaTypography from "../../FaComponents/FaTypography";
 import NewModal from "../../Modals";
 import AdjustmentStatementCard from "./AdjustmentStatementCard";
 
+const currencies = [
+  {
+    value: "دلار آمریکا",
+    label: "$",
+  },
+  {
+    value: "یورو",
+    label: "€",
+  },
+  {
+    value: "بیتکوین",
+    label: "฿",
+  },
+  {
+    value: "JPY",
+    label: "¥",
+  },
+  {
+    value: "روپیه",
+    label: "₽",
+  },
+  {
+    value: "ريال",
+    label: "ريال",
+  },
+];
+
 interface Props extends TableContainerProps {
   AdjustmentStatementTableId?: number;
   type?: "ACCUSED" | "ACCUSER";
@@ -57,6 +85,9 @@ const AdjustmentStatementTable = (props: Props) => {
   const { contractId } = useParams<{ contractId: string }>();
   const user = useUserStore((state) => state.user);
   const [editMode, setEditMode] = React.useState<boolean>(false);
+  const [TableHeader, setTableHeader] = React.useState<string>();
+  const [TableHeaderOther, setTableHeaderOther] =
+    React.useState<string>();
   const [AdjustmentStatement, setAdjustmentStatements] =
     React.useState<AdjustmentStatement[]>([
       // {
@@ -85,22 +116,17 @@ const AdjustmentStatementTable = (props: Props) => {
   const [newAdjustmentStatement, setNewAdjustmentStatement] =
     React.useState<AdjustmentStatement>({} as AdjustmentStatement);
 
-  const {
-    handleMutation: addAdjustmentStatement,
-  } = MutationWrapper(
+  const { handleMutation: addAdjustmentStatement } = MutationWrapper(
     CREATE_ADJUSTMENT_STATEMENT,
     "adjustmentStatement_addAdjustmentStatement"
   );
-  const {
-    handleMutation: addAdjustmentStatementTable,
-  } = MutationWrapper(
-    CREATE_ADJUSTMENT_STATEMENT_TABLE,
-    "adjustmentStatementTable_addAdjustmentStatementTable"
-  );
+  const { handleMutation: addAdjustmentStatementTable } =
+    MutationWrapper(
+      CREATE_ADJUSTMENT_STATEMENT_TABLE,
+      "adjustmentStatementTable_addAdjustmentStatementTable"
+    );
 
-  const {
-    handleMutation: editAdjustmentStatement,
-  } = MutationWrapper(
+  const { handleMutation: editAdjustmentStatement } = MutationWrapper(
     UPDATE_ADJUSTMENT_STATEMENT,
     "adjustmentStatement_updateAdjustmentStatement"
   );
@@ -132,13 +158,11 @@ const AdjustmentStatementTable = (props: Props) => {
     }
   );
 
-
-  const {
-    handleMutation: createAdjustmentStatementPart,
-  } = MutationWrapper(
-    CREATE_ADJUSTMENT_STATEMENT_PART,
-    "adjustmentStatementPart_addAdjustmentStatementPart"
-  );
+  const { handleMutation: createAdjustmentStatementPart } =
+    MutationWrapper(
+      CREATE_ADJUSTMENT_STATEMENT_PART,
+      "adjustmentStatementPart_addAdjustmentStatementPart"
+    );
 
   React.useEffect(() => {
     console.log("GET_AdjustmentStatement_TABLE_BY_CONTRACT_ID", data);
@@ -384,11 +408,136 @@ const AdjustmentStatementTable = (props: Props) => {
                   top: "50%",
                   left: "50%",
                   transform: "translate(-50%,-50%)",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "1rem",
                 }}
               >
                 <FaTypography variant="h6" textAlign={"center"}>
-                  جدول صورت وضعیت تعدیل
+                  جدول صورت حساب
                 </FaTypography>
+                <FaTextField
+                  label="انتخاب کنید"
+                  select
+                  sx={{
+                    color: primary,
+                    width: "130px",
+                  }}
+                  InputLabelProps={{
+                    sx: {
+                      color: primary,
+                    },
+                  }}
+                  value={TableHeader}
+                  onChange={(e) => {
+                    setTableHeader(e.target.value);
+                  }}
+                  InputProps={{
+                    sx: {
+                      // change the color of text in select
+                      color: primary,
+                      fontSize: "1.2rem",
+                    },
+                  }}
+                >
+                  <MenuItem value="REDUCE">تعدیل</MenuItem>
+                  <MenuItem value="CASH">ارز</MenuItem>
+                  <MenuItem value="MATERIAL">مصالح</MenuItem>
+                  <MenuItem value="OTHER">سایر</MenuItem>
+                </FaTextField>
+
+                <FaTextField
+                  value={TableHeaderOther}
+                  label="سایر"
+                  onChange={(e) => {
+                    setTableHeaderOther(e.target.value);
+                  }}
+                  sx={{
+                    color: primary,
+                    display:
+                      TableHeader === "OTHER" ? "flex" : "none",
+                  }}
+                  InputLabelProps={{
+                    sx: {
+                      color: primary,
+                    },
+                  }}
+                  InputProps={{
+                    sx: {
+                      // change the color of text in select
+                      color: primary,
+                      fontSize: "1.3rem",
+                    },
+                  }}
+                />
+
+                <FaTextField
+                  label="شماره بخشنامه"
+                  sx={{
+                    color: primary,
+                    display:
+                      TableHeader === "REDUCE" ? "flex" : "none",
+                  }}
+                  InputLabelProps={{
+                    sx: {
+                      color: primary,
+                    },
+                  }}
+                  InputProps={{
+                    sx: {
+                      // change the color of text in select
+                      color: primary,
+                      fontSize: "1.3rem",
+                    },
+                  }}
+                />
+                <FaTextField
+                  label="تاریخ بخشنامه"
+                  sx={{
+                    color: primary,
+                    display:
+                      TableHeader === "REDUCE" ? "flex" : "none",
+                  }}
+                  InputLabelProps={{
+                    sx: {
+                      color: primary,
+                    },
+                  }}
+                  InputProps={{
+                    sx: {
+                      // change the color of text in select
+                      color: primary,
+                      fontSize: "1.3rem",
+                    },
+                  }}
+                  type="date"
+                />
+                <FaTextField
+                  label="ارزی"
+                  sx={{
+                    color: primary,
+                    display: TableHeader === "CASH" ? "flex" : "none",
+                  }}
+                  InputLabelProps={{
+                    sx: {
+                      color: primary,
+                    },
+                  }}
+                  InputProps={{
+                    sx: {
+                      // change the color of text in select
+                      color: primary,
+                      fontSize: "1.3rem",
+                    },
+                  }}
+                  select
+                >
+                  {currencies.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label} {option.value}
+                    </MenuItem>
+                  ))}
+                </FaTextField>
               </Box>
             </TableCell>
           </TableRow>

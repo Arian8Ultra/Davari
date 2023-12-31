@@ -360,7 +360,7 @@ const WorkConditionStatementTable = (props: Props) => {
                 }}
               >
                 <FaTypography variant="h6" textAlign={"center"}>
-                  جدول صورت وضعیت کار
+                  جدول صورت وضعیت کارکرد
                 </FaTypography>
               </Box>
             </TableCell>

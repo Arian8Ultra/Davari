@@ -191,6 +191,7 @@ export const newStates = [
   "waitingForMailRoomExpertToDownloadDecree",
   "waitingForExpertsCouncilPayment",
   "determiningCaseExpert",
+  "determiningMeetingByMailRoomExpert",
   "didNotFulfillFirstPayment",
   "waitingForAccuserAndAccusedToSignDecree",
   "waitingForAccuserToSignDecree",
@@ -242,6 +243,7 @@ export const newStatesFa = [
   "در انتطار دانلود و تایید قرارنامه توسط کارشناس دبیرخانه",
   "در انتظار واریز هزینه داوری قوه قضایی",
   "در انتظار تعیین کارشناس پرونده",
+  "تعیین زمان جلسه توسط کارشناس دبیرخانه",
   "عدم پرداخت هزینه اول داوری در مهلت مقرر",
   "در انتظار امضای قرارنامه توسط خواهان و خوانده",
   "در انتظار امضای قرارنامه توسط خواهان",
@@ -293,6 +295,7 @@ export const newStatesCap = [
   "WAITING_FOR_MAIL_ROOM_EXPERT_TO_DOWNLOAD_DECREE",
   "WAITING_FOR_EXPERTS_COUNCIL_PAYMENT",
   "DETERMINING_CASE_EXPERT",
+  "DETERMINING_MEETING_BY_MAIL_ROOM_EXPERT",
   "DID_NOT_FULFILL_FIRST_PAYMENT",
   "WAITING_FOR_ACCUSER_AND_ACCUSED_TO_SIGN_DECREE",
   "WAITING_FOR_ACCUSER_TO_SIGN_DECREE",
@@ -418,6 +421,11 @@ export const newStatesObj = {
   determiningCaseExpert: {
     fa: "در انتظار تعیین کارشناس پرونده",
     cap: "DETERMINING_CASE_EXPERT",
+  },
+
+  determiningMeetingByMailRoomExpert: {
+    fa: "تعیین زمان جلسه توسط کارشناس دبیرخانه",
+    cap: "DETERMINING_MEETING_BY_MAIL_ROOM_EXPERT",
   },
 
   didNotFulfillFirstPayment: {

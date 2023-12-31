@@ -45,6 +45,7 @@ const CaseExpertSignUp = () => {
     isAlive?: boolean;
     gender?: "MALE" | "FEMALE";
     confirmCode?: string;
+    password?: string;
   }>();
 
   const [data, setData] = React.useState<PersonDataDto>();
@@ -231,6 +232,10 @@ const CaseExpertSignUp = () => {
               dateOfBirth: dateOfBirth,
             },
           }).then((res: PersonDataDto) => {
+            if(res instanceof Error){
+              setErrorMessage("کد ملی و تاریخ تولد با هم انطباق ندارند");
+              return;
+            }
             void checkPhoneNumber().then((phoneRes) => {
               console.log("phoneRes", phoneRes);
               if (phoneRes.data?.user_validatePhoneNumber.code == 1) {
@@ -252,6 +257,9 @@ const CaseExpertSignUp = () => {
               }
               console.log(res);
             });
+          }).catch((err) => {
+            console.log(err);
+            setErrorMessage("کد ملی وارد شده معتبر نیست");
           });
         }}
       >
@@ -322,6 +330,10 @@ const CaseExpertSignUp = () => {
               });
               void generatePasswordMutation().then((res) => {
                 const password = res.data?.test_generatePassword;
+                setInfos((prevInfos) => ({
+                  ...prevInfos,
+                  password: res.data?.test_generatePassword,
+                }));
                 if (password) {
                   void userSignUp({
                     variables: {
@@ -348,7 +360,7 @@ const CaseExpertSignUp = () => {
                           variables: {
                             input: {
                               complaintState:
-                                ComplaintState.WaitingForAccuserAndAccusedToSignDecree,
+                                ComplaintState.DeterminingMeetingByMailRoomExpert,
                               councilExpertId:
                                 data.user_signUp.result?.id,
                               id: parseInt(complaintId || "0"),
@@ -425,7 +437,9 @@ const CaseExpertSignUp = () => {
             textAlign={"center"}
             sx={{ gridColumn: "span 1" }}
           >
-            {pass.data?.test_generatePassword}
+            {infos?.password && complaintId
+              ? infos?.password
+              : ""}
           </Typography>
 
           <Button

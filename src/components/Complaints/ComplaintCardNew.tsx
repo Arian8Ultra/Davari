@@ -1451,6 +1451,37 @@ const ComplaintCardNew = (props: Props) => {
           } else {
             break;
           }
+        case ComplaintState.DeterminingMeetingByMailRoomExpert:
+          if (props.type == "mainRoomExpert" || props.type == "chief") {
+            return (
+              <Box
+                display={"grid"}
+                gridTemplateColumns={"repeat(2,1fr)"}
+                mt={"1rem"}
+                gap={"6rem"}
+              >
+                <div className=""></div>
+                <Button
+                  sx={{
+                    borderRadius: "0.5rem",
+                    backgroundColor: primaryDark,
+                    color: "white",
+                    "&:hover": {
+                      backgroundColor: primary,
+                      color: "white",
+                    },
+                  }}
+                  onClick={() => {
+                    navigate(`/complaints/${props.id}/setMeeting`);
+                  }}
+                >
+                  تعیین زمان جلسه پرونده
+                </Button>
+              </Box>
+            );
+          } else {
+            break;
+          }
 
       default:
         if (

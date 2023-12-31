@@ -26,6 +26,7 @@ import CaseExpertSignUp from "../pages/Login/SignUp/CaseExpertSignUp";
 import ConfirmUser from "../pages/Login/SignUp/ConfirmUser";
 import PersonInfo from "../pages/Login/SignUp/PersonInfo";
 import SignUp from "../pages/Login/SignUp/SignUp";
+import AddMeetingPage from "../pages/Complaints/Meeting/AddMeetingPage";
 const Complaints = lazy(
   () => import("../pages/Complaints/Complaints")
 );
@@ -130,6 +131,10 @@ const router = createBrowserRouter(
         <Route
           path="complaints/:complaintId/pay"
           element={<PaymentPage />}
+        />
+        <Route
+          path="complaints/:complaintId/setMeeting"
+          element={<AddMeetingPage />}
         />
 
         <Route path="contracts" element={<Contracts />} />

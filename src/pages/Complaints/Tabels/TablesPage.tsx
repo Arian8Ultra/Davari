@@ -26,8 +26,8 @@ const TablesPage = () => {
       />
 
       <InstallmentTable />
-      <AdjustmentStatementTable />
       <WorkConditionStatementTable />
+      <AdjustmentStatementTable />
       <Box display={'grid'} gridTemplateColumns={'repeat(6,1fr)'} my={'2rem'}>
         <Button
           variant="contained"

@@ -41,6 +41,7 @@ import {
   AddComplaintNoteDocument,
   GetComplaintsNotesDocument,
   NoteType,
+  SendAccusedRespondedSmsDocument,
 } from "../../../gql/graphql";
 import NoAccess from "../../../layout/NoAccess";
 import { newStatesObj } from "../../../static/States";
@@ -243,6 +244,8 @@ const AddArgument = () => {
       },
     }
   );
+
+  const [sendSMS] = useMutation(SendAccusedRespondedSmsDocument)
 
   return (
     <>
@@ -610,6 +613,13 @@ const AddArgument = () => {
                 onCompleted() {
                   alert("ثبت شد");
                   navigate("/complaints");
+
+                  // here we goooooooooooooooooo
+                  void sendSMS({
+                    variables:{
+                      complaintId: complaintIdInt || 0
+                    }
+                  })
                 },
               });
             } else if (stateInt == -1) {
@@ -639,7 +649,7 @@ const AddArgument = () => {
                 },
                 onCompleted() {
                   alert("ثبت شد");
-                  navigate("/complaints");
+                  navigate("/portal");
                 },
               });
             } else if (stateInt == 3) {
