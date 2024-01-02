@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-refresh/only-export-components */
@@ -28,6 +30,7 @@ import CaseExpertSignUp from "../pages/Login/SignUp/CaseExpertSignUp";
 import ConfirmUser from "../pages/Login/SignUp/ConfirmUser";
 import PersonInfo from "../pages/Login/SignUp/PersonInfo";
 import SignUp from "../pages/Login/SignUp/SignUp";
+import { useUserStore } from "../Context/UserStore";
 const Complaints = lazy(
   () => import("../pages/Complaints/Complaints")
 );
@@ -57,6 +60,7 @@ const AddArgument = lazy(
 const UpdateContractPage = lazy(
   () => import("../pages/Complaints/AddContract/UpdateContractPage")
 );
+const user = useUserStore.getState().user;
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Root />}>
@@ -74,10 +78,6 @@ const router = createBrowserRouter(
           path="complaints/addContract"
           element={<AddContract />}
         />
-        <Route path="test" element={<Test />} />
-        <Route path="login" element={<Test />} />
-        <Route path="signin/:oldPath" element={<Test />} />
-
         <Route path="signUp" element={<SignUp />}>
           <Route path="" element={<PersonInfo />} />
           <Route
@@ -85,9 +85,9 @@ const router = createBrowserRouter(
             element={<ConfirmUser />}
           />
           <Route
-          path="determiningCaseExpert/:complaintId"
-          element={<CaseExpertSignUp />}
-        />
+            path="determiningCaseExpert/:complaintId"
+            element={<CaseExpertSignUp />}
+          />
         </Route>
         <Route
           path="complaints/createContractPage"

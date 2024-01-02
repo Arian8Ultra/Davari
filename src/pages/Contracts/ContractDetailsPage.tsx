@@ -209,21 +209,21 @@ const ContractDetailsPage = () => {
         alignItems={"center"}
         justifyContent={"center"}
         gap={2}
-        width={'66%'}
-        marginX={'auto'}
+        width={"66%"}
+        marginX={"auto"}
         // padding={"2rem"}
         // paddingTop={"0"}
         border={`2px solid ${secondary}`}
         borderRadius={"0.5rem"}
         position={"relative"}
         marginY={"3rem"}
-        padding={'-1px'}
+        padding={"-1px"}
         // paddingX={"25%"}
       >
         <TableContainer
           sx={{
             gridColumn: "1 / span 12",
-            m:0,
+            m: 0,
             // outline: "2px solid #000",
             // change the table head background color
             borderRadius: "0.5rem",
@@ -899,26 +899,24 @@ const ContractDetailsPage = () => {
         gridColumn={"span 12"}
         display={"grid"}
         gridTemplateColumns={"1fr 1fr"}
-        justifyContent={'center'}
+        justifyContent={"center"}
         alignItems={"center"}
         gap={"2rem"}
-        my={'2rem'}
+        my={"2rem"}
       >
         <Button
           variant="contained"
           sx={{
             backgroundColor: Red,
             color: "white",
-            width:'max-content',
-            justifySelf:'end',
+            width: "max-content",
+            justifySelf: "end",
             "&:hover": {
               backgroundColor: RedLight,
               color: Red,
             },
           }}
-          endIcon={
-            <Cancel/>
-          }
+          endIcon={<Cancel />}
           onClick={() => {
             void updateByExpert({
               variables: {
@@ -945,7 +943,7 @@ const ContractDetailsPage = () => {
             });
           }}
         >
-          عدم تاییدعمرانی بودن
+          عدم احراز شرایط داوری
         </Button>
 
         <Button
@@ -953,15 +951,13 @@ const ContractDetailsPage = () => {
           sx={{
             backgroundColor: Green,
             color: "white",
-            width:'max-content',
+            width: "max-content",
             "&:hover": {
               backgroundColor: GreenLight,
               color: Green,
             },
           }}
-          endIcon={
-            <CheckBox/>
-          }
+          endIcon={<CheckBox />}
           onClick={() => {
             void updateByExpert({
               variables: {
@@ -987,7 +983,7 @@ const ContractDetailsPage = () => {
             });
           }}
         >
-          تایید عمرانی بودن
+          احراز شرایط داوری
         </Button>
       </Box>
     </>

@@ -31,6 +31,7 @@ export const Titles = {
     answerToComplaints: 'پاسخ به درخواست های داوری',
     complaint: 'درخواست داوری',
     portal: 'پورتال',
+    expertPortal: 'پورتال کارشناسان',
     portalList: 'لیست پورتال',
     admin: 'مدیریت',
     adminPanel: 'پنل مدیریت',

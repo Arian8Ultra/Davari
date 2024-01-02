@@ -405,6 +405,7 @@ export const GetComplaintsWithFilter = gql`
           }
           complaintState
           complaintCode
+          councilExpertId
           assignedUser {
             userName
             fullName

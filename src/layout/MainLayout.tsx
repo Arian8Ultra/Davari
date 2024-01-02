@@ -719,7 +719,7 @@ export default function MainLayout() {
               gap: "1rem",
             }}
           >
-            {SideBarMenu.map((item, index) =>
+            {/* {SideBarMenu.map((item, index) =>
               (user.userType === "CONTRACTOR_OR_CONSULTANT" &&
                 item.primary === Titles.adminPanel) ||
               (isMailRoom &&
@@ -777,6 +777,93 @@ export default function MainLayout() {
                   )}
                 </ListItemLink>
               )
+            )} */}
+
+            {/* {String(isMailRoom)} */}
+
+            {SideBarMenu.map((item, index) =>
+              user.userRoles &&
+              user.userRoles.some((role) =>
+                item.accessNeeded?.includes(role.roleType)
+              ) && isMailRoom !=true ? (
+                <ListItemLink
+                  key={index}
+                  to={item.to}
+                  primary={item.primary}
+                  icon={item.icon}
+                  hasLink={item.hasLink}
+                  hasCollapse={item.hasCollapse}
+                  open={open}
+                  display={"block"}
+                >
+                  {item.children?.map(
+                    (child: SideBarLinkType, index) => (
+                      <ListItemLink
+                        key={index}
+                        to={child.to && child.to}
+                        primary={child.primary}
+                        icon={child.icon}
+                        hasLink={child.hasLink}
+                        hasCollapse={child.hasCollapse}
+                        open={open}
+                      >
+                        {child.children?.map(
+                          (child: SideBarLinkType, index) => (
+                            <ListItemLink
+                              key={index}
+                              to={child.to && child.to}
+                              primary={child.primary}
+                              icon={child.icon}
+                              hasLink={child.hasLink}
+                              hasCollapse={child.hasCollapse}
+                              open={open}
+                            />
+                          )
+                        )}
+                      </ListItemLink>
+                    )
+                  )}
+                </ListItemLink>
+              ) : item.mailRoom == true && isMailRoom == true ? (
+                <ListItemLink
+                  key={index}
+                  to={item.to}
+                  primary={item.primary}
+                  icon={item.icon}
+                  hasLink={item.hasLink}
+                  hasCollapse={item.hasCollapse}
+                  open={open}
+                  display={"block"}
+                >
+                  {item.children?.map(
+                    (child: SideBarLinkType, index) => (
+                      <ListItemLink
+                        key={index}
+                        to={child.to && child.to}
+                        primary={child.primary}
+                        icon={child.icon}
+                        hasLink={child.hasLink}
+                        hasCollapse={child.hasCollapse}
+                        open={open}
+                      >
+                        {child.children?.map(
+                          (child: SideBarLinkType, index) => (
+                            <ListItemLink
+                              key={index}
+                              to={child.to && child.to}
+                              primary={child.primary}
+                              icon={child.icon}
+                              hasLink={child.hasLink}
+                              hasCollapse={child.hasCollapse}
+                              open={open}
+                            />
+                          )
+                        )}
+                      </ListItemLink>
+                    )
+                  )}
+                </ListItemLink>
+              ) : null
             )}
           </List>
         </Drawer>

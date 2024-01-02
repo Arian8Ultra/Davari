@@ -1,9 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { SpaceDashboardOutlined } from "@mui/icons-material";
-import {
-  BsPeopleFill,
-  BsPersonCircle
-} from "react-icons/bs";
+import { BsPeopleFill, BsPersonCircle } from "react-icons/bs";
 import { FaBalanceScale, FaHome } from "react-icons/fa";
 import { Titles } from "./Titles";
 
@@ -15,7 +12,7 @@ export const SideBarMenu = [
     hasLink: true,
     hasCollapse: false,
     children: [],
-    accessNeeded: ["NORMAL","SENIOR_USER","EXPERT","SUPER_ADMIN"],
+    accessNeeded: ["NORMAL", "SENIOR_USER", "EXPERT", "SUPER_ADMIN"],
     mailRoom: true,
     justMailRoom: false,
   },
@@ -26,7 +23,7 @@ export const SideBarMenu = [
     hasLink: true,
     hasCollapse: false,
     children: [],
-    accessNeeded: ["SENIOR_USER","SUPER_ADMIN","EXPERT"],
+    accessNeeded: ["SENIOR_USER", "SUPER_ADMIN", "EXPERT"],
     mailRoom: false,
     justMailRoom: false,
   },
@@ -38,6 +35,16 @@ export const SideBarMenu = [
   //   hasCollapse: false,
   //   children: [],
   // },
+  {
+    primary: Titles.expertPortal,
+    to: "/expertPortal",
+    icon: <SpaceDashboardOutlined />,
+    hasLink: true,
+    hasCollapse: false,
+    accessNeeded: ["JURY_EXPERT"],
+    mailRoom: false,
+    justMailRoom: false,
+  },
   {
     primary: Titles.portal,
     to: "/portal",
@@ -54,7 +61,7 @@ export const SideBarMenu = [
     icon: <BsPersonCircle />,
     hasLink: false,
     hasCollapse: true,
-    accessNeeded: ["SUPER_ADMIN","SENIOR_USER"],
+    accessNeeded: ["SUPER_ADMIN", "SENIOR_USER"],
     mailRoom: true,
     justMailRoom: false,
     children: [
@@ -87,7 +94,13 @@ export type SideBarLinkType = {
   hasLink?: boolean;
   hasCollapse?: boolean;
   children?: SideBarLinkType[];
-  accessNeeded?: ["NORMAL","SENIOR_USER","EXPERT","SUPER_ADMIN","MAIL_ROOM"];
+  accessNeeded?: [
+    "NORMAL",
+    "SENIOR_USER",
+    "EXPERT",
+    "SUPER_ADMIN",
+    "MAIL_ROOM"
+  ];
   mailRoom?: boolean;
   justMailRoom?: boolean;
 };
