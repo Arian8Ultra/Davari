@@ -8,12 +8,13 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { useMutation, useQuery } from "@apollo/client";
-import { FileOpenOutlined } from "@mui/icons-material";
+import { BoySharp, FileOpenOutlined } from "@mui/icons-material";
 import {
   Autocomplete,
   Box,
   Button,
   CircularProgress,
+  LinearProgress,
   Table,
   TableBody,
   TableCell,
@@ -79,6 +80,7 @@ interface Props {
     | "assigned"
     | "chief"
     | "mainRoomExpert"
+    | "juryExpert"
     | "all";
   departmentId?: string;
   isPortal?: boolean;
@@ -1529,15 +1531,18 @@ const ComplaintCardNew = (props: Props) => {
       sx={{
         width: "100%",
         // pt: "0.5rem",
+        // minHeight : "150px",
         backgroundColor: "white",
         display: "grid",
-        gridTemplateColumns: "repeat(3,1fr)",
+        position:'relative',
+        gridTemplateColumns: "repeat(4,1fr)",
         gridAutoColumns: "1fr",
         alignItems: "center",
         borderRadius: "10px",
         gap: "0.5rem",
         rowGap: 0,
         cursor: "pointer",
+        overflow:'clip',
         "&:hover": {
           background: "rgba(240,240,240)",
         },
@@ -1552,57 +1557,152 @@ const ComplaintCardNew = (props: Props) => {
       <Box
         display={"flex"}
         flexDirection={"column"}
-        gridColumn={"span 2"}
-        padding={"0.5rem"}
+        gridColumn={"span 4"}
+        padding={"0.7rem"}
         onClick={handleOpen}
+        sx={{
+          textOverflow: "ellipsis",
+          overflow: "clip",
+          transition: "all 0.3s ease",
+        }}
       >
-        <Typography fontWeight={700}>
+        <Typography
+          fontWeight={700}
+          fontSize={{
+            xs: "0.8rem",
+            sm: "0.6rem",
+            md: "0.8rem",
+            lg: "1rem",
+          }}
+        >
           شماره درخواست :{convertToPersianDigits(props.id)}
         </Typography>
-        <Typography>
-          شماره قرارداد :
-          {convertToPersianDigits(props.contractNumber)}
-        </Typography>
-        <Typography>
-          خواهان : {accuser?.user_getUser?.result?.fullName}
-        </Typography>
-        <Typography>
-          خوانده :{accused?.user_getUser?.result?.fullName}
-        </Typography>
+        <Box display={"flex"} alignItems={"center"} gap={1}>
+          <Typography
+            fontSize={{
+              xs: "0.8rem",
+              sm: "0.6rem",
+              md: "0.8rem",
+              lg: "1rem",
+            }}
+          >
+            شماره قرارداد:
+          </Typography>
+          <Typography
+            fontSize={{
+              xs: "0.8rem",
+              sm: "0.6rem",
+              md: "0.7rem",
+              lg: "0.9rem",
+            }}
+            color={secondary}
+          >
+            {convertToPersianDigits(props.contractNumber)}
+          </Typography>
+        </Box>
+        <Box display={"flex"} alignItems={"center"} gap={1}>
+          <Typography
+            fontSize={{
+              xs: "0.8rem",
+              sm: "0.6rem",
+              md: "0.8rem",
+              lg: "1rem",
+            }}
+          >
+            خواهان:
+          </Typography>
+          <Typography
+            fontSize={{
+              xs: "0.8rem",
+              sm: "0.6rem",
+              md: "0.7rem",
+              lg: "0.9rem",
+            }}
+            color={secondary}
+          >
+            {accuser?.user_getUser?.result?.fullName}
+          </Typography>
+        </Box>
+        <Box display={"flex"} alignItems={"center"} gap={1}>
+          <Typography
+            fontSize={{
+              xs: "0.8rem",
+              sm: "0.6rem",
+              md: "0.8rem",
+              lg: "1rem",
+            }}
+          >
+            خوانده:
+          </Typography>
+          <Typography
+            fontSize={{
+              xs: "0.8rem",
+              sm: "0.6rem",
+              md: "0.7rem",
+              lg: "0.9rem",
+            }}
+            color={secondary}
+          >
+            {accused?.user_getUser?.result?.fullName}
+          </Typography>
+        </Box>
+        <Box display={"flex"} alignItems={"center"} gap={1} sx={{
+          borderTop:'1px solid #ccc',
+          paddingTop:'0.5rem',
+          marginTop:'0.5rem',
+        }}>
+          <Typography
+            fontSize={{
+              xs: "0.8rem",
+              sm: "0.6rem",
+              md: "0.8rem",
+              lg: "1rem",
+            }}
+          >
+            وضعیت:
+          </Typography>
+          <Typography
+            fontSize={{
+              xs: "0.8rem",
+              sm: "0.6rem",
+              md: "0.7rem",
+              lg: "0.8rem",
+            }}
+            color={secondary}
+            sx={{
+              width:'100%',
+            }}
+            textAlign={'center'}
+          >
+            {newStatesFa[newStatesCap.indexOf(props.state || "")]}
+          </Typography>
+        </Box>
       </Box>
+
       <Box
-        position={"relative"}
         height={"100%"}
         display={"flex"}
         justifyContent={"center"}
         flexDirection={"column"}
         alignItems={"center"}
+        gridColumn={"span 1"}
         onClick={handleOpen}
         sx={{
           // background: "red",
           width: "100%",
         }}
       >
-        <Box
+        {/* <Box
           sx={{
             zIndex: 100,
-            // translate: "0% 50%",
-            bottom: "0",
-            top: "0",
-            // right: "55%",
-            width: "fit-content",
-            // opacity: isHover ? 1 : 0,
-            outline: isHover ? `2px solid ${primary}` : "none",
+            width: "100%",
+            height: "100%",
             outlineColor: primary,
-
-            // transition: "all 0.3s",
-            position: "absolute",
-            backgroundColor: "rgba(255,255,255,0.8)",
             padding: "0.2rem 0.5rem",
-            backdropFilter: "blur(5px)",
             borderRadius: "0.5rem",
+            position: "relative",
             display: "flex",
-            justifyContent: "start",
+            justifyContent: "center",
             alignItems: "center",
             flexDirection: "column",
             gap: "1rem",
@@ -1610,83 +1710,110 @@ const ComplaintCardNew = (props: Props) => {
             // boxShadow: "0 0 0.5rem rgba(0,0,0,0.5)",
           }}
         >
-          وضعیت درخواست
-          <Typography textAlign={"center"} fontSize={"0.8rem"}>
-            {/* @ts-ignore */}
-            {newStatesFa[newStatesCap.indexOf(props.state)]}
-          </Typography>
-        </Box>
-        {/* <CircularProgress
-          size={"88%"}
-          variant="determinate"
-          value={100}
-          thickness={1.75}
-          sx={{
-            gridColumn: "3",
-            padding: "1rem",
-            position: "absolute",
-            translate: "-50% -50%",
-            top: "50%",
-            right: "50%",
-            "& .MuiCircularProgress-circle": {
-              backgroundColor: "rgba(0,0,0,1)",
-              color: secondary,
-              borderRadius: "0.5rem",
-            },
-            "&.MuiCircularProgress-circleDeterminate": {
-              borderRadius: "1rem",
-              background: "red",
-            },
-          }}
-        />
-        <CircularProgress
-          size={"90%"}
-          variant="determinate"
-          thickness={3.5}
-          value={
-            // @ts-ignore
-            (
-              // @ts-ignore
-              newStatesCap.indexOf(props.state) / newStatesCap.length
-            ).toFixed(2) * 100
-          }
-          sx={{
-            gridColumn: "3",
-            padding: "1rem",
-            position: "absolute",
-            translate: "-50% -50%",
-            top: "50%",
-            right: "50%",
-            // gridRow: "1/3",
-            "& .MuiCircularProgress-circle": {
-              backgroundColor: "rgba(0,0,0,1)",
-              color: primary,
-              borderRadius: "1rem",
-            },
-          }}
-        />
-        <Typography
-          position={"absolute"}
-          textAlign={"center"}
-          fontSize={"1.4rem"}
-          sx={{
-            translate: "-50% -50%",
-            top: "50%",
-            right: "55%",
-          }}
-        >
-          {String(
-            convertToPersianDigits(
+
+          <CircularProgress
+            size={70}
+            variant="determinate"
+            value={100}
+            thickness={1.75}
+            sx={{
+              // padding: "1rem",
+              position: "absolute",
+              translate: "-50% -50%",
+              top: "50%",
+              right: "50%",
+              "& .MuiCircularProgress-circle": {
+                backgroundColor: "rgba(0,0,0,1)",
+                color: secondary,
+                borderRadius: "0.5rem",
+              },
+              "&.MuiCircularProgress-circleDeterminate": {
+                borderRadius: "1rem",
+                background: "red",
+              },
+            }}
+          />
+          <CircularProgress
+            size={73}
+            variant="determinate"
+            thickness={3.5}
+            value={
               // @ts-ignore
               (
-                // @ts-ignore
-                newStatesCap.indexOf(props.state) /
+                newStatesCap.indexOf(props.state || "") /
                 newStatesCap.length
               ).toFixed(2) * 100
-            )
-          ).split(".")[0] + "%"}
-        </Typography> */}
+            }
+            sx={{
+              position: "absolute",
+              translate: "-50% -50%",
+              top: "50%",
+              right: "50%",
+              // gridRow: "1/3",
+              "& .MuiCircularProgress-circle": {
+                backgroundColor: "rgba(0,0,0,1)",
+                color: primary,
+                borderRadius: "1rem",
+              },
+
+              "&.MuiCircularProgress-circleDeterminate": {
+                borderRadius: "1rem",
+                background: "red",
+              },
+            }}
+          />
+          <Typography
+            position={"absolute"}
+            textAlign={"center"}
+            fontSize={"1.4rem"}
+            sx={{
+              translate: "-50% -50%",
+              top: "51%",
+              right: "50%",
+            }}
+          >
+            {String(
+              convertToPersianDigits(
+                // @ts-ignore
+                (
+                  newStatesCap.indexOf(props.state || "") /
+                  newStatesCap.length
+                ).toFixed(2) * 100
+              )
+            ).split(".")[0] + "%"}
+          </Typography>
+        </Box> */}
       </Box>
+
+      <LinearProgress
+        value={
+          // @ts-ignore
+          (
+            newStatesCap.indexOf(props.state || "") /
+            newStatesCap.length
+          ).toFixed(2) * 100
+        }
+        variant="determinate"
+        sx={{
+          gridColumn: "span 4",
+          height: "0.4rem",
+          position: "absolute",
+          left: 0,
+          bottom: 0,
+          right: 0,
+          backgroundColor: grey[200],
+          
+          // change the color of the bar
+          "& .MuiLinearProgress-bar": {
+            backgroundColor: primary,
+            borderRadius: "0.5rem",
+          },
+          // change the color of the track
+          "& .MuiLinearProgress-root": {
+            backgroundColor: secondary,
+          },
+        }}
+      />
 
       <NewModal
         open={open}

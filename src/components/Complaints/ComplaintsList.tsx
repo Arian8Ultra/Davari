@@ -32,6 +32,7 @@ interface Props {
     | "assigned"
     | "chief"
     | "mainRoomExpert"
+    | "juryExpert"
     | "all";
 }
 const ComplaintsList = ({ departmentId, type, userId }: Props) => {
@@ -94,6 +95,27 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
     variables: {
       filter: {
         contract: { accusedDepartmentUserId: { eq: departmentId } },
+      },
+      order: [
+        {
+          complaintState: SortEnumType.Desc,
+        },
+      ],
+      take: 100,
+    },
+    onCompleted(data) {
+      console.log("accused data", data);
+    },
+  });
+
+  const {
+    data: expertsData,
+    loading: expertsLoading,
+    refetch: expertsRefetch,
+  } = useQuery(GetComplaintsWithFilterDocument, {
+    variables: {
+      filter: {
+        councilExpertId: { eq: userId },
       },
       order: [
         {
@@ -409,6 +431,55 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
               )
             )
           : null}
+
+        {type == "juryExpert" &&
+          expertsData?.complaint_getComplaints?.result?.items?.map(
+            (complaint) => (
+              <ComplaintCardNew
+                key={complaint.id}
+                id={complaint.id}
+                acussed={complaint?.assignedUser?.userName ?? ""}
+                date={complaint?.createdDate}
+                contractId={complaint?.contractId}
+                isPortal={true}
+                acussedId={String(
+                  complaint?.contract?.accusedDepartmentUserId
+                )}
+                acusserId={String(
+                  complaint?.contract?.accuserDepartmentUserId
+                )}
+                type="juryExpert"
+                state={complaint?.complaintState}
+                refetch={assignedRefetch}
+                contractNumber={
+                  complaint?.contract?.contractNumberByAccuser ?? ""
+                }
+              />
+            )
+          )}
+
+        {type == "juryExpert" &&
+          expertsData?.complaint_getComplaints.result?.items
+            ?.length === 0 && (
+            <Typography
+              variant="h5"
+              component="h2"
+              textAlign={'center'}
+              gridColumn={'span 4'}
+              sx={{
+                color: secondary,
+                // backgroundColor: primaryGrey,
+                // backgroundColor: secondary,
+                // background: "rgba(255,255,255,0.3)",
+                padding: "0.5rem",
+                // borderRadius: 2,
+                // textAlign: "center",
+                position: "sticky",
+              }}
+            >
+              {"درخواستی برای شما تعیین نشده است"}
+            </Typography>
+          )}
       </Box>
     </Stack>
   );
