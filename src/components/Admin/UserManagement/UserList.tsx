@@ -49,6 +49,7 @@ const UserList = () => {
         backgroundColor: primaryTransparent,
         // padding: 2,
         borderRadius: "0.5rem",
+        overflow:"clip",
         mb: 2,
         // boxShadow: "2px 2px 5px 1px rgba(0,0,0,0.2)",
       }}
