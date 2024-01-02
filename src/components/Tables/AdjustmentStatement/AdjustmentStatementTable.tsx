@@ -49,6 +49,7 @@ import FaTextField from "../../FaComponents/FaTextField";
 import FaTypography from "../../FaComponents/FaTypography";
 import NewModal from "../../Modals";
 import AdjustmentStatementCard from "./AdjustmentStatementCard";
+import { DatePicker } from "@mui/x-date-pickers";
 
 const currencies = [
   {
@@ -491,7 +492,7 @@ const AdjustmentStatementTable = (props: Props) => {
                     },
                   }}
                 />
-                <FaTextField
+                {/* <FaTextField
                   label="تاریخ بخشنامه"
                   sx={{
                     color: primary,
@@ -511,6 +512,24 @@ const AdjustmentStatementTable = (props: Props) => {
                     },
                   }}
                   type="date"
+                /> */}
+                <DatePicker
+                  label="تاریخ بخشنامه"
+                  value={new Date()}
+                  onChange={(date) => console.log(date)}
+                  disableFuture
+                  sx={{
+                    display:
+                      TableHeader === "REDUCE" ? "flex" : "none",
+                    // change the color of label
+                    "& label": {
+                      color: primary,
+                    },
+                    // change the color of text
+                    "& .MuiInputBase-input": {
+                      color: primary,
+                    },
+                  }}
                 />
                 {/* <FaTextField
                   label="ارزی"
