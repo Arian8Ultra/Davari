@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable prefer-const */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
@@ -19,7 +22,11 @@ import { red } from "@mui/material/colors";
 import React, { useEffect, useState } from "react";
 import { BsEye, BsEyeSlash } from "react-icons/bs";
 import { FaBalanceScale } from "react-icons/fa";
-import { useNavigate, useParams } from "react-router-dom";
+import {
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
 import { useUserStore } from "../../Context/UserStore";
 import { MutationWrapper } from "../../GraphQL/MutationWrapper";
 import { UserLogin } from "../../GraphQL/Users/Mutations";
@@ -34,7 +41,8 @@ import {
 } from "../../theme/color";
 
 const SignIn = () => {
-  const { oldPath } = useParams<{ oldPath: string }>();
+  let [searchParams, setSearchParams] = useSearchParams();
+  const oldPath = searchParams.get("path");
   const user = useUserStore((state) => state.user);
   const setUser = useUserStore((state) => state.setUser);
   const setIsMailRoom = useUserStore((state) => state.setIsMailRoom);
@@ -58,6 +66,8 @@ const SignIn = () => {
   useEffect(() => {
     console.log("token" + token);
     if (token && token !== "") {
+      console.log("oldPath", oldPath);
+
       if (oldPath && oldPath !== "") {
         navigate(oldPath);
       } else {
@@ -126,6 +136,8 @@ const SignIn = () => {
       >
         برای ورود نام کاربری و رمز عبور خود را وارد کنید
       </Typography>
+
+      {}
 
       <form
         onSubmit={(e) => {
@@ -229,7 +241,7 @@ const SignIn = () => {
             padding: "0.5rem",
             "&:hover": {
               backgroundColor: primaryLight,
-              color:secondary
+              color: secondary,
             },
           }}
           type="submit"
@@ -246,9 +258,11 @@ const SignIn = () => {
         </Button>
       </form>
 
-      <Typography sx={{
-        marginY:"0.2rem"
-      }}>
+      <Typography
+        sx={{
+          marginY: "0.2rem",
+        }}
+      >
         یا
       </Typography>
 
@@ -260,12 +274,12 @@ const SignIn = () => {
           width: "max-content",
           borderRadius: "3rem",
           padding: "1rem",
-          paddingY:"0.5rem",
+          paddingY: "0.5rem",
           outline: "2px soild red",
           boxShadow: "none",
           ":hover": {
             background: primaryLight,
-            color:secondary
+            color: secondary,
           },
         }}
         type="submit"
@@ -282,7 +296,7 @@ const SignIn = () => {
           width: "80%",
           borderRadius: "15px",
           padding: "0.5rem",
-          textShadow:2
+          textShadow: 2,
         }}
         type="submit"
         href="/login/forgotPassword"

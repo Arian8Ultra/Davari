@@ -202,13 +202,14 @@ export default function MainLayout() {
       setSignInModal({ ...signInModal, open: true });
     } else {
       setSignedIn(false);
-      navigate("/");
+      // navigate("/");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
   useEffect(() => {
     if (!signedIn && !path.includes("/login")) {
+      clearToken();
       navigate(`/login/signin/?path=${oldLocation}`);
     }
   });
@@ -240,11 +241,15 @@ export default function MainLayout() {
         onError(error) {
           console.log(error);
           clearToken();
-          navigate("/login/signin");
+          if (!signedIn && !path.includes("/login")) {
+            navigate("/login/signin");
+          }
         },
       });
     } else {
-      navigate("/login/signin");
+      if (!signedIn && !path.includes("/login")) {
+        navigate("/login/signin");
+      }
     }
   }, [TokenCheck, token, path]);
 
