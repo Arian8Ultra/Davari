@@ -1543,8 +1543,11 @@ const ComplaintCardNew = (props: Props) => {
         rowGap: 0,
         cursor: "pointer",
         overflow:'clip',
+        transition: "all 0.2s ease",
         "&:hover": {
-          background: "rgba(240,240,240)",
+          // background: "rgba(240,240,240)",
+          scale:"1.02",
+          boxShadow: "5px 5px 20px rgba(0,0,0,0.2)",
         },
       }}
       onMouseEnter={() => {

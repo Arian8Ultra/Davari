@@ -70,7 +70,7 @@ const CouncilList = () => {
           },
           {
             complaintState:{
-              in:[ComplaintState.GivingTrackingCodeToComplaint,ComplaintState.WaitingForFirstPayment,ComplaintState.WaitingForSecondPayment]
+              in:[ComplaintState.GivingTrackingCodeToComplaint]
             }
           }
         ]
