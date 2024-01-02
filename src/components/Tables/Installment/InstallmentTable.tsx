@@ -275,7 +275,8 @@ const InstallmentTable = (props: Props) => {
               sx={{
                 textAlign: "center",
                 position: "relative",
-                height: "4rem",
+                height: "2.5rem",
+                
               }}
             >
               <Box
