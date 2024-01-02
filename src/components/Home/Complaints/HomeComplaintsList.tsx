@@ -87,7 +87,7 @@ const HomeComplaintsList = ({ columns, rows }: Props) => {
         spacing={1}
         sx={{ padding: "1rem" }}
       >
-        {/* {assignedData?.complaint_getComplaints?.result.items.map(
+        {assignedData?.complaint_getComplaints?.result.items.map(
               (complaint: Complaint) => (
                 <ComplaintCardNew
                   key={complaint.id}
@@ -128,7 +128,7 @@ const HomeComplaintsList = ({ columns, rows }: Props) => {
                   type="accuser"
                 />
               )
-            )} */}
+            )}
       </Stack>
     </Card>
   );
