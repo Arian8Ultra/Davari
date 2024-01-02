@@ -15,10 +15,12 @@ import UserManagement from "../pages/Admin/UserManager/UserManagement";
 import UpdateContractAccuserPage from "../pages/Complaints/AddContract/UpdateContractAccuserPage";
 import CouncilListPage from "../pages/Complaints/CouncilList/CouncilListPage";
 import FilePage from "../pages/Complaints/Files/FilesPage";
+import AddMeetingPage from "../pages/Complaints/Meeting/AddMeetingPage";
 import PaymentPage from "../pages/Complaints/Payment/PaymentPage";
 import TablesPage from "../pages/Complaints/Tabels/TablesPage";
 import ContractDetailsPage from "../pages/Contracts/ContractDetailsPage";
 import ContractPage from "../pages/Contracts/ContractPage";
+import ExpertPortal from "../pages/Expert/ExpertPortal";
 import ForgetPassword from "../pages/Login/ForgetPassword";
 import OTPpage from "../pages/Login/OTPpage";
 import SignIn from "../pages/Login/SignIn";
@@ -26,7 +28,6 @@ import CaseExpertSignUp from "../pages/Login/SignUp/CaseExpertSignUp";
 import ConfirmUser from "../pages/Login/SignUp/ConfirmUser";
 import PersonInfo from "../pages/Login/SignUp/PersonInfo";
 import SignUp from "../pages/Login/SignUp/SignUp";
-import AddMeetingPage from "../pages/Complaints/Meeting/AddMeetingPage";
 const Complaints = lazy(
   () => import("../pages/Complaints/Complaints")
 );
@@ -168,6 +169,8 @@ const router = createBrowserRouter(
           path="admin/usermanagement"
           element={<UserManagement />}
         />
+
+        <Route path="expertPortal" element={<ExpertPortal />} />
 
         <Route path="test" element={<Test />} />
       </Route>
