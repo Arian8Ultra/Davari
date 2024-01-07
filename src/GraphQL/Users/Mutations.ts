@@ -137,7 +137,7 @@ export const SendCallToMeetingSMS = gql`
   mutation SendCallToMeetingSMS(
     $input: SendInviteToMeetingSMSDtoInput!
   ) {
-    test_sendCallToMeetingSMS(input: $input) {
+    sms_sendInviteToMeetingSMS(input: $input) {
       code
       value
     }

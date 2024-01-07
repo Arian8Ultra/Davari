@@ -355,7 +355,7 @@ export const ADD_COMPLAINT_NOTE = gql`
 `;
 export const SendAccusedRespondedSMS = gql`
   mutation SendAccusedRespondedSMS($complaintId: Int!) {
-    test_sendAccusedRespondedSMS(complaintId: $complaintId) {
+    sms_sendAccusedRespondedSMS(complaintId: $complaintId) {
       code
       value
     }
