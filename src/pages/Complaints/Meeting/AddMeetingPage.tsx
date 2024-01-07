@@ -97,6 +97,7 @@ const AddMeetingPage = () => {
             padding: "0.5rem 1rem",
             userSelect: "none",
             width: "max-content",
+            maxWidth: "70%",
             zIndex: 1000,
             display: "flex",
             alignItems: "center",
