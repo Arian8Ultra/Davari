@@ -98,7 +98,7 @@ const HomeComplaintsList = ({ columns, rows }: Props) => {
         width: "100%",
         overflowY: "scroll",
         gap: "0.5rem",
-        padding: "0.5rem",
+        padding: "0.75rem",
       }}>
         {assignedData?.complaint_getComplaints?.result.items.map(
           (complaint: Complaint) => (
