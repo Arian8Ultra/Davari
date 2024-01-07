@@ -14,6 +14,7 @@ import { MutationWrapper } from "../../../GraphQL/MutationWrapper";
 import {
   ComplaintState,
   GenarateDateOfBirthDocument,
+  GetAllOganizationUsersDocument,
   GetComplaintDocument,
   PersonDataDto,
   SendCallToMeetingSmsDocument,
@@ -83,6 +84,8 @@ const CaseExpertSignUp = () => {
       },
     }
   );
+
+  const { data: users } = useQuery(GetAllOganizationUsersDocument);
   const [generatePasswordMutation, { data: pass }] =
     useMutation(generatePassword);
   const [userSignUp] = useMutation(UserSignUpDocument, {});
@@ -231,36 +234,42 @@ const CaseExpertSignUp = () => {
               nationalCode: infos?.nationalCode,
               dateOfBirth: dateOfBirth,
             },
-          }).then((res: PersonDataDto) => {
-            if(res instanceof Error){
-              setErrorMessage("کد ملی و تاریخ تولد با هم انطباق ندارند");
-              return;
-            }
-            void checkPhoneNumber().then((phoneRes) => {
-              console.log("phoneRes", phoneRes);
-              if (phoneRes.data?.user_validatePhoneNumber.code == 1) {
-                setData(res);
-                setErrorMessage("");
-                void sendCodeMutation();
-                setInfos((prevInfos) => ({
-                  ...prevInfos,
-                  firstName: res?.firstName,
-                  lastName: res?.lastName,
-                  fatherName: res?.fatherName,
-                  isAlive: res?.isAlive,
-                  gender: res?.gender,
-                }));
-              } else {
+          })
+            .then((res: PersonDataDto) => {
+              if (res instanceof Error) {
                 setErrorMessage(
-                  "شماره تلفن وارد شده معتبر نیست یا برای این کد ملی نمیباشد"
+                  "کد ملی و تاریخ تولد با هم انطباق ندارند"
                 );
+                return;
               }
-              console.log(res);
+              void checkPhoneNumber().then((phoneRes) => {
+                console.log("phoneRes", phoneRes);
+                if (
+                  phoneRes.data?.user_validatePhoneNumber.code == 1
+                ) {
+                  setData(res);
+                  setErrorMessage("");
+                  void sendCodeMutation();
+                  setInfos((prevInfos) => ({
+                    ...prevInfos,
+                    firstName: res?.firstName,
+                    lastName: res?.lastName,
+                    fatherName: res?.fatherName,
+                    isAlive: res?.isAlive,
+                    gender: res?.gender,
+                  }));
+                } else {
+                  setErrorMessage(
+                    "شماره تلفن وارد شده معتبر نیست یا برای این کد ملی نمیباشد"
+                  );
+                }
+                console.log(res);
+              });
+            })
+            .catch((err) => {
+              console.log(err);
+              setErrorMessage("کد ملی وارد شده معتبر نیست");
             });
-          }).catch((err) => {
-            console.log(err);
-            setErrorMessage("کد ملی وارد شده معتبر نیست");
-          });
         }}
       >
         تایید
@@ -347,7 +356,10 @@ const CaseExpertSignUp = () => {
                           ? infos?.nationalCode + complaintId
                           : "",
                       nationalCode: infos?.nationalCode,
-                      parentId: user.parentId,
+                      parentId:
+                        users?.user_getUsers.result?.items?.find(
+                          (a) => a.userName == "Dadgostari"
+                        )?.id,
                       email: "",
                       userType: UserType.Individual,
                       // to do
@@ -437,9 +449,7 @@ const CaseExpertSignUp = () => {
             textAlign={"center"}
             sx={{ gridColumn: "span 1" }}
           >
-            {infos?.password && complaintId
-              ? infos?.password
-              : ""}
+            {infos?.password && complaintId ? infos?.password : ""}
           </Typography>
 
           <Button
