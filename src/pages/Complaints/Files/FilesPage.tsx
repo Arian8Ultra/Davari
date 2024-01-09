@@ -19,7 +19,8 @@ const FilePage = () => {
 
   return (
     <>
-    <BackButton to="/portal"/>
+    <BackButton />
+    
       <Box
         display={"grid"}
         gridTemplateColumns={"repeat(3,1fr)"}
