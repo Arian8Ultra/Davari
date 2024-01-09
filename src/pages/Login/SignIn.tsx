@@ -39,18 +39,25 @@ import {
   primaryLight,
   secondary,
 } from "../../theme/color";
+import {
+  UserType,
+  useGetUserWithFilterQuery,
+} from "../../../generated-types";
+import { AccessesEnum } from "../../static/Accesses";
 
 const SignIn = () => {
   let [searchParams, setSearchParams] = useSearchParams();
   const oldPath = searchParams.get("path");
   const user = useUserStore((state) => state.user);
+  const setJury = useUserStore((state) => state.setJury);
   const setUser = useUserStore((state) => state.setUser);
   const setIsMailRoom = useUserStore((state) => state.setIsMailRoom);
+  const setAccesses = useUserStore((state) => state.setAccesses);
   const token = useUserStore((state) => state.token);
   const [userName, setUserName] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [phone, setPhone] = React.useState<number>();
-  
+
   const [showPassword, setShowPassword] = React.useState(false);
   const navigate = useNavigate();
   const [loginError, setLoginError] = useState<{
@@ -84,6 +91,21 @@ const SignIn = () => {
     // fetchPolicy: "network-only",
     nextFetchPolicy: "network-only",
     pollInterval: 1000,
+  });
+
+  const { data: users } = useGetUserWithFilterQuery({
+    variables: {
+      filter: {
+        parent: {
+          userName: {
+            eq: "Dadgostari",
+          },
+        },
+      },
+    },
+    onCompleted(data) {
+      console.log("users", data);
+    },
   });
 
   useEffect(() => {
@@ -165,6 +187,36 @@ const SignIn = () => {
                 data.user.parentId ===
                   "e7a85297-91d4-4f27-a4b2-ff394fe71dd3"
               );
+              if (
+                data.user.parentId ===
+                "e7a85297-91d4-4f27-a4b2-ff394fe71dd3"
+              ) {
+                setAccesses([
+                  AccessesEnum.PORTAL,
+                  AccessesEnum.ADMIN_PANEL_USERS,
+                  AccessesEnum.ADMIN_PANEL,
+                ]);
+              }
+              setJury(
+                users?.user_getUsers.result?.items?.find(
+                  (a) => a.id === data.user.id
+                )
+                  ? true
+                  : false
+              );
+
+              if (
+                users?.user_getUsers.result?.items?.find(
+                  (a) => a.id === data.user.id
+                )
+                  ? true
+                  : false
+              ) {
+                setAccesses([
+                  AccessesEnum.EXPERTS_PORTAL,
+                  AccessesEnum.HOME,
+                ]);
+              }
             }
           });
         }}
