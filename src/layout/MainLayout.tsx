@@ -164,6 +164,7 @@ export default function MainLayout() {
   const setUser = useUserStore((state) => state.setUser);
   const setIsMailRoom = useUserStore((state) => state.setIsMailRoom);
   const isMailRoom = useUserStore((state) => state.isMailRoom);
+  const isJury = useUserStore((state) => state.isJury);
   const setAccesses = useUserStore((state) => state.setAccesses);
   const token = useUserStore((state) => state.token);
   const clearToken = useUserStore((state) => state.clearToken);
@@ -723,7 +724,7 @@ export default function MainLayout() {
               user.userRoles &&
               user.userRoles.some((role) =>
                 item.accessNeeded?.includes(role.roleType)
-              ) && isMailRoom !=true ? (
+              ) && isMailRoom !=true && isJury!=true ? (
                 <ListItemLink
                   key={index}
                   to={item.to}
@@ -801,7 +802,46 @@ export default function MainLayout() {
                     )
                   )}
                 </ListItemLink>
-              ) : null
+              ) : item.accessNeeded.includes("JURY_EXPERT") == true && isJury == true ? (
+                <ListItemLink
+                  key={index}
+                  to={item.to}
+                  primary={item.primary}
+                  icon={item.icon}
+                  hasLink={item.hasLink}
+                  hasCollapse={item.hasCollapse}
+                  open={open}
+                  display={"block"}
+                >
+                  {item.children?.map(
+                    (child: SideBarLinkType, index) => (
+                      <ListItemLink
+                        key={index}
+                        to={child.to && child.to}
+                        primary={child.primary}
+                        icon={child.icon}
+                        hasLink={child.hasLink}
+                        hasCollapse={child.hasCollapse}
+                        open={open}
+                      >
+                        {child.children?.map(
+                          (child: SideBarLinkType, index) => (
+                            <ListItemLink
+                              key={index}
+                              to={child.to && child.to}
+                              primary={child.primary}
+                              icon={child.icon}
+                              hasLink={child.hasLink}
+                              hasCollapse={child.hasCollapse}
+                              open={open}
+                            />
+                          )
+                        )}
+                      </ListItemLink>
+                    )
+                  )}
+                </ListItemLink>
+              ): null
             )}
           </List>
         </Drawer>
