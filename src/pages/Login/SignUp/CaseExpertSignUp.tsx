@@ -30,6 +30,7 @@ import {
   user_getUserInfo,
   validatePhoneNumber,
 } from "./gql/mutations";
+import { useGetUserWithFilterLazyQuery } from "../../../../generated-types";
 
 const CaseExpertSignUp = () => {
   const { complaintId } = useParams();
@@ -86,6 +87,8 @@ const CaseExpertSignUp = () => {
   );
 
   const { data: users } = useQuery(GetAllOganizationUsersDocument);
+  const [getUser, { data: userFiltered }] =
+    useGetUserWithFilterLazyQuery();
   const [generatePasswordMutation, { data: pass }] =
     useMutation(generatePassword);
   const [userSignUp] = useMutation(UserSignUpDocument, {});
@@ -368,18 +371,43 @@ const CaseExpertSignUp = () => {
                     onCompleted(data, clientOptions) {
                       console.log(data);
                       if (data.user_signUp.status.code === 1) {
-                        void updateComplaint({
+                        void getUser({
                           variables: {
-                            input: {
-                              complaintState:
-                                ComplaintState.DeterminingMeetingByMailRoomExpert,
-                              councilExpertId:
-                                data.user_signUp.result?.id,
-                              id: parseInt(complaintId || "0"),
+                            filter: {
+                              userName: {
+                                eq:
+                                  infos?.nationalCode && complaintId
+                                    ? infos?.nationalCode +
+                                      complaintId
+                                    : "",
+                              },
                             },
                           },
+                          onCompleted(expertData) {
+                            console.log("expertData", expertData);
+                            
+                            if (
+                              expertData.user_getUsers.result?.items
+                            ) {
+                              const expertId =
+                                expertData.user_getUsers.result
+                                  ?.items[0].id;
+                              void updateComplaint({
+                                variables: {
+                                  input: {
+                                    complaintState:
+                                      ComplaintState.DeterminingMeetingByMailRoomExpert,
+                                    councilExpertId: expertId,
+                                    id: parseInt(complaintId || "0"),
+                                  },
+                                },
+                                onCompleted(data, clientOptions) {
+                                  setDone(true);
+                                },
+                              });
+                            }
+                          },
                         });
-                        setDone(true);
                       }
                     },
                   });
