@@ -13,7 +13,12 @@ import { primary } from "../../../theme/color";
 import FaTypography from "../../../components/FaComponents/FaTypography";
 import { convertToPersianDigits } from "../../../functions/Functions";
 import { useMutation } from "@apollo/client";
-import { ComplaintState, SendCallToMeetingSmsDocument, UpdateComplaintDocument, UpdateComplaintFullDocument } from "../../../gql/graphql";
+import {
+  ComplaintState,
+  SendCallToMeetingSmsDocument,
+  UpdateComplaintDocument,
+  UpdateComplaintFullDocument,
+} from "../../../gql/graphql";
 import {
   DateCalendar,
   DatePicker,
@@ -45,21 +50,41 @@ const AddMeetingPage = () => {
           meetingPlace: place,
         },
       },
+      onCompleted: (data) => {
+        console.log(data);
+        if (data.sms_sendInviteToMeetingSMS.code === 1) {
+          void updateComplaint({
+            onCompleted(data, clientOptions) {
+              console.log(data);
+              if (data.complaint_updateComplaint.status.code === 1) {
+                alert("با موفقیت ارسال شد");
+              } else {
+                alert("خطا در ارسال");
+              }
+            },
+          });
+        }else{
+          alert("خطا در ارسال پیامک")
+        }
+      },
     }
   );
 
-  const [updateComplaint, { loading: updateLoading }] = useMutation(UpdateComplaintFullDocument,
+  const [updateComplaint, { loading: updateLoading }] = useMutation(
+    UpdateComplaintFullDocument,
     {
-        variables:{
-            input:{
-                contractId: parseInt(complaintId || "") || 0,
-                complaintState: ComplaintState.WaitingForAccuserAndAccusedToSignDecree
-            }
-        }
-    });
+      variables: {
+        input: {
+          contractId: parseInt(complaintId || "") || 0,
+          complaintState:
+            ComplaintState.WaitingForAccuserAndAccusedToSignDecree,
+        },
+      },
+    }
+  );
   return (
     <>
-    <BackButton />
+      <BackButton />
       <Box
         display={"grid"}
         gridTemplateColumns={"repeat(6, 1fr)"}
@@ -178,7 +203,6 @@ const AddMeetingPage = () => {
           }}
           onClick={() => {
             void sendSms();
-            void updateComplaint();
           }}
         >
           ارسال پیامک
