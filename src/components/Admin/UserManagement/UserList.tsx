@@ -31,7 +31,7 @@ const UserList = () => {
     data: parentData,
   } = useQuery(GET_ALL_USERS_WITH_PARENT_ID, {
     variables: {
-      id: user.parentId,
+      id: user.userType == "ORGANIZATION" ? user.id : user.parentId,
     },
     onCompleted(data) {
       console.log("parentData", data);
