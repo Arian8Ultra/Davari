@@ -26,6 +26,7 @@
     "strictNullChecks": true
 
   },
-  "include": ["src"],
+  // include all files in src and out of it
+  "include": ["src/**/*", "vite.config.ts","generated-types.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
