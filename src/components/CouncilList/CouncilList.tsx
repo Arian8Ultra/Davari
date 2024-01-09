@@ -284,9 +284,10 @@ const CouncilList = () => {
             paddingX: "3rem",
           }}
           endIcon={<BsGearFill />}
+          disabled={selectedList.length === 0}
           onClick={() => {
             void setCouncilList({
-              onCompleted(data, clientOptions) {
+              onCompleted(data) {
                 console.log(data);
                 if (
                   data.complaint_setInCouncilList.result?.result.some(
