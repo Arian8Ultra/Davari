@@ -3,6 +3,8 @@ export const Accesses = [
   "HOME",
   "COMPLAINTS",
   "COMPLAINTS_LIST",
+  "PORTAL",
+  "EXPERTS_PORTAL",
   "ADMIN_PANEL",
   "ADMIN_PANEL_USERS",
   // user management
@@ -59,6 +61,8 @@ export const Accesses = [
 
 export enum AccessesEnum {
   HOME = "HOME",
+  PORTAL = "PORTAL",
+  EXPERTS_PORTAL = "EXPERTS_PORTAL",
   COMPLAINTS = "COMPLAINTS",
   COMPLAINTS_LIST = "COMPLAINTS_LIST",
   ADMIN_PANEL = "ADMIN_PANEL",
