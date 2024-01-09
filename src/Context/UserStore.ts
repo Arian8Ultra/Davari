@@ -23,9 +23,11 @@ interface UserStore {
   expireDate: Date;
   accesses: string[];
   isMailRoom: boolean;
+  isJury: boolean;
   setAccesses: (newAccesses: string[]) => void;
   setUser: (user: User, token: string, expireDate: Date) => void;
   setIsMailRoom: (isMailRoom: boolean) => void;
+  setJury: (isJury: boolean) => void;
   clearToken: () => void;
   logout: () => void;
 }
@@ -45,6 +47,7 @@ export const useUserStore = create<UserStore>()(
       isMailRoom: false,
       expireDate: new Date(),
       accesses: [AccessesEnum.HOME, AccessesEnum.COMPLAINTS],
+      isJury: false,
       setUser: (user: User, token: string, expireDate: Date) => {
         set({ user: user, token: token, expireDate: expireDate });
       },
@@ -59,6 +62,9 @@ export const useUserStore = create<UserStore>()(
       },
       setIsMailRoom: (isMailRoom: boolean) => {
         set({ isMailRoom: isMailRoom });
+      },
+      setJury(isJury) {
+        set({ isJury });
       },
       clearToken: () => {
         set({ token: "", expireDate: new Date() });
@@ -76,6 +82,7 @@ export const useUserStore = create<UserStore>()(
           expireDate: new Date(),
           accesses: [AccessesEnum.HOME, AccessesEnum.COMPLAINTS],
           isMailRoom: false,
+          isJury: false,
         });
       },
     }),
