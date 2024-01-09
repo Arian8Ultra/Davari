@@ -261,6 +261,7 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
         gridTemplateColumns={
           type === "chief" ||
           type == "mainRoomExpert" ||
+          type == "juryExpert" ||
           type == "all"
             ? {
                 xs: "repeat(1, 1fr)",
@@ -279,6 +280,7 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
         paddingTop={
           type === "chief" ||
           type == "mainRoomExpert" ||
+          type == "juryExpert" ||
           type == "all"
             ? 1
             : 0
@@ -464,8 +466,8 @@ const ComplaintsList = ({ departmentId, type, userId }: Props) => {
             <Typography
               variant="h5"
               component="h2"
-              textAlign={'center'}
-              gridColumn={'span 4'}
+              textAlign={"center"}
+              gridColumn={"span 4"}
               sx={{
                 color: secondary,
                 // backgroundColor: primaryGrey,
