@@ -32,13 +32,18 @@ export const GET_ALL_USERS = gql`
   }
 `;
 
-
-
 export const GET_ALL_USERS_WITH_PARENT_ID = gql`
-query GetUsersWithParentID ($id:String!){
-  user_getUsers{
-    result(where: {and:[{parentId: {eq: $id}},{userRoles: {none: {roleType: {eq: SENIOR_USER}}}}]}){
-      items {
+  query GetUsersWithParentID($id: String!) {
+    user_getUsers {
+      result(
+        where: {
+          and: [
+            { parentId: { eq: $id } }
+            { userRoles: { none: { roleType: { eq: SENIOR_USER } } } }
+          ]
+        }
+      ) {
+        items {
           id
           userName
           email
@@ -59,11 +64,12 @@ query GetUsersWithParentID ($id:String!){
             isDeleted
             createdDate
           }
+        }
       }
+      status
     }
-    status
   }
-}`
+`;
 export const GET_USER = gql`
   query GetUser($id: String!) {
     user_getUser(entityId: $id) {
@@ -112,7 +118,6 @@ export const GET_USER = gql`
     }
   }
 `;
-
 
 export const GET_USER_QUERIABLE = gql`
   query GET_USER_QUERIABLE($id: String!) {
@@ -167,9 +172,9 @@ export const GET_ALL_ORGANIZATION_USERS = gql`
       result(
         take: 2000
         where: {
-          or : [
-            {userType: {eq: ORGANIZATION}},
-            {userType: {eq: CONTRACTOR_OR_CONSULTANT}}
+          or: [
+            { userType: { eq: ORGANIZATION } }
+            { userType: { eq: CONTRACTOR_OR_CONSULTANT } }
           ]
         }
       ) {
@@ -202,9 +207,8 @@ export const GET_ALL_ORGANIZATION_USERS = gql`
 `;
 export const GET_ORGANIZATION_INDIVIDUAL_USERS_WITH_ROLE = gql`
   query GET_ORGANIZATION_INDIVIDUAL_USERS_WITH_ROLE(
-    $organizationId: String!
-  ) # $roleType: RoleType!
-  {
+    $organizationId: String! # $roleType: RoleType!
+  ) {
     user_getUsers {
       result(
         take: 2000
@@ -238,6 +242,47 @@ export const GET_ORGANIZATION_INDIVIDUAL_USERS_WITH_ROLE = gql`
         }
       }
       status
+    }
+  }
+`;
+
+export const GetUserWithFilter = gql`
+  query GetUserWithFilter(
+    $filter: UserFilterInput
+    $take: Int
+    $skip: Int
+    $order: [UserSortInput!] = [{ createdDate: DESC }]
+  ) {
+    user_getUsers {
+      result(
+        take: $take
+        skip: $skip
+        order: $order
+        where: $filter
+      ) {
+        items {
+          id
+          userName
+          email
+          fullName
+          phoneNumber
+          nationalCode
+          userType
+          parentId
+          childUsers {
+            parentId
+            fullName
+            id
+          }
+          userRoles {
+            id
+            roleType
+            userId
+            isDeleted
+            createdDate
+          }
+        }
+      }
     }
   }
 `;
