@@ -4725,6 +4725,16 @@ export type Get_Organization_Individual_Users_With_RoleQueryVariables = Exact<{
 
 export type Get_Organization_Individual_Users_With_RoleQuery = { __typename?: 'Query', user_getUsers: { __typename?: 'ListResponseBaseOfUser', status?: any | null, result?: { __typename?: 'UserCollectionSegment', items?: Array<{ __typename?: 'User', id?: string | null, userName?: string | null, email?: string | null, fullName: string, phoneNumber?: string | null, nationalCode?: string | null, childUsers?: Array<{ __typename?: 'User', parentId?: string | null, fullName: string, id?: string | null }> | null, userRoles?: Array<{ __typename?: 'UserRole', id: number, roleType: RoleType, userId: string, isDeleted: boolean, createdDate: any }> | null }> | null } | null } };
 
+export type GetUserWithFilterQueryVariables = Exact<{
+  filter?: InputMaybe<UserFilterInput>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  order?: InputMaybe<Array<UserSortInput> | UserSortInput>;
+}>;
+
+
+export type GetUserWithFilterQuery = { __typename?: 'Query', user_getUsers: { __typename?: 'ListResponseBaseOfUser', result?: { __typename?: 'UserCollectionSegment', items?: Array<{ __typename?: 'User', id?: string | null, userName?: string | null, email?: string | null, fullName: string, phoneNumber?: string | null, nationalCode?: string | null, userType: UserType, parentId?: string | null, childUsers?: Array<{ __typename?: 'User', parentId?: string | null, fullName: string, id?: string | null }> | null, userRoles?: Array<{ __typename?: 'UserRole', id: number, roleType: RoleType, userId: string, isDeleted: boolean, createdDate: any }> | null }> | null } | null } };
+
 export type TokenCheckQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -9519,6 +9529,67 @@ export function useGet_Organization_Individual_Users_With_RoleLazyQuery(baseOpti
 export type Get_Organization_Individual_Users_With_RoleQueryHookResult = ReturnType<typeof useGet_Organization_Individual_Users_With_RoleQuery>;
 export type Get_Organization_Individual_Users_With_RoleLazyQueryHookResult = ReturnType<typeof useGet_Organization_Individual_Users_With_RoleLazyQuery>;
 export type Get_Organization_Individual_Users_With_RoleQueryResult = Apollo.QueryResult<Get_Organization_Individual_Users_With_RoleQuery, Get_Organization_Individual_Users_With_RoleQueryVariables>;
+export const GetUserWithFilterDocument = gql`
+    query GetUserWithFilter($filter: UserFilterInput, $take: Int, $skip: Int, $order: [UserSortInput!] = [{createdDate: DESC}]) {
+  user_getUsers {
+    result(take: $take, skip: $skip, order: $order, where: $filter) {
+      items {
+        id
+        userName
+        email
+        fullName
+        phoneNumber
+        nationalCode
+        userType
+        parentId
+        childUsers {
+          parentId
+          fullName
+          id
+        }
+        userRoles {
+          id
+          roleType
+          userId
+          isDeleted
+          createdDate
+        }
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetUserWithFilterQuery__
+ *
+ * To run a query within a React component, call `useGetUserWithFilterQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserWithFilterQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserWithFilterQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *      order: // value for 'order'
+ *   },
+ * });
+ */
+export function useGetUserWithFilterQuery(baseOptions?: Apollo.QueryHookOptions<GetUserWithFilterQuery, GetUserWithFilterQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetUserWithFilterQuery, GetUserWithFilterQueryVariables>(GetUserWithFilterDocument, options);
+      }
+export function useGetUserWithFilterLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserWithFilterQuery, GetUserWithFilterQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetUserWithFilterQuery, GetUserWithFilterQueryVariables>(GetUserWithFilterDocument, options);
+        }
+export type GetUserWithFilterQueryHookResult = ReturnType<typeof useGetUserWithFilterQuery>;
+export type GetUserWithFilterLazyQueryHookResult = ReturnType<typeof useGetUserWithFilterLazyQuery>;
+export type GetUserWithFilterQueryResult = Apollo.QueryResult<GetUserWithFilterQuery, GetUserWithFilterQueryVariables>;
 export const TokenCheckDocument = gql`
     query TokenCheck {
   user_isTokenValid
