@@ -17,6 +17,7 @@ const Home = () => {
       height={"100%"}
       overflow={"hidden"}
     >
+      {import.meta.env.VITE_GRAPHQL_URL}
       <InfoCard
         columns={{
           xs: "span 12",
