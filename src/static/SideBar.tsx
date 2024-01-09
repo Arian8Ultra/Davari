@@ -99,7 +99,8 @@ export type SideBarLinkType = {
     "SENIOR_USER",
     "EXPERT",
     "SUPER_ADMIN",
-    "MAIL_ROOM"
+    "MAIL_ROOM",
+    "JURY_EXPERT"
   ];
   mailRoom?: boolean;
   justMailRoom?: boolean;
