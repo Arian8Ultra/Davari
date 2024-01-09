@@ -1,7 +1,8 @@
-import { Box, Button } from "@mui/material";
+import { Box, Button, List } from "@mui/material";
 import { useUserStore } from "../../Context/UserStore";
 import ComplaintsList from "../../components/Complaints/ComplaintsList";
-import { primary, secondary } from "../../theme/color";
+import { primary, secondary, secondaryDark } from "../../theme/color";
+import { ListRounded } from "@mui/icons-material";
 
 const Protal = () => {
   const user = useUserStore((state) => state.user);
@@ -11,10 +12,17 @@ const Protal = () => {
         justifyContent:"flex-end"
       }}>
         <Button variant="contained" color="primary" sx={{
-          background:secondary
+          background:primary,
+          color:secondaryDark,
+          boxShadow:"none",
+          "&:hover":{
+            background:secondary,
+            color:primary
+          }
         }}
         href="/portal/council_List">
          ایجاد لیست دولت
+          <ListRounded sx={{ml:1}}/>
         </Button>
       </Box>
       {user?.userRoles?.find(
