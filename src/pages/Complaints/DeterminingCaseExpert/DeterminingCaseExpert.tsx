@@ -74,9 +74,7 @@ const DeterminingCaseExpert = () => {
             color: primary,
           },
         }}
-        onClick={() => {
-          console.log(selectedExpert);
-        }}
+        href= {`signUp/determiningCaseExpert/newUser/${complaintId || ""}`}
       >
         <BsPersonAdd />
         افزودن کارشناس جدید

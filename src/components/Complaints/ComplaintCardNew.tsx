@@ -1443,7 +1443,7 @@ const ComplaintCardNew = (props: Props) => {
                 }}
                 onClick={() => {
                   navigate(
-                    `/signUp/determiningCaseExpert/${props.id}`
+                    `/determiningCaseExpert/${props.id}`
                   );
                 }}
               >
