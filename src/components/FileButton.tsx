@@ -52,6 +52,7 @@ interface FileButtonProps {
   multiple?: boolean;
   setFiles?: Function;
   fileType?: string;
+  sx?: any;
 }
 
 function FileButton(props: FileButtonProps) {
