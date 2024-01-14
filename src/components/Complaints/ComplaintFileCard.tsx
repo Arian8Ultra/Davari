@@ -3,8 +3,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { Download } from "@mui/icons-material";
-import { Box } from "@mui/material";
-import { blue, grey, red } from "@mui/material/colors";
+import { Box, IconButton } from "@mui/material";
+import { blue, green, grey, red } from "@mui/material/colors";
 import {
   Blue,
   Green,
@@ -63,81 +63,38 @@ const ComplaintFileCard = (props: Props) => {
         </FaTypography>
       </Box>
       {props.fileName && (
-        <Box
+        <IconButton
           sx={{
-            display: "grid",
-            gridTemplateColumns: "repeat(2,1fr)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
             bgcolor: Green,
+            borderRadius: "0",
             // background:`linear-gradient(90deg,${primary},${Green})`,
             cursor: "pointer",
             transition: "all 0.2s ease-in-out",
             ":hover": {
-              bgcolor: primary,
+              bgcolor: green[500],
+              borderRadius: "1rem",
               transition: "all 0.2s ease-in-out",
             },
           }}
+          onClick={() => {
+            props.fileName &&
+              window.open(
+                "http://172.16.23.50:7030/files/letters/" +
+                  props.fileName +
+                  ".docx"
+              );
+          }}
+          // href={
+          //   "http://172.16.23.50:7030/files/letters/" +
+          //   props.fileName +
+          //   ".docx"
+          // }
         >
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              color: grey[300],
-              justifyContent: "center",
-              alignItems: "center",
-              bgcolor: Red,
-              // background:`linear-gradient(90deg,${primary},${Green})`,
-              cursor: "pointer",
-              transition: "all 0.2s ease-in-out",
-              ":hover": {
-                bgcolor: red[500],
-                transition: "all 0.2s ease-in-out",
-              },
-            }}
-          >
-            <Download
-              sx={{ color: grey[300] }}
-              onClick={() => {
-                props.fileName &&
-                  window.open(
-                    "http://172.16.23.50:7030/files/letters/" +
-                      props.fileName +
-                      ".pdf"
-                  );
-              }}
-            />
-            PDF
-          </Box>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              color: grey[300],
-              justifyContent: "center",
-              alignItems: "center",
-              bgcolor: Blue,
-              // background:`linear-gradient(90deg,${primary},${Green})`,
-              cursor: "pointer",
-              transition: "all 0.2s ease-in-out",
-              ":hover": {
-                bgcolor: blue[500],
-                transition: "all 0.2s ease-in-out",
-              },
-            }}
-          >
-            <Download
-              sx={{ color: grey[300] }}
-              onClick={() => {
-                props.fileName &&
-                  window.open(
-                    "http://172.16.23.50:7030/files/letters/" +
-                      props.fileName +
-                      ".docx"
-                  );
-              }}
-            />
-            DOCX
-          </Box>
-        </Box>
+          <Download sx={{ color: grey[300] }} />
+        </IconButton>
       )}
     </Box>
   );
