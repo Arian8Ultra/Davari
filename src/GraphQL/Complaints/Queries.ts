@@ -412,11 +412,64 @@ export const GetComplaintsWithFilter = gql`
             phoneNumber
           }
           contract {
-            contractNumberByAccuser
-            contractDateByAccuser
-            initialBudgetByAccuser
-            accusedDepartmentUserId
-            accuserDepartmentUserId
+            id
+          accuserDepartmentUserId
+          accusedDepartmentUserId
+          accuserNationality
+          accusedNationality
+          accuserRelatedPeopleByAccuser
+          accuserRelatedPeopleByAccused
+          accusedRelatedPeopleByAccuser
+          accusedRelatedPeopleByAccused
+          contractTypeByAccused
+          contractTypeByAccuser
+          otherContractTypeByAccused
+          otherContractTypeByAccuser
+          circularNumberByAccused
+          circularNumberByAccuser
+          circularDateByAccused
+          circularDateByAccuser
+          contractSubjectByAccused
+          contractSubjectByAccuser
+          contractNumberByAccused
+          contractNumberByAccuser
+          contractDateByAccused
+          contractDateByAccuser
+          initialBudgetByAccused
+          initialBudgetByAccuser
+          initialTimePeriodByAccused
+          initialTimePeriodByAccuser
+          priceListOfBasicUnitOfFieldByAccused
+          priceListOfBasicUnitOfFieldByAccuser
+          isSpecialPriceListAttachedToContractByAccused
+          isSpecialPriceListAttachedToContractByAccuser
+          recommendedCoefficientByAccused
+          recommendedCoefficientByAccuser
+          coefficientTypeByAccused
+          coefficientTypeByAccuser
+          assigningTypeByAccused
+          assigningTypeByAccuser
+          doesContainAdjustmentByAccused
+          doesContainAdjustmentByAccuser
+          baseIndexPeriodByAccused
+          baseIndexPeriodByAccuser
+          operationStartDateByAccused
+          operationStartDateByAccuser
+          physicalProgressInArbitrationDateByAccused
+          physicalProgressInArbitrationDateByAccuser
+          financialProgressInArbitrationDateByAccused
+          financialProgressInArbitrationDateByAccuser
+          contractStatusAndDateInArbitrationByAccused
+          contractStatusAndDateInArbitrationByAccuser
+          supervisionDepartmentByAccused
+          supervisionDepartmentByAccuser
+          authorizedDelaysByAccused
+          authorizedDelaysByAccuser
+          unauthorizedDelaysByAccused
+          unauthorizedDelaysByAccuser
+          isExecutive
+          fileNamesByAccused
+          fileNamesByAccuser
           }
         }
       }
@@ -454,10 +507,15 @@ export const GetArgumentsWithFilter = gql`
           filledBy
           mailRoomChiefSuggestedAmount
           mailRoomExpertApprovedAmount
+          mailRoomExpertOpinionOnExpertOpinion
+          mailRoomChiefOpinionOnArgument
+          mailRoomExpertOpinionOnArgument
           accuserAnswerToAccusedResponse
           suggestedAmount
           summary
           userId
+          createdDate
+          isDeleted
         }
       }
       status
