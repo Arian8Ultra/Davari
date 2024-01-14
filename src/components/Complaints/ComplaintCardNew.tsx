@@ -8,12 +8,11 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { useMutation, useQuery } from "@apollo/client";
-import { BoySharp, FileOpenOutlined } from "@mui/icons-material";
+import { FileOpenOutlined } from "@mui/icons-material";
 import {
   Autocomplete,
   Box,
   Button,
-  CircularProgress,
   LinearProgress,
   Table,
   TableBody,
@@ -28,10 +27,7 @@ import { grey, red } from "@mui/material/colors";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUserStore } from "../../Context/UserStore";
-import {
-  DELETE_COMPLAINT,
-  UPDATE_COMPLAINT,
-} from "../../GraphQL/Complaints/Mutations";
+import { DELETE_COMPLAINT } from "../../GraphQL/Complaints/Mutations";
 import {
   GET_ALL_ORGANIZATION_USERS,
   GET_USER,
@@ -48,7 +44,6 @@ import {
   newStatesObj,
 } from "../../static/States";
 import { User } from "../../static/Types";
-import states from "../../static/states.json";
 import {
   Green,
   GreenLight,
@@ -61,6 +56,15 @@ import {
   secondaryDark,
 } from "../../theme/color";
 import NewModal from "../Modals";
+import { BsCloudUploadFill } from "react-icons/bs";
+import FileButton from "../FileButton";
+import FileBox from "../FileBox";
+import { UPLOAD_FILE } from "../../api/upload";
+import {
+  useAddComplaintFileMutationMutation,
+  useGetFileFullLazyQuery,
+  useGetFileQueryLazyQuery,
+} from "../../../generated-types";
 interface Props {
   id: number;
   complaintId?: number;
@@ -88,6 +92,7 @@ interface Props {
 }
 const ComplaintCardNew = (props: Props) => {
   const [open, setOpen] = useState(false);
+  const [files, setFiles] = useState<File>();
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const user = useUserStore((state) => state.user);
@@ -174,6 +179,9 @@ const ComplaintCardNew = (props: Props) => {
       console.log(error);
     },
   });
+
+  const [addFile] = useAddComplaintFileMutationMutation();
+  const [getFile] = useGetFileFullLazyQuery();
 
   const buttons = () => {
     switch (props.state) {
@@ -1442,9 +1450,7 @@ const ComplaintCardNew = (props: Props) => {
                   },
                 }}
                 onClick={() => {
-                  navigate(
-                    `/determiningCaseExpert/${props.id}`
-                  );
+                  navigate(`/determiningCaseExpert/${props.id}`);
                 }}
               >
                 تعیین کارشناس پرونده
@@ -1519,9 +1525,215 @@ const ComplaintCardNew = (props: Props) => {
                 </Button>
               </Box>
             );
-            else{
-              break;
-            }
+          else {
+            break;
+          }
+        }
+
+      case ComplaintState.CheckingAndUploadingTheSignedDecree:
+        if (props.type == "mainRoomExpert" || props.type == "chief") {
+          return (
+            <Box
+              display={"grid"}
+              gridTemplateColumns={"repeat(3,1fr)"}
+              mt={"1rem"}
+              gap={"6rem"}
+              justifyContent={"center"}
+              alignItems={"center"}
+            >
+              <div className="">آپلود قرار نامه امضا شده : </div>
+
+              <FileBox setFiles={setFiles} files={files} fullWidth />
+              <Button
+                sx={{
+                  borderRadius: "0.5rem",
+                  backgroundColor: primaryDark,
+                  color: "white",
+                  gap: "0.5rem",
+                  "&:hover": {
+                    backgroundColor: primary,
+                    color: "white",
+                  },
+                }}
+                disabled={!files}
+                onClick={() => {
+                  void UPLOAD_FILE({
+                    file: files,
+                    token: localStorage.getItem("token") as string,
+                    onFail: (err) => {
+                      console.log(err);
+                    },
+                    onSuccess(res) {
+                      console.log(res);
+                      void getFile({
+                        variables: {
+                          filter: {
+                            name: {
+                              eq: res.result?.[0]?.newFileName,
+                            },
+                          },
+                        },
+                        onCompleted(data) {
+                          console.log("File", data);
+                          void addFile({
+                            variables: {
+                              input: {
+                                complaintId: props.id,
+                                title: "قرارنامه امضا شده",
+                                fileId:
+                                  data.fileGallery_getFiles.result
+                                    ?.items?.[0]?.id,
+                              },
+                            },
+                            onCompleted(data, clientOptions) {
+                              console.log("addedFile", data);
+                              if (
+                                data.complaintFile_addComplaintFile
+                                  .status.code == 1
+                              ) {
+                                void updateComplaint({
+                                  variables: {
+                                    id: props.id,
+                                    complaintState:
+                                      ComplaintState.UploadingDocumentsAndReviewingComplaint,
+                                  },
+                                  onCompleted(data, clientOptions) {
+                                    props.refetch && props.refetch();
+                                  },
+                                });
+                              }
+                            },
+                          });
+                        },
+                      });
+                      // void addFile({
+                      //   variables:{
+                      //     input:{
+                      //       complaintId: props.id,
+                      //       title: "قرارنامه امضا شده",
+
+                      //     }
+                      //   }
+                      // })
+                    },
+                  });
+                }}
+              >
+                <BsCloudUploadFill />
+                ثبت و آپلود
+              </Button>
+            </Box>
+          );
+        } else {
+          if (
+            user.parentId == props.acusserId ||
+            user.parentId == props.acusser ||
+            user.id == props.acusserId ||
+            user.id == props.acusser
+          )
+            return (
+              <Box
+                display={"grid"}
+                gridTemplateColumns={"repeat(2,1fr)"}
+                mt={"1rem"}
+                gap={"6rem"}
+              >
+                <Button
+                  sx={{
+                    borderRadius: "0.5rem",
+                    backgroundColor: Red,
+                    color: "white",
+                    "&:hover": {
+                      backgroundColor: red[100],
+                      color: Red,
+                    },
+                  }}
+                  onClick={() => {
+                    const agree = confirm(
+                      "آیا از انصراف از این درخواست داوری مطمئن هستید؟"
+                    );
+                    if (agree) {
+                      void deleteComplaint();
+                    }
+                  }}
+                >
+                  انصراف از درخواست داوری
+                </Button>
+              </Box>
+            );
+          else {
+            break;
+          }
+        }
+
+      case ComplaintState.UploadingDocumentsAndReviewingComplaint:
+        if (props.type == "juryExpert") {
+          return (
+            <Box
+              display={"grid"}
+              gridTemplateColumns={"repeat(2,1fr)"}
+              mt={"1rem"}
+              gap={"6rem"}
+            >
+              <div className=""></div>
+              <Button
+                sx={{
+                  borderRadius: "0.5rem",
+                  backgroundColor: primaryDark,
+                  color: "white",
+                  "&:hover": {
+                    backgroundColor: primary,
+                    color: "white",
+                  },
+                }}
+                onClick={() => {
+                  navigate(`/complaints/${props.id}/docReq`);
+                }}
+              >
+                مشاهده درخواست داوری و درخواست مدارک مورد نیاز
+              </Button>
+            </Box>
+          );
+        } else {
+          if (
+            user.parentId == props.acusserId ||
+            user.parentId == props.acusser ||
+            user.id == props.acusserId ||
+            user.id == props.acusser
+          )
+            return (
+              <Box
+                display={"grid"}
+                gridTemplateColumns={"repeat(2,1fr)"}
+                mt={"1rem"}
+                gap={"6rem"}
+              >
+                <Button
+                  sx={{
+                    borderRadius: "0.5rem",
+                    backgroundColor: Red,
+                    color: "white",
+                    "&:hover": {
+                      backgroundColor: red[100],
+                      color: Red,
+                    },
+                  }}
+                  onClick={() => {
+                    const agree = confirm(
+                      "آیا از انصراف از این درخواست داوری مطمئن هستید؟"
+                    );
+                    if (agree) {
+                      void deleteComplaint();
+                    }
+                  }}
+                >
+                  انصراف از درخواست داوری
+                </Button>
+              </Box>
+            );
+          else {
+            break;
+          }
         }
 
       default:
@@ -1572,7 +1784,7 @@ const ComplaintCardNew = (props: Props) => {
         // minHeight : "150px",
         backgroundColor: "white",
         display: "grid",
-        position:'relative',
+        position: "relative",
         gridTemplateColumns: "repeat(4,1fr)",
         gridAutoColumns: "1fr",
         alignItems: "center",
@@ -1580,11 +1792,11 @@ const ComplaintCardNew = (props: Props) => {
         gap: "0.5rem",
         rowGap: 0,
         cursor: "pointer",
-        overflow:'clip',
+        overflow: "clip",
         transition: "all 0.2s ease",
         "&:hover": {
           // background: "rgba(240,240,240)",
-          scale:"1.02",
+          scale: "1.02",
           boxShadow: "5px 5px 20px rgba(0,0,0,0.2)",
         },
       }}
@@ -1687,11 +1899,16 @@ const ComplaintCardNew = (props: Props) => {
             {accused?.user_getUser?.result?.fullName}
           </Typography>
         </Box>
-        <Box display={"flex"} alignItems={"center"} gap={1} sx={{
-          borderTop:'1px solid #ccc',
-          paddingTop:'0.5rem',
-          marginTop:'0.5rem',
-        }}>
+        <Box
+          display={"flex"}
+          alignItems={"center"}
+          gap={1}
+          sx={{
+            borderTop: "1px solid #ccc",
+            paddingTop: "0.5rem",
+            marginTop: "0.5rem",
+          }}
+        >
           <Typography
             fontSize={{
               xs: "0.8rem",
@@ -1711,9 +1928,9 @@ const ComplaintCardNew = (props: Props) => {
             }}
             color={secondary}
             sx={{
-              width:'100%',
+              width: "100%",
             }}
-            textAlign={'center'}
+            textAlign={"center"}
           >
             {newStatesFa[newStatesCap.indexOf(props.state || "")]}
           </Typography>
@@ -1843,7 +2060,7 @@ const ComplaintCardNew = (props: Props) => {
           bottom: 0,
           right: 0,
           backgroundColor: grey[200],
-          
+
           // change the color of the bar
           "& .MuiLinearProgress-bar": {
             backgroundColor: primary,
