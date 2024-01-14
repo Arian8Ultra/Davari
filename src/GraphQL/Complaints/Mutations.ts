@@ -362,6 +362,24 @@ export const SendAccusedRespondedSMS = gql`
   }
 `;
 
+export const AddComplaintFileMutation = gql`
+  mutation AddComplaintFileMutation($input: ComplaintFileInput!) {
+    complaintFile_addComplaintFile(input: $input) {
+      result {
+        complaintId
+        title
+        fileId
+        description
+        id
+      }
+      status {
+        code
+        value
+      }
+    }
+  }
+`;
+
 // export const test = gql `
 // mutation {
 //   adjustmentStatement_addAdjustmentStatement(input: {
