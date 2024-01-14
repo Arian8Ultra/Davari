@@ -75,9 +75,9 @@ const AddMeetingPage = () => {
     {
       variables: {
         input: {
-          contractId: parseInt(complaintId || "") || 0,
+          id: parseInt(complaintId || "") || 0,
           complaintState:
-            ComplaintState.WaitingForAccuserAndAccusedToSignDecree,
+            ComplaintState.CheckingAndUploadingTheSignedDecree,
         },
       },
     }
