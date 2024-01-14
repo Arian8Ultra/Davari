@@ -1,0 +1,20 @@
+query GetReqestedDocsQuery(
+  $filter: DocumentRequestFilterInput
+  $order: [DocumentRequestSortInput!]
+  $skip: Int
+  $take: Int
+) {
+  documentRequest_getDocumentRequests {
+    result(where: $filter, order: $order, skip: $skip, take: $take) {
+      items {
+        complaintId
+        requestedDocumentName
+        requestedDocumentFileName
+        isDeleted
+        createdDate
+        id
+        userId
+      }
+    }
+  }
+}

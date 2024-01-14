@@ -4327,6 +4327,23 @@ export type AddDocsRequestMutationMutationVariables = Exact<{
 
 export type AddDocsRequestMutationMutation = { __typename?: 'Mutation', documentRequest_addDocumentRequest: { __typename?: 'ResponseBaseOfDocumentRequest', result?: { __typename?: 'DocumentRequest', userId: string, complaintId: number, requestedDocumentName: string, requestedDocumentFileName?: string | null, id: number } | null } };
 
+export type DeleteRequestedDocMutationMutationVariables = Exact<{
+  id: Scalars['Int']['input'];
+}>;
+
+
+export type DeleteRequestedDocMutationMutation = { __typename?: 'Mutation', documentRequest_deleteDocumentRequest: { __typename?: 'ResponseBaseOfDocumentRequest', status: { __typename?: 'ResponseStatus', code: number, value: string }, result?: { __typename?: 'DocumentRequest', id: number } | null } };
+
+export type GetReqestedDocsQueryQueryVariables = Exact<{
+  filter?: InputMaybe<DocumentRequestFilterInput>;
+  order?: InputMaybe<Array<DocumentRequestSortInput> | DocumentRequestSortInput>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type GetReqestedDocsQueryQuery = { __typename?: 'Query', documentRequest_getDocumentRequests: { __typename?: 'ListResponseBaseOfDocumentRequest', result?: { __typename?: 'DocumentRequestCollectionSegment', items?: Array<{ __typename?: 'DocumentRequest', complaintId: number, requestedDocumentName: string, requestedDocumentFileName?: string | null, isDeleted: boolean, createdDate: any, id: number, userId: string }> | null } | null } };
+
 export type GetFileQueryQueryVariables = Exact<{
   id: Scalars['Int']['input'];
 }>;
@@ -6836,6 +6853,93 @@ export function useAddDocsRequestMutationMutation(baseOptions?: Apollo.MutationH
 export type AddDocsRequestMutationMutationHookResult = ReturnType<typeof useAddDocsRequestMutationMutation>;
 export type AddDocsRequestMutationMutationResult = Apollo.MutationResult<AddDocsRequestMutationMutation>;
 export type AddDocsRequestMutationMutationOptions = Apollo.BaseMutationOptions<AddDocsRequestMutationMutation, AddDocsRequestMutationMutationVariables>;
+export const DeleteRequestedDocMutationDocument = gql`
+    mutation DeleteRequestedDocMutation($id: Int!) {
+  documentRequest_deleteDocumentRequest(entityId: $id) {
+    status {
+      code
+      value
+    }
+    result {
+      id
+    }
+  }
+}
+    `;
+export type DeleteRequestedDocMutationMutationFn = Apollo.MutationFunction<DeleteRequestedDocMutationMutation, DeleteRequestedDocMutationMutationVariables>;
+
+/**
+ * __useDeleteRequestedDocMutationMutation__
+ *
+ * To run a mutation, you first call `useDeleteRequestedDocMutationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteRequestedDocMutationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteRequestedDocMutationMutation, { data, loading, error }] = useDeleteRequestedDocMutationMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteRequestedDocMutationMutation(baseOptions?: Apollo.MutationHookOptions<DeleteRequestedDocMutationMutation, DeleteRequestedDocMutationMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteRequestedDocMutationMutation, DeleteRequestedDocMutationMutationVariables>(DeleteRequestedDocMutationDocument, options);
+      }
+export type DeleteRequestedDocMutationMutationHookResult = ReturnType<typeof useDeleteRequestedDocMutationMutation>;
+export type DeleteRequestedDocMutationMutationResult = Apollo.MutationResult<DeleteRequestedDocMutationMutation>;
+export type DeleteRequestedDocMutationMutationOptions = Apollo.BaseMutationOptions<DeleteRequestedDocMutationMutation, DeleteRequestedDocMutationMutationVariables>;
+export const GetReqestedDocsQueryDocument = gql`
+    query GetReqestedDocsQuery($filter: DocumentRequestFilterInput, $order: [DocumentRequestSortInput!], $skip: Int, $take: Int) {
+  documentRequest_getDocumentRequests {
+    result(where: $filter, order: $order, skip: $skip, take: $take) {
+      items {
+        complaintId
+        requestedDocumentName
+        requestedDocumentFileName
+        isDeleted
+        createdDate
+        id
+        userId
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetReqestedDocsQueryQuery__
+ *
+ * To run a query within a React component, call `useGetReqestedDocsQueryQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetReqestedDocsQueryQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetReqestedDocsQueryQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *      order: // value for 'order'
+ *      skip: // value for 'skip'
+ *      take: // value for 'take'
+ *   },
+ * });
+ */
+export function useGetReqestedDocsQueryQuery(baseOptions?: Apollo.QueryHookOptions<GetReqestedDocsQueryQuery, GetReqestedDocsQueryQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetReqestedDocsQueryQuery, GetReqestedDocsQueryQueryVariables>(GetReqestedDocsQueryDocument, options);
+      }
+export function useGetReqestedDocsQueryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetReqestedDocsQueryQuery, GetReqestedDocsQueryQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetReqestedDocsQueryQuery, GetReqestedDocsQueryQueryVariables>(GetReqestedDocsQueryDocument, options);
+        }
+export type GetReqestedDocsQueryQueryHookResult = ReturnType<typeof useGetReqestedDocsQueryQuery>;
+export type GetReqestedDocsQueryLazyQueryHookResult = ReturnType<typeof useGetReqestedDocsQueryLazyQuery>;
+export type GetReqestedDocsQueryQueryResult = Apollo.QueryResult<GetReqestedDocsQueryQuery, GetReqestedDocsQueryQueryVariables>;
 export const GetFileQueryDocument = gql`
     query getFileQuery($id: Int!) {
   fileGallery_getFile(entityId: $id) {

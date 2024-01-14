@@ -1,0 +1,11 @@
+mutation DeleteRequestedDocMutation($id: Int!) {
+  documentRequest_deleteDocumentRequest(entityId: $id) {
+    status{
+         code
+         value
+    }
+    result{
+        id
+    }
+  }
+}
