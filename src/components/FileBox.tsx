@@ -24,8 +24,8 @@ import {
 import React, { useEffect } from "react";
 import { Red } from "../theme/color";
 interface Props extends ButtonProps {
-  setFiles?: (files: File[]) => void;
-  files?: File[];
+  setFiles?: (file: File) => void;
+  files?: File;
   fileTypes?: string[];
   // multiple?: boolean;
 }
@@ -36,7 +36,7 @@ const FileBox = ({
   // multiple = false,
   ...props
 }: Props) => {
-  const [, setFile] = React.useState(files);
+  const [file, setFile] = React.useState(files);
   const [fileName, setFileName] = React.useState<string>("");
 
   useEffect(() => {
@@ -47,7 +47,7 @@ const FileBox = ({
     const newFiles = e.target.files;
     console.log(newFiles);
     setFile(newFiles[0]);
-    setFiles && setFiles(newFiles);
+    setFiles && setFiles(newFiles[0]);
     setFileName(newFiles[0].name.split(".")[0]);
   };
   return (
