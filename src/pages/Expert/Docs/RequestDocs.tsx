@@ -1,38 +1,45 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import {
   Box,
   Button,
+  Divider,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
+  TextField,
   Typography,
 } from "@mui/material";
+import React from "react";
 import { useParams } from "react-router-dom";
 import {
+  useAddDocsRequestMutationMutation,
+  useDeleteRequestedDocMutationMutation,
   useGetArgumentsWithFilterQuery,
   useGetComplaintsWithFilterQuery,
+  useGetReqestedDocsQueryQuery,
   useGetUserWithFilterLazyQuery,
 } from "../../../../generated-types";
-import {
-  primary,
-  secondary,
-  secondaryDark,
-} from "../../../theme/color";
 import ArgumentInfoModal from "../../../components/Arguments/ArgumentInfoModal";
-import React from "react";
 import { ComplaintArgument } from "../../../gql/graphql";
+import { Green, Red, primary, secondary } from "../../../theme/color";
+import { useUserStore } from "../../../Context/UserStore";
+import { Add, Delete } from "@mui/icons-material";
 
 const RequestDocs = () => {
   const { complaintId } = useParams<{ complaintId: string }>();
+  const user = useUserStore((state) => state.user);
   const [infoModal, setInfoModal] = React.useState<{
     open: boolean;
     argument?: ComplaintArgument;
   }>({
     open: false,
   });
+
+  const [requestedDoc, setRequestedDoc] = React.useState<string>();
 
   const { data: ArgumentsData } = useGetArgumentsWithFilterQuery({
     variables: {
@@ -58,6 +65,33 @@ const RequestDocs = () => {
       void GetAccused();
     },
   });
+
+  const { data: requestedDocsData, refetch: requestedDocsRefetch } =
+    useGetReqestedDocsQueryQuery({
+      variables: {
+        filter: {
+          complaintId: {
+            eq: parseInt(complaintId || "") || 0,
+          },
+        },
+      },
+    });
+
+  const [addDoc] = useAddDocsRequestMutationMutation({
+    variables: {
+      input: {
+        complaintId: parseInt(complaintId || "") || 0,
+        requestedDocumentName: requestedDoc || "",
+        userId: user.id || "",
+      },
+    },
+  });
+
+  const [deleteDoc] = useDeleteRequestedDocMutationMutation({
+    onCompleted(data, clientOptions) {
+      requestedDocsRefetch();
+    },
+  })
 
   const [GetAccuser, { data: AccuserData }] =
     useGetUserWithFilterLazyQuery({
@@ -108,6 +142,39 @@ const RequestDocs = () => {
           {AccusedData?.user_getUsers.result?.items?.[0]?.fullName}
         </Typography>
       </Box> */}
+
+      <Box
+        display={"flex"}
+        justifyContent={"center"}
+        alignItems={"center"}
+        flexDirection={"column"}
+        position={"relative"}
+      >
+        <Box
+          borderRadius={"3rem"}
+          sx={{
+            background: primary,
+            padding: "0.5rem 1rem",
+            userSelect: "none",
+            width: "max-content",
+            justifySelf: "center",
+            zIndex: 1000,
+          }}
+        >
+          <Typography variant={"h6"} sx={{ color: secondary }}>
+            مشخصات قرارداد
+          </Typography>
+        </Box>
+        <Divider
+          sx={{
+            width: "100%",
+            backgroundColor: secondary,
+            height: "0.2rem",
+            margin: "1rem 0",
+            position: "absolute",
+          }}
+        />
+      </Box>
       <Box
         sx={{
           borderRadius: "0.5rem",
@@ -632,11 +699,43 @@ const RequestDocs = () => {
 
 
       */}
+      <Box
+        display={"flex"}
+        justifyContent={"center"}
+        alignItems={"center"}
+        flexDirection={"column"}
+        position={"relative"}
+      >
+        <Box
+          borderRadius={"3rem"}
+          sx={{
+            background: primary,
+            padding: "0.5rem 1rem",
+            userSelect: "none",
+            width: "max-content",
+            justifySelf: "center",
+            zIndex: 1000,
+          }}
+        >
+          <Typography variant={"h6"} sx={{ color: secondary }}>
+            دعاوی مرتبط
+          </Typography>
+        </Box>
+        <Divider
+          sx={{
+            width: "100%",
+            backgroundColor: secondary,
+            height: "0.2rem",
+            margin: "1rem 0",
+            position: "absolute",
+          }}
+        />
+      </Box>
 
       <Box
         sx={{
           borderRadius: "0.5rem",
-          outline: `2px solid ${primary}`,
+          outline: `2px solid ${secondary}`,
           backgroundColor: "rgb(220,220,220)",
           display: "flex",
           flexDirection: "column",
@@ -769,6 +868,187 @@ const RequestDocs = () => {
                       }
                     >
                       مشاهده مستندات
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              )
+            )}
+          </TableBody>
+        </Table>
+      </Box>
+      <Box
+        display={"flex"}
+        justifyContent={"center"}
+        alignItems={"center"}
+        flexDirection={"column"}
+        position={"relative"}
+      >
+        <Box
+          borderRadius={"3rem"}
+          sx={{
+            background: primary,
+            padding: "0.5rem 1rem",
+            userSelect: "none",
+            width: "max-content",
+            justifySelf: "center",
+            zIndex: 1000,
+          }}
+        >
+          <Typography variant={"h6"} sx={{ color: secondary }}>
+            مستندات مورد نیاز
+          </Typography>
+        </Box>
+        <Divider
+          sx={{
+            width: "100%",
+            backgroundColor: secondary,
+            height: "0.2rem",
+            margin: "1rem 0",
+            position: "absolute",
+          }}
+        />
+      </Box>
+      <Box
+        sx={{
+          borderRadius: "0.5rem",
+          outline: `2px solid ${secondary}`,
+          backgroundColor: "rgb(220,220,220)",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "flex-start",
+          justifyContent: "center",
+          my: "2rem",
+          overflow: "hidden",
+          width: "40%",
+          mx: "auto",
+        }}
+      >
+        <Table
+          sx={{
+            // backgroundColor: primaryGreyLightTransparent,
+            borderRadius: "0.5rem",
+          }}
+        >
+          <TableHead
+            sx={{
+              background: secondary,
+              borderRadius: "0.5rem",
+              color: "white",
+              "& th": {
+                textAlign: "center",
+              },
+            }}
+          >
+            <TableRow>
+              <TableCell
+                sx={{
+                  fontWeight: "bold",
+                  color: "white",
+                }}
+              >
+                نام مستند مورد نیاز
+              </TableCell>
+              <TableCell
+                sx={{
+                  fontWeight: "bold",
+                  color: "white",
+                }}
+              >
+                ...
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody
+            sx={{
+              // delete padding of cells
+              "& td": {
+                padding: "0.5rem",
+                borderBottom: `1px solid ${secondary}`,
+                borderRight: `1px solid ${secondary}`,
+              },
+              // add border to first column
+              "& td:first-child": {
+                borderRight: `1px solid ${secondary}`,
+                width: "max-content",
+              },
+              // add border to last column
+              "& td:last-child": {
+                borderLeft: `1px solid ${secondary}`,
+                borderRight: `0px solid ${secondary}`,
+              },
+            }}
+          >
+            <TableRow>
+              <TableCell
+                sx={{
+                  textAlign: "center",
+                }}
+              >
+                <TextField
+                  variant={"outlined"}
+                  fullWidth
+                  value={requestedDoc}
+                  onChange={(e) => setRequestedDoc(e.target.value)}
+                />
+              </TableCell>
+              <TableCell
+                sx={{
+                  textAlign: "center",
+                  width: "20%",
+                }}
+              >
+                <Button
+                  variant={"contained"}
+                  sx={{
+                    backgroundColor: Green,
+                    ":hover": {
+                      backgroundColor: primary,
+                    },
+                  }}
+                  fullWidth
+                  onClick={() => {
+                    void addDoc();
+                    void requestedDocsRefetch();
+                  }}
+                >
+                  <Add />
+                  افزودن
+                </Button>
+              </TableCell>
+            </TableRow>
+            {requestedDocsData?.documentRequest_getDocumentRequests.result?.items?.map(
+              (item) => (
+                <TableRow>
+                  <TableCell
+                    sx={{
+                      textAlign: "center",
+                    }}
+                  >
+                    {item?.requestedDocumentName}
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      textAlign: "center",
+                    }}
+                  >
+                    <Button
+                      variant={"contained"}
+                      sx={{
+                        backgroundColor: Red,
+                        ":hover": {
+                          backgroundColor: primary,
+                        },
+                      }}
+                      onClick={() => {
+                        void deleteDoc({
+                          variables:{
+                            id: item?.id || 0
+                          }
+                        })
+                      }}
+                    >
+                      <Delete />
+                      حذف
                     </Button>
                   </TableCell>
                 </TableRow>
