@@ -55,7 +55,9 @@ const ArgumentInfoModal = (props: Props) => {
                 </TableRow>
                 <TableRow>
                   <TableCell>مشروح ادعا :</TableCell>
-                  <TableCell>{props.fullArgument?.description}</TableCell>
+                  <TableCell>
+                    {props.fullArgument?.description}
+                  </TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>مبلغ خواسته شده ادعا :</TableCell>
@@ -74,13 +76,55 @@ const ArgumentInfoModal = (props: Props) => {
                 <TableRow>
                   <TableCell>نظر کارشناس دبیرخانه :</TableCell>
                   <TableCell>
-                    {props.fullArgument?.mailRoomExpertOpinionOnArgument}
+                    {
+                      props.fullArgument
+                        ?.mailRoomExpertOpinionOnArgument
+                    }
                   </TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>نظر رئیس دبیرخانه :</TableCell>
                   <TableCell>
-                    {props.fullArgument?.mailRoomChiefOpinionOnArgument}
+                    {
+                      props.fullArgument
+                        ?.mailRoomChiefOpinionOnArgument
+                    }
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>مستندات خواهان :</TableCell>
+                  <TableCell>
+                    <Button
+                      variant="contained"
+                      endIcon={<AiFillFileAdd />}
+                      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+                      onClick={() => {
+                        // download file with url in fileName
+                        window.open(
+                          "http://172.16.23.50:7030/files/" +
+                            props.fullArgument?.fileName
+                        );
+                      }}
+                      sx={{
+                        borderRadius: 2,
+                        backgroundColor: Green,
+                        fontWeight: 700,
+                        fontStyle: "normal",
+                        fontSize: "0.7rem",
+                        boxShadow: "none",
+                        display: props.fullArgument?.fileName
+                          ? "flex"
+                          : "none",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        "&:hover": {
+                          backgroundColor: GreenLight,
+                          color: Green,
+                        },
+                      }}
+                    >
+                      {props.fullArgument?.fileName}
+                    </Button>
                   </TableCell>
                 </TableRow>
                 <TableRow>
@@ -95,7 +139,7 @@ const ArgumentInfoModal = (props: Props) => {
 
                         window.open(
                           "http://172.16.23.50:7030/files/" +
-                            props.argument?.fileName
+                            props.fullArgument?.fileName
                         );
                       }}
                       sx={{
@@ -105,42 +149,9 @@ const ArgumentInfoModal = (props: Props) => {
                         fontStyle: "normal",
                         fontSize: "0.7rem",
                         boxShadow: "none",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        "&:hover": {
-                          backgroundColor: GreenLight,
-                          color: Green,
-                        },
-                      }}
-                    >
-                      {props.argument?.accusedResponseFileName}
-                    </Button>
-                  </TableCell>
-                </TableRow>
-
-                <TableRow>
-                  <TableCell>مستندات خواهان :</TableCell>
-                  <TableCell>
-                    <Button
-                      variant="contained"
-                      endIcon={<AiFillFileAdd />}
-                      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-                      onClick={() => {
-                        // download file with url in fileName
-                        window.open(
-                          "http://172.16.23.50:7030/files/" +
-                            props.argument?.fileName
-                        );
-                      }}
-                      sx={{
-                        borderRadius: 2,
-                        backgroundColor: Green,
-                        fontWeight: 700,
-                        fontStyle: "normal",
-                        fontSize: "0.7rem",
-                        boxShadow: "none",
-                        display: props.argument?.fileName
+                        // display: "flex",
+                        display: props.fullArgument
+                          ?.accusedResponseFileName
                           ? "flex"
                           : "none",
                         justifyContent: "center",
@@ -151,43 +162,7 @@ const ArgumentInfoModal = (props: Props) => {
                         },
                       }}
                     >
-                      {props.argument?.fileName}
-                    </Button>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>مستندات کارشناس :</TableCell>
-                  <TableCell>
-                    <Button
-                      variant="contained"
-                      endIcon={<AiFillFileAdd />}
-                      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-                      onClick={() => {
-                        // download file with url in fileName
-                        window.open(
-                          "http://172.16.23.50:7030/files/" +
-                            props.argument?.fileName
-                        );
-                      }}
-                      sx={{
-                        borderRadius: 2,
-                        backgroundColor: Green,
-                        fontWeight: 700,
-                        fontStyle: "normal",
-                        fontSize: "0.7rem",
-                        boxShadow: "none",
-                        display: props.argument?.fileName
-                          ? "flex"
-                          : "none",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        "&:hover": {
-                          backgroundColor: GreenLight,
-                          color: Green,
-                        },
-                      }}
-                    >
-                      {props.argument?.fileName}
+                      {props.fullArgument?.accusedResponseFileName}
                     </Button>
                   </TableCell>
                 </TableRow>
