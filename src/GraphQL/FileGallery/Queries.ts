@@ -26,3 +26,26 @@ export const getFile = gql`
     }
   }
 `;
+
+export const GetFileFull = gql`
+query GetFileFull(
+  $filter : FileGalleryFilterInput
+  $order : [FileGallerySortInput!]
+  $skip : Int
+  $take : Int
+){
+  fileGallery_getFiles{
+    result(where: $filter,order: $order,skip: $skip,take: $take){
+      items{
+        id
+        userId
+        name
+        user{
+          fullName
+          id
+        } 
+      }
+  }
+  }
+}
+`;
