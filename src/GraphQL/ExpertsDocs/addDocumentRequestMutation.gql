@@ -1,0 +1,11 @@
+mutation AddDocsRequestMutation($input: DocumentRequestInput!) {
+  documentRequest_addDocumentRequest(input: $input) {
+    result {
+      userId
+      complaintId
+      requestedDocumentName
+      requestedDocumentFileName
+      id
+    }
+  }
+}
