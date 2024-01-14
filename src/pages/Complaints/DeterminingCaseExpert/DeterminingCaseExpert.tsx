@@ -1,22 +1,21 @@
-import { Box, Button, Divider, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
+import { grey } from "@mui/material/colors";
 import React from "react";
+import { BsPersonAdd } from "react-icons/bs";
 import { useParams } from "react-router-dom";
+import {
+  useGetUserWithFilterQuery,
+  useUpdateComplaintFullMutation,
+} from "../../../../generated-types";
+import FaTypography from "../../../components/FaComponents/FaTypography";
+import { ComplaintState } from "../../../gql/graphql";
 import {
   background,
   primary,
   secondary,
   secondaryDark,
-  secondaryLight,
-  secondaryLighter,
+  secondaryLighter
 } from "../../../theme/color";
-import {
-  useGetUserWithFilterQuery,
-  useUpdateComplaintFullMutation,
-} from "../../../../generated-types";
-import { BsPersonAdd } from "react-icons/bs";
-import FaTypography from "../../../components/FaComponents/FaTypography";
-import { grey } from "@mui/material/colors";
-import { ComplaintState } from "../../../gql/graphql";
 
 const DeterminingCaseExpert = () => {
   const { complaintId } = useParams();
