@@ -1,0 +1,16 @@
+mutation UpdateRequestedDoc($input: DocumentRequestInput!) {
+  documentRequest_updateDocumentRequest(input: $input) {
+    result {
+      userId
+      requestedDocumentName
+      requestedDocumentFileName
+      target
+      id
+      complaintId
+    }
+    status {
+      code
+      value
+    }
+  }
+}
