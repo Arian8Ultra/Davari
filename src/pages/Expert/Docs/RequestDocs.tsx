@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
@@ -5,6 +6,8 @@ import {
   Box,
   Button,
   Divider,
+  LinearProgress,
+  MenuItem,
   Table,
   TableBody,
   TableCell,
@@ -22,9 +25,14 @@ import {
   useGetComplaintsWithFilterQuery,
   useGetReqestedDocsQueryQuery,
   useGetUserWithFilterLazyQuery,
+  useUpdateComplaintFullMutation,
 } from "../../../../generated-types";
 import ArgumentInfoModal from "../../../components/Arguments/ArgumentInfoModal";
-import { ComplaintArgument } from "../../../gql/graphql";
+import {
+  ComplaintArgument,
+  ComplaintState,
+  TargetType,
+} from "../../../gql/graphql";
 import { Green, Red, primary, secondary } from "../../../theme/color";
 import { useUserStore } from "../../../Context/UserStore";
 import { Add, Delete } from "@mui/icons-material";
@@ -40,6 +48,8 @@ const RequestDocs = () => {
   });
 
   const [requestedDoc, setRequestedDoc] = React.useState<string>();
+  const [requestedDocType, setRequestedDocType] =
+    React.useState<TargetType>();
 
   const { data: ArgumentsData } = useGetArgumentsWithFilterQuery({
     variables: {
@@ -83,15 +93,19 @@ const RequestDocs = () => {
         complaintId: parseInt(complaintId || "") || 0,
         requestedDocumentName: requestedDoc || "",
         userId: user.id || "",
+        target: requestedDocType || TargetType.Both,
       },
+    },
+    onCompleted(data, clientOptions) {
+      void requestedDocsRefetch();
     },
   });
 
   const [deleteDoc] = useDeleteRequestedDocMutationMutation({
     onCompleted(data, clientOptions) {
-      requestedDocsRefetch();
+      void requestedDocsRefetch();
     },
-  })
+  });
 
   const [GetAccuser, { data: AccuserData }] =
     useGetUserWithFilterLazyQuery({
@@ -116,6 +130,9 @@ const RequestDocs = () => {
         },
       },
     });
+
+  const [updateComplaint, { loading }] =
+    useUpdateComplaintFullMutation();
 
   //   const
   return (
@@ -954,6 +971,14 @@ const RequestDocs = () => {
                   color: "white",
                 }}
               >
+                برای
+              </TableCell>
+              <TableCell
+                sx={{
+                  fontWeight: "bold",
+                  color: "white",
+                }}
+              >
                 ...
               </TableCell>
             </TableRow>
@@ -997,6 +1022,32 @@ const RequestDocs = () => {
                   width: "20%",
                 }}
               >
+                <TextField
+                  variant={"outlined"}
+                  fullWidth
+                  value={requestedDoc}
+                  onChange={(e) => {
+                    if (e.target.value === "خوانده") {
+                      setRequestedDocType(TargetType.Accused);
+                    } else if (e.target.value === "خواهان") {
+                      setRequestedDocType(TargetType.Accuser);
+                    } else {
+                      setRequestedDocType(TargetType.Both);
+                    }
+                  }}
+                  select
+                >
+                  {["خوانده", "خواهان", "هردو"].map((item) => (
+                    <MenuItem value={item}>{item}</MenuItem>
+                  ))}
+                </TextField>
+              </TableCell>
+              <TableCell
+                sx={{
+                  textAlign: "center",
+                  width: "20%",
+                }}
+              >
                 <Button
                   variant={"contained"}
                   sx={{
@@ -1008,7 +1059,6 @@ const RequestDocs = () => {
                   fullWidth
                   onClick={() => {
                     void addDoc();
-                    void requestedDocsRefetch();
                   }}
                 >
                   <Add />
@@ -1031,6 +1081,17 @@ const RequestDocs = () => {
                       textAlign: "center",
                     }}
                   >
+                    {item?.target === TargetType.Accused
+                      ? "خواهان"
+                      : item?.target === TargetType.Accuser
+                      ? "خوانده"
+                      : "هردو"}
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      textAlign: "center",
+                    }}
+                  >
                     <Button
                       variant={"contained"}
                       sx={{
@@ -1041,10 +1102,10 @@ const RequestDocs = () => {
                       }}
                       onClick={() => {
                         void deleteDoc({
-                          variables:{
-                            id: item?.id || 0
-                          }
-                        })
+                          variables: {
+                            id: item?.id || 0,
+                          },
+                        });
                       }}
                     >
                       <Delete />
@@ -1056,6 +1117,42 @@ const RequestDocs = () => {
             )}
           </TableBody>
         </Table>
+      </Box>
+      <Box display={"flex"} justifyContent={"flex-end"} my={2}>
+        {loading && <Typography>در حال ثبت اطلاعات</Typography>}
+        {loading && <LinearProgress sx={{ width: "100%" }} />}
+        <Button
+          variant={"contained"}
+          sx={{
+            backgroundColor: primary,
+            padding: "0.5rem 2rem",
+            borderRadius: "3rem",
+            color: secondary,
+            fontSize: "1.2rem",
+            "&:hover": {
+              backgroundColor: secondary,
+              color: primary,
+            },
+          }}
+          onClick={() => {
+            const agree = confirm(
+              "آیا از ثبت نهایی اطلاعات اطمینان دارید؟"
+            );
+            if (agree) {
+              void updateComplaint({
+                variables: {
+                  input: {
+                    complaintState:
+                      ComplaintState.UploadingDocumentsByAccuserAndAccused,
+                    id: parseInt(complaintId || "") || 0,
+                  },
+                },
+              });
+            }
+          }}
+        >
+          ثبت و تایید نهایی
+        </Button>
       </Box>
     </>
   );
