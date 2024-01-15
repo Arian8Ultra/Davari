@@ -251,6 +251,9 @@ export const newStatesFa = [
   "در انتظار بررسی و بارگزاری قرارنامه امضا شده",
   "در انتظار ثبت نام کارشناس پرونده در سامانه",
   "در انتظار ثبت مدارک و مستندات مورد نیاز و بررسی شکایت",
+  "در انتظار درخواست مدارک از خواهان",
+  "در انتظار بارگزاری مدارک توسط خواهان و خوانده",
+  "در انتظار بررسی پرونده توسط کارشناس پرونده",
   "در انتظار تعیین کارشناس پرونده پس از انصراف",
   "در انتظار ثبت نهایی گزارش و تنظیم خودکار پیش نویس رای داوری",
   "در انتظار بررسی گزارش دریافتی از کارشناس پرونده",
@@ -303,6 +306,9 @@ export const newStatesCap = [
   "CHECKING_AND_UPLOADING_THE_SIGNED_DECREE",
   "WAITING_FOR_CASE_EXPERT_REGISTRY",
   "UPLOADING_DOCUMENTS_AND_REVIEWING_COMPLAINT",
+  "REQUESTING_DOCUMENTS",
+  "UPLOADING_DOCUMENTS_BY_ACCUSER_AND_ACCUSED",
+  "REVIEWING_CASE_BY_CASE_EXPERT",
   "REDETERMINING_CASE_EXPERT",
   "WAITING_FOR_FINAL_REPORT_REGISTRATION",
   "MAIL_ROOM_EXPERT_REVIEWING_THE_FINAL_REPORT",
@@ -455,6 +461,19 @@ export const newStatesObj = {
   uploadingDocumentsAndReviewingComplaint: {
     fa: "در انتظار ثبت مدارک و مستندات مورد نیاز و بررسی شکایت",
     cap: "UPLOADING_DOCUMENTS_AND_REVIEWING_COMPLAINT",
+  },
+  requestingDocuments: {
+    fa: "در انتظار درخواست مدارک از خواهان",
+    cap: "REQUESTING_DOCUMENTS",
+  },
+  uploadingDocumentsByAccuserAndAccused: {
+    fa: "در انتظار بارگزاری مدارک توسط خواهان و خوانده",
+    cap: "UPLOADING_DOCUMENTS_BY_ACCUSER_AND_ACCUSED",
+  },
+
+  reviewingCaseByCaseExpert: {
+    fa: "در انتظار بررسی پرونده توسط کارشناس پرونده",
+    cap: "REVIEWING_CASE_BY_CASE_EXPERT",
   },
   redeterminingCaseExpert: {
     fa: "در انتظار تعیین کارشناس پرونده پس از انصراف",
