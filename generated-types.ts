@@ -594,6 +594,7 @@ export type ComparableNullableOfInt32OperationFilterInput = {
 
 export type Complaint = {
   __typename?: 'Complaint';
+  accusedFinalOpinion?: Maybe<Scalars['String']['output']>;
   arbitrationCost: Scalars['Decimal']['output'];
   arbitrationTermsForms?: Maybe<Array<ArbitrationTermsForm>>;
   arguments?: Maybe<Array<ComplaintArgument>>;
@@ -836,6 +837,7 @@ export type ComplaintFileSortInput = {
 };
 
 export type ComplaintFilterInput = {
+  accusedFinalOpinion?: InputMaybe<StringOperationFilterInput>;
   and?: InputMaybe<Array<ComplaintFilterInput>>;
   arbitrationCost?: InputMaybe<ComparableDecimalOperationFilterInput>;
   arbitrationTermsForms?: InputMaybe<ListFilterInputTypeOfArbitrationTermsFormFilterInput>;
@@ -871,6 +873,7 @@ export type ComplaintGotCancelledLetterDtoInput = {
 };
 
 export type ComplaintInput = {
+  accusedFinalOpinion?: InputMaybe<Scalars['String']['input']>;
   arbitrationCost?: InputMaybe<Scalars['Decimal']['input']>;
   assignedUserId?: InputMaybe<Scalars['String']['input']>;
   complaintState?: InputMaybe<ComplaintState>;
@@ -943,6 +946,7 @@ export type ComplaintNoteSortInput = {
 };
 
 export type ComplaintSortInput = {
+  accusedFinalOpinion?: InputMaybe<SortEnumType>;
   arbitrationCost?: InputMaybe<SortEnumType>;
   assignedUser?: InputMaybe<UserSortInput>;
   assignedUserId?: InputMaybe<SortEnumType>;
@@ -979,9 +983,11 @@ export enum ComplaintState {
   NewOfferorNotified = 'NEW_OFFEROR_NOTIFIED',
   NotAcceptedForBeingConstructive = 'NOT_ACCEPTED_FOR_BEING_CONSTRUCTIVE',
   RedeterminingCaseExpert = 'REDETERMINING_CASE_EXPERT',
+  RequestingDocuments = 'REQUESTING_DOCUMENTS',
   ResultNotifiedAbilityToViewScannedPhysicalResult = 'RESULT_NOTIFIED_ABILITY_TO_VIEW_SCANNED_PHYSICAL_RESULT',
+  ReviewingCaseByCaseExpert = 'REVIEWING_CASE_BY_CASE_EXPERT',
   ReviewingExpertOpinionOnOfferorChanging = 'REVIEWING_EXPERT_OPINION_ON_OFFEROR_CHANGING',
-  UploadingDocumentsAndReviewingComplaint = 'UPLOADING_DOCUMENTS_AND_REVIEWING_COMPLAINT',
+  UploadingDocumentsByAccuserAndAccused = 'UPLOADING_DOCUMENTS_BY_ACCUSER_AND_ACCUSED',
   WaitingForAccusedToAnswerArguments = 'WAITING_FOR_ACCUSED_TO_ANSWER_ARGUMENTS',
   WaitingForAccusedToApproveArgumentsAnswers = 'WAITING_FOR_ACCUSED_TO_APPROVE_ARGUMENTS_ANSWERS',
   WaitingForAccusedToRegisterArbitrationTerms = 'WAITING_FOR_ACCUSED_TO_REGISTER_ARBITRATION_TERMS',
@@ -1023,9 +1029,7 @@ export type ComplaintStateOperationFilterInput = {
 };
 
 export type ComplaintVerdictLetterDtoInput = {
-  accusedBIPeriod: Scalars['String']['input'];
   accusedContractStatus: Scalars['String']['input'];
-  accuserBIPeriod: Scalars['String']['input'];
   accuserContractStatus: Scalars['String']['input'];
   canonDate: Scalars['String']['input'];
   canonNum: Scalars['String']['input'];
@@ -1037,7 +1041,6 @@ export type ComplaintVerdictLetterDtoInput = {
   letterNum: Scalars['String']['input'];
   letterNum2: Scalars['String']['input'];
   letterNum3: Scalars['String']['input'];
-  pageCountNum: Scalars['Int']['input'];
   signByPreviousMembersDate: Scalars['String']['input'];
   userId: Scalars['String']['input'];
   verdictDate: Scalars['String']['input'];
@@ -1438,10 +1441,7 @@ export type CouncilListStatusOperationFilterInput = {
 };
 
 export type DecreeDtoInput = {
-  accusedBIPeriod: Scalars['String']['input'];
-  accusedFinalOpinion: Scalars['String']['input'];
   accusedSignDate: Scalars['String']['input'];
-  accuserBIPeriod: Scalars['String']['input'];
   accuserSignDate: Scalars['String']['input'];
   canonDate: Scalars['String']['input'];
   canonDate2: Scalars['String']['input'];
@@ -1465,6 +1465,7 @@ export type DocumentRequest = {
   lastModifiedDate?: Maybe<Scalars['DateTime']['output']>;
   requestedDocumentFileName?: Maybe<Scalars['String']['output']>;
   requestedDocumentName: Scalars['String']['output'];
+  target?: Maybe<TargetType>;
   user?: Maybe<User>;
   userId: Scalars['String']['output'];
 };
@@ -1488,6 +1489,7 @@ export type DocumentRequestFilterInput = {
   or?: InputMaybe<Array<DocumentRequestFilterInput>>;
   requestedDocumentFileName?: InputMaybe<StringOperationFilterInput>;
   requestedDocumentName?: InputMaybe<StringOperationFilterInput>;
+  target?: InputMaybe<NullableOfTargetTypeOperationFilterInput>;
   user?: InputMaybe<UserFilterInput>;
   userId?: InputMaybe<StringOperationFilterInput>;
 };
@@ -1497,6 +1499,7 @@ export type DocumentRequestInput = {
   id?: InputMaybe<Scalars['Int']['input']>;
   requestedDocumentFileName?: InputMaybe<Scalars['String']['input']>;
   requestedDocumentName: Scalars['String']['input'];
+  target?: InputMaybe<TargetType>;
   userId: Scalars['String']['input'];
 };
 
@@ -1509,6 +1512,7 @@ export type DocumentRequestSortInput = {
   lastModifiedDate?: InputMaybe<SortEnumType>;
   requestedDocumentFileName?: InputMaybe<SortEnumType>;
   requestedDocumentName?: InputMaybe<SortEnumType>;
+  target?: InputMaybe<SortEnumType>;
   user?: InputMaybe<UserSortInput>;
   userId?: InputMaybe<SortEnumType>;
 };
@@ -2437,6 +2441,7 @@ export type Mutation = {
   test_testSMS: Scalars['String']['output'];
   test_testSabtAhval?: Maybe<PersonDataDto>;
   test_testShahkar: Scalars['String']['output'];
+  test_toMonthName: Scalars['String']['output'];
   userPayment_addUserPayment: ResponseBaseOfUserPayment;
   userPayment_deleteUserPayment: ResponseBaseOfUserPayment;
   userPayment_updateUserPayment: ResponseBaseOfUserPayment;
@@ -2828,6 +2833,11 @@ export type MutationTest_TestShahkarArgs = {
 };
 
 
+export type MutationTest_ToMonthNameArgs = {
+  input?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
 export type MutationUserPayment_AddUserPaymentArgs = {
   input: UserPaymentInput;
 };
@@ -2994,6 +3004,13 @@ export type NullableOfRoleTypeOperationFilterInput = {
   in?: InputMaybe<Array<InputMaybe<RoleType>>>;
   neq?: InputMaybe<RoleType>;
   nin?: InputMaybe<Array<InputMaybe<RoleType>>>;
+};
+
+export type NullableOfTargetTypeOperationFilterInput = {
+  eq?: InputMaybe<TargetType>;
+  in?: InputMaybe<Array<InputMaybe<TargetType>>>;
+  neq?: InputMaybe<TargetType>;
+  nin?: InputMaybe<Array<InputMaybe<TargetType>>>;
 };
 
 export type OneTimePasswordDtoInput = {
@@ -3453,6 +3470,12 @@ export type StringOperationFilterInput = {
   or?: InputMaybe<Array<StringOperationFilterInput>>;
   startsWith?: InputMaybe<Scalars['String']['input']>;
 };
+
+export enum TargetType {
+  Accused = 'ACCUSED',
+  Accuser = 'ACCUSER',
+  Both = 'BOTH'
+}
 
 export type User = {
   __typename?: 'User';
@@ -4342,7 +4365,14 @@ export type GetReqestedDocsQueryQueryVariables = Exact<{
 }>;
 
 
-export type GetReqestedDocsQueryQuery = { __typename?: 'Query', documentRequest_getDocumentRequests: { __typename?: 'ListResponseBaseOfDocumentRequest', result?: { __typename?: 'DocumentRequestCollectionSegment', items?: Array<{ __typename?: 'DocumentRequest', complaintId: number, requestedDocumentName: string, requestedDocumentFileName?: string | null, isDeleted: boolean, createdDate: any, id: number, userId: string }> | null } | null } };
+export type GetReqestedDocsQueryQuery = { __typename?: 'Query', documentRequest_getDocumentRequests: { __typename?: 'ListResponseBaseOfDocumentRequest', result?: { __typename?: 'DocumentRequestCollectionSegment', items?: Array<{ __typename?: 'DocumentRequest', complaintId: number, requestedDocumentName: string, requestedDocumentFileName?: string | null, isDeleted: boolean, createdDate: any, id: number, userId: string, target?: TargetType | null }> | null } | null } };
+
+export type UpdateRequestedDocMutationVariables = Exact<{
+  input: DocumentRequestInput;
+}>;
+
+
+export type UpdateRequestedDocMutation = { __typename?: 'Mutation', documentRequest_updateDocumentRequest: { __typename?: 'ResponseBaseOfDocumentRequest', result?: { __typename?: 'DocumentRequest', userId: string, requestedDocumentName: string, requestedDocumentFileName?: string | null, target?: TargetType | null, id: number, complaintId: number } | null, status: { __typename?: 'ResponseStatus', code: number, value: string } } };
 
 export type GetFileQueryQueryVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -6904,6 +6934,7 @@ export const GetReqestedDocsQueryDocument = gql`
         createdDate
         id
         userId
+        target
       }
     }
   }
@@ -6940,6 +6971,50 @@ export function useGetReqestedDocsQueryLazyQuery(baseOptions?: Apollo.LazyQueryH
 export type GetReqestedDocsQueryQueryHookResult = ReturnType<typeof useGetReqestedDocsQueryQuery>;
 export type GetReqestedDocsQueryLazyQueryHookResult = ReturnType<typeof useGetReqestedDocsQueryLazyQuery>;
 export type GetReqestedDocsQueryQueryResult = Apollo.QueryResult<GetReqestedDocsQueryQuery, GetReqestedDocsQueryQueryVariables>;
+export const UpdateRequestedDocDocument = gql`
+    mutation UpdateRequestedDoc($input: DocumentRequestInput!) {
+  documentRequest_updateDocumentRequest(input: $input) {
+    result {
+      userId
+      requestedDocumentName
+      requestedDocumentFileName
+      target
+      id
+      complaintId
+    }
+    status {
+      code
+      value
+    }
+  }
+}
+    `;
+export type UpdateRequestedDocMutationFn = Apollo.MutationFunction<UpdateRequestedDocMutation, UpdateRequestedDocMutationVariables>;
+
+/**
+ * __useUpdateRequestedDocMutation__
+ *
+ * To run a mutation, you first call `useUpdateRequestedDocMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateRequestedDocMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateRequestedDocMutation, { data, loading, error }] = useUpdateRequestedDocMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateRequestedDocMutation(baseOptions?: Apollo.MutationHookOptions<UpdateRequestedDocMutation, UpdateRequestedDocMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateRequestedDocMutation, UpdateRequestedDocMutationVariables>(UpdateRequestedDocDocument, options);
+      }
+export type UpdateRequestedDocMutationHookResult = ReturnType<typeof useUpdateRequestedDocMutation>;
+export type UpdateRequestedDocMutationResult = Apollo.MutationResult<UpdateRequestedDocMutation>;
+export type UpdateRequestedDocMutationOptions = Apollo.BaseMutationOptions<UpdateRequestedDocMutation, UpdateRequestedDocMutationVariables>;
 export const GetFileQueryDocument = gql`
     query getFileQuery($id: Int!) {
   fileGallery_getFile(entityId: $id) {

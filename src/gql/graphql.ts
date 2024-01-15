@@ -597,6 +597,7 @@ export type ComparableNullableOfInt32OperationFilterInput = {
 
 export type Complaint = {
   __typename?: 'Complaint';
+  accusedFinalOpinion?: Maybe<Scalars['String']['output']>;
   arbitrationCost: Scalars['Decimal']['output'];
   arbitrationTermsForms?: Maybe<Array<ArbitrationTermsForm>>;
   arguments?: Maybe<Array<ComplaintArgument>>;
@@ -839,6 +840,7 @@ export type ComplaintFileSortInput = {
 };
 
 export type ComplaintFilterInput = {
+  accusedFinalOpinion?: InputMaybe<StringOperationFilterInput>;
   and?: InputMaybe<Array<ComplaintFilterInput>>;
   arbitrationCost?: InputMaybe<ComparableDecimalOperationFilterInput>;
   arbitrationTermsForms?: InputMaybe<ListFilterInputTypeOfArbitrationTermsFormFilterInput>;
@@ -874,6 +876,7 @@ export type ComplaintGotCancelledLetterDtoInput = {
 };
 
 export type ComplaintInput = {
+  accusedFinalOpinion?: InputMaybe<Scalars['String']['input']>;
   arbitrationCost?: InputMaybe<Scalars['Decimal']['input']>;
   assignedUserId?: InputMaybe<Scalars['String']['input']>;
   complaintState?: InputMaybe<ComplaintState>;
@@ -946,6 +949,7 @@ export type ComplaintNoteSortInput = {
 };
 
 export type ComplaintSortInput = {
+  accusedFinalOpinion?: InputMaybe<SortEnumType>;
   arbitrationCost?: InputMaybe<SortEnumType>;
   assignedUser?: InputMaybe<UserSortInput>;
   assignedUserId?: InputMaybe<SortEnumType>;
@@ -982,9 +986,11 @@ export enum ComplaintState {
   NewOfferorNotified = 'NEW_OFFEROR_NOTIFIED',
   NotAcceptedForBeingConstructive = 'NOT_ACCEPTED_FOR_BEING_CONSTRUCTIVE',
   RedeterminingCaseExpert = 'REDETERMINING_CASE_EXPERT',
+  RequestingDocuments = 'REQUESTING_DOCUMENTS',
   ResultNotifiedAbilityToViewScannedPhysicalResult = 'RESULT_NOTIFIED_ABILITY_TO_VIEW_SCANNED_PHYSICAL_RESULT',
+  ReviewingCaseByCaseExpert = 'REVIEWING_CASE_BY_CASE_EXPERT',
   ReviewingExpertOpinionOnOfferorChanging = 'REVIEWING_EXPERT_OPINION_ON_OFFEROR_CHANGING',
-  UploadingDocumentsAndReviewingComplaint = 'UPLOADING_DOCUMENTS_AND_REVIEWING_COMPLAINT',
+  UploadingDocumentsByAccuserAndAccused = 'UPLOADING_DOCUMENTS_BY_ACCUSER_AND_ACCUSED',
   WaitingForAccusedToAnswerArguments = 'WAITING_FOR_ACCUSED_TO_ANSWER_ARGUMENTS',
   WaitingForAccusedToApproveArgumentsAnswers = 'WAITING_FOR_ACCUSED_TO_APPROVE_ARGUMENTS_ANSWERS',
   WaitingForAccusedToRegisterArbitrationTerms = 'WAITING_FOR_ACCUSED_TO_REGISTER_ARBITRATION_TERMS',
@@ -1026,9 +1032,7 @@ export type ComplaintStateOperationFilterInput = {
 };
 
 export type ComplaintVerdictLetterDtoInput = {
-  accusedBIPeriod: Scalars['String']['input'];
   accusedContractStatus: Scalars['String']['input'];
-  accuserBIPeriod: Scalars['String']['input'];
   accuserContractStatus: Scalars['String']['input'];
   canonDate: Scalars['String']['input'];
   canonNum: Scalars['String']['input'];
@@ -1040,7 +1044,6 @@ export type ComplaintVerdictLetterDtoInput = {
   letterNum: Scalars['String']['input'];
   letterNum2: Scalars['String']['input'];
   letterNum3: Scalars['String']['input'];
-  pageCountNum: Scalars['Int']['input'];
   signByPreviousMembersDate: Scalars['String']['input'];
   userId: Scalars['String']['input'];
   verdictDate: Scalars['String']['input'];
@@ -1441,10 +1444,7 @@ export type CouncilListStatusOperationFilterInput = {
 };
 
 export type DecreeDtoInput = {
-  accusedBIPeriod: Scalars['String']['input'];
-  accusedFinalOpinion: Scalars['String']['input'];
   accusedSignDate: Scalars['String']['input'];
-  accuserBIPeriod: Scalars['String']['input'];
   accuserSignDate: Scalars['String']['input'];
   canonDate: Scalars['String']['input'];
   canonDate2: Scalars['String']['input'];
@@ -1468,6 +1468,7 @@ export type DocumentRequest = {
   lastModifiedDate?: Maybe<Scalars['DateTime']['output']>;
   requestedDocumentFileName?: Maybe<Scalars['String']['output']>;
   requestedDocumentName: Scalars['String']['output'];
+  target?: Maybe<TargetType>;
   user?: Maybe<User>;
   userId: Scalars['String']['output'];
 };
@@ -1491,6 +1492,7 @@ export type DocumentRequestFilterInput = {
   or?: InputMaybe<Array<DocumentRequestFilterInput>>;
   requestedDocumentFileName?: InputMaybe<StringOperationFilterInput>;
   requestedDocumentName?: InputMaybe<StringOperationFilterInput>;
+  target?: InputMaybe<NullableOfTargetTypeOperationFilterInput>;
   user?: InputMaybe<UserFilterInput>;
   userId?: InputMaybe<StringOperationFilterInput>;
 };
@@ -1500,6 +1502,7 @@ export type DocumentRequestInput = {
   id?: InputMaybe<Scalars['Int']['input']>;
   requestedDocumentFileName?: InputMaybe<Scalars['String']['input']>;
   requestedDocumentName: Scalars['String']['input'];
+  target?: InputMaybe<TargetType>;
   userId: Scalars['String']['input'];
 };
 
@@ -1512,6 +1515,7 @@ export type DocumentRequestSortInput = {
   lastModifiedDate?: InputMaybe<SortEnumType>;
   requestedDocumentFileName?: InputMaybe<SortEnumType>;
   requestedDocumentName?: InputMaybe<SortEnumType>;
+  target?: InputMaybe<SortEnumType>;
   user?: InputMaybe<UserSortInput>;
   userId?: InputMaybe<SortEnumType>;
 };
@@ -2440,6 +2444,7 @@ export type Mutation = {
   test_testSMS: Scalars['String']['output'];
   test_testSabtAhval?: Maybe<PersonDataDto>;
   test_testShahkar: Scalars['String']['output'];
+  test_toMonthName: Scalars['String']['output'];
   userPayment_addUserPayment: ResponseBaseOfUserPayment;
   userPayment_deleteUserPayment: ResponseBaseOfUserPayment;
   userPayment_updateUserPayment: ResponseBaseOfUserPayment;
@@ -2831,6 +2836,11 @@ export type MutationTest_TestShahkarArgs = {
 };
 
 
+export type MutationTest_ToMonthNameArgs = {
+  input?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
 export type MutationUserPayment_AddUserPaymentArgs = {
   input: UserPaymentInput;
 };
@@ -2997,6 +3007,13 @@ export type NullableOfRoleTypeOperationFilterInput = {
   in?: InputMaybe<Array<InputMaybe<RoleType>>>;
   neq?: InputMaybe<RoleType>;
   nin?: InputMaybe<Array<InputMaybe<RoleType>>>;
+};
+
+export type NullableOfTargetTypeOperationFilterInput = {
+  eq?: InputMaybe<TargetType>;
+  in?: InputMaybe<Array<InputMaybe<TargetType>>>;
+  neq?: InputMaybe<TargetType>;
+  nin?: InputMaybe<Array<InputMaybe<TargetType>>>;
 };
 
 export type OneTimePasswordDtoInput = {
@@ -3456,6 +3473,12 @@ export type StringOperationFilterInput = {
   or?: InputMaybe<Array<StringOperationFilterInput>>;
   startsWith?: InputMaybe<Scalars['String']['input']>;
 };
+
+export enum TargetType {
+  Accused = 'ACCUSED',
+  Accuser = 'ACCUSER',
+  Both = 'BOTH'
+}
 
 export type User = {
   __typename?: 'User';
@@ -4345,7 +4368,14 @@ export type GetReqestedDocsQueryQueryVariables = Exact<{
 }>;
 
 
-export type GetReqestedDocsQueryQuery = { __typename?: 'Query', documentRequest_getDocumentRequests: { __typename?: 'ListResponseBaseOfDocumentRequest', result?: { __typename?: 'DocumentRequestCollectionSegment', items?: Array<{ __typename?: 'DocumentRequest', complaintId: number, requestedDocumentName: string, requestedDocumentFileName?: string | null, isDeleted: boolean, createdDate: any, id: number, userId: string }> | null } | null } };
+export type GetReqestedDocsQueryQuery = { __typename?: 'Query', documentRequest_getDocumentRequests: { __typename?: 'ListResponseBaseOfDocumentRequest', result?: { __typename?: 'DocumentRequestCollectionSegment', items?: Array<{ __typename?: 'DocumentRequest', complaintId: number, requestedDocumentName: string, requestedDocumentFileName?: string | null, isDeleted: boolean, createdDate: any, id: number, userId: string, target?: TargetType | null }> | null } | null } };
+
+export type UpdateRequestedDocMutationVariables = Exact<{
+  input: DocumentRequestInput;
+}>;
+
+
+export type UpdateRequestedDocMutation = { __typename?: 'Mutation', documentRequest_updateDocumentRequest: { __typename?: 'ResponseBaseOfDocumentRequest', result?: { __typename?: 'DocumentRequest', userId: string, requestedDocumentName: string, requestedDocumentFileName?: string | null, target?: TargetType | null, id: number, complaintId: number } | null, status: { __typename?: 'ResponseStatus', code: number, value: string } } };
 
 export type GetFileQueryQueryVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -4957,7 +4987,8 @@ export const GetContractDocument = {"kind":"Document","definitions":[{"kind":"Op
 export const SetCouncilListMutationDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"setCouncilListMutation"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"ids"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"complaint_setInCouncilList"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"entityIds"},"value":{"kind":"Variable","name":{"kind":"Name","value":"ids"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"result"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"fileNames"}},{"kind":"Field","name":{"kind":"Name","value":"result"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"key"}},{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"status"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]}}]}}]} as unknown as DocumentNode<SetCouncilListMutationMutation, SetCouncilListMutationMutationVariables>;
 export const AddDocsRequestMutationDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"AddDocsRequestMutation"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"DocumentRequestInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"documentRequest_addDocumentRequest"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"result"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"complaintId"}},{"kind":"Field","name":{"kind":"Name","value":"requestedDocumentName"}},{"kind":"Field","name":{"kind":"Name","value":"requestedDocumentFileName"}},{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<AddDocsRequestMutationMutation, AddDocsRequestMutationMutationVariables>;
 export const DeleteRequestedDocMutationDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteRequestedDocMutation"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"documentRequest_deleteDocumentRequest"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"entityId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"status"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"result"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<DeleteRequestedDocMutationMutation, DeleteRequestedDocMutationMutationVariables>;
-export const GetReqestedDocsQueryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetReqestedDocsQuery"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"filter"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"DocumentRequestFilterInput"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"order"}},"type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"DocumentRequestSortInput"}}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"skip"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"take"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"documentRequest_getDocumentRequests"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"result"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"Variable","name":{"kind":"Name","value":"filter"}}},{"kind":"Argument","name":{"kind":"Name","value":"order"},"value":{"kind":"Variable","name":{"kind":"Name","value":"order"}}},{"kind":"Argument","name":{"kind":"Name","value":"skip"},"value":{"kind":"Variable","name":{"kind":"Name","value":"skip"}}},{"kind":"Argument","name":{"kind":"Name","value":"take"},"value":{"kind":"Variable","name":{"kind":"Name","value":"take"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"complaintId"}},{"kind":"Field","name":{"kind":"Name","value":"requestedDocumentName"}},{"kind":"Field","name":{"kind":"Name","value":"requestedDocumentFileName"}},{"kind":"Field","name":{"kind":"Name","value":"isDeleted"}},{"kind":"Field","name":{"kind":"Name","value":"createdDate"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetReqestedDocsQueryQuery, GetReqestedDocsQueryQueryVariables>;
+export const GetReqestedDocsQueryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetReqestedDocsQuery"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"filter"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"DocumentRequestFilterInput"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"order"}},"type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"DocumentRequestSortInput"}}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"skip"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"take"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"documentRequest_getDocumentRequests"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"result"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"Variable","name":{"kind":"Name","value":"filter"}}},{"kind":"Argument","name":{"kind":"Name","value":"order"},"value":{"kind":"Variable","name":{"kind":"Name","value":"order"}}},{"kind":"Argument","name":{"kind":"Name","value":"skip"},"value":{"kind":"Variable","name":{"kind":"Name","value":"skip"}}},{"kind":"Argument","name":{"kind":"Name","value":"take"},"value":{"kind":"Variable","name":{"kind":"Name","value":"take"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"complaintId"}},{"kind":"Field","name":{"kind":"Name","value":"requestedDocumentName"}},{"kind":"Field","name":{"kind":"Name","value":"requestedDocumentFileName"}},{"kind":"Field","name":{"kind":"Name","value":"isDeleted"}},{"kind":"Field","name":{"kind":"Name","value":"createdDate"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"target"}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetReqestedDocsQueryQuery, GetReqestedDocsQueryQueryVariables>;
+export const UpdateRequestedDocDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateRequestedDoc"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"DocumentRequestInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"documentRequest_updateDocumentRequest"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"result"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"requestedDocumentName"}},{"kind":"Field","name":{"kind":"Name","value":"requestedDocumentFileName"}},{"kind":"Field","name":{"kind":"Name","value":"target"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"complaintId"}}]}},{"kind":"Field","name":{"kind":"Name","value":"status"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]}}]}}]} as unknown as DocumentNode<UpdateRequestedDocMutation, UpdateRequestedDocMutationVariables>;
 export const GetFileQueryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getFileQuery"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"fileGallery_getFile"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"entityId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"result"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"fullName"}},{"kind":"Field","name":{"kind":"Name","value":"id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"complaintFiles"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"fileId"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"description"}}]}},{"kind":"Field","name":{"kind":"Name","value":"createdDate"}},{"kind":"Field","name":{"kind":"Name","value":"isDeleted"}},{"kind":"Field","name":{"kind":"Name","value":"lastModifiedDate"}}]}},{"kind":"Field","name":{"kind":"Name","value":"status"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]}}]}}]} as unknown as DocumentNode<GetFileQueryQuery, GetFileQueryQueryVariables>;
 export const GetFileFullDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetFileFull"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"filter"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"FileGalleryFilterInput"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"order"}},"type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"FileGallerySortInput"}}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"skip"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"take"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"fileGallery_getFiles"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"result"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"Variable","name":{"kind":"Name","value":"filter"}}},{"kind":"Argument","name":{"kind":"Name","value":"order"},"value":{"kind":"Variable","name":{"kind":"Name","value":"order"}}},{"kind":"Argument","name":{"kind":"Name","value":"skip"},"value":{"kind":"Variable","name":{"kind":"Name","value":"skip"}}},{"kind":"Argument","name":{"kind":"Name","value":"take"},"value":{"kind":"Variable","name":{"kind":"Name","value":"take"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"fullName"}},{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetFileFullQuery, GetFileFullQueryVariables>;
 export const Create_Installment_TableDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CREATE_INSTALLMENT_TABLE"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"contractId"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"paymentTotal"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Decimal"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"registrarType"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"RegistrarType"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"remainingPayment"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Decimal"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userId"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"installmentTable_addInstallmentTable"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"contractId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"contractId"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"paymentTotal"},"value":{"kind":"Variable","name":{"kind":"Name","value":"paymentTotal"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"registrarType"},"value":{"kind":"Variable","name":{"kind":"Name","value":"registrarType"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"remainingPayment"},"value":{"kind":"Variable","name":{"kind":"Name","value":"remainingPayment"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"userId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userId"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"result"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"contractId"}},{"kind":"Field","name":{"kind":"Name","value":"paymentTotal"}}]}},{"kind":"Field","name":{"kind":"Name","value":"status"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]}}]}}]} as unknown as DocumentNode<Create_Installment_TableMutation, Create_Installment_TableMutationVariables>;
