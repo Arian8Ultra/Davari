@@ -22,7 +22,7 @@ import {
 import { useUserStore } from "../../../Context/UserStore";
 import { ComplaintState, TargetType } from "../../../gql/graphql";
 import { primary, secondary } from "../../../theme/color";
-import UploadDocCard from "./UploadDocCard";
+import UploadDocCard from "../../../components/Docs/UploadDocCard";
 
 const UploadDocs = () => {
   const { complaintId } = useParams<{ complaintId: string }>();
