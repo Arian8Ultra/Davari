@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
@@ -18,6 +19,7 @@ import {
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
+  TargetType,
   useDeleteRequestedDocMutationMutation,
   useGetArgumentsWithFilterQuery,
   useGetComplaintsWithFilterQuery,
@@ -837,7 +839,7 @@ const ReviewCase = () => {
                   color: "white",
                 }}
               >
-                شناسه
+                نام سند
               </TableCell>
               <TableCell
                 sx={{
@@ -845,23 +847,7 @@ const ReviewCase = () => {
                   color: "white",
                 }}
               >
-                خلاصه ادعا
-              </TableCell>
-              {/* <TableCell
-                sx={{
-                  fontWeight: "bold",
-                  color: "white",
-                }}
-              >
-                پاسخ خوانده
-              </TableCell> */}
-              <TableCell
-                sx={{
-                  fontWeight: "bold",
-                  color: "white",
-                }}
-              >
-                مبلغ خواسته شده ادعا(ریال)
+                توسط
               </TableCell>
               <TableCell
                 sx={{
@@ -869,36 +855,90 @@ const ReviewCase = () => {
                   color: "white",
                 }}
               >
-                نظر کارشناس دادگستری
-              </TableCell>
-              <TableCell
-                sx={{
-                  fontWeight: "bold",
-                  color: "white",
-                }}
-              >
-                مبلغ مورد تایید کارشناس دادگستری
-              </TableCell>
-              <TableCell
-                sx={{
-                  fontWeight: "bold",
-                  color: "white",
-                }}
-              >
-                مستندات
-              </TableCell>
-              <TableCell
-                sx={{
-                  fontWeight: "bold",
-                  color: "white",
-                }}
-              >
-                ...
+                فایل
               </TableCell>
             </TableRow>
           </TableHead>
-          </Table>
-          </Box>
+          <TableBody
+            sx={{
+              // delete padding of cells
+              "& td": {
+                padding: "0.5rem",
+                borderBottom: `1px solid ${secondary}`,
+                borderRight: `1px solid ${secondary}`,
+              },
+              // add border to first column
+              "& td:first-child": {
+                borderRight: `1px solid ${secondary}`,
+                width: "max-content",
+              },
+              // add border to last column
+              "& td:last-child": {
+                borderLeft: `1px solid ${secondary}`,
+                borderRight: `0px solid ${secondary}`,
+              },
+            }}
+          >
+            {requestedDocsData?.documentRequest_getDocumentRequests?.result?.items?.map(
+              (item) => (
+                <TableRow>
+                  <TableCell
+                    sx={{
+                      textAlign: "center",
+                    }}
+                  >
+                    {item?.requestedDocumentName}
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      textAlign: "center",
+                    }}
+                  >
+                    {item?.target == TargetType.Accused
+                      ? "خوانده"
+                      : item?.target == TargetType.Accuser
+                      ? "خواهان"
+                      : "هر دو"}
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      textAlign: "center",
+                    }}
+                  >
+                    <Button
+                      variant={"contained"}
+                      color={"primary"}
+                      fullWidth
+                      sx={{
+                        backgroundColor: primary,
+                        color: secondary,
+                        fontWeight: "bold",
+                        borderRadius: "0rem",
+                        boxShadow: "none",
+                        "&:hover": {
+                          backgroundColor: secondary,
+                          color: primary,
+                        },
+                      }}
+                      onClick={() => {
+                        window.open(
+                          `${
+                            import.meta.env.VITE_FILE_URL ||
+                            "http://172.16.23.50:7030/files"
+                          }/${item?.requestedDocumentFileName}`,
+                          "_blank"
+                        );
+                      }}
+                    >
+                      دانلود فایل {item?.requestedDocumentName}
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              )
+            )}
+          </TableBody>
+        </Table>
+      </Box>
       {/* 
 
 
@@ -1206,7 +1246,7 @@ const ReviewCase = () => {
                 },
                 onCompleted() {
                   navigate("/expertPortal");
-                }
+                },
               });
             }
           }}

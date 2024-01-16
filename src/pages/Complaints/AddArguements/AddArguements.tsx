@@ -40,6 +40,7 @@ import { convertToPersianDigits } from "../../../functions/Functions";
 import {
   AddComplaintNoteDocument,
   ComplaintArgument,
+  ComplaintState,
   GetComplaintsNotesDocument,
   NoteType,
   SendAccusedRespondedSmsDocument,
@@ -62,7 +63,10 @@ import {
   secondary,
   secondaryDark,
 } from "../../../theme/color";
-import { useGetArgumentsWithFilterQuery, useGetComplaintArgumentsQuery } from "../../../../generated-types";
+import {
+  useGetArgumentsWithFilterQuery,
+  useGetComplaintArgumentsQuery,
+} from "../../../../generated-types";
 
 const AddArgument = () => {
   const { complaintId, state } = useParams();
@@ -137,20 +141,18 @@ const AddArgument = () => {
     },
   });
 
-  const { data, loading, refetch } = useGetArgumentsWithFilterQuery(
-    {
-      variables: {
-        filter:{
-          complaintId:{
-            eq: complaintIdInt || 0
-          }
-        }
+  const { data, loading, refetch } = useGetArgumentsWithFilterQuery({
+    variables: {
+      filter: {
+        complaintId: {
+          eq: complaintIdInt || 0,
+        },
       },
-      onCompleted(data) {
-        console.log(data);
-      },
-    }
-  );
+    },
+    onCompleted(data) {
+      console.log(data);
+    },
+  });
 
   const { loading: compaintLoading } = useQuery(GET_COMPLAINT, {
     variables: {
@@ -244,7 +246,7 @@ const AddArgument = () => {
     }
   );
 
-  const [sendSMS] = useMutation(SendAccusedRespondedSmsDocument)
+  const [sendSMS] = useMutation(SendAccusedRespondedSmsDocument);
 
   return (
     <>
@@ -281,6 +283,7 @@ const AddArgument = () => {
               open: false,
             })
           }
+          isCloseable={false}
           background={background}
         >
           <Box
@@ -313,23 +316,53 @@ const AddArgument = () => {
                       ...newNoteModal,
                       open: false,
                     });
-                    void updateCompaint({
-                      variables: {
-                        id: complaintIdInt,
-                        complaintState:
-                          newStatesObj.checkingForBeingConstructive
-                            .cap,
-                        isApprovedByChief: false,
-                      } as {
-                        id: number | "" | undefined;
-                        complaintState: string;
-                        isApprovedByChief: boolean;
-                      },
-                      onCompleted() {
-                        alert("ثبت شد");
-                        navigate("/portal");
-                      },
-                    });
+                    if (stateInt == 5) {
+                      const agreed = confirm("آیا مطمئن هستید؟");
+                      if (!agreed) return;
+                      void updateCompaint({
+                        variables: {
+                          id: complaintIdInt,
+                          complaintState:
+                            ComplaintState.MailRoomExpertReviewingTheFinalReport,
+                        },
+                        onCompleted() {
+                          alert("ثبت شد");
+                          navigate("/portal");
+                        },
+                      });
+                    } else if (stateInt == 4) {
+                      const agreed = confirm("آیا مطمئن هستید؟");
+                      if (!agreed) return;
+                      void updateCompaint({
+                        variables: {
+                          id: complaintIdInt,
+                          complaintState:
+                            ComplaintState.RequestingDocuments,
+                        },
+                        onCompleted() {
+                          alert("ثبت شد");
+                          navigate("/portal");
+                        },
+                      });
+                    } else if (stateInt == 3) {
+                      void updateCompaint({
+                        variables: {
+                          id: complaintIdInt,
+                          complaintState:
+                            newStatesObj.checkingForBeingConstructive
+                              .cap,
+                          isApprovedByChief: false,
+                        } as {
+                          id: number | "" | undefined;
+                          complaintState: string;
+                          isApprovedByChief: boolean;
+                        },
+                        onCompleted() {
+                          alert("ثبت شد");
+                          navigate("/portal");
+                        },
+                      });
+                    }
                   },
                 });
               }}
@@ -368,7 +401,7 @@ const AddArgument = () => {
           </Box>
         </Modal>
 
-        <TimeLine stage={5} />
+        {parseInt(state || "") < 3 && <TimeLine stage={5} />}
         {/* <Box
           gridColumn={"span 12"}
           borderRadius={"1rem"}
@@ -615,10 +648,10 @@ const AddArgument = () => {
 
                   // here we goooooooooooooooooo
                   void sendSMS({
-                    variables:{
-                      complaintId: complaintIdInt || 0
-                    }
-                  })
+                    variables: {
+                      complaintId: complaintIdInt || 0,
+                    },
+                  });
                 },
               });
             } else if (stateInt == -1) {
@@ -670,6 +703,34 @@ const AddArgument = () => {
                   navigate("/portal");
                 },
               });
+            } else if (stateInt == 4) {
+              const agreed = confirm("آیا مطمئن هستید؟");
+              if (!agreed) return;
+              void updateCompaint({
+                variables: {
+                  id: complaintIdInt,
+                  complaintState:
+                    ComplaintState.MailRoomChiefReviewingTheFinalReport,
+                },
+                onCompleted() {
+                  alert("ثبت شد");
+                  navigate("/portal");
+                },
+              });
+            } else if (stateInt == 5) {
+              const agreed = confirm("آیا مطمئن هستید؟");
+              if (!agreed) return;
+              void updateCompaint({
+                variables: {
+                  id: complaintIdInt,
+                  complaintState:
+                    ComplaintState.WaitingForCouncilResult,
+                },
+                onCompleted() {
+                  alert("ثبت شد");
+                  navigate("/portal");
+                },
+              });
             }
           }}
         >
@@ -691,7 +752,7 @@ const AddArgument = () => {
             bottom: 10,
             right: 200,
             fontSize: "3rem",
-            display: stateInt != 3 ? "none" : "flex",
+            display: stateInt < 3 ? "none" : "flex",
             borderRadius: "1.5rem",
             "&:hover": {
               backgroundColor: RedLight,
@@ -735,9 +796,7 @@ const AddArgument = () => {
           data?.complaintArgument_getComplaintArguments?.result?.items
             ?.length == 0
         }
-        argumentId={
-          selectedArgument.id ? selectedArgument.id : 0
-        }
+        argumentId={selectedArgument.id ? selectedArgument.id : 0}
         complaintId={complaintIdInt || 0}
         state={stateInt}
         open={addModal.open}
