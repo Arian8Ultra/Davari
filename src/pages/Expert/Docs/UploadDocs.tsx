@@ -1,13 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import React from "react";
-import {
-  useGetComplaintsWithFilterQuery,
-  useGetReqestedDocsQueryLazyQuery,
-  useGetReqestedDocsQueryQuery,
-  useGetUserWithFilterLazyQuery,
-  useUpdateComplaintFullMutation,
-} from "../../../../generated-types";
-import { useNavigate, useParams } from "react-router-dom";
 import {
   Box,
   Button,
@@ -20,10 +11,17 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { primary, secondary } from "../../../theme/color";
+import { useNavigate, useParams } from "react-router-dom";
+import {
+  useGetComplaintsWithFilterQuery,
+  useGetReqestedDocsQueryLazyQuery,
+  useGetReqestedDocsQueryQuery,
+  useGetUserWithFilterLazyQuery,
+  useUpdateComplaintFullMutation,
+} from "../../../../generated-types";
 import { useUserStore } from "../../../Context/UserStore";
 import { ComplaintState, TargetType } from "../../../gql/graphql";
-import FileBox from "../../../components/FileBox";
+import { primary, secondary } from "../../../theme/color";
 import UploadDocCard from "./UploadDocCard";
 
 const UploadDocs = () => {
@@ -36,7 +34,7 @@ const UploadDocs = () => {
         id: { eq: parseInt(complaintId || "") || 0 },
       },
     },
-    onCompleted(data) {
+    onCompleted() {
       void GetAccuser();
       void GetAccused();
     },
@@ -54,7 +52,7 @@ const UploadDocs = () => {
           },
         },
       },
-      onCompleted(data) {
+      onCompleted() {
         void getRequests();
       },
     });
@@ -114,7 +112,7 @@ const UploadDocs = () => {
     }
   );
 
-  const [GetAccused, { data: AccusedData }] =
+  const [GetAccused] =
     useGetUserWithFilterLazyQuery({
       variables: {
         filter: {
@@ -292,7 +290,7 @@ const UploadDocs = () => {
                         ComplaintState.ReviewingCaseByCaseExpert,
                     },
                   },
-                  onCompleted(data, clientOptions) {
+                  onCompleted(data) {
                     console.log("🚀 ~ onCompleted ~ data", data);
                     navigate(`/complaints`);
                   },

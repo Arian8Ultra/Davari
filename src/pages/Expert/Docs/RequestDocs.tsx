@@ -70,7 +70,7 @@ const RequestDocs = () => {
         id: { eq: parseInt(complaintId || "") || 0 },
       },
     },
-    onCompleted(data) {
+    onCompleted() {
       void GetAccuser();
       void GetAccused();
     },
@@ -96,13 +96,13 @@ const RequestDocs = () => {
         target: requestedDocType || TargetType.Both,
       },
     },
-    onCompleted(data, clientOptions) {
+    onCompleted() {
       void requestedDocsRefetch();
     },
   });
 
   const [deleteDoc] = useDeleteRequestedDocMutationMutation({
-    onCompleted(data, clientOptions) {
+    onCompleted() {
       void requestedDocsRefetch();
     },
   });
