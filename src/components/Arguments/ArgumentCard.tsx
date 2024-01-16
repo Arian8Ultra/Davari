@@ -1,9 +1,12 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable no-mixed-spaces-and-tabs */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import {
   DeleteOutlineTwoTone,
+  DocumentScannerRounded,
   EditRounded,
 } from "@mui/icons-material";
 import {
@@ -35,13 +38,14 @@ import {
   secondaryLight,
   secondaryLighter,
 } from "../../theme/color";
+import { ComplaintArgument } from "../../gql/graphql";
 
 interface Props {
   state: number;
   id: number;
-  arguement: OptionalArgumentSamll;
+  arguement: ComplaintArgument;
   setSelectedArgument: React.Dispatch<
-    React.SetStateAction<OptionalArgument>
+    React.SetStateAction<ComplaintArgument>
   >;
   setAddModal: React.Dispatch<
     React.SetStateAction<{
@@ -53,7 +57,7 @@ interface Props {
   setVewMoreModal?: React.Dispatch<
     React.SetStateAction<{
       open: boolean;
-      argument: OptionalArgument;
+      argument: ComplaintArgument;
     }>
   >;
   addModal: { open: boolean; Argument: Argument };
@@ -348,7 +352,7 @@ const ArgumentCard = ({
                 onClick={() => {
                   deleteArgument &&
                     deleteArgument(
-                      parseInt(arguement.id ? arguement.id : "")
+                      arguement.id ? arguement.id : 0
                     );
                 }}
                 sx={{
@@ -869,6 +873,89 @@ const ArgumentCard = ({
           </TableCell>
         </TableRow>
       );
+
+      case 4 :
+        return(
+          <TableRow>
+                  <TableCell
+                    sx={{
+                      textAlign: "center",
+                    }}
+                  >
+                    {arguement?.id}
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      textAlign: "center",
+                    }}
+                  >
+                    {arguement?.summary}
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      textAlign: "center",
+                    }}
+                  >
+                    {arguement.suggestedAmount
+                      ? convertToPersianDigits(
+                        arguement.suggestedAmount
+                            ?.toString()
+                            .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                        ) + " ریال"
+                      : "وارد نشده است"}
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      textAlign: "center",
+                    }}
+                  >
+                    {arguement?.justiceExpertOpinion || "وارد نشده است"}
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      textAlign: "center",
+                    }}
+                  >
+                    {arguement.justiceExpertApprovedAmount
+                      ? convertToPersianDigits(
+                          arguement.justiceExpertApprovedAmount
+                            ?.toString()
+                            .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                        ) + " ریال"
+                      : "وارد نشده است"}
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      textAlign: "center",
+                    }}
+                  >
+                    <Button
+                      variant={"text"}
+                      fullWidth
+                      // sx={{
+                      //   backgroundColor: secondaryDark,
+                      //   color: "white",
+                      //   "&:hover": {
+                      //     backgroundColor: secondary,
+                      //   },
+                      // }}
+                      sx={{
+                        display: "flex",
+                        gap: 3,
+                      }}
+                    >
+                      <DocumentScannerRounded />
+                      مستندات
+                    </Button>
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      textAlign: "center",
+                    }}
+                  >
+                  </TableCell>
+                </TableRow>
+        )
   }
 };
 
