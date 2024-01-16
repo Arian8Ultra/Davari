@@ -39,6 +39,7 @@ import {
   secondaryLighter,
 } from "../../theme/color";
 import { ComplaintArgument } from "../../gql/graphql";
+import { FaEdit } from "react-icons/fa";
 
 interface Props {
   state: number;
@@ -351,9 +352,7 @@ const ArgumentCard = ({
               <IconButton
                 onClick={() => {
                   deleteArgument &&
-                    deleteArgument(
-                      arguement.id ? arguement.id : 0
-                    );
+                    deleteArgument(arguement.id ? arguement.id : 0);
                 }}
                 sx={{
                   backgroundColor: Red,
@@ -874,88 +873,270 @@ const ArgumentCard = ({
         </TableRow>
       );
 
-      case 4 :
-        return(
-          <TableRow>
-                  <TableCell
-                    sx={{
-                      textAlign: "center",
-                    }}
-                  >
-                    {arguement?.id}
-                  </TableCell>
-                  <TableCell
-                    sx={{
-                      textAlign: "center",
-                    }}
-                  >
-                    {arguement?.summary}
-                  </TableCell>
-                  <TableCell
-                    sx={{
-                      textAlign: "center",
-                    }}
-                  >
-                    {arguement.suggestedAmount
-                      ? convertToPersianDigits(
-                        arguement.suggestedAmount
-                            ?.toString()
-                            .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                        ) + " ریال"
-                      : "وارد نشده است"}
-                  </TableCell>
-                  <TableCell
-                    sx={{
-                      textAlign: "center",
-                    }}
-                  >
-                    {arguement?.justiceExpertOpinion || "وارد نشده است"}
-                  </TableCell>
-                  <TableCell
-                    sx={{
-                      textAlign: "center",
-                    }}
-                  >
-                    {arguement.justiceExpertApprovedAmount
-                      ? convertToPersianDigits(
-                          arguement.justiceExpertApprovedAmount
-                            ?.toString()
-                            .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                        ) + " ریال"
-                      : "وارد نشده است"}
-                  </TableCell>
-                  <TableCell
-                    sx={{
-                      textAlign: "center",
-                    }}
-                  >
-                    <Button
-                      variant={"text"}
-                      fullWidth
-                      // sx={{
-                      //   backgroundColor: secondaryDark,
-                      //   color: "white",
-                      //   "&:hover": {
-                      //     backgroundColor: secondary,
-                      //   },
-                      // }}
-                      sx={{
-                        display: "flex",
-                        gap: 3,
-                      }}
-                    >
-                      <DocumentScannerRounded />
-                      مستندات
-                    </Button>
-                  </TableCell>
-                  <TableCell
-                    sx={{
-                      textAlign: "center",
-                    }}
-                  >
-                  </TableCell>
-                </TableRow>
-        )
+    case 4:
+      return (
+        <TableRow>
+          <TableCell
+            sx={{
+              textAlign: "center",
+            }}
+          >
+            {arguement?.id}
+          </TableCell>
+          <TableCell
+            sx={{
+              textAlign: "center",
+            }}
+          >
+            {arguement?.summary}
+          </TableCell>
+          <TableCell
+            sx={{
+              textAlign: "center",
+            }}
+          >
+            {arguement.suggestedAmount
+              ? convertToPersianDigits(
+                  arguement.suggestedAmount
+                    ?.toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                ) + " ریال"
+              : "وارد نشده است"}
+          </TableCell>
+          <TableCell
+            sx={{
+              textAlign: "center",
+            }}
+          >
+            {arguement?.justiceExpertOpinion || "وارد نشده است"}
+          </TableCell>
+          <TableCell
+            sx={{
+              textAlign: "center",
+            }}
+          >
+            {arguement.justiceExpertApprovedAmount
+              ? convertToPersianDigits(
+                  arguement.justiceExpertApprovedAmount
+                    ?.toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                ) + " ریال"
+              : "وارد نشده است"}
+          </TableCell>
+          <TableCell
+            sx={{
+              textAlign: "center",
+            }}
+          >
+            <Button
+              variant={"text"}
+              fullWidth
+              // sx={{
+              //   backgroundColor: secondaryDark,
+              //   color: "white",
+              //   "&:hover": {
+              //     backgroundColor: secondary,
+              //   },
+              // }}
+              sx={{
+                display: "flex",
+                gap: 3,
+              }}
+              onClick={() => {
+                console.log("open");
+                setViewMoreModal &&
+                  setViewMoreModal({
+                    argument: arguement,
+                    open: true,
+                  });
+              }}
+            >
+              <DocumentScannerRounded />
+              مستندات
+            </Button>
+          </TableCell>
+        </TableRow>
+      );
+    case 5:
+      return (
+        <TableRow>
+          <TableCell
+            sx={{
+              textAlign: "center",
+            }}
+          >
+            {arguement?.id}
+          </TableCell>
+          <TableCell
+            sx={{
+              textAlign: "center",
+            }}
+          >
+            {arguement?.summary}
+          </TableCell>
+          <TableCell
+            sx={{
+              textAlign: "center",
+            }}
+          >
+            {arguement.suggestedAmount
+              ? convertToPersianDigits(
+                  arguement.suggestedAmount
+                    ?.toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                ) + " ریال"
+              : "وارد نشده است"}
+          </TableCell>
+          <TableCell
+            sx={{
+              textAlign: "center",
+            }}
+          >
+            {arguement?.justiceExpertOpinion || "وارد نشده است"}
+          </TableCell>
+          <TableCell
+            sx={{
+              textAlign: "center",
+            }}
+          >
+            {arguement.justiceExpertApprovedAmount
+              ? convertToPersianDigits(
+                  arguement.justiceExpertApprovedAmount
+                    ?.toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                ) + " ریال"
+              : "وارد نشده است"}
+          </TableCell>
+          <TableCell
+            sx={{
+              textAlign: "center",
+            }}
+          >
+            <Button
+              variant={"text"}
+              fullWidth
+              sx={{
+                display: "flex",
+                gap: 3,
+              }}
+              onClick={() => {
+                console.log("open");
+                setViewMoreModal &&
+                  setViewMoreModal({
+                    argument: arguement,
+                    open: true,
+                  });
+              }}
+            >
+              <DocumentScannerRounded />
+              مستندات
+            </Button>
+          </TableCell>
+        </TableRow>
+      );
+    case 6:
+      return (
+        <TableRow>
+          <TableCell
+            sx={{
+              textAlign: "center",
+            }}
+          >
+            {arguement?.id}
+          </TableCell>
+          <TableCell
+            sx={{
+              textAlign: "center",
+            }}
+          >
+            {arguement?.summary}
+          </TableCell>
+          <TableCell
+            sx={{
+              textAlign: "center",
+            }}
+          >
+            {arguement.suggestedAmount
+              ? convertToPersianDigits(
+                  arguement.suggestedAmount
+                    ?.toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                ) + " ریال"
+              : "وارد نشده است"}
+          </TableCell>
+          <TableCell
+            sx={{
+              textAlign: "center",
+            }}
+          >
+            {arguement?.justiceExpertOpinion || "وارد نشده است"}
+          </TableCell>
+          <TableCell
+            sx={{
+              textAlign: "center",
+            }}
+          >
+            {arguement.justiceExpertApprovedAmount
+              ? convertToPersianDigits(
+                  arguement.justiceExpertApprovedAmount
+                    ?.toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                ) + " ریال"
+              : "وارد نشده است"}
+          </TableCell>
+          <TableCell
+            sx={{
+              textAlign: "center",
+            }}
+          >
+            <Button
+              variant={"text"}
+              fullWidth
+              sx={{
+                display: "flex",
+                gap: 3,
+              }}
+              onClick={() => {
+                console.log("open");
+                setViewMoreModal &&
+                  setViewMoreModal({
+                    argument: arguement,
+                    open: true,
+                  });
+              }}
+            >
+              <DocumentScannerRounded />
+              مستندات
+            </Button>
+          </TableCell>
+          <TableCell
+            sx={{
+              textAlign: "center",
+            }}
+          >
+            <Button
+              variant={"text"}
+              fullWidth
+              sx={{
+                display: "flex",
+                gap: 3,
+              }}
+              onClick={() => {
+                console.log("open");
+                setSelectedArgument(arguement);
+                setAddModal({
+                  ...addModal,
+                  open: true,
+                  editMode: true,
+                });
+              }}
+            >
+              <FaEdit />
+              افزودن نظر شورا
+            </Button>
+          </TableCell>
+        </TableRow>
+      );
   }
 };
 
