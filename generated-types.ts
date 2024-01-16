@@ -4084,6 +4084,13 @@ export type UpdateArgumentMutationVariables = Exact<{
 
 export type UpdateArgumentMutation = { __typename?: 'Mutation', complaintArgument_updateComplaintArgument: { __typename?: 'ResponseBaseOfComplaintArgument', result?: { __typename?: 'ComplaintArgument', id: number, accusedResponse?: string | null, accusedResponseFileName?: string | null, approvedAmount?: any | null, complaintId: number, councilApprovedAmount?: any | null, description?: string | null, expertId?: string | null, expertOpinion?: string | null, expertOpinionFileName?: string | null, expertVerdict?: string | null, fileName?: string | null, filledBy: RegistrarType, mailRoomChiefSuggestedAmount?: any | null, mailRoomExpertApprovedAmount?: any | null, suggestedAmount: any, summary?: string | null, userId: string } | null, status: { __typename?: 'ResponseStatus', code: number, value: string } } };
 
+export type UpdateArgumentFullMutationVariables = Exact<{
+  input: ComplaintArgumentInput;
+}>;
+
+
+export type UpdateArgumentFullMutation = { __typename?: 'Mutation', complaintArgument_updateComplaintArgument: { __typename?: 'ResponseBaseOfComplaintArgument', result?: { __typename?: 'ComplaintArgument', id: number, accusedResponse?: string | null, accusedResponseFileName?: string | null, approvedAmount?: any | null, complaintId: number, councilApprovedAmount?: any | null, justiceExpertOpinion?: string | null, justiceExpertApprovedAmount?: any | null, description?: string | null, expertId?: string | null, expertOpinion?: string | null, expertOpinionFileName?: string | null, expertVerdict?: string | null, fileName?: string | null, filledBy: RegistrarType, mailRoomChiefSuggestedAmount?: any | null, mailRoomExpertApprovedAmount?: any | null, suggestedAmount: any, summary?: string | null, userId: string } | null, status: { __typename?: 'ResponseStatus', code: number, value: string } } };
+
 export type DeleteArgumentMutationVariables = Exact<{
   id: Scalars['Int']['input'];
 }>;
@@ -4208,7 +4215,7 @@ export type GetArgumentsWithFilterQueryVariables = Exact<{
 }>;
 
 
-export type GetArgumentsWithFilterQuery = { __typename?: 'Query', complaintArgument_getComplaintArguments: { __typename?: 'ListResponseBaseOfComplaintArgument', status?: any | null, result?: { __typename?: 'ComplaintArgumentCollectionSegment', items?: Array<{ __typename?: 'ComplaintArgument', id: number, accusedResponse?: string | null, accusedResponseFileName?: string | null, approvedAmount?: any | null, complaintId: number, councilApprovedAmount?: any | null, description?: string | null, expertId?: string | null, expertOpinion?: string | null, expertOpinionFileName?: string | null, expertVerdict?: string | null, fileName?: string | null, filledBy: RegistrarType, mailRoomChiefSuggestedAmount?: any | null, mailRoomExpertApprovedAmount?: any | null, mailRoomExpertOpinionOnExpertOpinion?: string | null, mailRoomChiefOpinionOnArgument?: string | null, mailRoomExpertOpinionOnArgument?: string | null, accuserAnswerToAccusedResponse?: string | null, suggestedAmount: any, summary?: string | null, userId: string, createdDate: any, isDeleted: boolean }> | null } | null } };
+export type GetArgumentsWithFilterQuery = { __typename?: 'Query', complaintArgument_getComplaintArguments: { __typename?: 'ListResponseBaseOfComplaintArgument', status?: any | null, result?: { __typename?: 'ComplaintArgumentCollectionSegment', items?: Array<{ __typename?: 'ComplaintArgument', id: number, accusedResponse?: string | null, accusedResponseFileName?: string | null, approvedAmount?: any | null, complaintId: number, councilApprovedAmount?: any | null, councilOpinion?: any | null, justiceExpertOpinion?: string | null, justiceExpertApprovedAmount?: any | null, description?: string | null, expertId?: string | null, expertOpinion?: string | null, expertOpinionFileName?: string | null, expertVerdict?: string | null, fileName?: string | null, filledBy: RegistrarType, mailRoomChiefSuggestedAmount?: any | null, mailRoomExpertApprovedAmount?: any | null, mailRoomExpertOpinionOnExpertOpinion?: string | null, mailRoomChiefOpinionOnArgument?: string | null, mailRoomExpertOpinionOnArgument?: string | null, accuserAnswerToAccusedResponse?: string | null, suggestedAmount: any, summary?: string | null, userId: string, createdDate: any, isDeleted: boolean }> | null } | null } };
 
 export type Create_ContractMutationVariables = Exact<{
   AccuserRelatedPeople?: InputMaybe<Scalars['String']['input']>;
@@ -5345,6 +5352,64 @@ export function useUpdateArgumentMutation(baseOptions?: Apollo.MutationHookOptio
 export type UpdateArgumentMutationHookResult = ReturnType<typeof useUpdateArgumentMutation>;
 export type UpdateArgumentMutationResult = Apollo.MutationResult<UpdateArgumentMutation>;
 export type UpdateArgumentMutationOptions = Apollo.BaseMutationOptions<UpdateArgumentMutation, UpdateArgumentMutationVariables>;
+export const UpdateArgumentFullDocument = gql`
+    mutation UpdateArgumentFull($input: ComplaintArgumentInput!) {
+  complaintArgument_updateComplaintArgument(input: $input) {
+    result {
+      id
+      accusedResponse
+      accusedResponseFileName
+      approvedAmount
+      complaintId
+      councilApprovedAmount
+      justiceExpertOpinion
+      justiceExpertApprovedAmount
+      description
+      expertId
+      expertOpinion
+      expertOpinionFileName
+      expertVerdict
+      fileName
+      filledBy
+      mailRoomChiefSuggestedAmount
+      mailRoomExpertApprovedAmount
+      suggestedAmount
+      summary
+      userId
+    }
+    status {
+      code
+      value
+    }
+  }
+}
+    `;
+export type UpdateArgumentFullMutationFn = Apollo.MutationFunction<UpdateArgumentFullMutation, UpdateArgumentFullMutationVariables>;
+
+/**
+ * __useUpdateArgumentFullMutation__
+ *
+ * To run a mutation, you first call `useUpdateArgumentFullMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateArgumentFullMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateArgumentFullMutation, { data, loading, error }] = useUpdateArgumentFullMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateArgumentFullMutation(baseOptions?: Apollo.MutationHookOptions<UpdateArgumentFullMutation, UpdateArgumentFullMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateArgumentFullMutation, UpdateArgumentFullMutationVariables>(UpdateArgumentFullDocument, options);
+      }
+export type UpdateArgumentFullMutationHookResult = ReturnType<typeof useUpdateArgumentFullMutation>;
+export type UpdateArgumentFullMutationResult = Apollo.MutationResult<UpdateArgumentFullMutation>;
+export type UpdateArgumentFullMutationOptions = Apollo.BaseMutationOptions<UpdateArgumentFullMutation, UpdateArgumentFullMutationVariables>;
 export const DeleteArgumentDocument = gql`
     mutation DeleteArgument($id: Int!) {
   complaintArgument_deleteComplaintArgument(entityId: $id) {
@@ -6328,6 +6393,9 @@ export const GetArgumentsWithFilterDocument = gql`
         approvedAmount
         complaintId
         councilApprovedAmount
+        councilOpinion
+        justiceExpertOpinion
+        justiceExpertApprovedAmount
         description
         expertId
         expertOpinion
