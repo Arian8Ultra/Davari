@@ -27,6 +27,7 @@ import {
 import FileBox from "../FileBox";
 import NewModal from "../Modals";
 import { newStatesObj } from "../../static/States";
+import { ComplaintArgument } from "../../gql/graphql";
 
 interface Props {
   state?: number;
@@ -35,7 +36,7 @@ interface Props {
   setArgumentModal?: React.Dispatch<
     React.SetStateAction<OptionalArgument>
   >;
-  ArgumentFromParent?: OptionalArgumentSamll;
+  ArgumentFromParent?: ComplaintArgument;
   AddArgument?: ({
     Argument,
   }: {
@@ -49,10 +50,10 @@ interface Props {
   isFirst?: boolean;
 }
 const ArgumentModal = (props: Props) => {
-  const [Argument, setArgument] =
-    React.useState<OptionalArgumentSamll>(
-      {} as OptionalArgumentSamll
-    );
+  const [Argument, setArgument] = React.useState<ComplaintArgument>(
+    {} as ComplaintArgument
+  );
+  const [files, setFiles] = React.useState<File>();
   //   set argument from parent if exists
   React.useEffect(() => {
     if (props.ArgumentFromParent) {
@@ -64,7 +65,7 @@ const ArgumentModal = (props: Props) => {
     onCompleted(data) {
       console.log(data);
       props.onClose();
-      setArgument({} as OptionalArgumentSamll);
+      setArgument({} as ComplaintArgument);
       props.isFirst &&
         void updateCompaint({
           variables: {
@@ -80,7 +81,7 @@ const ArgumentModal = (props: Props) => {
     onCompleted(data) {
       console.log(data);
       props.onClose();
-      setArgument({} as OptionalArgumentSamll);
+      setArgument({} as ComplaintArgument);
       props.refetch && props.refetch();
     },
   });
@@ -282,14 +283,9 @@ const ArgumentModal = (props: Props) => {
                 gridRow: "span 2",
                 gridColumn: "span 1",
               }}
-              setFiles={(files: File) => {
-                setArgument({
-                  ...Argument,
-                  Files: files,
-                });
-              }}
+              setFiles={setFiles}
               fileTypes={["pdf", "jpeg"]}
-              files={Argument?.Files}
+              files={files}
             >
               آپلود مستندات
             </FileBox>
@@ -297,12 +293,12 @@ const ArgumentModal = (props: Props) => {
               onClick={() => {
                 if (props.editMode) {
                   if (
-                    Argument?.Files?.length &&
-                    Argument?.Files?.length > 0
+                   files?.length &&
+                   files?.length > 0
                   ) {
                     void UPLOAD_FILE({
-                      file: Argument?.Files
-                        ? Argument?.Files
+                      file: files
+                        ? files
                         : undefined,
                       // @ts-ignore
                       token: localStorage.getItem("token")
@@ -333,12 +329,12 @@ const ArgumentModal = (props: Props) => {
                     });
                   }
                 } else if (
-                  Argument?.Files?.length &&
-                  Argument?.Files?.length > 0
+                  files?.length &&
+                  files?.length > 0
                 )
                   void UPLOAD_FILE({
-                    file: Argument?.Files
-                      ? Argument?.Files
+                    file: files
+                      ? files
                       : undefined,
                     // @ts-ignore
                     token: localStorage.getItem("token")
@@ -435,13 +431,8 @@ const ArgumentModal = (props: Props) => {
                 gridRow: "span 2",
                 gridColumn: "span 1",
               }}
-              setFiles={(files: File) => {
-                setArgument({
-                  ...Argument,
-                  Files: files,
-                });
-              }}
-              files={Argument?.Files}
+              setFiles={setFiles}
+              files={files}
               fileTypes={["pdf", "jpeg"]}
             >
               آپلود مستندات
@@ -450,12 +441,12 @@ const ArgumentModal = (props: Props) => {
             <Button
               onClick={() => {
                 if (
-                  Argument?.Files?.length &&
-                  Argument?.Files?.length > 0
+                  files?.length &&
+                  files?.length > 0
                 )
                   void UPLOAD_FILE({
-                    file: Argument?.Files
-                      ? Argument?.Files
+                    file: files
+                      ? files
                       : undefined,
                     // @ts-ignore
                     token: localStorage.getItem("token")
@@ -597,13 +588,8 @@ const ArgumentModal = (props: Props) => {
                 gridRow: "span 2",
                 gridColumn: "span 1",
               }}
-              setFiles={(files: File) => {
-                setArgument({
-                  ...Argument,
-                  Files: files,
-                });
-              }}
-              files={Argument?.Files}
+              setFiles={setFiles}
+              files={files}
               fileTypes={["pdf", "jpeg"]}
             >
               آپلود مستندات
@@ -612,12 +598,12 @@ const ArgumentModal = (props: Props) => {
             <Button
               onClick={() => {
                 if (
-                  Argument?.Files?.length &&
-                  Argument?.Files?.length > 0
+                  files?.length &&
+                  files?.length > 0
                 )
                   void UPLOAD_FILE({
-                    file: Argument?.Files
-                      ? Argument?.Files
+                    file: files
+                      ? files
                       : undefined,
                     // @ts-ignore
                     token: localStorage.getItem("token")
