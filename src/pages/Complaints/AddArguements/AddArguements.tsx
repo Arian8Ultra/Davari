@@ -39,6 +39,7 @@ import TimeLine from "../../../components/TimeLine";
 import { convertToPersianDigits } from "../../../functions/Functions";
 import {
   AddComplaintNoteDocument,
+  ComplaintArgument,
   GetComplaintsNotesDocument,
   NoteType,
   SendAccusedRespondedSmsDocument,
@@ -61,6 +62,7 @@ import {
   secondary,
   secondaryDark,
 } from "../../../theme/color";
+import { useGetArgumentsWithFilterQuery, useGetComplaintArgumentsQuery } from "../../../../generated-types";
 
 const AddArgument = () => {
   const { complaintId, state } = useParams();
@@ -87,11 +89,11 @@ const AddArgument = () => {
   });
 
   const [selectedArgument, setSelectedArgument] =
-    React.useState<OptionalArgument>({} as OptionalArgument);
+    React.useState<ComplaintArgument>({} as ComplaintArgument);
 
   const [viewMoreModal, setViewMoreModal] = React.useState({
     open: false,
-    argument: {} as OptionalArgument,
+    argument: {} as ComplaintArgument,
   });
 
   const [updateCompaint] = useMutation(UPDATE_COMPLAINT, {
@@ -135,19 +137,16 @@ const AddArgument = () => {
     },
   });
 
-  const { data, loading, refetch } = useQuery(
-    GET_COMPLAINT_ARGUMENTS,
+  const { data, loading, refetch } = useGetArgumentsWithFilterQuery(
     {
       variables: {
-        id: complaintIdInt,
+        filter:{
+          complaintId:{
+            eq: complaintIdInt || 0
+          }
+        }
       },
-      onCompleted(data: {
-        complaintArgument_getComplaintArguments: {
-          result: {
-            items: OptionalArgumentSamll[];
-          };
-        };
-      }) {
+      onCompleted(data) {
         console.log(data);
       },
     }
@@ -737,7 +736,7 @@ const AddArgument = () => {
             ?.length == 0
         }
         argumentId={
-          selectedArgument.id ? parseInt(selectedArgument.id) : 0
+          selectedArgument.id ? selectedArgument.id : 0
         }
         complaintId={complaintIdInt || 0}
         state={stateInt}
