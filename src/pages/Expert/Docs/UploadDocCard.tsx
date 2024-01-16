@@ -1,16 +1,17 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { TableRow, TableCell, Button, Box } from "@mui/material";
-import FileBox from "../../../components/FileBox";
-import { Red, primary, secondary } from "../../../theme/color";
-import {
-  TargetType,
-  useUpdateRequestedDocMutation,
-} from "../../../../generated-types";
+import { Box, Button, TableCell, TableRow } from "@mui/material";
 import { useState } from "react";
+import {
+    TargetType,
+    useUpdateRequestedDocMutation,
+} from "../../../../generated-types";
 import { UPLOAD_FILE } from "../../../api/upload";
+import FileBox from "../../../components/FileBox";
+import { primary, secondary } from "../../../theme/color";
 
 export default function UploadDocCard(item: {
   __typename?: "DocumentRequest" | undefined;
@@ -91,7 +92,7 @@ export default function UploadDocCard(item: {
                         target: item?.target,
                       },
                     },
-                    onCompleted(data, clientOptions) {
+                    onCompleted(data) {
                       console.log("🚀 ~ onCompleted ~ data", data);
                       item.reftech && item.reftech();
                     },
@@ -142,7 +143,7 @@ export default function UploadDocCard(item: {
                       target: item?.target,
                     },
                   },
-                  onCompleted(data, clientOptions) {
+                  onCompleted(data) {
                     console.log("🚀 ~ onCompleted ~ data", data);
                     item.reftech && item.reftech();
                   },
