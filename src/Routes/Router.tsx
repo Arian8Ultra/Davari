@@ -34,6 +34,7 @@ import { useUserStore } from "../Context/UserStore";
 import DeterminingCaseExpert from "../pages/Complaints/DeterminingCaseExpert/DeterminingCaseExpert";
 import RequestDocs from "../pages/Expert/Docs/RequestDocs";
 import UploadDocs from "../pages/Expert/Docs/UploadDocs";
+import ReviewCase from "../pages/Expert/ReviewCase";
 const Complaints = lazy(
   () => import("../pages/Complaints/Complaints")
 );
@@ -156,6 +157,10 @@ const router = createBrowserRouter(
         <Route
           path="complaints/:complaintId/docUpload"
           element={<UploadDocs />}
+        />
+        <Route
+          path="complaints/:complaintId/expertReview"
+          element={<ReviewCase />}
         />
 
         <Route path="contracts" element={<Contracts />} />
