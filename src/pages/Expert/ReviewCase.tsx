@@ -6,6 +6,7 @@ import {
   Box,
   Button,
   Divider,
+  LinearProgress,
   Modal,
   Table,
   TableBody,
@@ -15,7 +16,7 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   useDeleteRequestedDocMutationMutation,
   useGetArgumentsWithFilterQuery,
@@ -33,7 +34,7 @@ import {
   secondary,
   secondaryDark,
 } from "../../theme/color";
-import { ComplaintArgument } from "../../gql/graphql";
+import { ComplaintArgument, ComplaintState } from "../../gql/graphql";
 import ArgumentInfoModal from "../../components/Arguments/ArgumentInfoModal";
 import { DocumentScannerRounded } from "@mui/icons-material";
 import { FaEdit } from "react-icons/fa";
@@ -46,6 +47,7 @@ import { convertToPersianDigits } from "../../functions/Functions";
 
 const ReviewCase = () => {
   const { complaintId } = useParams<{ complaintId: string }>();
+  const navigate = useNavigate();
   const [infoModal, setInfoModal] = React.useState<{
     open: boolean;
     argument?: ComplaintArgument;
@@ -199,7 +201,8 @@ const ReviewCase = () => {
                       argumentModal.justicExpertApprovedAmount,
                   },
                 },
-                onCompleted(data, clientOptions) {
+                onCompleted(data) {
+                  console.log("🚀 ~ onCompleted ~ data:", data);
                   void ArgumentRefetch();
                 },
               });
@@ -1032,6 +1035,45 @@ const ReviewCase = () => {
             )}
           </TableBody>
         </Table>
+      </Box>
+      <Box display={"flex"} justifyContent={"flex-end"} my={2}>
+        {loading && <Typography>در حال ثبت اطلاعات</Typography>}
+        {loading && <LinearProgress sx={{ width: "100%" }} />}
+        <Button
+          variant={"contained"}
+          sx={{
+            backgroundColor: primary,
+            padding: "0.5rem 2rem",
+            borderRadius: "3rem",
+            color: secondary,
+            fontSize: "1.2rem",
+            "&:hover": {
+              backgroundColor: secondary,
+              color: primary,
+            },
+          }}
+          onClick={() => {
+            const agree = confirm(
+              "آیا از ثبت نهایی اطلاعات اطمینان دارید؟"
+            );
+            if (agree) {
+              void updateComplaint({
+                variables: {
+                  input: {
+                    complaintState:
+                      ComplaintState.MailRoomExpertReviewingTheFinalReport,
+                    id: parseInt(complaintId || "") || 0,
+                  },
+                },
+                onCompleted() {
+                  navigate("/expertPortal");
+                }
+              });
+            }
+          }}
+        >
+          ثبت و تایید نهایی
+        </Button>
       </Box>
     </div>
   );
