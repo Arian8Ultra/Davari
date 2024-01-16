@@ -28,6 +28,7 @@ import FileBox from "../FileBox";
 import NewModal from "../Modals";
 import { newStatesObj } from "../../static/States";
 import { ComplaintArgument } from "../../gql/graphql";
+import { FaCheck } from "react-icons/fa";
 
 interface Props {
   state?: number;
@@ -644,6 +645,135 @@ const ArgumentModal = (props: Props) => {
               }}
               variant={"contained"}
             >
+              ثبت
+            </Button>
+          </Box>
+        </NewModal>
+      );
+    case 6:
+      return (
+        <NewModal
+          open={props.open}
+          onClose={props.onClose}
+          title={"ثبت ادعا"}
+          width={"50vw"}
+          height={"80vh"}
+          isCloseable={true}
+          backgroundColor={background}
+        >
+          <Box
+            display={"grid"}
+            gridTemplateColumns={"1fr 1fr"}
+            gap={"1rem"}
+            width={"100%"}
+            justifyContent={"center"}
+            alignItems={"center"}
+          >
+            <TextField
+              label={"متن رای شورا"}
+              variant={"outlined"}
+              focused={Argument?.expertOpinion != ""}
+              sx={{
+                borderRadius: "1rem",
+                gridColumn: "span 2",
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "0.5rem",
+                },
+              }}
+              fullWidth
+              multiline
+              rows={4}
+              value={Argument?.councilOpinion}
+              onChange={(e) => {
+                setArgument({
+                  ...Argument,
+                  councilOpinion: e.target.value,
+                });
+              }}
+            />
+
+            <TextField
+              label={"مبلغ مورد تایید شورا"}
+              variant={"outlined"}
+              focused={Argument?.councilApprovedAmount != 0}
+              sx={{
+                borderRadius: "1rem",
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "0.5rem",
+                },
+              }}
+              fullWidth
+              type="number"
+              InputProps={{
+                endAdornment: "ریال",
+              }}
+              value={
+                Argument?.councilApprovedAmount == 0
+                  ? ""
+                  : Argument?.councilApprovedAmount
+              }
+              onChange={(e) => {
+                setArgument({
+                  ...Argument,
+                  councilApprovedAmount: parseFloat(
+                    e.target.value
+                  ),
+                });
+              }}
+            />
+
+            <Button
+              onClick={() => {
+                if (
+                  files?.length &&
+                  files?.length > 0
+                )
+                  void UPLOAD_FILE({
+                    file: files
+                      ? files
+                      : undefined,
+                    // @ts-ignore
+                    token: localStorage.getItem("token")
+                      ? localStorage.getItem("token")
+                      : undefined,
+                    onSuccess(res) {
+                      console.log(res);
+                      void UpdateArgument({
+                        variables: {
+                          id: props.argumentId,
+                          expertOpinion: Argument?.expertOpinion,
+                          expertVerdict: Argument?.expertVerdict,
+                          mailRoomExpertApprovedAmount:
+                            Argument.mailRoomExpertApprovedAmount,
+                          expertOpinionFileName:
+                            res.result[0].newFileName,
+                        },
+                      });
+                    },
+                  });
+                else {
+                  void UpdateArgument({
+                    variables: {
+                      id: props.argumentId,
+                      accuserResponse: Argument?.accusedResponse,
+                    },
+                  });
+                }
+              }}
+              sx={{
+                background: primary,
+                color: secondaryDark,
+                borderRadius: "0.5rem",
+                display:'flex',
+                gap:3,
+                width: "100%",
+                "&:hover": {
+                  background: GreenLight,
+                },
+              }}
+              variant={"contained"}
+            >
+              <FaCheck/>
               ثبت
             </Button>
           </Box>
