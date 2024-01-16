@@ -185,6 +185,16 @@ export const GET_CHIEF_COMPLAINTS = gql`
                 eq: WAITING_FOR_CHIEF_TO_APPROVE_EXPERTS_ANSWERS_TO_ARGUMENTS
               }
             }
+            {
+              complaintState: {
+                eq: WAITING_FOR_CHIEF_TO_APPROVE_EXPERTS_ANSWERS_TO_ARGUMENTS
+              }
+            }
+            {
+              complaintState: {
+                eq: MAIL_ROOM_CHIEF_REVIEWING_THE_FINAL_REPORT
+              }
+            }
           ]
         }
         order: { createdDate: DESC }
