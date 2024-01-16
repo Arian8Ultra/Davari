@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import {
@@ -21,7 +23,7 @@ interface Props {
   open: boolean;
   handleClose: () => void;
   state: number;
-  argument?: OptionalArgumentSamll;
+  argument?: ComplaintArgument;
   fullArgument?: ComplaintArgument;
 }
 const ArgumentInfoModal = (props: Props) => {
