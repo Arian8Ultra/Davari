@@ -1805,6 +1805,76 @@ const ComplaintCardNew = (props: Props) => {
           }
         }
 
+        case ComplaintState.ReviewingCaseByCaseExpert:
+          if (props.type == "juryExpert") {
+            return (
+              <Box
+                display={"grid"}
+                gridTemplateColumns={"repeat(2,1fr)"}
+                mt={"1rem"}
+                gap={"6rem"}
+              >
+                <div className=""></div>
+                <Button
+                  sx={{
+                    borderRadius: "0.5rem",
+                    backgroundColor: primaryDark,
+                    color: "white",
+                    "&:hover": {
+                      backgroundColor: primary,
+                      color: "white",
+                    },
+                  }}
+                  onClick={() => {
+                    navigate(`/complaints/${props.id}/expertReview`);
+                  }}
+                >
+                  بررسی درخواست داوری و مدارک
+                </Button>
+              </Box>
+            );
+          } else {
+            if (
+              user.parentId == props.acusserId ||
+              user.parentId == props.acusser ||
+              user.id == props.acusserId ||
+              user.id == props.acusser
+            )
+              return (
+                <Box
+                  display={"grid"}
+                  gridTemplateColumns={"repeat(2,1fr)"}
+                  mt={"1rem"}
+                  gap={"6rem"}
+                >
+                  <Button
+                    sx={{
+                      borderRadius: "0.5rem",
+                      backgroundColor: Red,
+                      color: "white",
+                      "&:hover": {
+                        backgroundColor: red[100],
+                        color: Red,
+                      },
+                    }}
+                    onClick={() => {
+                      const agree = confirm(
+                        "آیا از انصراف از این درخواست داوری مطمئن هستید؟"
+                      );
+                      if (agree) {
+                        void deleteComplaint();
+                      }
+                    }}
+                  >
+                    انصراف از درخواست داوری
+                  </Button>
+                </Box>
+              );
+            else {
+              break;
+            }
+          }
+
       default:
         if (
           user.parentId == props.acusserId ||
