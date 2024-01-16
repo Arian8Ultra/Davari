@@ -1,25 +1,22 @@
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import React from "react";
 import {
-  OptionalArgument,
-  OptionalArgumentSamll,
-} from "../../static/Types";
-import NewModal from "../Modals";
-import { Green, GreenLight, background } from "../../theme/color";
-import {
-  Box,
   Button,
   Table,
   TableBody,
   TableCell,
   TableContainer,
-  TableRow,
+  TableRow
 } from "@mui/material";
 import { AiFillFileAdd } from "react-icons/ai";
-import FaTypography from "../FaComponents/FaTypography";
 import { convertToPersianDigits } from "../../functions/Functions";
 import { ComplaintArgument } from "../../gql/graphql";
+import {
+  OptionalArgumentSamll
+} from "../../static/Types";
+import { Green, GreenLight, background } from "../../theme/color";
+import FaTypography from "../FaComponents/FaTypography";
+import NewModal from "../Modals";
 interface Props {
   open: boolean;
   handleClose: () => void;

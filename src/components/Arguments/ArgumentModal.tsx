@@ -282,7 +282,7 @@ const ArgumentModal = (props: Props) => {
                 gridRow: "span 2",
                 gridColumn: "span 1",
               }}
-              setFiles={(files: File[]) => {
+              setFiles={(files: File) => {
                 setArgument({
                   ...Argument,
                   Files: files,
@@ -302,7 +302,7 @@ const ArgumentModal = (props: Props) => {
                   ) {
                     void UPLOAD_FILE({
                       file: Argument?.Files
-                        ? Argument?.Files[0]
+                        ? Argument?.Files
                         : undefined,
                       // @ts-ignore
                       token: localStorage.getItem("token")
@@ -338,7 +338,7 @@ const ArgumentModal = (props: Props) => {
                 )
                   void UPLOAD_FILE({
                     file: Argument?.Files
-                      ? Argument?.Files[0]
+                      ? Argument?.Files
                       : undefined,
                     // @ts-ignore
                     token: localStorage.getItem("token")
@@ -435,7 +435,7 @@ const ArgumentModal = (props: Props) => {
                 gridRow: "span 2",
                 gridColumn: "span 1",
               }}
-              setFiles={(files: File[]) => {
+              setFiles={(files: File) => {
                 setArgument({
                   ...Argument,
                   Files: files,
@@ -455,7 +455,7 @@ const ArgumentModal = (props: Props) => {
                 )
                   void UPLOAD_FILE({
                     file: Argument?.Files
-                      ? Argument?.Files[0]
+                      ? Argument?.Files
                       : undefined,
                     // @ts-ignore
                     token: localStorage.getItem("token")
@@ -597,7 +597,7 @@ const ArgumentModal = (props: Props) => {
                 gridRow: "span 2",
                 gridColumn: "span 1",
               }}
-              setFiles={(files: File[]) => {
+              setFiles={(files: File) => {
                 setArgument({
                   ...Argument,
                   Files: files,
@@ -617,7 +617,7 @@ const ArgumentModal = (props: Props) => {
                 )
                   void UPLOAD_FILE({
                     file: Argument?.Files
-                      ? Argument?.Files[0]
+                      ? Argument?.Files
                       : undefined,
                     // @ts-ignore
                     token: localStorage.getItem("token")
