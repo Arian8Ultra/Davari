@@ -498,6 +498,9 @@ export const GetArgumentsWithFilter = gql`
           approvedAmount
           complaintId
           councilApprovedAmount
+          councilOpinion
+          justiceExpertOpinion
+          justiceExpertApprovedAmount
           description
           expertId
           expertOpinion

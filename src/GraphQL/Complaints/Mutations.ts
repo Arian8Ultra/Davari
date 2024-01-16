@@ -315,6 +315,37 @@ export const UPDATE_ARGUMENT = gql`
   }
 `;
 
+export const UPDATE_ARGUMENT_FULL = gql`
+  mutation UpdateArgumentFull($input: ComplaintArgumentInput!) {
+    complaintArgument_updateComplaintArgument(input: $input) {
+      result {
+        id
+        accusedResponse
+        accusedResponseFileName
+        approvedAmount
+        complaintId
+        councilApprovedAmount
+        justiceExpertOpinion
+        justiceExpertApprovedAmount
+        description
+        expertId
+        expertOpinion
+        expertOpinionFileName
+        expertVerdict
+        fileName
+        filledBy
+        mailRoomChiefSuggestedAmount
+        mailRoomExpertApprovedAmount
+        suggestedAmount
+        summary
+        userId
+      }
+      status {
+        code
+        value
+      }
+    }
+  }`
 export const DELETE_ARGUMENT = gql`
   mutation DeleteArgument($id: Int!) {
     complaintArgument_deleteComplaintArgument(entityId: $id) {
