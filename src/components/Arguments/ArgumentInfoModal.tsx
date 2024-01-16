@@ -8,14 +8,12 @@ import {
   TableBody,
   TableCell,
   TableContainer,
-  TableRow
+  TableRow,
 } from "@mui/material";
 import { AiFillFileAdd } from "react-icons/ai";
 import { convertToPersianDigits } from "../../functions/Functions";
 import { ComplaintArgument } from "../../gql/graphql";
-import {
-  OptionalArgumentSamll
-} from "../../static/Types";
+import { OptionalArgumentSamll } from "../../static/Types";
 import { Green, GreenLight, background } from "../../theme/color";
 import FaTypography from "../FaComponents/FaTypography";
 import NewModal from "../Modals";
@@ -656,6 +654,166 @@ const ArgumentInfoModal = (props: Props) => {
                       }}
                     >
                       {props.argument?.expertOpinionFileName}
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </NewModal>
+      );
+    default:
+      return (
+        <NewModal
+          open={props.open}
+          onClose={props.handleClose}
+          background={background}
+          isCloseable={true}
+          title={`مشخصات ادعا`}
+          width={{
+            xs: "100%",
+            md: "50%",
+          }}
+        >
+          <TableContainer
+            sx={{
+              width: "100%",
+            }}
+          >
+            <Table>
+              <TableBody>
+                <TableRow>
+                  <TableCell>خلاصه ادعا :</TableCell>
+                  <TableCell>{props.argument?.summary}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>مشروح ادعا :</TableCell>
+                  <TableCell>
+                    {props.argument?.description}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>مبلغ خواسته شده ادعا :</TableCell>
+                  <TableCell>
+                    <FaTypography>
+                      {props.argument?.suggestedAmount}
+                    </FaTypography>
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>پاسخ خوانده :</TableCell>
+                  <TableCell>
+                    {props.argument?.accusedResponse}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>نظر کارشناس دبیرخانه :</TableCell>
+                  <TableCell>
+                    {
+                      props.argument
+                        ?.mailRoomExpertOpinionOnArgument
+                    }
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>نظر رئیس دبیرخانه :</TableCell>
+                  <TableCell>
+                    {
+                      props.argument
+                        ?.mailRoomChiefOpinionOnArgument
+                    }
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>نظر کارشناس دادگستری :</TableCell>
+                  <TableCell>
+                    {
+                      props.argument
+                        ?.justiceExpertOpinion
+                    }
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>مبلغ موردتایید کارشناس دادگستری :</TableCell>
+                  <TableCell>
+                    {
+                      props.argument
+                        ?.justiceExpertApprovedAmount
+                    }
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>مستندات خواهان :</TableCell>
+                  <TableCell>
+                    <Button
+                      variant="contained"
+                      endIcon={<AiFillFileAdd />}
+                      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+                      onClick={() => {
+                        // download file with url in fileName
+                        window.open(
+                          "http://172.16.23.50:7030/files/" +
+                            props.argument?.fileName
+                        );
+                      }}
+                      sx={{
+                        borderRadius: 2,
+                        backgroundColor: Green,
+                        fontWeight: 700,
+                        fontStyle: "normal",
+                        fontSize: "0.7rem",
+                        boxShadow: "none",
+                        display: props.argument?.fileName
+                          ? "flex"
+                          : "none",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        "&:hover": {
+                          backgroundColor: GreenLight,
+                          color: Green,
+                        },
+                      }}
+                    >
+                      {props.argument?.fileName}
+                    </Button>
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>مستندات خوانده :</TableCell>
+                  <TableCell>
+                    <Button
+                      variant="contained"
+                      endIcon={<AiFillFileAdd />}
+                      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+                      onClick={() => {
+                        // download file with url in fileName
+
+                        window.open(
+                          "http://172.16.23.50:7030/files/" +
+                            props.argument?.fileName
+                        );
+                      }}
+                      sx={{
+                        borderRadius: 2,
+                        backgroundColor: Green,
+                        fontWeight: 700,
+                        fontStyle: "normal",
+                        fontSize: "0.7rem",
+                        boxShadow: "none",
+                        // display: "flex",
+                        display: props.argument
+                          ?.accusedResponseFileName
+                          ? "flex"
+                          : "none",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        "&:hover": {
+                          backgroundColor: GreenLight,
+                          color: Green,
+                        },
+                      }}
+                    >
+                      {props.argument?.accusedResponseFileName}
                     </Button>
                   </TableCell>
                 </TableRow>
