@@ -256,8 +256,8 @@ export const newStatesFa = [
   "در انتظار بررسی پرونده توسط کارشناس پرونده",
   "در انتظار تعیین کارشناس پرونده پس از انصراف",
   "در انتظار ثبت نهایی گزارش و تنظیم خودکار پیش نویس رای داوری",
-  "در انتظار بررسی گزارش دریافتی از کارشناس پرونده",
-  "در انتظار بررسی گزارش دریافتی از کارشناس پرونده",
+  "در انتظار بررسی گزارش دریافتی از کارشناس پرونده توسط کارشناس دبیرخانه",
+  "در انتظار بررسی گزارش دریافتی از کارشناس پرونده توسط رئیس دبیرخانه",
   "در انتظار نتیجه بررسی توسط شورا",
   "در انتظار بارگزاری اسکن رای نهایی",
   "در انتظار اطلاع رسانی به خواهان و تعیین مهلت پرداخت هزینه دوم داوری",
@@ -470,7 +470,6 @@ export const newStatesObj = {
     fa: "در انتظار بارگزاری مدارک توسط خواهان و خوانده",
     cap: "UPLOADING_DOCUMENTS_BY_ACCUSER_AND_ACCUSED",
   },
-
   reviewingCaseByCaseExpert: {
     fa: "در انتظار بررسی پرونده توسط کارشناس پرونده",
     cap: "REVIEWING_CASE_BY_CASE_EXPERT",
@@ -484,11 +483,11 @@ export const newStatesObj = {
     cap: "WAITING_FOR_FINAL_REPORT_REGISTRATION",
   },
   mailRoomExpertReviewingTheFinalReport: {
-    fa: "در انتظار بررسی گزارش دریافتی از کارشناس پرونده",
+    fa: "در انتظار بررسی گزارش دریافتی از کارشناس پرونده توسط کارشناس دبیرخانه",
     cap: "MAIL_ROOM_EXPERT_REVIEWING_THE_FINAL_REPORT",
   },
   mailRoomChiefReviewingTheFinalReport: {
-    fa: "در انتظار بررسی گزارش دریافتی از کارشناس پرونده",
+    fa: "در انتظار بررسی گزارش دریافتی از کارشناس پرونده توسط رئیس دبیرخانه",
     cap: "MAIL_ROOM_CHIEF_REVIEWING_THE_FINAL_REPORT",
   },
   waitingForCouncilResult: {
