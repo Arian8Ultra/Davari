@@ -47,7 +47,7 @@ export type OptionalArgument = {
   MailRoomChiefSuggestedAmount?: number;
   CouncilApprovedAmount?: number;
   ContractId?: number;
-  Files?: File[];
+  Files?: File;
   AccuserAnswerToAccusedResponse?: string;
 };
 
@@ -67,7 +67,7 @@ export type OptionalArgumentSamll = {
   mailRoomChiefSuggestedAmount?: number;
   councilApprovedAmount?: number;
   contractId?: number;
-  Files?: File[];
+  Files?: File;
   accuserAnswerToAccusedResponse?: string;
 };
 
