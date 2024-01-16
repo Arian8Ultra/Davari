@@ -788,6 +788,145 @@ const ReviewCase = () => {
           }}
         >
           <Typography variant={"h6"} sx={{ color: secondary }}>
+            مدارک درخواست شده
+          </Typography>
+        </Box>
+        <Divider
+          sx={{
+            width: "100%",
+            backgroundColor: secondary,
+            height: "0.2rem",
+            margin: "1rem 0",
+            position: "absolute",
+          }}
+        />
+      </Box>
+      <Box
+        sx={{
+          borderRadius: "0.5rem",
+          outline: `2px solid ${secondary}`,
+          backgroundColor: "rgb(220,220,220)",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "flex-start",
+          justifyContent: "center",
+          my: "2rem",
+          overflow: "hidden",
+        }}
+      >
+        <Table
+          sx={{
+            // backgroundColor: primaryGreyLightTransparent,
+            borderRadius: "0.5rem",
+          }}
+        >
+          <TableHead
+            sx={{
+              background: secondary,
+              borderRadius: "0.5rem",
+              color: "white",
+              "& th": {
+                textAlign: "center",
+              },
+            }}
+          >
+            <TableRow>
+              <TableCell
+                sx={{
+                  fontWeight: "bold",
+                  color: "white",
+                }}
+              >
+                شناسه
+              </TableCell>
+              <TableCell
+                sx={{
+                  fontWeight: "bold",
+                  color: "white",
+                }}
+              >
+                خلاصه ادعا
+              </TableCell>
+              {/* <TableCell
+                sx={{
+                  fontWeight: "bold",
+                  color: "white",
+                }}
+              >
+                پاسخ خوانده
+              </TableCell> */}
+              <TableCell
+                sx={{
+                  fontWeight: "bold",
+                  color: "white",
+                }}
+              >
+                مبلغ خواسته شده ادعا(ریال)
+              </TableCell>
+              <TableCell
+                sx={{
+                  fontWeight: "bold",
+                  color: "white",
+                }}
+              >
+                نظر کارشناس دادگستری
+              </TableCell>
+              <TableCell
+                sx={{
+                  fontWeight: "bold",
+                  color: "white",
+                }}
+              >
+                مبلغ مورد تایید کارشناس دادگستری
+              </TableCell>
+              <TableCell
+                sx={{
+                  fontWeight: "bold",
+                  color: "white",
+                }}
+              >
+                مستندات
+              </TableCell>
+              <TableCell
+                sx={{
+                  fontWeight: "bold",
+                  color: "white",
+                }}
+              >
+                ...
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          </Table>
+          </Box>
+      {/* 
+
+
+
+
+
+
+
+      */}
+      <Box
+        display={"flex"}
+        justifyContent={"center"}
+        alignItems={"center"}
+        flexDirection={"column"}
+        position={"relative"}
+      >
+        <Box
+          borderRadius={"3rem"}
+          sx={{
+            background: primary,
+            padding: "0.5rem 1rem",
+            userSelect: "none",
+            width: "max-content",
+            justifySelf: "center",
+            zIndex: 1000,
+          }}
+        >
+          <Typography variant={"h6"} sx={{ color: secondary }}>
             دعاوی مرتبط
           </Typography>
         </Box>
