@@ -130,7 +130,7 @@ export default function UploadDocCard(item: {
               token: localStorage.getItem("token") as string,
               onSuccess(res) {
                 console.log("🚀 ~ onSuccess ~ res:", res);
-                UpdateDocumentRequest({
+                void UpdateDocumentRequest({
                   variables: {
                     input: {
                       id: item?.id,
