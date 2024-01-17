@@ -250,6 +250,7 @@ export const UPDATE_ARGUMENT = gql`
     $approvedAmount: Decimal
     $complaintId: Int
     $councilApprovedAmount: Decimal
+    $councilOpinion : Decimal
     $description: String
     $expertId: String
     $expertOpinion: String
@@ -271,6 +272,7 @@ export const UPDATE_ARGUMENT = gql`
         approvedAmount: $approvedAmount
         complaintId: $complaintId
         councilApprovedAmount: $councilApprovedAmount
+        councilOpinion: $councilOpinion
         description: $description
         expertId: $expertId
         expertOpinion: $expertOpinion
