@@ -10,6 +10,7 @@ import { useUserStore } from "../../Context/UserStore";
 import {
   ADD_ARGUMENT_TO_COMPLAINT,
   UPDATE_ARGUMENT,
+  UPDATE_ARGUMENT_FULL,
   UPDATE_COMPLAINT,
 } from "../../GraphQL/Complaints/Mutations";
 import { UPLOAD_FILE } from "../../api/upload";
@@ -29,6 +30,7 @@ import NewModal from "../Modals";
 import { newStatesObj } from "../../static/States";
 import { ComplaintArgument } from "../../gql/graphql";
 import { FaCheck } from "react-icons/fa";
+import { useUpdateArgumentFullMutation } from "../../../generated-types";
 
 interface Props {
   state?: number;
@@ -78,7 +80,7 @@ const ArgumentModal = (props: Props) => {
       props.refetch && props.refetch();
     },
   });
-  const [UpdateArgument] = useMutation(UPDATE_ARGUMENT, {
+  const [UpdateArgument] = useUpdateArgumentFullMutation({
     onCompleted(data) {
       console.log(data);
       props.onClose();
@@ -101,6 +103,14 @@ const ArgumentModal = (props: Props) => {
             suggestedAmount
             accusedResponse
             complaintId
+            councilOpinion
+            councilApprovedAmount
+            accuserAnswerToAccusedResponse
+            accuserAnswerToAccusedResponseFileName
+            expertOpinion
+            expertOpinionFileName
+            expertVerdict
+            approvedAmount
           }
         }
       }
@@ -166,9 +176,11 @@ const ArgumentModal = (props: Props) => {
               onClick={() => {
                 void UpdateArgument({
                   variables: {
-                    id: props.argumentId,
-                    accuserAnswerToAccusedResponse:
-                      Argument?.accuserAnswerToAccusedResponse,
+                    input: {
+                      id: props.argumentId,
+                      accuserAnswerToAccusedResponse:
+                        Argument?.accuserAnswerToAccusedResponse,
+                    },
                   },
                 });
               }}
@@ -293,14 +305,9 @@ const ArgumentModal = (props: Props) => {
             <Button
               onClick={() => {
                 if (props.editMode) {
-                  if (
-                   files?.length &&
-                   files?.length > 0
-                  ) {
+                  if (files?.length && files?.length > 0) {
                     void UPLOAD_FILE({
-                      file: files
-                        ? files
-                        : undefined,
+                      file: files ? files : undefined,
                       // @ts-ignore
                       token: localStorage.getItem("token")
                         ? localStorage.getItem("token")
@@ -309,12 +316,15 @@ const ArgumentModal = (props: Props) => {
                         console.log(res);
                         void UpdateArgument({
                           variables: {
-                            id: props.argumentId,
-                            summary: Argument?.summary,
-                            description: Argument?.description,
-                            suggestedAmount: Argument.suggestedAmount,
-                            // @ts-ignore
-                            fileName: res.result[0].newFileName,
+                            input: {
+                              id: props.argumentId,
+                              summary: Argument?.summary,
+                              description: Argument?.description,
+                              suggestedAmount:
+                                Argument.suggestedAmount,
+                              // @ts-ignore
+                              fileName: res.result[0].newFileName,
+                            },
                           },
                         });
                       },
@@ -322,21 +332,18 @@ const ArgumentModal = (props: Props) => {
                   } else {
                     void UpdateArgument({
                       variables: {
-                        id: props.argumentId,
-                        summary: Argument?.summary,
-                        description: Argument?.description,
-                        suggestedAmount: Argument.suggestedAmount,
+                        input: {
+                          id: props.argumentId,
+                          summary: Argument?.summary,
+                          description: Argument?.description,
+                          suggestedAmount: Argument.suggestedAmount,
+                        },
                       },
                     });
                   }
-                } else if (
-                  files?.length &&
-                  files?.length > 0
-                )
+                } else if (files?.length && files?.length > 0)
                   void UPLOAD_FILE({
-                    file: files
-                      ? files
-                      : undefined,
+                    file: files ? files : undefined,
                     // @ts-ignore
                     token: localStorage.getItem("token")
                       ? localStorage.getItem("token")
@@ -441,14 +448,9 @@ const ArgumentModal = (props: Props) => {
 
             <Button
               onClick={() => {
-                if (
-                  files?.length &&
-                  files?.length > 0
-                )
+                if (files?.length && files?.length > 0)
                   void UPLOAD_FILE({
-                    file: files
-                      ? files
-                      : undefined,
+                    file: files ? files : undefined,
                     // @ts-ignore
                     token: localStorage.getItem("token")
                       ? localStorage.getItem("token")
@@ -457,10 +459,13 @@ const ArgumentModal = (props: Props) => {
                       console.log(res);
                       void UpdateArgument({
                         variables: {
-                          id: props.argumentId,
-                          accuserResponse: Argument?.accusedResponse,
-                          accuserResponseFileName:
-                            res.result[0].newFileName,
+                          input: {
+                            id: props.argumentId,
+                            accuserAnswerToAccusedResponse:
+                              Argument?.accusedResponse,
+                            accuserAnswerToAccusedResponseFileName:
+                              res.result[0].newFileName,
+                          },
                         },
                       });
                     },
@@ -468,8 +473,11 @@ const ArgumentModal = (props: Props) => {
                 else {
                   void UpdateArgument({
                     variables: {
-                      id: props.argumentId,
-                      accuserResponse: Argument?.accusedResponse,
+                      input: {
+                        id: props.argumentId,
+                        accuserAnswerToAccusedResponse:
+                          Argument?.accusedResponse,
+                      },
                     },
                   });
                 }
@@ -598,14 +606,9 @@ const ArgumentModal = (props: Props) => {
 
             <Button
               onClick={() => {
-                if (
-                  files?.length &&
-                  files?.length > 0
-                )
+                if (files?.length && files?.length > 0)
                   void UPLOAD_FILE({
-                    file: files
-                      ? files
-                      : undefined,
+                    file: files ? files : undefined,
                     // @ts-ignore
                     token: localStorage.getItem("token")
                       ? localStorage.getItem("token")
@@ -614,13 +617,15 @@ const ArgumentModal = (props: Props) => {
                       console.log(res);
                       void UpdateArgument({
                         variables: {
-                          id: props.argumentId,
-                          expertOpinion: Argument?.expertOpinion,
-                          expertVerdict: Argument?.expertVerdict,
-                          mailRoomExpertApprovedAmount:
-                            Argument.mailRoomExpertApprovedAmount,
-                          expertOpinionFileName:
-                            res.result[0].newFileName,
+                          input: {
+                            id: props.argumentId,
+                            expertOpinion: Argument?.expertOpinion,
+                            expertVerdict: Argument?.expertVerdict,
+                            mailRoomExpertApprovedAmount:
+                              Argument.mailRoomExpertApprovedAmount,
+                            expertOpinionFileName:
+                              res.result[0].newFileName,
+                          },
                         },
                       });
                     },
@@ -628,8 +633,11 @@ const ArgumentModal = (props: Props) => {
                 else {
                   void UpdateArgument({
                     variables: {
-                      id: props.argumentId,
-                      accuserResponse: Argument?.accusedResponse,
+                      input: {
+                        id: props.argumentId,
+                        accuserAnswerToAccusedResponse:
+                          Argument?.accusedResponse,
+                      },
                     },
                   });
                 }
@@ -691,6 +699,7 @@ const ArgumentModal = (props: Props) => {
                 });
               }}
             />
+            {Argument?.councilOpinion}
 
             <TextField
               label={"مبلغ مورد تایید شورا"}
@@ -715,57 +724,36 @@ const ArgumentModal = (props: Props) => {
               onChange={(e) => {
                 setArgument({
                   ...Argument,
-                  councilApprovedAmount: parseFloat(
-                    e.target.value
-                  ),
+                  councilApprovedAmount: parseFloat(e.target.value),
                 });
               }}
             />
 
             <Button
               onClick={() => {
-                if (
-                  files?.length &&
-                  files?.length > 0
-                )
-                  void UPLOAD_FILE({
-                    file: files
-                      ? files
-                      : undefined,
-                    // @ts-ignore
-                    token: localStorage.getItem("token")
-                      ? localStorage.getItem("token")
-                      : undefined,
-                    onSuccess(res) {
-                      console.log(res);
-                      void UpdateArgument({
-                        variables: {
-                          id: props.argumentId,
-                          expertOpinion: Argument?.expertOpinion,
-                          expertVerdict: Argument?.expertVerdict,
-                          mailRoomExpertApprovedAmount:
-                            Argument.mailRoomExpertApprovedAmount,
-                          expertOpinionFileName:
-                            res.result[0].newFileName,
-                        },
-                      });
-                    },
-                  });
-                else {
-                  void UpdateArgument({
-                    variables: {
+                void UpdateArgument({
+                  variables: {
+                    input: {
                       id: props.argumentId,
-                      accuserResponse: Argument?.accusedResponse,
+                      councilOpinion: Argument?.councilOpinion,
+                      councilApprovedAmount:
+                        Argument.councilApprovedAmount,
                     },
-                  });
-                }
+                  },
+                  onCompleted(data) {
+                    console.log(data);
+                    props.onClose();
+                    setArgument({} as ComplaintArgument);
+                    props.refetch && props.refetch();
+                  },
+                });
               }}
               sx={{
                 background: primary,
                 color: secondaryDark,
                 borderRadius: "0.5rem",
-                display:'flex',
-                gap:3,
+                display: "flex",
+                gap: 3,
                 width: "100%",
                 "&:hover": {
                   background: GreenLight,
@@ -773,7 +761,7 @@ const ArgumentModal = (props: Props) => {
               }}
               variant={"contained"}
             >
-              <FaCheck/>
+              <FaCheck />
               ثبت
             </Button>
           </Box>
