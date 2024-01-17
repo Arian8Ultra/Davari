@@ -1089,6 +1089,26 @@ const ArgumentCard = ({
               textAlign: "center",
             }}
           >
+            {arguement?.councilOpinion || "وارد نشده است"}
+          </TableCell>
+          <TableCell
+            sx={{
+              textAlign: "center",
+            }}
+          >
+            {arguement.councilApprovedAmount
+              ? convertToPersianDigits(
+                  arguement.councilApprovedAmount
+                    ?.toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                ) + " ریال"
+              : "وارد نشده است"}
+          </TableCell>
+          <TableCell
+            sx={{
+              textAlign: "center",
+            }}
+          >
             <Button
               variant={"text"}
               fullWidth
@@ -1132,7 +1152,7 @@ const ArgumentCard = ({
               }}
             >
               <FaEdit />
-              افزودن نظر شورا
+              {arguement?.councilApprovedAmount ? "ویرایش" : "افزودن نظر شورا"}
             </Button>
           </TableCell>
         </TableRow>

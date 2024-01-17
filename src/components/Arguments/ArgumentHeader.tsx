@@ -538,6 +538,22 @@ const ArgumentHeader = (props: Props) => {
               color: "white",
             }}
           >
+            نظر شورا
+          </TableCell>
+          <TableCell
+            sx={{
+              fontWeight: "bold",
+              color: "white",
+            }}
+          >
+            مبلغ مورد تایید شورا
+          </TableCell>
+          <TableCell
+            sx={{
+              fontWeight: "bold",
+              color: "white",
+            }}
+          >
             مستندات
           </TableCell>
           <TableCell
