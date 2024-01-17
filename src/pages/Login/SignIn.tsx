@@ -75,11 +75,11 @@ const SignIn = () => {
     console.log("token" + token);
     if (token && token !== "") {
       console.log("oldPath", oldPath);
-
       if (oldPath && oldPath !== "") {
-        navigate(oldPath);
+        // navigate(oldPath);
+        window.location.href = oldPath;
       } else {
-        navigate("/");
+        window.location.href = "/";
       }
     }
   }, [navigate, oldPath, token]);
@@ -132,24 +132,6 @@ const SignIn = () => {
 
   return (
     <>
-      {/* <RadioGroup
-        row
-        value={mode}
-        onChange={(e) => {
-          setMode(e.target.value);
-        }}
-      >
-        <FormControlLabel
-          value="phone"
-          control={<Radio />}
-          label="شماره تلفن"
-        />
-        <FormControlLabel
-          value="userName"
-          control={<Radio />}
-          label="نام کاربری"
-        />
-      </RadioGroup> */}
       <Typography
         variant="body1"
         sx={{
