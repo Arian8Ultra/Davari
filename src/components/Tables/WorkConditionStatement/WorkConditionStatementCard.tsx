@@ -5,17 +5,14 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import { ApolloQueryResult } from "@apollo/client";
-import {
-  Add,
-  CancelOutlined,
-  EditOutlined,
-} from "@mui/icons-material";
+import { Add, CancelOutlined, EditOutlined } from "@mui/icons-material";
 import {
   Box,
+  Button,
   IconButton,
   TableCell,
   TableRow,
-  Tooltip
+  Tooltip,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { MutationWrapper } from "../../../GraphQL/MutationWrapper";
@@ -24,7 +21,7 @@ import {
   DELETE_WORK_CONDITION_STATEMENT,
   DELETE_WORK_CONDITION_STATEMENT_PART,
   WorkConditionStatement,
-  WorkConditionStatementPart
+  WorkConditionStatementPart,
 } from "../../../GraphQL/Tables/Mutations";
 import { GET_WORK_CONDITION_STATEMENT } from "../../../GraphQL/Tables/Queries";
 import { convertToPersianDigits } from "../../../functions/Functions";
@@ -35,128 +32,149 @@ import {
   primaryLight,
   primaryTransparent,
   secondaryDark,
-  secondaryLighter
+  secondaryLighter,
 } from "../../../theme/color";
-  
-  interface WorkConditionStatementCard {
-    WorkConditionStatement: WorkConditionStatement;
-    setNewWorkConditionStatement: React.Dispatch<
-      React.SetStateAction<WorkConditionStatement>
-    >;
-    setEditMode: React.Dispatch<React.SetStateAction<boolean>>;
-    refetch: (
-      variables?: Partial<any> | undefined
-    ) => Promise<ApolloQueryResult<any>>;
-    setAddWorkConditionStatementPartModal: (
-      value: React.SetStateAction<{
-        open: boolean;
-        WorkConditionStatementPart: WorkConditionStatementPart;
-        WorkConditionStatementId?: number | undefined;
-      }>
-    ) => void;
-  }
-  export default function WorkConditionStatementCard({
-    WorkConditionStatement,
-    setNewWorkConditionStatement,
-    setEditMode,
-    refetch,
-    setAddWorkConditionStatementPartModal,
-  }: WorkConditionStatementCard) {
-    const {
-      handleMutation: deleteWorkConditionStatement,
-    } = MutationWrapper(
-      DELETE_WORK_CONDITION_STATEMENT,
-      "workConditionStatement_deleteWorkConditionStatement"
-    );
-    const [WorkConditionStatementParts, setWorkConditionStatementParts] =
-      useState<WorkConditionStatementPart[]>();
-  
-    const {
-      handleMutation: deleteWorkConditionStatementPart,
-    } = MutationWrapper(
-      DELETE_WORK_CONDITION_STATEMENT_PART,
-      "workConditionStatementPart_deleteWorkConditionStatementPart"
-    );
-  
-    const { data,refetch:WorkConditionStatementRefetch } = QueryWrapper(
-      GET_WORK_CONDITION_STATEMENT,
-      "workConditionStatement_getWorkConditionStatement",
-      { id: WorkConditionStatement.id },
-      {
-        onCompleted(data) {
-          console.log(
-            "workConditionStatement_getWorkConditionStatement",
-            data
-          );
-          setWorkConditionStatementParts(data.workConditionStatementParts);
-        },
-      }
-    );
-  
-    useEffect(() => {
-      setWorkConditionStatementParts(data?.workConditionStatementParts);
-    }, [data]);
-  
-    return (
-      <>
-        <TableRow key={WorkConditionStatement.id}>
-          <TableCell>{WorkConditionStatement.title}</TableCell>
-          <TableCell>
-            {convertToPersianDigits(
-              WorkConditionStatement.amountProvidedByContractor
-            )
-              ?.toString()
-              .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-          </TableCell>
-          <TableCell>
-            {new Date(
-              WorkConditionStatement?.dateProvidedByContractor
-            ).toLocaleDateString("fa-IR")}
-          </TableCell>
-          <TableCell>
-            {convertToPersianDigits(
-              WorkConditionStatement.amountConfirmedByConsultant
-            )
-              ?.toString()
-              .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-          </TableCell>
-          <TableCell>
-            {new Date(
-              WorkConditionStatement?.dateConfirmedByConsultant
-            ).toLocaleDateString("fa-IR")}
-          </TableCell>
-          <TableCell>
-            {convertToPersianDigits(
-              WorkConditionStatement.amountApprovedByEmployer
-            )
-              ?.toString()
-              .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-          </TableCell>
-          <TableCell>
-            {new Date(
-              WorkConditionStatement?.dateApprovedByEmployer
-            ).toLocaleDateString("fa-IR")}
-          </TableCell>
-          <TableCell>
-            {convertToPersianDigits(WorkConditionStatement.amountPaid)
-              ?.toString()
-              .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-          </TableCell>
-          <TableCell>
-            {new Date(WorkConditionStatement?.datePaid).toLocaleDateString(
-              "fa-IR"
-            )}
-          </TableCell>
-          <TableCell>
-            <Box
+
+interface WorkConditionStatementCard {
+  WorkConditionStatement: WorkConditionStatement;
+  setNewWorkConditionStatement: React.Dispatch<
+    React.SetStateAction<WorkConditionStatement>
+  >;
+  setEditMode: React.Dispatch<React.SetStateAction<boolean>>;
+  refetch: (
+    variables?: Partial<any> | undefined
+  ) => Promise<ApolloQueryResult<any>>;
+  setAddWorkConditionStatementPartModal: (
+    value: React.SetStateAction<{
+      open: boolean;
+      WorkConditionStatementPart: WorkConditionStatementPart;
+      WorkConditionStatementId?: number | undefined;
+    }>
+  ) => void;
+  isConsultant?: boolean;
+}
+export default function WorkConditionStatementCard({
+  WorkConditionStatement,
+  setNewWorkConditionStatement,
+  setEditMode,
+  refetch,
+  setAddWorkConditionStatementPartModal,
+  isConsultant,
+}: WorkConditionStatementCard) {
+  const { handleMutation: deleteWorkConditionStatement } = MutationWrapper(
+    DELETE_WORK_CONDITION_STATEMENT,
+    "workConditionStatement_deleteWorkConditionStatement"
+  );
+  const [WorkConditionStatementParts, setWorkConditionStatementParts] =
+    useState<WorkConditionStatementPart[]>();
+
+  const { handleMutation: deleteWorkConditionStatementPart } = MutationWrapper(
+    DELETE_WORK_CONDITION_STATEMENT_PART,
+    "workConditionStatementPart_deleteWorkConditionStatementPart"
+  );
+
+  const { data, refetch: WorkConditionStatementRefetch } = QueryWrapper(
+    GET_WORK_CONDITION_STATEMENT,
+    "workConditionStatement_getWorkConditionStatement",
+    { id: WorkConditionStatement.id },
+    {
+      onCompleted(data) {
+        console.log("workConditionStatement_getWorkConditionStatement", data);
+        setWorkConditionStatementParts(data.workConditionStatementParts);
+      },
+    }
+  );
+
+  useEffect(() => {
+    setWorkConditionStatementParts(data?.workConditionStatementParts);
+  }, [data]);
+
+  return (
+    <>
+      <TableRow key={WorkConditionStatement.id}>
+        <TableCell>{WorkConditionStatement.title}</TableCell>
+        <TableCell>
+          {convertToPersianDigits(
+            WorkConditionStatement.amountProvidedByContractor
+          )
+            ?.toString()
+            .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+        </TableCell>
+        <TableCell>
+          {new Date(
+            WorkConditionStatement?.dateProvidedByContractor
+          ).toLocaleDateString("fa-IR")}
+        </TableCell>
+
+        {!isConsultant && (
+          <>
+            <TableCell>
+              {convertToPersianDigits(
+                WorkConditionStatement.amountConfirmedByConsultant
+              )
+                ?.toString()
+                .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+            </TableCell>
+            <TableCell>
+              {new Date(
+                WorkConditionStatement?.dateConfirmedByConsultant
+              ).toLocaleDateString("fa-IR")}
+            </TableCell>
+          </>
+        )}
+
+        <TableCell>
+          {convertToPersianDigits(
+            WorkConditionStatement.amountApprovedByEmployer
+          )
+            ?.toString()
+            .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+        </TableCell>
+        <TableCell>
+          {new Date(
+            WorkConditionStatement?.dateApprovedByEmployer
+          ).toLocaleDateString("fa-IR")}
+        </TableCell>
+        <TableCell>
+          {convertToPersianDigits(WorkConditionStatement.amountPaid)
+            ?.toString()
+            .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+        </TableCell>
+        <TableCell>
+          {new Date(WorkConditionStatement?.datePaid).toLocaleDateString(
+            "fa-IR"
+          )}
+        </TableCell>
+        <TableCell>
+          <Box
+            sx={{
+              display: "grid",
+              // justifyContent: "flex-end",
+              gridTemplateColumns: "repeat(3,auto)",
+              gap: "0.2rem",
+              // flexWrap:'wrap'
+            }}
+          >
+            <Button
+              variant="text"
               sx={{
-                display: "flex",
-                justifyContent: "flex-end",
-                gap: "1rem",
-                // flexWrap:'wrap'
+                color: primary,
+                "&:hover": {
+                  color: primary,
+                },
+              }}
+              onClick={() => {
+                setAddWorkConditionStatementPartModal({
+                  open: true,
+                  WorkConditionStatementPart: {} as WorkConditionStatementPart,
+                  WorkConditionStatementId: WorkConditionStatement.id,
+                });
               }}
             >
-              <Tooltip title={"افزودن زیرمجموعه"}>
+              <Add />
+              افزودن زیرمجموعه
+            </Button>
+            {/* <Tooltip title={"افزودن زیرمجموعه"}>
                 <IconButton
                   sx={{
                     borderRadius: "10px",
@@ -178,7 +196,39 @@ import {
                 >
                   <Add />
                 </IconButton>
-              </Tooltip>
+              </Tooltip> */}
+            <Button
+              variant="text"
+              sx={{
+                color: secondaryDark,
+                "&:hover": {
+                  color: secondaryDark,
+                },
+              }}
+              onClick={() => {
+                setNewWorkConditionStatement({
+                  amountApprovedByEmployer: WorkConditionStatement.amountApprovedByEmployer,
+                  amountConfirmedByConsultant: WorkConditionStatement.amountConfirmedByConsultant,
+                  amountPaid: WorkConditionStatement.amountPaid,
+                  amountProvidedByContractor: WorkConditionStatement.amountProvidedByContractor,
+                  dateApprovedByEmployer: new Date(WorkConditionStatement.dateApprovedByEmployer),
+                  dateConfirmedByConsultant: new Date(WorkConditionStatement.dateConfirmedByConsultant),
+                  datePaid: new Date(WorkConditionStatement.datePaid),
+                  dateProvidedByContractor: new Date(WorkConditionStatement.dateProvidedByContractor),
+                  filledBy: WorkConditionStatement.filledBy,
+                  id: WorkConditionStatement.id,
+                  operationPeriodEndDate: new Date(WorkConditionStatement.operationPeriodEndDate),
+                  operationPeriodStartDate: new Date(WorkConditionStatement.operationPeriodStartDate),
+                  title: WorkConditionStatement.title,
+                  workConditionStatementTableId: WorkConditionStatement.workConditionStatementTableId,
+                });
+                setEditMode(true);
+              }}
+            >
+              <EditOutlined />
+              ویرایش
+            </Button>
+            {/*
               <Tooltip title={"ویرایش"}>
                 <IconButton
                   sx={{
@@ -195,13 +245,35 @@ import {
                     setEditMode(true);
                   }}
                 >
-                  {/* <FaTypography variant="body2" textAlign={"center"}>
-                    ویرایش
-                  </FaTypography> */}
                   <EditOutlined />
                 </IconButton>
               </Tooltip>
-  
+              */}
+
+            <Button
+              variant="text"
+              sx={{
+                color: Red,
+                "&:hover": {
+                  color: Red,
+                },
+              }}
+              onClick={() => {
+                void deleteWorkConditionStatement({
+                  variables: {
+                    id: WorkConditionStatement.id,
+                  },
+                }).then(() => {
+                  setNewWorkConditionStatement({} as WorkConditionStatement);
+                  void refetch();
+                });
+              }}
+            >
+              <CancelOutlined />
+              حذف
+            </Button>
+
+            {/*   
               <Tooltip title={"حذف"}>
                 <IconButton
                   sx={{
@@ -227,150 +299,146 @@ import {
                     });
                   }}
                 >
-                  {/* <FaTypography variant="body2" textAlign={"center"}>
-                    حذف
-                  </FaTypography> */}
                   <CancelOutlined />
                 </IconButton>
-              </Tooltip>
-            </Box>
-          </TableCell>
-        </TableRow>
-        {/* {JSON.stringify(WorkConditionStatementParts)} */}
-        {WorkConditionStatementParts?.map(
-          (WorkConditionStatementPart: WorkConditionStatementPart) => (
-            <TableRow
-              key={WorkConditionStatementPart.id}
-              sx={{
-                backgroundColor: primaryTransparent,
-                borderLeft: `2px solid ${primary}`,
-              }}
-            >
-              <TableCell></TableCell>
-  
-              <TableCell>
-                {convertToPersianDigits(
-                  WorkConditionStatementPart.amountProvidedByContractor
-                )
-                  ?.toString()
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-              </TableCell>
-              <TableCell>
-                {new Date(
-                  WorkConditionStatementPart?.dateProvidedByContractor
-                ).toLocaleDateString("fa-IR")}
-              </TableCell>
-              <TableCell>
-                {convertToPersianDigits(
-                  WorkConditionStatementPart.amountConfirmedByConsultant
-                )
-                  ?.toString()
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-              </TableCell>
-              <TableCell>
-                {new Date(
-                  WorkConditionStatementPart?.dateConfirmedByConsultant
-                ).toLocaleDateString("fa-IR")}
-              </TableCell>
-              <TableCell>
-                {convertToPersianDigits(
-                  WorkConditionStatementPart.amountApprovedByEmployer
-                )
-                  ?.toString()
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-              </TableCell>
-              <TableCell>
-                {new Date(
-                  WorkConditionStatementPart?.dateApprovedByEmployer
-                ).toLocaleDateString("fa-IR")}
-              </TableCell>
-              <TableCell>
-                {convertToPersianDigits(
-                  WorkConditionStatementPart.amountPaid
-                )
-                  ?.toString()
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-              </TableCell>
-              <TableCell>
-                {new Date(
-                  WorkConditionStatementPart?.datePaid
-                ).toLocaleDateString("fa-IR")}
-              </TableCell>
-  
-              <TableCell>
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "flex-end",
-                    gap: "1rem",
-                    // flexWrap:'wrap'
-                  }}
-                >
-                  <Tooltip title={"ویرایش"}>
-                    <IconButton
-                      sx={{
-                        borderRadius: "10px",
-                        background: secondaryLighter,
-                        color: secondaryDark,
-                        "&:hover": {
-                          background: primaryLight,
-                        },
-                        gap: "0.5rem",
-                      }}
-                      onClick={() => {
-                        setAddWorkConditionStatementPartModal({
-                          open: true,
-                          WorkConditionStatementPart:
-                            WorkConditionStatementPart,
-                          WorkConditionStatementId: WorkConditionStatement.id,
-                        });
-                      }}
-                    >
-                      {/* <FaTypography variant="body2" textAlign={"center"}>
+              </Tooltip> */}
+          </Box>
+        </TableCell>
+      </TableRow>
+      {/* {JSON.stringify(WorkConditionStatementParts)} */}
+      {WorkConditionStatementParts?.map(
+        (WorkConditionStatementPart: WorkConditionStatementPart,index) => (
+          <TableRow
+            key={WorkConditionStatementPart.id}
+            sx={{
+              backgroundColor: primaryTransparent,
+              borderLeft: `2px solid ${primary}`,
+            }}
+          >
+            <TableCell>
+              {WorkConditionStatement.title + " - " + String(index+1)}
+            </TableCell>
+
+            <TableCell>
+              {/* {convertToPersianDigits(
+                WorkConditionStatementPart.amountProvidedByContractor
+              )
+                ?.toString()
+                .replace(/\B(?=(\d{3})+(?!\d))/g, ",")} */}
+            </TableCell>
+            <TableCell>
+              {/* {new Date(
+                WorkConditionStatementPart?.dateProvidedByContractor
+              ).toLocaleDateString("fa-IR")} */}
+            </TableCell>
+            <TableCell>
+              {/* {convertToPersianDigits(
+                WorkConditionStatementPart.amountConfirmedByConsultant
+              )
+                ?.toString()
+                .replace(/\B(?=(\d{3})+(?!\d))/g, ",")} */}
+            </TableCell>
+            <TableCell>
+              {/* {new Date(
+                WorkConditionStatementPart?.dateConfirmedByConsultant
+              ).toLocaleDateString("fa-IR")} */}
+            </TableCell>
+            <TableCell>
+              {/* {convertToPersianDigits(
+                WorkConditionStatementPart.amountApprovedByEmployer
+              )
+                ?.toString()
+                .replace(/\B(?=(\d{3})+(?!\d))/g, ",")} */}
+            </TableCell>
+            <TableCell>
+              {/* {new Date(
+                WorkConditionStatementPart?.dateApprovedByEmployer
+              ).toLocaleDateString("fa-IR")} */}
+            </TableCell>
+            <TableCell>
+              {convertToPersianDigits(WorkConditionStatementPart.amountPaid)
+                ?.toString()
+                .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+            </TableCell>
+            <TableCell>
+              {new Date(
+                WorkConditionStatementPart?.datePaid
+              ).toLocaleDateString("fa-IR")}
+            </TableCell>
+            <TableCell></TableCell>
+
+            <TableCell>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  gap: "1rem",
+                  // flexWrap:'wrap'
+                }}
+              >
+                <Tooltip title={"ویرایش"}>
+                  <IconButton
+                    sx={{
+                      borderRadius: "10px",
+                      background: secondaryLighter,
+                      color: secondaryDark,
+                      "&:hover": {
+                        background: primaryLight,
+                      },
+                      gap: "0.5rem",
+                    }}
+                    onClick={() => {
+                      setAddWorkConditionStatementPartModal({
+                        open: true,
+                        WorkConditionStatementPart: WorkConditionStatementPart,
+                        WorkConditionStatementId: WorkConditionStatement.id,
+                      });
+                    }}
+                  >
+                    {/* <FaTypography variant="body2" textAlign={"center"}>
                     ویرایش
                   </FaTypography> */}
-                      <EditOutlined />
-                    </IconButton>
-                  </Tooltip>
-  
-                  <Tooltip title={"حذف"}>
-                    <IconButton
-                      sx={{
-                        borderRadius: "10px",
-                        background: Red,
-                        color: "white",
-                        "&:hover": {
-                          background: RedLight,
-                          color: Red,
+                    <EditOutlined />
+                  </IconButton>
+                </Tooltip>
+
+                <Tooltip title={"حذف"}>
+                  <IconButton
+                    sx={{
+                      borderRadius: "10px",
+                      background: Red,
+                      color: "white",
+                      "&:hover": {
+                        background: RedLight,
+                        color: Red,
+                      },
+                      gap: "0.5rem",
+                    }}
+                    onClick={() => {
+                      void deleteWorkConditionStatementPart({
+                        variables: {
+                          id: WorkConditionStatementPart.id,
                         },
-                        gap: "0.5rem",
-                      }}
-                      onClick={() => {
-                        void deleteWorkConditionStatementPart({
-                          variables: {
-                            id: WorkConditionStatementPart.id,
-                          },
-                        }).then(() => {
-                          setNewWorkConditionStatement(
-                            {} as WorkConditionStatement
-                          );
-                          void refetch();
-                          void WorkConditionStatementRefetch()
-                        });
-                      }}
-                    >
-                      {/* <FaTypography variant="body2" textAlign={"center"}>
+                      }).then(() => {
+                        setNewWorkConditionStatement(
+                          {} as WorkConditionStatement
+                        );
+                        void refetch();
+                        void WorkConditionStatementRefetch();
+                      });
+                    }}
+                  >
+                    {/* <FaTypography variant="body2" textAlign={"center"}>
                     حذف
                   </FaTypography> */}
-                      <CancelOutlined />
-                    </IconButton>
-                  </Tooltip>
-                </Box>
-              </TableCell>
-            </TableRow>
-          )
-        )}
-      </>
-    );
-  }
-  
+                    <CancelOutlined />
+                  </IconButton>
+                </Tooltip>
+              </Box>
+            </TableCell>
+          </TableRow>
+        )
+      )}
+    </>
+  );
+}

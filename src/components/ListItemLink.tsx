@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import ExpandLess from "@mui/icons-material/ExpandLess";
@@ -17,6 +19,7 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import useLayoutStore from "../Context/LayoutStore";
 import { secondaryDark } from "../theme/color";
+import { useUserStore } from "../Context/UserStore";
 
 interface ListItemLinkProps extends ListItemButtonProps {
   to: string;
@@ -29,9 +32,20 @@ interface ListItemLinkProps extends ListItemButtonProps {
   setCollapseOpen?: React.Dispatch<React.SetStateAction<boolean>>;
   children?: React.ReactNode;
   display?: string;
+  accessNeeded?:
+    | [
+        "NORMAL",
+        "SENIOR_USER",
+        "EXPERT",
+        "SUPER_ADMIN",
+        "MAIL_ROOM",
+        "JURY_EXPERT"
+      ]
+    | string[];
 }
 
 function ListItemLink(props: ListItemLinkProps) {
+  const { user } = useUserStore((state) => state);
   const { to, open, primary, display, ...other } = props;
   const [collapseOpen, setCollapseOpen] = React.useState(
     props.collapseOpen || false
@@ -48,10 +62,18 @@ function ListItemLink(props: ListItemLinkProps) {
       key={primary}
       disablePadding
       sx={{
-        display: display || "block",
+        display:
+          display ||
+          (user &&
+            user.userRoles?.some((role) =>
+              props.accessNeeded?.includes(role.roleType)
+            ))
+            ? "block"
+            : "none",
         width: "90%",
+        minWidth: "max-content",
         margin: "1rem auto",
-        borderRadius:'1rem',
+        borderRadius: "1rem",
         backgroundColor:
           primary == PageTitle
             ? "rgb(136, 212, 152)"
@@ -60,13 +82,23 @@ function ListItemLink(props: ListItemLinkProps) {
             : "transparent",
       }}
     >
-      <Box sx={{ flexGrow: 1 }} display={"flex"}>
+      <Box
+        sx={{
+          flexGrow: 1,
+          // outline: "1px solid red",
+          minWidth: "max-content",
+        }}
+        display={"flex"}
+      >
         <ListItemButton
           sx={{
             minHeight: 48,
             justifyContent: open ? "initial" : "center",
             px: 2.5,
-            color: primary == PageTitle ? secondaryDark : 'white',
+            color: primary == PageTitle ? secondaryDark : "white",
+            width: "100%",
+            overflow: "clip",
+            textOverflow: "ellipsis",
           }}
           onClick={() => {
             // console.log("to", to);\
@@ -85,9 +117,9 @@ function ListItemLink(props: ListItemLinkProps) {
           <ListItemIcon
             sx={{
               minWidth: 0,
-              mr: open ? 3 : "auto",
+              mr: open ? 1 : "auto",
               justifyContent: "center",
-              color: primary == PageTitle ? secondaryDark : 'white',
+              color: primary == PageTitle ? secondaryDark : "white",
             }}
           >
             {props.icon}
@@ -95,9 +127,14 @@ function ListItemLink(props: ListItemLinkProps) {
           <ListItemText
             primary={primary}
             sx={{
+              width: "max-content",
+              // outline:'1px solid red',
               opacity: open ? 1 : 0,
               display: open ? "block" : "none",
               transition: "opacity 0.5s ease-in-out",
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis",
             }}
           />
         </ListItemButton>
@@ -131,6 +168,11 @@ function ListItemLink(props: ListItemLinkProps) {
             width: "100%",
             backgroundColor: "rgba(255,255,255,0.3)",
             borderRadius: "0 0 10px 10px",
+            // display: "flex",
+            // gap: "0rem",
+            // flexDirection: "column",
+            // alignItems: "stretch",
+            // justifyContent: "stretch",
           }}
         >
           {props.children}

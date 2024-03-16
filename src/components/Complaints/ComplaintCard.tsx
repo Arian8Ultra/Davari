@@ -48,7 +48,7 @@ const ComplaintCard = (props: Props) => {
         }}
       >
         <Typography textAlign={"center"} gridArea={"title"}>
-          شماره قرارداد:
+          شناسه قرارداد :
           {
             // if title is not provided, use id + title
             props.title ? String(props.title) : String(props.id) + " title "

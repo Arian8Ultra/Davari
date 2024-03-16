@@ -13,7 +13,6 @@ import {
 import { AiFillFileAdd } from "react-icons/ai";
 import { convertToPersianDigits } from "../../functions/Functions";
 import { ComplaintArgument } from "../../gql/graphql";
-import { OptionalArgumentSamll } from "../../static/Types";
 import { Green, GreenLight, background } from "../../theme/color";
 import FaTypography from "../FaComponents/FaTypography";
 import NewModal from "../Modals";
@@ -71,7 +70,7 @@ const ArgumentInfoModal = (props: Props) => {
                   </TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell>نظر کارشناس دبیرخانه :</TableCell>
+                  <TableCell>نظر کمیته فنی تخصصی :</TableCell>
                   <TableCell>
                     {
                       props.fullArgument
@@ -80,7 +79,7 @@ const ArgumentInfoModal = (props: Props) => {
                   </TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell>نظر رئیس دبیرخانه :</TableCell>
+                  <TableCell>نظر شورای عالی فنی :</TableCell>
                   <TableCell>
                     {
                       props.fullArgument
@@ -136,7 +135,7 @@ const ArgumentInfoModal = (props: Props) => {
 
                         window.open(
                           "http://172.16.23.50:7030/files/" +
-                            props.fullArgument?.fileName
+                            props.fullArgument?.accusedResponseFileName
                         );
                       }}
                       sx={{
@@ -222,7 +221,7 @@ const ArgumentInfoModal = (props: Props) => {
 
                         window.open(
                           "http://172.16.23.50:7030/files/" +
-                            props.argument?.fileName
+                            props.argument?.accusedResponseFileName
                         );
                       }}
                       sx={{
@@ -418,7 +417,7 @@ const ArgumentInfoModal = (props: Props) => {
 
                         window.open(
                           "http://172.16.23.50:7030/files/" +
-                            props.argument?.fileName
+                            props.argument?.accusedResponseFileName
                         );
                       }}
                       sx={{
@@ -544,7 +543,7 @@ const ArgumentInfoModal = (props: Props) => {
                   <TableCell>مبلغ مورد تایید کارشناس :</TableCell>
                   <TableCell>
                     {convertToPersianDigits(
-                      props.argument?.mailRoomExpertApprovedAmount
+                      props.argument?.netMailRoomExpertApprovedAmount
                         ?.toString()
                         .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                     )}
@@ -561,7 +560,7 @@ const ArgumentInfoModal = (props: Props) => {
                         // download file with url in fileName
                         window.open(
                           "http://172.16.23.50:7030/files/" +
-                            props.argument?.fileName
+                            props.argument?.accusedResponseFileName
                         );
                       }}
                       sx={{
@@ -707,7 +706,7 @@ const ArgumentInfoModal = (props: Props) => {
                   </TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell>نظر کارشناس دبیرخانه :</TableCell>
+                  <TableCell>نظر کمیته فنی تخصصی :</TableCell>
                   <TableCell>
                     {
                       props.argument
@@ -716,7 +715,7 @@ const ArgumentInfoModal = (props: Props) => {
                   </TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell>نظر رئیس دبیرخانه :</TableCell>
+                  <TableCell>نظر شورای عالی فنی :</TableCell>
                   <TableCell>
                     {
                       props.argument
@@ -738,7 +737,7 @@ const ArgumentInfoModal = (props: Props) => {
                   <TableCell>
                     {
                       props.argument
-                        ?.justiceExpertApprovedAmount
+                        ?.netJusticeExpertApprovedAmount
                     }
                   </TableCell>
                 </TableRow>
@@ -790,7 +789,7 @@ const ArgumentInfoModal = (props: Props) => {
 
                         window.open(
                           "http://172.16.23.50:7030/files/" +
-                            props.argument?.fileName
+                            props.argument?.accusedResponseFileName
                         );
                       }}
                       sx={{

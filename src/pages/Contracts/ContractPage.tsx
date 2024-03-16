@@ -50,9 +50,12 @@ import DateButton from "../../components/DateButton";
 import { GET_ALL_ORGANIZATION_USERS } from "../../GraphQL/Users/Queries";
 import { UPDATE_COMPLAINT } from "../../GraphQL/Complaints/Mutations";
 import states from "../../static/states.json";
-import { newStatesObj } from "../../static/States";
+// import { newStatesObj } from "../../static/States";
 import { GET_ARBITRATION_TERMS_FORM_BY_COMPLAINT_ID } from "../../GraphQL/Complaints/Queries";
 import { QueryWrapper } from "../../GraphQL/QueryWrapper";
+import { getComplaintStateWithEnum } from "../../functions/ComplaintStatesFunc";
+import { ComplaintStateStatus } from "../../gql/graphql";
+import { UpdateComplaintDocument } from "../../../generated-types";
 
 const ContractPage = () => {
   const { contractId, complaintId } = useParams<{
@@ -182,11 +185,7 @@ const ContractPage = () => {
     },
   });
 
-  const [updateCompaint] = useMutation(UPDATE_COMPLAINT, {
-    variables: {
-      id: complaintId ? parseInt(complaintId) : undefined,
-      complaintState: states.AccuserApprovedArguments.cap,
-    },
+  const [updateCompaint] = useMutation(UpdateComplaintDocument, {
     onCompleted(data) {
       console.log(data);
       alert("ثبت شد");
@@ -216,6 +215,7 @@ const ContractPage = () => {
     "رای قطعی در خصوص دعاوی مورد درخواست توسط شورا صادر شده است.",
     "قرار عدم صلاحیت (استماع) توسط مراجع قضایی صادر شده است.",
   ];
+
 
   return (
     <>
@@ -274,7 +274,7 @@ const ContractPage = () => {
         </Typography>
         {/* 
         <TextField
-          label="شماره قرارداد: "
+          label="شناسه قرارداد : "
           variant="outlined"
           sx={{
             gridColumn: "span 3",
@@ -290,7 +290,7 @@ const ContractPage = () => {
             gridColumn: "span 6",
           }}
         >
-          شماره قرارداد:(خواهان){" "}
+          شناسه قرارداد :(خواهان){" "}
           {contract?.contractNumberByAccuser || ""}
         </Typography>
 
@@ -301,7 +301,7 @@ const ContractPage = () => {
             gridColumn: "span 6",
           }}
         >
-          شماره قرارداد:(خوانده){" "}
+          شناسه قرارداد :(خوانده){" "}
           {contract?.contractNumberByAccused || ""}
         </Typography>
         <Typography
@@ -1391,8 +1391,7 @@ const ContractPage = () => {
                   void updateCompaint({
                     variables: {
                       complaintState:
-                        newStatesObj.notAcceptedForBeingConstructive
-                          .cap,
+                        getComplaintStateWithEnum(ComplaintStateStatus.NotAcceptedForBeingConstructive).id,
                       id: complaintId
                         ? parseInt(complaintId)
                         : undefined,
@@ -1428,13 +1427,13 @@ const ContractPage = () => {
                 },
                 onCompleted(data, clientOptions) {
                   void updateCompaint({
-                    variables: {
-                      complaintState:
-                        newStatesObj.acceptedForBeingConstructive.cap,
-                      id: complaintId
-                        ? parseInt(complaintId)
-                        : undefined,
-                    },
+                    // variables: {
+                    //   complaintState:
+                    //     newStatesObj.acceptedForBeingConstructive.cap,
+                    //   id: complaintId
+                    //     ? parseInt(complaintId)
+                    //     : undefined,
+                    // },
                     onCompleted(data, clientOptions) {
                       console.log(data);
                       alert("ثبت شد");

@@ -3,6 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { useMutation, useQuery } from "@apollo/client";
+import { Cancel, CheckBox } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -15,7 +16,7 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { UPDATE_COMPLAINT } from "../../GraphQL/Complaints/Mutations";
+import { useSmsComplaintCodeMutation } from "../../../generated-types";
 import { GET_ARBITRATION_TERMS_FORM_BY_COMPLAINT_ID } from "../../GraphQL/Complaints/Queries";
 import {
   ContractSmall,
@@ -25,8 +26,11 @@ import { GET_CONTRACT } from "../../GraphQL/Contracts/Queries";
 import { QueryWrapper } from "../../GraphQL/QueryWrapper";
 import { GET_ALL_ORGANIZATION_USERS } from "../../GraphQL/Users/Queries";
 import BackButton from "../../components/BackButton";
-import { newStatesObj } from "../../static/States";
-import states from "../../static/states.json";
+import { getComplaintStateWithEnum } from "../../functions/ComplaintStatesFunc";
+import {
+  ComplaintStateStatus,
+  UpdateComplaintDocument,
+} from "../../gql/graphql";
 import {
   Green,
   GreenLight,
@@ -35,7 +39,6 @@ import {
   primary,
   secondary,
 } from "../../theme/color";
-import { Cancel, CheckBox } from "@mui/icons-material";
 
 const ContractDetailsPage = () => {
   const { contractId, complaintId } = useParams<{
@@ -43,34 +46,30 @@ const ContractDetailsPage = () => {
     complaintId: string;
   }>();
   const [contract, setContract] = useState<ContractSmall>();
-  const [
-    arbitrationTermsFormAccuser,
-    setArbitrationTermsFormAccuser,
-  ] = useState<{
-    firstCondition: string;
-    firstConditionFileName: string;
-    secondCondition: string;
-    secondConditionFileName: string;
-    thirdCondition: string;
-    thirdConditionFileName: string;
-    fourthCondition: string;
-    fourthConditionFileName: string;
-    filledBy: "ACCUSER" | "ACCUSED";
-  }>();
-  const [
-    arbitrationTermsFormAccused,
-    setArbitrationTermsFormAccused,
-  ] = useState<{
-    firstCondition: string;
-    firstConditionFileName: string;
-    secondCondition: string;
-    secondConditionFileName: string;
-    thirdCondition: string;
-    thirdConditionFileName: string;
-    fourthCondition: string;
-    fourthConditionFileName: string;
-    filledBy: "ACCUSER" | "ACCUSED";
-  }>();
+  const [arbitrationTermsFormAccuser, setArbitrationTermsFormAccuser] =
+    useState<{
+      firstCondition: string;
+      firstConditionFileName: string;
+      secondCondition: string;
+      secondConditionFileName: string;
+      thirdCondition: string;
+      thirdConditionFileName: string;
+      fourthCondition: string;
+      fourthConditionFileName: string;
+      filledBy: "ACCUSER" | "ACCUSED";
+    }>();
+  const [arbitrationTermsFormAccused, setArbitrationTermsFormAccused] =
+    useState<{
+      firstCondition: string;
+      firstConditionFileName: string;
+      secondCondition: string;
+      secondConditionFileName: string;
+      thirdCondition: string;
+      thirdConditionFileName: string;
+      fourthCondition: string;
+      fourthConditionFileName: string;
+      filledBy: "ACCUSER" | "ACCUSED";
+    }>();
   const navigate = useNavigate();
   const [isApproved, setIsApproved] = useState<boolean>(false);
   useQuery(GET_CONTRACT, {
@@ -78,10 +77,7 @@ const ContractDetailsPage = () => {
       id: contractId ? parseInt(contractId) : undefined,
     },
     onCompleted(data) {
-      console.log(
-        "Contract",
-        data.contract_getContracts.result.items[0]
-      );
+      console.log("Contract", data.contract_getContracts.result.items[0]);
 
       const contract = data.contract_getContracts.result
         .items[0] as ContractSmall;
@@ -96,10 +92,7 @@ const ContractDetailsPage = () => {
     },
     {
       onCompleted(data) {
-        console.log(
-          "GET_ARBITRATION_TERMS_FORM_BY_COMPLAINT_ID",
-          data
-        );
+        console.log("GET_ARBITRATION_TERMS_FORM_BY_COMPLAINT_ID", data);
       },
     }
   );
@@ -126,10 +119,7 @@ const ContractDetailsPage = () => {
     {
       label: string;
       id: string;
-      type:
-        | "INDIVIDUAL"
-        | "ORGANIZATION"
-        | "CONTRACTOR_OR_CONSULTANT";
+      type: "INDIVIDUAL" | "ORGANIZATION" | "CONTRACTOR_OR_CONSULTANT";
     }[]
   >([]);
   useQuery(GET_ALL_ORGANIZATION_USERS, {
@@ -158,10 +148,7 @@ const ContractDetailsPage = () => {
     },
   });
 
-  const firstConditionItems = [
-    "عمرانی (تملک دارایی سرمایه ای)",
-    "غیرعمرانی",
-  ];
+  const firstConditionItems = ["عمرانی (تملک دارایی سرمایه ای)", "غیرعمرانی"];
   const secondConditionItems = [
     "در ماده حل اختلاف قرارداد، داوری شورای عالی فنی درج شده است.",
     "طرفین پس از عقد قرارداد، بر داوری شورا تراضی نموده اند.",
@@ -189,14 +176,16 @@ const ContractDetailsPage = () => {
     },
   });
 
-  const [updateCompaint] = useMutation(UPDATE_COMPLAINT, {
-    variables: {
-      id: complaintId ? parseInt(complaintId) : undefined,
-      complaintState: states.AccuserApprovedArguments.cap,
-    },
+  const [updateCompaint] = useMutation(UpdateComplaintDocument, {
     onCompleted(data) {
       console.log(data);
       alert("ثبت شد");
+    },
+  });
+
+  const [sendSms] = useSmsComplaintCodeMutation({
+    variables: {
+      id: complaintId ? parseInt(complaintId) : 0,
     },
   });
 
@@ -469,9 +458,7 @@ const ContractDetailsPage = () => {
                   }}
                 >
                   {contract?.accuserRelatedPeopleByAccuser &&
-                    JSON.parse(
-                      contract?.accuserRelatedPeopleByAccuser
-                    ).map(
+                    JSON.parse(contract?.accuserRelatedPeopleByAccuser).map(
                       (
                         item: {
                           name: string;
@@ -492,9 +479,7 @@ const ContractDetailsPage = () => {
                   }}
                 >
                   {contract?.accuserRelatedPeopleByAccused &&
-                    JSON.parse(
-                      contract?.accuserRelatedPeopleByAccused
-                    ).map(
+                    JSON.parse(contract?.accuserRelatedPeopleByAccused).map(
                       (
                         item: {
                           name: string;
@@ -524,9 +509,7 @@ const ContractDetailsPage = () => {
                   }}
                 >
                   {contract?.accusedRelatedPeopleByAccuser
-                    ? JSON.parse(
-                        contract?.accusedRelatedPeopleByAccuser
-                      ).map(
+                    ? JSON.parse(contract?.accusedRelatedPeopleByAccuser).map(
                         (
                           item: {
                             name: string;
@@ -548,9 +531,7 @@ const ContractDetailsPage = () => {
                   }}
                 >
                   {contract?.accusedRelatedPeopleByAccused
-                    ? JSON.parse(
-                        contract?.accusedRelatedPeopleByAccused
-                      ).map(
+                    ? JSON.parse(contract?.accusedRelatedPeopleByAccused).map(
                         (
                           item: {
                             name: string;
@@ -594,6 +575,11 @@ const ContractDetailsPage = () => {
                 <TableCell
                   sx={{
                     textAlign: "center",
+                    backgroundColor:
+                    contract?.operationStartDateByAccused !=
+                    contract?.operationStartDateByAccuser
+                      ? RedLight
+                      : "transparent",
                   }}
                 >
                   تاريخ شروع كار
@@ -601,6 +587,11 @@ const ContractDetailsPage = () => {
                 <TableCell
                   sx={{
                     textAlign: "center",
+                    backgroundColor:
+                    contract?.operationStartDateByAccused !=
+                    contract?.operationStartDateByAccuser
+                      ? RedLight
+                      : "transparent",
                   }}
                 >
                   {contract?.operationStartDateByAccuser
@@ -612,6 +603,11 @@ const ContractDetailsPage = () => {
                 <TableCell
                   sx={{
                     textAlign: "center",
+                    backgroundColor:
+                      contract?.operationStartDateByAccused !=
+                      contract?.operationStartDateByAccuser
+                        ? RedLight
+                        : "transparent",
                   }}
                 >
                   {contract?.operationStartDateByAccused
@@ -625,6 +621,11 @@ const ContractDetailsPage = () => {
                 <TableCell
                   sx={{
                     textAlign: "center",
+                    backgroundColor:
+                      contract?.physicalProgressInArbitrationDateByAccused !=
+                      contract?.physicalProgressInArbitrationDateByAccused
+                        ? RedLight
+                        : "transparent",
                   }}
                 >
                   پيشرفت فيزيكي كار در تاريخ درخواست داوری
@@ -632,24 +633,37 @@ const ContractDetailsPage = () => {
                 <TableCell
                   sx={{
                     textAlign: "center",
+                    backgroundColor:
+                      contract?.physicalProgressInArbitrationDateByAccused !=
+                      contract?.physicalProgressInArbitrationDateByAccused
+                        ? RedLight
+                        : "transparent",
                   }}
                 >
-                  {contract?.physicalProgressInArbitrationDateByAccuser ||
-                    "-"}
+                  {contract?.physicalProgressInArbitrationDateByAccuser || "-"}
                 </TableCell>
                 <TableCell
                   sx={{
                     textAlign: "center",
+                    backgroundColor:
+                      contract?.physicalProgressInArbitrationDateByAccused !=
+                      contract?.physicalProgressInArbitrationDateByAccused
+                        ? RedLight
+                        : "transparent",
                   }}
                 >
-                  {contract?.physicalProgressInArbitrationDateByAccused ||
-                    "-"}
+                  {contract?.physicalProgressInArbitrationDateByAccused || "-"}
                 </TableCell>
               </TableRow>
               <TableRow>
                 <TableCell
                   sx={{
                     textAlign: "center",
+                    backgroundColor:
+                      contract?.financialProgressInArbitrationDateByAccused !=
+                      contract?.financialProgressInArbitrationDateByAccuser
+                        ? RedLight
+                        : "transparent",
                   }}
                 >
                   پيشرفت ریالی كار در تاريخ درخواست داوری
@@ -657,18 +671,26 @@ const ContractDetailsPage = () => {
                 <TableCell
                   sx={{
                     textAlign: "center",
+                    backgroundColor:
+                      contract?.financialProgressInArbitrationDateByAccused !=
+                      contract?.financialProgressInArbitrationDateByAccuser
+                        ? RedLight
+                        : "transparent",
                   }}
                 >
-                  {contract?.financialProgressInArbitrationDateByAccuser ||
-                    "-"}
+                  {contract?.financialProgressInArbitrationDateByAccuser || "-"}
                 </TableCell>
                 <TableCell
                   sx={{
                     textAlign: "center",
+                    backgroundColor:
+                      contract?.financialProgressInArbitrationDateByAccused !=
+                      contract?.financialProgressInArbitrationDateByAccuser
+                        ? RedLight
+                        : "transparent",
                   }}
                 >
-                  {contract?.financialProgressInArbitrationDateByAccused ||
-                    "-"}
+                  {contract?.financialProgressInArbitrationDateByAccused || "-"}
                 </TableCell>
               </TableRow>
               <TableRow>
@@ -722,6 +744,11 @@ const ContractDetailsPage = () => {
                 <TableCell
                   sx={{
                     textAlign: "center",
+                    backgroundColor:
+                      contract?.supervisionDepartmentByAccused !=
+                      contract?.supervisionDepartmentByAccuser
+                        ? RedLight
+                        : "transparent",
                   }}
                 >
                   دستگاه نظارت (مهندس مشاور)
@@ -729,6 +756,11 @@ const ContractDetailsPage = () => {
                 <TableCell
                   sx={{
                     textAlign: "center",
+                    backgroundColor:
+                      contract?.supervisionDepartmentByAccused !=
+                      contract?.supervisionDepartmentByAccuser
+                        ? RedLight
+                        : "transparent",
                   }}
                 >
                   {contract?.supervisionDepartmentByAccuser || "-"}
@@ -736,6 +768,11 @@ const ContractDetailsPage = () => {
                 <TableCell
                   sx={{
                     textAlign: "center",
+                    backgroundColor:
+                      contract?.supervisionDepartmentByAccused !=
+                      contract?.supervisionDepartmentByAccuser
+                        ? RedLight
+                        : "transparent",
                   }}
                 >
                   {contract?.supervisionDepartmentByAccused || "-"}
@@ -745,6 +782,11 @@ const ContractDetailsPage = () => {
                 <TableCell
                   sx={{
                     textAlign: "center",
+                    backgroundColor:
+                      contract?.authorizedDelaysByAccused !=
+                      contract?.authorizedDelaysByAccuser
+                        ? RedLight
+                        : "transparent",
                   }}
                 >
                   تاخیرات مجاز
@@ -752,6 +794,11 @@ const ContractDetailsPage = () => {
                 <TableCell
                   sx={{
                     textAlign: "center",
+                    backgroundColor:
+                      contract?.authorizedDelaysByAccused !=
+                      contract?.authorizedDelaysByAccuser
+                        ? RedLight
+                        : "transparent",
                   }}
                 >
                   {contract?.authorizedDelaysByAccuser || "-"}
@@ -759,6 +806,11 @@ const ContractDetailsPage = () => {
                 <TableCell
                   sx={{
                     textAlign: "center",
+                    backgroundColor:
+                      contract?.authorizedDelaysByAccused !=
+                      contract?.authorizedDelaysByAccuser
+                        ? RedLight
+                        : "transparent",
                   }}
                 >
                   {contract?.authorizedDelaysByAccused || "-"}
@@ -768,6 +820,11 @@ const ContractDetailsPage = () => {
                 <TableCell
                   sx={{
                     textAlign: "center",
+                    backgroundColor:
+                      contract?.unauthorizedDelaysByAccused !=
+                      contract?.unauthorizedDelaysByAccuser
+                        ? RedLight
+                        : "transparent",
                   }}
                 >
                   تاخیرات غیر مجاز
@@ -775,6 +832,11 @@ const ContractDetailsPage = () => {
                 <TableCell
                   sx={{
                     textAlign: "center",
+                    backgroundColor:
+                      contract?.unauthorizedDelaysByAccused !=
+                      contract?.unauthorizedDelaysByAccuser
+                        ? RedLight
+                        : "transparent",
                   }}
                 >
                   {contract?.unauthorizedDelaysByAccuser || "-"}
@@ -782,6 +844,11 @@ const ContractDetailsPage = () => {
                 <TableCell
                   sx={{
                     textAlign: "center",
+                    backgroundColor:
+                      contract?.unauthorizedDelaysByAccused !=
+                      contract?.unauthorizedDelaysByAccuser
+                        ? RedLight
+                        : "transparent",
                   }}
                 >
                   {contract?.unauthorizedDelaysByAccused || "-"}
@@ -803,6 +870,11 @@ const ContractDetailsPage = () => {
                 <TableCell
                   sx={{
                     textAlign: "center",
+                    backgroundColor:
+                      arbitrationTermsFormAccuser?.firstCondition !=
+                      arbitrationTermsFormAccused?.firstCondition
+                        ? RedLight
+                        : "transparent",
                   }}
                 >
                   شرط اول (عمرانی بودن محل اعتبار طرح)
@@ -810,6 +882,11 @@ const ContractDetailsPage = () => {
                 <TableCell
                   sx={{
                     textAlign: "center",
+                    backgroundColor:
+                      arbitrationTermsFormAccuser?.firstCondition !=
+                      arbitrationTermsFormAccused?.firstCondition
+                        ? RedLight
+                        : "transparent",
                   }}
                 >
                   {arbitrationTermsFormAccuser?.firstCondition}
@@ -817,6 +894,11 @@ const ContractDetailsPage = () => {
                 <TableCell
                   sx={{
                     textAlign: "center",
+                    backgroundColor:
+                      arbitrationTermsFormAccuser?.firstCondition !=
+                      arbitrationTermsFormAccused?.firstCondition
+                        ? RedLight
+                        : "transparent",
                   }}
                 >
                   {arbitrationTermsFormAccused?.firstCondition}
@@ -826,6 +908,11 @@ const ContractDetailsPage = () => {
                 <TableCell
                   sx={{
                     textAlign: "center",
+                    backgroundColor:
+                      arbitrationTermsFormAccuser?.secondCondition !=
+                      arbitrationTermsFormAccused?.secondCondition
+                        ? RedLight
+                        : "transparent",
                   }}
                 >
                   شرط دوم (تراضی بر داوری شورا)
@@ -833,6 +920,11 @@ const ContractDetailsPage = () => {
                 <TableCell
                   sx={{
                     textAlign: "center",
+                    backgroundColor:
+                      arbitrationTermsFormAccuser?.secondCondition !=
+                      arbitrationTermsFormAccused?.secondCondition
+                        ? RedLight
+                        : "transparent",
                   }}
                 >
                   {arbitrationTermsFormAccuser?.secondCondition}
@@ -840,6 +932,11 @@ const ContractDetailsPage = () => {
                 <TableCell
                   sx={{
                     textAlign: "center",
+                    backgroundColor:
+                      arbitrationTermsFormAccuser?.secondCondition !=
+                      arbitrationTermsFormAccused?.thirdCondition
+                        ? RedLight
+                        : "transparent",
                   }}
                 >
                   {arbitrationTermsFormAccused?.secondCondition}
@@ -849,6 +946,11 @@ const ContractDetailsPage = () => {
                 <TableCell
                   sx={{
                     textAlign: "center",
+                    backgroundColor:
+                      arbitrationTermsFormAccuser?.thirdCondition !=
+                      arbitrationTermsFormAccused?.thirdCondition
+                        ? RedLight
+                        : "transparent",
                   }}
                 >
                   شرط سوم (عدم تسویه حساب)
@@ -856,6 +958,11 @@ const ContractDetailsPage = () => {
                 <TableCell
                   sx={{
                     textAlign: "center",
+                    backgroundColor:
+                      arbitrationTermsFormAccuser?.thirdCondition !=
+                      arbitrationTermsFormAccused?.thirdCondition
+                        ? RedLight
+                        : "transparent",
                   }}
                 >
                   {arbitrationTermsFormAccuser?.thirdCondition}
@@ -863,6 +970,11 @@ const ContractDetailsPage = () => {
                 <TableCell
                   sx={{
                     textAlign: "center",
+                    backgroundColor:
+                      arbitrationTermsFormAccuser?.thirdCondition !=
+                      arbitrationTermsFormAccused?.thirdCondition
+                        ? RedLight
+                        : "transparent",
                   }}
                 >
                   {arbitrationTermsFormAccused?.thirdCondition}
@@ -872,6 +984,11 @@ const ContractDetailsPage = () => {
                 <TableCell
                   sx={{
                     textAlign: "center",
+                    backgroundColor:
+                      arbitrationTermsFormAccuser?.fourthCondition !=
+                      arbitrationTermsFormAccused?.fourthCondition
+                        ? RedLight
+                        : "transparent",
                   }}
                 >
                   شرط چهارم (عدم طرح در مراجع قضایی یا داوری)
@@ -879,6 +996,11 @@ const ContractDetailsPage = () => {
                 <TableCell
                   sx={{
                     textAlign: "center",
+                    backgroundColor:
+                      arbitrationTermsFormAccuser?.fourthCondition !=
+                      arbitrationTermsFormAccused?.fourthCondition
+                        ? RedLight
+                        : "transparent",
                   }}
                 >
                   {arbitrationTermsFormAccuser?.fourthCondition}
@@ -886,6 +1008,11 @@ const ContractDetailsPage = () => {
                 <TableCell
                   sx={{
                     textAlign: "center",
+                    backgroundColor:
+                      arbitrationTermsFormAccuser?.fourthCondition !=
+                      arbitrationTermsFormAccused?.fourthCondition
+                        ? RedLight
+                        : "transparent",
                   }}
                 >
                   {arbitrationTermsFormAccused?.fourthCondition}
@@ -898,17 +1025,23 @@ const ContractDetailsPage = () => {
       <Box
         gridColumn={"span 12"}
         display={"grid"}
-        gridTemplateColumns={"1fr 1fr"}
-        justifyContent={"center"}
+        gridTemplateColumns={"auto auto"}
+        justifyContent={"end"}
         alignItems={"center"}
         gap={"2rem"}
         my={"2rem"}
+        mx={"auto"}
+        width={"66%"}
+        // sx={{
+        //   outline: "2px solid #000",
+        // }}
       >
         <Button
-          variant="contained"
+          variant="outlined"
+          color="error"
           sx={{
-            backgroundColor: Red,
-            color: "white",
+            // backgroundColor: Red,
+            color: Red,
             width: "max-content",
             justifySelf: "end",
             "&:hover": {
@@ -926,12 +1059,10 @@ const ContractDetailsPage = () => {
               onCompleted(data, clientOptions) {
                 void updateCompaint({
                   variables: {
-                    complaintState:
-                      newStatesObj.notAcceptedForBeingConstructive
-                        .cap,
-                    id: complaintId
-                      ? parseInt(complaintId)
-                      : undefined,
+                    complaintStateId: getComplaintStateWithEnum(
+                      ComplaintStateStatus.NotAcceptedForBeingConstructive
+                    ).id,
+                    id: complaintId ? parseInt(complaintId) : 0,
                   },
                   onCompleted(data, clientOptions) {
                     console.log(data);
@@ -947,10 +1078,11 @@ const ContractDetailsPage = () => {
         </Button>
 
         <Button
-          variant="contained"
+          variant="outlined"
+          color="success"
           sx={{
-            backgroundColor: Green,
-            color: "white",
+            // backgroundColor: Green,
+            color: Green,
             width: "max-content",
             "&:hover": {
               backgroundColor: GreenLight,
@@ -967,15 +1099,20 @@ const ContractDetailsPage = () => {
               onCompleted(data, clientOptions) {
                 void updateCompaint({
                   variables: {
-                    complaintState:
-                      newStatesObj.acceptedForBeingConstructive.cap,
-                    id: complaintId
-                      ? parseInt(complaintId)
-                      : undefined,
+                    complaintStateId: getComplaintStateWithEnum(
+                      ComplaintStateStatus.AcceptedForBeingConstructive
+                    ).id,
+                    id: complaintId ? parseInt(complaintId) : 0,
                   },
-                  onCompleted(data, clientOptions) {
+                  onCompleted(data) {
                     console.log(data);
-                    alert("ثبت شد");
+                    void sendSms({
+                      onCompleted(data) {
+                        console.log(data);
+                        alert("ثبت شد");
+                      },
+                    });
+                    // alert("ثبت شد");
                     navigate("/portal");
                   },
                 });

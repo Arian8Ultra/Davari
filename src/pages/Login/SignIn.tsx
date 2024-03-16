@@ -54,10 +54,10 @@ const SignIn = () => {
   const setIsMailRoom = useUserStore((state) => state.setIsMailRoom);
   const setAccesses = useUserStore((state) => state.setAccesses);
   const token = useUserStore((state) => state.token);
+  const logedOut = useUserStore((state) => state.logedOut);
   const [userName, setUserName] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [phone, setPhone] = React.useState<number>();
-
   const [showPassword, setShowPassword] = React.useState(false);
   const navigate = useNavigate();
   const [loginError, setLoginError] = useState<{
@@ -75,14 +75,14 @@ const SignIn = () => {
     console.log("token" + token);
     if (token && token !== "") {
       console.log("oldPath", oldPath);
-      if (oldPath && oldPath !== "") {
+      if (oldPath && oldPath !== "" && !logedOut) {
         // navigate(oldPath);
         window.location.href = oldPath;
       } else {
         window.location.href = "/";
       }
     }
-  }, [navigate, oldPath, token]);
+  }, [logedOut, navigate, oldPath, token]);
 
   const [TokenCheck] = useLazyQuery(TokenCheckDocument, {
     onCompleted(data) {
@@ -114,7 +114,7 @@ const SignIn = () => {
         onCompleted(data) {
           console.log("tokenCheck", data.user_isTokenValid);
           if (data?.user_isTokenValid) {
-            if (oldPath && oldPath !== "") {
+            if (oldPath && oldPath !== "" && !logedOut) {
               // navigate(oldPath);
               window.location.href = oldPath;
             } else {
@@ -128,7 +128,7 @@ const SignIn = () => {
         },
       });
     }
-  }, [TokenCheck, token, oldPath, navigate]);
+  }, [TokenCheck, token, oldPath, navigate, logedOut]);
 
   return (
     <>

@@ -9,45 +9,26 @@ import {
   DocumentScannerRounded,
   EditRounded,
 } from "@mui/icons-material";
-import {
-  Box,
-  Button,
-  IconButton,
-  TableCell,
-  TableRow,
-} from "@mui/material";
+import { Box, Button, IconButton, TableCell, TableRow } from "@mui/material";
 import { AiFillFileAdd } from "react-icons/ai";
-import { BsEyeFill, BsPaperclip } from "react-icons/bs";
+import { BsCloudDownloadFill, BsEyeFill, BsPaperclip } from "react-icons/bs";
+import { FaEdit } from "react-icons/fa";
 import { convertToPersianDigits } from "../../functions/Functions";
-import {
-  Argument,
-  OptionalArgument,
-  OptionalArgumentSamll,
-} from "../../static/Types";
+import { ComplaintArgument } from "../../gql/graphql";
+import { Argument } from "../../static/Types";
 import {
   Green,
   GreenLight,
-  Red,
-  RedLight,
-  onPrimary,
-  primary,
+  primaryDark,
   primaryGreyTransparent,
-  primaryLight,
-  secondary,
-  secondaryDark,
-  secondaryLight,
-  secondaryLighter,
+  secondary
 } from "../../theme/color";
-import { ComplaintArgument } from "../../gql/graphql";
-import { FaEdit } from "react-icons/fa";
 
 interface Props {
   state: number;
   id: number;
   arguement: ComplaintArgument;
-  setSelectedArgument: React.Dispatch<
-    React.SetStateAction<ComplaintArgument>
-  >;
+  setSelectedArgument: React.Dispatch<React.SetStateAction<ComplaintArgument>>;
   setAddModal: React.Dispatch<
     React.SetStateAction<{
       open: boolean;
@@ -80,8 +61,7 @@ const ArgumentCard = ({
         <TableRow
           key={id}
           sx={{
-            background:
-              id % 2 == 0 ? "rgba(230,230,230)" : "rgba(200,200,200)",
+            background: id % 2 == 0 ? "rgba(230,230,230)" : "rgba(200,200,200)",
             borderBottom: `1px solid ${primaryGreyTransparent}`,
             transition: "all 0.2s ease-in-out",
           }}
@@ -147,11 +127,52 @@ const ArgumentCard = ({
               width={"100%"}
               display={"grid"}
               sx={{
-                gridTemplateColumns: "repeat(4, 50px)",
+                gridTemplateColumns: "repeat(2, auto)",
                 gap: 1,
               }}
             >
               <IconButton
+                onClick={() => {
+                  console.log(arguement);
+                  setViewMoreModal &&
+                    setViewMoreModal({
+                      argument: arguement,
+                      open: true,
+                    });
+                }}
+                sx={{
+                  // backgroundColor: primary,
+                  // color: primaryLight,
+                  aspectRatio: "1/1",
+                  width: "40px",
+                  justifySelf: "center",
+                  // "&:hover": {
+                  //   backgroundColor: primaryLight,
+                  //   color: primary,
+                  // },
+                }}
+              >
+                <BsEyeFill />
+              </IconButton>
+              <Button
+                variant="text"
+                onClick={() => {
+                  setSelectedArgument(arguement);
+                  setAddModal({
+                    ...addModal,
+                    open: true,
+                    editMode: true,
+                  });
+                }}
+                sx={{
+                  display: "flex",
+                  gap: 2,
+                }}
+              >
+                <EditRounded />
+                ویرایش/افزودن پاسخ
+              </Button>
+              {/* <IconButton
                 onClick={() => {
                   setSelectedArgument(arguement);
                   setAddModal({
@@ -173,30 +194,7 @@ const ArgumentCard = ({
                 }}
               >
                 <EditRounded />
-              </IconButton>
-              <IconButton
-                onClick={() => {
-                  console.log(arguement);
-                  setViewMoreModal &&
-                    setViewMoreModal({
-                      argument: arguement,
-                      open: true,
-                    });
-                }}
-                sx={{
-                  backgroundColor: primary,
-                  color: primaryLight,
-                  aspectRatio: "1/1",
-                  width: "40px",
-                  justifySelf: "center",
-                  "&:hover": {
-                    backgroundColor: primaryLight,
-                    color: primary,
-                  },
-                }}
-              >
-                <BsEyeFill />
-              </IconButton>
+              </IconButton> */}
             </Box>
           </TableCell>
         </TableRow>
@@ -206,13 +204,31 @@ const ArgumentCard = ({
         <TableRow
           key={id}
           sx={{
-            background:
-              id % 2 == 0 ? "rgba(230,230,230)" : "rgba(200,200,200)",
+            background: id % 2 == 0 ? "rgba(230,230,230)" : "rgba(200,200,200)",
             borderBottom: `1px solid ${primaryGreyTransparent}`,
             transition: "all 0.2s ease-in-out",
           }}
         >
           <TableCell>{convertToPersianDigits(id + 1)}</TableCell>
+          <TableCell
+            sx={{
+              borderInline:
+                id % 2 == 0
+                  ? `1px solid ${secondary}`
+                  : `1px solid ${secondary}`,
+            }}
+          >
+            {arguement?.financialSituation &&
+              (JSON.parse(arguement?.financialSituation)?.title ==
+              "withFinancialEffects"
+                ? "دارای بار مالی"
+                : JSON.parse(arguement?.financialSituation)?.title ==
+                  "withoutFinancialEffects"
+                ? "بدون بار مالی"
+                : "") +
+                "، " +
+                JSON.parse(arguement?.financialSituation)?.subtitle}
+          </TableCell>
           <TableCell
             sx={{
               borderInline:
@@ -231,8 +247,7 @@ const ArgumentCard = ({
                   : `1px solid ${secondary}`,
             }}
           >
-            {arguement.description?.length &&
-            arguement.description?.length > 80
+            {arguement.description?.length && arguement.description?.length > 80
               ? arguement.description?.slice(0, 80) + "..."
               : arguement.description}
           </TableCell>
@@ -259,19 +274,21 @@ const ArgumentCard = ({
           >
             {arguement.fileName && arguement.fileName?.length > 0 && (
               <Button
-                variant="contained"
-                endIcon={<AiFillFileAdd />}
+                variant="text"
+                endIcon={<BsCloudDownloadFill />}
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-call
                 onClick={() => {
                   // download file with url in fileName
                   window.open(
-                    "http://172.16.23.50:7030/files/" +
-                      arguement.fileName
+                    "http://172.16.23.50:7030/files/" + arguement.fileName
                   );
                 }}
+                fullWidth
+                color="success"
                 sx={{
                   borderRadius: 2,
-                  backgroundColor: Green,
+                  // backgroundColor: Green,
+                  color:primaryDark,
                   fontWeight: 700,
                   fontStyle: "normal",
                   fontSize: "0.7rem",
@@ -279,10 +296,6 @@ const ArgumentCard = ({
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
-                  "&:hover": {
-                    backgroundColor: GreenLight,
-                    color: Green,
-                  },
                 }}
               >
                 {arguement.fileName}
@@ -300,33 +313,29 @@ const ArgumentCard = ({
               width={"100%"}
               display={"grid"}
               sx={{
-                gridTemplateColumns: "repeat(4, 50px)",
+                gridTemplateColumns: "repeat(2, 1fr)",
                 gap: 1,
               }}
             >
-              {/* <IconButton
-                // onClick={() => {
-                //   setSelectedArgument(arguement);
-                //   setAddModal({
-                //     ...addModal,
-                //     open: true,
-                //   });
-                // }}
+              <Button
+                variant="text"
+                onClick={() => {
+                  setSelectedArgument(arguement);
+                  setAddModal({
+                    ...addModal,
+                    open: true,
+                    editMode: true,
+                  });
+                }}
                 sx={{
-                  backgroundColor: Green,
-                  color: "white",
-                  aspectRatio: "1/1",
-                  width: "40px",
-                  justifySelf: "center",
-                  "&:hover": {
-                    backgroundColor: GreenLight,
-                    color: Green,
-                  },
+                  display: "flex",
+                  gap: 3,
                 }}
               >
-                <BsPaperclip />
-              </IconButton> */}
-              <IconButton
+                <EditRounded />
+                ویرایش
+              </Button>
+              {/* <IconButton
                 onClick={() => {
                   setSelectedArgument(arguement);
                   setAddModal({
@@ -348,8 +357,8 @@ const ArgumentCard = ({
                 }}
               >
                 <EditRounded />
-              </IconButton>
-              <IconButton
+              </IconButton> */}
+              {/* <IconButton
                 onClick={() => {
                   deleteArgument &&
                     deleteArgument(arguement.id ? arguement.id : 0);
@@ -367,7 +376,23 @@ const ArgumentCard = ({
                 }}
               >
                 <DeleteOutlineTwoTone />
-              </IconButton>
+              </IconButton> */}
+
+              <Button
+                variant="text"
+                onClick={() => {
+                  deleteArgument &&
+                    deleteArgument(arguement.id ? arguement.id : 0);
+                }}
+                color="error"
+                sx={{
+                  display: "flex",
+                  gap: 3,
+                }}
+              >
+                <DeleteOutlineTwoTone />
+                حذف
+              </Button>
             </Box>
           </TableCell>
         </TableRow>
@@ -378,8 +403,7 @@ const ArgumentCard = ({
         <TableRow
           key={id}
           sx={{
-            background:
-              id % 2 == 0 ? "rgba(230,230,230)" : "rgba(200,200,200)",
+            background: id % 2 == 0 ? "rgba(230,230,230)" : "rgba(200,200,200)",
             borderBottom: `1px solid ${secondary}`,
             transition: "all 0.2s ease-in-out",
           }}
@@ -486,20 +510,39 @@ const ArgumentCard = ({
                     });
                 }}
                 sx={{
-                  backgroundColor: primary,
-                  color: secondaryDark,
+                  // backgroundColor: primary,
+                  // color: secondaryDark,
                   aspectRatio: "1/1",
                   width: "40px",
                   justifySelf: "center",
-                  "&:hover": {
-                    backgroundColor: GreenLight,
-                    color: secondaryDark,
-                  },
+                  // "&:hover": {
+                  //   backgroundColor: GreenLight,
+                  //   color: secondaryDark,
+                  // },
                 }}
               >
                 <BsEyeFill />
               </IconButton>
-              <IconButton
+
+              <Button
+                variant="text"
+                onClick={() => {
+                  setSelectedArgument(arguement);
+                  setAddModal({
+                    ...addModal,
+                    open: true,
+                    editMode: true,
+                  });
+                }}
+                sx={{
+                  display: "flex",
+                  gap: 3,
+                }}
+              >
+                <EditRounded />
+                افزودن/ویرایش پاسخ
+              </Button>
+              {/* <IconButton
                 onClick={() => {
                   setSelectedArgument(arguement);
                   setAddModal({
@@ -524,7 +567,7 @@ const ArgumentCard = ({
               >
                 <EditRounded />
                 افزودن/ویرایش پاسخ
-              </IconButton>
+              </IconButton> */}
               {/* <IconButton
                 sx={{
                   backgroundColor: Red,
@@ -549,8 +592,7 @@ const ArgumentCard = ({
         <TableRow
           key={id}
           sx={{
-            background:
-              id % 2 == 0 ? "rgba(230,230,230)" : "rgba(200,200,200)",
+            background: id % 2 == 0 ? "rgba(230,230,230)" : "rgba(200,200,200)",
             borderBottom: `1px solid ${secondary}`,
             transition: "all 0.2s ease-in-out",
           }}
@@ -632,7 +674,7 @@ const ArgumentCard = ({
               padding: 1,
             }}
           >
-            {arguement.mailRoomExpertApprovedAmount}
+            {arguement.netMailRoomExpertApprovedAmount}
           </TableCell>
           <TableCell
             width={"250px"}
@@ -645,7 +687,7 @@ const ArgumentCard = ({
               width={"100%"}
               display={"grid"}
               sx={{
-                gridTemplateColumns: "repeat(4, 50px)",
+                gridTemplateColumns: "repeat(2, auto)",
                 gap: 1,
               }}
             >
@@ -659,20 +701,20 @@ const ArgumentCard = ({
                     });
                 }}
                 sx={{
-                  backgroundColor: Green,
-                  color: "white",
+                  // backgroundColor: Green,
+                  // color: "white",
                   aspectRatio: "1/1",
                   width: "40px",
                   justifySelf: "center",
-                  "&:hover": {
-                    backgroundColor: GreenLight,
-                    color: Green,
-                  },
+                  // "&:hover": {
+                  //   backgroundColor: GreenLight,
+                  //   color: Green,
+                  // },
                 }}
               >
                 <BsPaperclip />
               </IconButton>
-              <IconButton
+              {/* <IconButton
                 onClick={() => {
                   setSelectedArgument(arguement);
                   setAddModal({
@@ -694,22 +736,26 @@ const ArgumentCard = ({
                 }}
               >
                 <EditRounded />
-              </IconButton>
-              {/* <IconButton
+              </IconButton> */}
+
+              <Button
+                variant="text"
+                onClick={() => {
+                  setSelectedArgument(arguement);
+                  setAddModal({
+                    ...addModal,
+                    open: true,
+                    editMode: true,
+                  });
+                }}
                 sx={{
-                  backgroundColor: Red,
-                  color: "white",
-                  aspectRatio: "1/1",
-                  width: "40px",
-                  justifySelf: "center",
-                  "&:hover": {
-                    backgroundColor: RedLight,
-                    color: Red,
-                  },
+                  display: "flex",
+                  gap: 1,
                 }}
               >
-                <DeleteOutlineTwoTone />
-              </IconButton> */}
+                <EditRounded />
+                افزودن/ویرایش پاسخ
+              </Button>
             </Box>
           </TableCell>
         </TableRow>
@@ -719,8 +765,7 @@ const ArgumentCard = ({
         <TableRow
           key={id}
           sx={{
-            background:
-              id % 2 == 0 ? "rgba(230,230,230)" : "rgba(200,200,200)",
+            background: id % 2 == 0 ? "rgba(230,230,230)" : "rgba(200,200,200)",
             borderBottom: `1px solid ${secondary}`,
             transition: "all 0.2s ease-in-out",
           }}
@@ -803,7 +848,7 @@ const ArgumentCard = ({
             }}
           >
             {convertToPersianDigits(
-              arguement.mailRoomExpertApprovedAmount
+              arguement.netMailRoomExpertApprovedAmount
                 ?.toString()
                 .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
             )}
@@ -855,15 +900,15 @@ const ArgumentCard = ({
                     });
                 }}
                 sx={{
-                  backgroundColor: primary,
-                  color: primaryLight,
+                  // backgroundColor: primary,
+                  // color: primaryLight,
                   aspectRatio: "1/1",
                   width: "40px",
                   justifySelf: "center",
-                  "&:hover": {
-                    backgroundColor: primaryLight,
-                    color: primary,
-                  },
+                  // "&:hover": {
+                  //   backgroundColor: primaryLight,
+                  //   color: primary,
+                  // },
                 }}
               >
                 <BsEyeFill />
@@ -915,9 +960,9 @@ const ArgumentCard = ({
               textAlign: "center",
             }}
           >
-            {arguement.justiceExpertApprovedAmount
+            {arguement.netJusticeExpertApprovedAmount
               ? convertToPersianDigits(
-                  arguement.justiceExpertApprovedAmount
+                  arguement.netJusticeExpertApprovedAmount
                     ?.toString()
                     .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                 ) + " ریال"
@@ -999,9 +1044,9 @@ const ArgumentCard = ({
               textAlign: "center",
             }}
           >
-            {arguement.justiceExpertApprovedAmount
+            {arguement.netJusticeExpertApprovedAmount
               ? convertToPersianDigits(
-                  arguement.justiceExpertApprovedAmount
+                  arguement.netJusticeExpertApprovedAmount
                     ?.toString()
                     .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                 ) + " ریال"
@@ -1076,9 +1121,9 @@ const ArgumentCard = ({
               textAlign: "center",
             }}
           >
-            {arguement.justiceExpertApprovedAmount
+            {arguement.netJusticeExpertApprovedAmount
               ? convertToPersianDigits(
-                  arguement.justiceExpertApprovedAmount
+                  arguement.netJusticeExpertApprovedAmount
                     ?.toString()
                     .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                 ) + " ریال"
@@ -1096,9 +1141,9 @@ const ArgumentCard = ({
               textAlign: "center",
             }}
           >
-            {arguement.councilApprovedAmount
+            {arguement.netCouncilApprovedAmount
               ? convertToPersianDigits(
-                  arguement.councilApprovedAmount
+                  arguement.netCouncilApprovedAmount
                     ?.toString()
                     .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                 ) + " ریال"
@@ -1152,7 +1197,7 @@ const ArgumentCard = ({
               }}
             >
               <FaEdit />
-              {arguement?.councilApprovedAmount ? "ویرایش" : "افزودن نظر شورا"}
+              {arguement?.netCouncilApprovedAmount ? "ویرایش" : "افزودن نظر شورا"}
             </Button>
           </TableCell>
         </TableRow>

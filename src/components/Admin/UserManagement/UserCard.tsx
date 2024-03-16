@@ -16,7 +16,7 @@ import {
   Select,
   TextField,
   Tooltip,
-  Typography,
+  Typography, Grid,
 } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import React, { useState } from "react";
@@ -184,11 +184,11 @@ const UserCard = (props: Props) => {
         display: "grid",
         alignItems: "center",
         gap: 1,
-        gridTemplateAreas: {
-          xs: `"fullName department role userName type" "operation operation operation"`,
-          md: `"fullName department role userName  type" "operation operation operation"`,
-          lg: `"fullName  department role userName type operation"`,
-          xl: `"fullName department role userName type operation"`,
+        gridTemplateColumns:{
+          xs: "repeat(3,1fr)",
+          md: "repeat(3,1fr)",
+          lg: "repeat(6,1fr)",
+          xl: "repeat(6,1fr)",
         },
         gridAutoColumns: "1fr",
         "&:hover": {
@@ -197,7 +197,6 @@ const UserCard = (props: Props) => {
       }}
     >
       <Typography
-        gridArea={"fullName"}
         textAlign={"center"}
         fontSize={{
           xs: 10,
@@ -210,7 +209,6 @@ const UserCard = (props: Props) => {
       </Typography>
 
       <Typography
-        gridArea={"department"}
         display={{ xs: "none", md: "block" }}
         textAlign={"center"}
         fontSize={{
@@ -231,7 +229,6 @@ const UserCard = (props: Props) => {
       </Typography>
 
       <Typography
-        gridArea={"userName"}
         display={{ xs: "none", md: "block" }}
         textAlign={"center"}
         fontSize={{
@@ -247,7 +244,6 @@ const UserCard = (props: Props) => {
         {props.userName && props.userName}
       </Typography>
       <Typography
-        gridArea={"role"}
         display={{ xs: "none", md: "flex" }}
         textAlign={"center"}
         fontSize={{
@@ -269,8 +265,6 @@ const UserCard = (props: Props) => {
           )): "---"}
       </Typography>
       <Typography
-        gridArea={"type"}
-        display={{ xs: "none", md: "block" }}
         textAlign={"center"}
         fontSize={{
           xs: 10,
@@ -285,7 +279,6 @@ const UserCard = (props: Props) => {
         {props.userType && props.userType}
       </Typography>
       <Box
-        gridArea={"operation"}
         sx={{
           display: "flex",
           justifyContent: "center",

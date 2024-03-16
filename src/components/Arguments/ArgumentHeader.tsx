@@ -1,5 +1,5 @@
 import { TableCell, TableHead, TableRow } from "@mui/material";
-import { secondary, secondaryLighter } from "../../theme/color";
+import { secondary } from "../../theme/color";
 interface Props {
   state?: number;
 }
@@ -59,6 +59,7 @@ const ArgumentHeader = (props: Props) => {
               sx={{
                 fontWeight: "bold",
                 color: "white",
+                textAlign: "center",
               }}
             >
               ...
@@ -77,12 +78,32 @@ const ArgumentHeader = (props: Props) => {
         >
           <TableRow>
             <TableCell
+              colSpan={7}
+              sx={{
+                fontWeight: "bold",
+                color: "white",
+                textAlign:'center'
+              }}
+            >
+              دعاوی قابل رسیدگی
+            </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell
               sx={{
                 fontWeight: "bold",
                 color: "white",
               }}
             >
               شناسه
+            </TableCell>
+            <TableCell
+              sx={{
+                fontWeight: "bold",
+                color: "white",
+              }}
+            >
+              نوع بار مالی
             </TableCell>
             <TableCell
               sx={{
@@ -220,7 +241,7 @@ const ArgumentHeader = (props: Props) => {
                 color: "white",
               }}
             >
-              نظر کارشناسی به طور مفصل
+              نظر کمیته فنی تخصصی به طور مفصل
             </TableCell>
             <TableCell
               sx={{
@@ -289,7 +310,7 @@ const ArgumentHeader = (props: Props) => {
                 color: "white",
               }}
             >
-              نظر کارشناسی به طور مفصل
+              نظر کمیته فنی تخصصی به طور مفصل
             </TableCell>
             <TableCell
               sx={{
@@ -330,33 +351,33 @@ const ArgumentHeader = (props: Props) => {
     case 4:
       return (
         <TableHead
-        sx={{
-          background: secondary,
-          borderRadius: "0.5rem",
-          color: "white",
-          "& th": {
-            textAlign: "center",
-          },
-        }}
-      >
-        <TableRow>
-          <TableCell
-            sx={{
-              fontWeight: "bold",
-              color: "white",
-            }}
-          >
-            شناسه
-          </TableCell>
-          <TableCell
-            sx={{
-              fontWeight: "bold",
-              color: "white",
-            }}
-          >
-            خلاصه ادعا
-          </TableCell>
-          {/* <TableCell
+          sx={{
+            background: secondary,
+            borderRadius: "0.5rem",
+            color: "white",
+            "& th": {
+              textAlign: "center",
+            },
+          }}
+        >
+          <TableRow>
+            <TableCell
+              sx={{
+                fontWeight: "bold",
+                color: "white",
+              }}
+            >
+              شناسه
+            </TableCell>
+            <TableCell
+              sx={{
+                fontWeight: "bold",
+                color: "white",
+              }}
+            >
+              خلاصه ادعا
+            </TableCell>
+            {/* <TableCell
             sx={{
               fontWeight: "bold",
               color: "white",
@@ -364,71 +385,71 @@ const ArgumentHeader = (props: Props) => {
           >
             پاسخ خوانده
           </TableCell> */}
-          <TableCell
-            sx={{
-              fontWeight: "bold",
-              color: "white",
-            }}
-          >
-            مبلغ خواسته شده ادعا(ریال)
-          </TableCell>
-          <TableCell
-            sx={{
-              fontWeight: "bold",
-              color: "white",
-            }}
-          >
-            نظر کارشناس دادگستری
-          </TableCell>
-          <TableCell
-            sx={{
-              fontWeight: "bold",
-              color: "white",
-            }}
-          >
-            مبلغ مورد تایید کارشناس دادگستری
-          </TableCell>
-          <TableCell
-            sx={{
-              fontWeight: "bold",
-              color: "white",
-            }}
-          >
-            مستندات
-          </TableCell>
-        </TableRow>
-      </TableHead>
+            <TableCell
+              sx={{
+                fontWeight: "bold",
+                color: "white",
+              }}
+            >
+              مبلغ خواسته شده ادعا(ریال)
+            </TableCell>
+            <TableCell
+              sx={{
+                fontWeight: "bold",
+                color: "white",
+              }}
+            >
+              نظر کارشناس دادگستری
+            </TableCell>
+            <TableCell
+              sx={{
+                fontWeight: "bold",
+                color: "white",
+              }}
+            >
+              مبلغ مورد تایید کارشناس دادگستری
+            </TableCell>
+            <TableCell
+              sx={{
+                fontWeight: "bold",
+                color: "white",
+              }}
+            >
+              مستندات
+            </TableCell>
+          </TableRow>
+        </TableHead>
       );
     case 5:
       return (
         <TableHead
-        sx={{
-          background: secondary,
-          borderRadius: "0.5rem",
-          color: "white",
-          "& th": {
-            textAlign: "center",
-          },
-        }}
-      >
-        <TableRow>
-          <TableCell
-            sx={{
-              fontWeight: "bold",
-              color: "white",
-            }}
-          >
-            شناسه
-          </TableCell>
-          <TableCell
-            sx={{
-              fontWeight: "bold",
-              color: "white",
-            }}
-          >
-            خلاصه ادعا
-          </TableCell>
-          {/* <TableCell
+          sx={{
+            background: secondary,
+            borderRadius: "0.5rem",
+            color: "white",
+            "& th": {
+              textAlign: "center",
+            },
+          }}
+        >
+          <TableRow>
+            <TableCell
+              sx={{
+                fontWeight: "bold",
+                color: "white",
+              }}
+            >
+              شناسه
+            </TableCell>
+            <TableCell
+              sx={{
+                fontWeight: "bold",
+                color: "white",
+              }}
+            >
+              خلاصه ادعا
+            </TableCell>
+            {/* <TableCell
             sx={{
               fontWeight: "bold",
               color: "white",
@@ -436,71 +457,71 @@ const ArgumentHeader = (props: Props) => {
           >
             پاسخ خوانده
           </TableCell> */}
-          <TableCell
-            sx={{
-              fontWeight: "bold",
-              color: "white",
-            }}
-          >
-            مبلغ خواسته شده ادعا(ریال)
-          </TableCell>
-          <TableCell
-            sx={{
-              fontWeight: "bold",
-              color: "white",
-            }}
-          >
-            نظر کارشناس دادگستری
-          </TableCell>
-          <TableCell
-            sx={{
-              fontWeight: "bold",
-              color: "white",
-            }}
-          >
-            مبلغ مورد تایید کارشناس دادگستری
-          </TableCell>
-          <TableCell
-            sx={{
-              fontWeight: "bold",
-              color: "white",
-            }}
-          >
-            مستندات
-          </TableCell>
-        </TableRow>
-      </TableHead>
+            <TableCell
+              sx={{
+                fontWeight: "bold",
+                color: "white",
+              }}
+            >
+              مبلغ خواسته شده ادعا(ریال)
+            </TableCell>
+            <TableCell
+              sx={{
+                fontWeight: "bold",
+                color: "white",
+              }}
+            >
+              نظر کارشناس دادگستری
+            </TableCell>
+            <TableCell
+              sx={{
+                fontWeight: "bold",
+                color: "white",
+              }}
+            >
+              مبلغ مورد تایید کارشناس دادگستری
+            </TableCell>
+            <TableCell
+              sx={{
+                fontWeight: "bold",
+                color: "white",
+              }}
+            >
+              مستندات
+            </TableCell>
+          </TableRow>
+        </TableHead>
       );
     case 6:
       return (
         <TableHead
-        sx={{
-          background: secondary,
-          borderRadius: "0.5rem",
-          color: "white",
-          "& th": {
-            textAlign: "center",
-          },
-        }}
-      >
-        <TableRow>
-          <TableCell
-            sx={{
-              fontWeight: "bold",
-              color: "white",
-            }}
-          >
-            شناسه
-          </TableCell>
-          <TableCell
-            sx={{
-              fontWeight: "bold",
-              color: "white",
-            }}
-          >
-            خلاصه ادعا
-          </TableCell>
-          {/* <TableCell
+          sx={{
+            background: secondary,
+            borderRadius: "0.5rem",
+            color: "white",
+            "& th": {
+              textAlign: "center",
+            },
+          }}
+        >
+          <TableRow>
+            <TableCell
+              sx={{
+                fontWeight: "bold",
+                color: "white",
+              }}
+            >
+              شناسه
+            </TableCell>
+            <TableCell
+              sx={{
+                fontWeight: "bold",
+                color: "white",
+              }}
+            >
+              خلاصه ادعا
+            </TableCell>
+            {/* <TableCell
             sx={{
               fontWeight: "bold",
               color: "white",
@@ -508,64 +529,64 @@ const ArgumentHeader = (props: Props) => {
           >
             پاسخ خوانده
           </TableCell> */}
-          <TableCell
-            sx={{
-              fontWeight: "bold",
-              color: "white",
-            }}
-          >
-            مبلغ خواسته شده ادعا(ریال)
-          </TableCell>
-          <TableCell
-            sx={{
-              fontWeight: "bold",
-              color: "white",
-            }}
-          >
-            نظر کارشناس دادگستری
-          </TableCell>
-          <TableCell
-            sx={{
-              fontWeight: "bold",
-              color: "white",
-            }}
-          >
-            مبلغ مورد تایید کارشناس دادگستری
-          </TableCell>
-          <TableCell
-            sx={{
-              fontWeight: "bold",
-              color: "white",
-            }}
-          >
-            نظر شورا
-          </TableCell>
-          <TableCell
-            sx={{
-              fontWeight: "bold",
-              color: "white",
-            }}
-          >
-            مبلغ مورد تایید شورا
-          </TableCell>
-          <TableCell
-            sx={{
-              fontWeight: "bold",
-              color: "white",
-            }}
-          >
-            مستندات
-          </TableCell>
-          <TableCell
-            sx={{
-              fontWeight: "bold",
-              color: "white",
-            }}
-          >
-            ...
-          </TableCell>
-        </TableRow>
-      </TableHead>
+            <TableCell
+              sx={{
+                fontWeight: "bold",
+                color: "white",
+              }}
+            >
+              مبلغ خواسته شده ادعا(ریال)
+            </TableCell>
+            <TableCell
+              sx={{
+                fontWeight: "bold",
+                color: "white",
+              }}
+            >
+              نظر کارشناس دادگستری
+            </TableCell>
+            <TableCell
+              sx={{
+                fontWeight: "bold",
+                color: "white",
+              }}
+            >
+              مبلغ مورد تایید کارشناس دادگستری
+            </TableCell>
+            <TableCell
+              sx={{
+                fontWeight: "bold",
+                color: "white",
+              }}
+            >
+              نظر شورا
+            </TableCell>
+            <TableCell
+              sx={{
+                fontWeight: "bold",
+                color: "white",
+              }}
+            >
+              مبلغ مورد تایید شورا
+            </TableCell>
+            <TableCell
+              sx={{
+                fontWeight: "bold",
+                color: "white",
+              }}
+            >
+              مستندات
+            </TableCell>
+            <TableCell
+              sx={{
+                fontWeight: "bold",
+                color: "white",
+              }}
+            >
+              ...
+            </TableCell>
+          </TableRow>
+        </TableHead>
       );
   }
 };

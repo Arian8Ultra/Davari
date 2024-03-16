@@ -18,6 +18,8 @@ interface UserStore {
       | "CONTRACTOR_OR_CONSULTANT";
     parent?: User | null;
     parentId?: string;
+    isJury: boolean;
+    email?: string;
   };
   token: string;
   expireDate: Date;
@@ -30,6 +32,7 @@ interface UserStore {
   setJury: (isJury: boolean) => void;
   clearToken: () => void;
   logout: () => void;
+  logedOut: boolean;
 }
 
 export const useUserStore = create<UserStore>()(
@@ -42,14 +45,18 @@ export const useUserStore = create<UserStore>()(
         phoneNumber: "",
         id: "",
         userRole: "",
+        userType: "INDIVIDUAL",
+        isJury: false,
       },
       token: "",
       isMailRoom: false,
       expireDate: new Date(),
       accesses: [AccessesEnum.HOME, AccessesEnum.COMPLAINTS],
       isJury: false,
+      logedOut: false,
       setUser: (user: User, token: string, expireDate: Date) => {
-        set({ user: user, token: token, expireDate: expireDate });
+        set({ user: user, token: token, expireDate: expireDate});
+        set({ logedOut: false });
       },
       setAccesses: (newAccesses: string[]) => {
         set({
@@ -77,12 +84,17 @@ export const useUserStore = create<UserStore>()(
             fullName: "",
             nationalCode: "",
             phoneNumber: "",
+            userRoles: [],
+            userType: "INDIVIDUAL",
+            parent: null,
+            isJury: false,
           },
           token: "",
           expireDate: new Date(),
           accesses: [AccessesEnum.HOME, AccessesEnum.COMPLAINTS],
           isMailRoom: false,
           isJury: false,
+          logedOut: true,
         });
       },
     }),

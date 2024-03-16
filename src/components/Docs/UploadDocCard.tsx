@@ -6,8 +6,8 @@
 import { Box, Button, TableCell, TableRow } from "@mui/material";
 import { useState } from "react";
 import {
-    TargetType,
-    useUpdateRequestedDocMutation,
+  TargetType,
+  useUpdateRequestedDocMutation,
 } from "../../../generated-types";
 import { UPLOAD_FILE } from "../../api/upload";
 import FileBox from "../FileBox";
@@ -17,13 +17,15 @@ export default function UploadDocCard(item: {
   __typename?: "DocumentRequest" | undefined;
   complaintId: number;
   requestedDocumentName: string;
-  requestedDocumentFileName?: string | null | undefined;
+  requestedDocumentFileNameAccuser?: string | null | undefined;
+  requestedDocumentFileNameAccused?: string | null | undefined;
   isDeleted: boolean;
   createdDate: any;
   id: number;
   userId: string;
   target?: TargetType | null | undefined;
   reftech?: any;
+  accuser?: boolean;
 }) {
   const [file, setFile] = useState<File | undefined>();
   const [UpdateDocumentRequest] = useUpdateRequestedDocMutation();
@@ -32,13 +34,30 @@ export default function UploadDocCard(item: {
     <TableRow key={item?.id}>
       <TableCell>{item?.requestedDocumentName}</TableCell>
       <TableCell>
-        {!item?.requestedDocumentFileName
-          ? "در انتظار آپلود"
-          : "ثبت شده"}
+        {item.accuser
+          ? item?.requestedDocumentFileNameAccuser
+            ? "ثبت شده"
+            : "در انتظار آپلود"
+          : item?.requestedDocumentFileNameAccused
+          ? "ثبت شده"
+          : "در انتظار آپلود"}
       </TableCell>
       <TableCell>
-        {item?.requestedDocumentFileName ? (
-          <Box display={"flex"} justifyContent={"center"} gap={0}>
+        {item?.requestedDocumentFileNameAccused ||
+        item.requestedDocumentFileNameAccuser ? (
+          <Box
+            display={
+              item.accuser
+                ? item?.requestedDocumentFileNameAccuser
+                  ? "flex"
+                  : "none"
+                : item?.requestedDocumentFileNameAccused
+                ? "flex"
+                : "none"
+            }
+            justifyContent={"center"}
+            gap={0}
+          >
             {import.meta.env.VITE_FILE_URL}
             <Button
               variant={"contained"}
@@ -60,7 +79,11 @@ export default function UploadDocCard(item: {
                   `${
                     import.meta.env.VITE_FILE_URL ||
                     "http://172.16.23.50:7030/files"
-                  }/${item?.requestedDocumentFileName}`,
+                  }/${
+                    item?.accuser
+                      ? item?.requestedDocumentFileNameAccuser
+                      : item?.requestedDocumentFileNameAccused
+                  }`,
                   "_blank"
                 );
               }}
@@ -76,18 +99,20 @@ export default function UploadDocCard(item: {
                 boxShadow: "none",
               }}
               onClick={() => {
-                const agree = confirm(
-                  "آیا از حذف اطلاعات اطمینان دارید؟"
-                );
+                const agree = confirm("آیا از حذف اطلاعات اطمینان دارید؟");
                 if (agree) {
                   void UpdateDocumentRequest({
                     variables: {
                       input: {
                         id: item?.id,
-                        requestedDocumentFileName: "",
+                        requestedDocumentFileNameAccuser: item.accuser
+                          ? ""
+                          : undefined,
+                        requestedDocumentFileNameAccused: item.accuser
+                          ? undefined
+                          : "",
                         complaintId: item?.complaintId,
-                        requestedDocumentName:
-                          item?.requestedDocumentName,
+                        requestedDocumentName: item?.requestedDocumentName,
                         userId: item?.userId,
                         target: item?.target,
                       },
@@ -122,7 +147,15 @@ export default function UploadDocCard(item: {
               color: primary,
             },
           }}
-          disabled={item?.requestedDocumentFileName ? true : false}
+          disabled={
+            item?.accuser
+              ? item?.requestedDocumentFileNameAccuser
+                ? true
+                : false
+              : item?.requestedDocumentFileNameAccused
+              ? true
+              : false
+          }
           onClick={() => {
             //
             void UPLOAD_FILE({
@@ -134,11 +167,14 @@ export default function UploadDocCard(item: {
                   variables: {
                     input: {
                       id: item?.id,
-                      requestedDocumentFileName:
-                        res?.result?.[0]?.newFileName,
+                      requestedDocumentFileNameAccuser: item.accuser
+                        ? res?.result?.[0]?.newFileName
+                        : null,
+                      requestedDocumentFileNameAccused: item.accuser
+                        ? null
+                        : res?.result?.[0]?.newFileName,
                       complaintId: item?.complaintId,
-                      requestedDocumentName:
-                        item?.requestedDocumentName,
+                      requestedDocumentName: item?.requestedDocumentName,
                       userId: item?.userId,
                       target: item?.target,
                     },

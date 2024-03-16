@@ -15,73 +15,77 @@ import {
   TableCell,
   TableContainer,
   TableHead,
-  TableRow
+  TableRow,
 } from "@mui/material";
 import { green } from "@mui/material/colors";
 import React from "react";
 import { BsDownload, BsGearFill } from "react-icons/bs";
 import { useUserStore } from "../../Context/UserStore";
 import { GET_ALL_ORGANIZATION_USERS } from "../../GraphQL/Users/Queries";
+import { getComplaintStateWithEnum } from "../../functions/ComplaintStatesFunc";
 import {
-  ComplaintState,
+  ComplaintStateStatus,
   GetComplaintsWithFilterDocument,
-  Get_Complaint_AssignedDocument,
   SetCouncilListMutationDocument,
   UpdateComplaintDocument,
 } from "../../gql/graphql";
-import { newStatesCap, newStatesFa } from "../../static/States";
-import {
-  primary,
-  secondary
-} from "../../theme/color";
-import { equal } from "assert";
+import { primary, secondary } from "../../theme/color";
 
 const CouncilList = () => {
-  const [selectedList, setSelectedList] = React.useState<number[]>(
-    []
-  );
+  const [selectedList, setSelectedList] = React.useState<number[]>([]);
 
   const [files, setFiles] = React.useState<string[]>([]); // [
   const user = useUserStore((state) => state.user);
-  const {
-    data: assignedData,
-    loading,
-    refetch: assignedRefetch,
-  } = useQuery(Get_Complaint_AssignedDocument, {
+  // const {
+  //   data: assignedData,
+  //   loading,
+  //   refetch: assignedRefetch,
+  // } = useQuery(Get_Complaint_AssignedDocument, {
+  //   variables: {
+  //     id: user.id,
+  //   },
+  //   refetchWritePolicy: "overwrite",
+  //   pollInterval: 2000,
+  //   onCompleted(data) {
+  //     console.log("assigned data", data);
+  //   },
+  // });
+
+  // const {data:statusData} = useGetComplaintStatesQuery({
+  //   variables:{
+  //     filter:{
+  //       state:{
+  //         in:[ComplaintStateStatus.WaitingForFirstPayment]
+  //       }
+  //     }
+  //   }
+  // })
+
+  const { data: filteredData } = useQuery(GetComplaintsWithFilterDocument, {
     variables: {
-      id: user.id,
-    },
-    refetchWritePolicy: "overwrite",
-    pollInterval: 2000,
-    onCompleted(data) {
-      console.log("assigned data", data);
-    },
-  });
-
-
-  const {data :filteredData} = useQuery(GetComplaintsWithFilterDocument,{
-    variables:{
-      filter:{
-        and:[
+      filter: {
+        and: [
           {
-            assignedUserId:{
-              eq:user.id
-            }
+            assignedUserId: {
+              eq: user.id,
+            },
           },
           {
-            complaintState:{
-              in:[ComplaintState.GivingTrackingCodeToComplaint]
-            }
-          }
-        ]
-      }
+            complaintState: {
+              state: {
+                in: [ComplaintStateStatus.GivingTrackingCodeToComplaint],
+              },
+            },
+          },
+        ],
+      },
     },
     onCompleted(data) {
       console.log("filtered data", data);
     },
-  })
+  });
 
-  const [updateComplaint, { data: updateData }] = useMutation(
+  const [updateComplaint] = useMutation(
     UpdateComplaintDocument
   );
 
@@ -89,10 +93,7 @@ const CouncilList = () => {
     {
       label: string;
       id: string;
-      type:
-        | "INDIVIDUAL"
-        | "ORGANIZATION"
-        | "CONTRACTOR_OR_CONSULTANT";
+      type: "INDIVIDUAL" | "ORGANIZATION" | "CONTRACTOR_OR_CONSULTANT";
     }[]
   >([]);
   useQuery(GET_ALL_ORGANIZATION_USERS, {
@@ -120,12 +121,14 @@ const CouncilList = () => {
     },
   });
 
-  const [setCouncilList, { data, loading: mutationLoading }] =
-    useMutation(SetCouncilListMutationDocument, {
+  const [setCouncilList, { data }] = useMutation(
+    SetCouncilListMutationDocument,
+    {
       variables: {
         ids: selectedList,
       },
-    });
+    }
+  );
   return (
     <>
       <TableContainer
@@ -234,9 +237,7 @@ const CouncilList = () => {
                           setSelectedList([...selectedList, item.id]);
                         } else {
                           setSelectedList(
-                            selectedList.filter(
-                              (id) => id !== item.id
-                            )
+                            selectedList.filter((id) => id !== item.id)
                           );
                         }
                       }}
@@ -262,13 +263,7 @@ const CouncilList = () => {
                       )?.label
                     }
                   </TableCell>
-                  <TableCell>
-                    {
-                      newStatesFa[
-                        newStatesCap.indexOf(item.complaintState)
-                      ]
-                    }
-                  </TableCell>
+                  <TableCell>{item.complaintState?.persianName}</TableCell>
                 </TableRow>
               )
             )}
@@ -293,21 +288,17 @@ const CouncilList = () => {
                   data.complaint_setInCouncilList.result?.result.some(
                     (item) => item.value == false
                   ) ||
-                  data.complaint_setInCouncilList.result?.result
-                    .length === 0
+                  data.complaint_setInCouncilList.result?.result.length === 0
                 ) {
                   alert("خطا در تولید نامه ها");
                 } else {
-                  setFiles(
-                    data.complaint_setInCouncilList.result?.fileNames!
-                  );
+                  setFiles(data.complaint_setInCouncilList.result?.fileNames!);
                   data.complaint_setInCouncilList.result?.result?.map(
                     (complaint) => {
                       void updateComplaint({
                         variables: {
                           id: complaint.key,
-                          complaintState:
-                            ComplaintState.WaitingForFirstPayment,
+                          complaintStateId: getComplaintStateWithEnum(ComplaintStateStatus.WaitingForFirstPayment).id,
                         },
                       });
                     }
@@ -320,8 +311,7 @@ const CouncilList = () => {
           تولید نامه
         </Button>
       </Box>
-      {data?.complaint_setInCouncilList?.result?.result.length !==
-        0 &&
+      {data?.complaint_setInCouncilList?.result?.result.length !== 0 &&
         data?.complaint_setInCouncilList?.status.code === 1 && (
           <Box sx={{ mt: 2 }}>
             <Box
@@ -345,9 +335,7 @@ const CouncilList = () => {
                     alignItems={"center"}
                     justifyContent={"space-between"}
                     onClick={() => {
-                      window.open(
-                        `http://172.16.23.50:7030/files/letters/${file}`
-                      );
+                      window.open(`http://172.16.23.50:7030/files/${file}`);
                     }}
                     sx={{
                       backgroundColor: green["A100"],
@@ -369,9 +357,7 @@ const CouncilList = () => {
                     alignItems={"center"}
                     justifyContent={"space-between"}
                     onClick={() => {
-                      window.open(
-                        `http://172.16.23.50:7030/files/letters/${file}`
-                      );
+                      window.open(`http://172.16.23.50:7030/files/${file}`);
                     }}
                     sx={{
                       backgroundColor: green["A100"],

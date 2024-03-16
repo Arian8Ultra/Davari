@@ -74,9 +74,56 @@ export const GET_CONTRACT = gql`
           authorizedDelaysByAccuser
           unauthorizedDelaysByAccused
           unauthorizedDelaysByAccuser
-          isExecutive
+          isExecutiveByAccused
+          isExecutiveByAccuser
+          isExecutiveByExpert
           fileNamesByAccused
           fileNamesByAccuser
+          currencyByAccused
+          currencyByAccuser
+          generalConditionsFileNameByAccuser
+          generalConditionsFileNameByAccused
+          contractGeneralTypeByAccused
+          contractGeneralTypeByAccuser
+        }
+      }
+      status
+    }
+  }
+`;
+
+export const GetPublicContracts = gql`
+  query GetPublicContracts(
+    $filter: PublicContractFilterInput
+    $order: [PublicContractSortInput!]
+    $skip: Int
+    $take: Int
+  ) {
+    publicContract_getPublicContracts {
+      result(
+        where: $filter
+        order: $order
+        skip: $skip
+        take: $take
+      ) {
+        items {
+          guid
+          fullName
+          executiveTitle
+          nationalCode
+          id
+          isDeleted
+          createdDate
+          lastModifiedDate
+          contractID
+          contractSubject
+          generalConditionTitle
+          sourceOfFundingTitle
+          city
+          agreeAmountRial
+          agreeDate
+          jobReferenceTitle
+          contractCategoryTitle
         }
       }
       status

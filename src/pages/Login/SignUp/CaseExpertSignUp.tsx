@@ -13,6 +13,7 @@ import { useUserStore } from "../../../Context/UserStore";
 import { MutationWrapper } from "../../../GraphQL/MutationWrapper";
 import {
   ComplaintState,
+  ComplaintStateStatus,
   GenarateDateOfBirthDocument,
   GetAllOganizationUsersDocument,
   GetComplaintDocument,
@@ -31,6 +32,7 @@ import {
   validatePhoneNumber,
 } from "./gql/mutations";
 import { useGetUserWithFilterLazyQuery } from "../../../../generated-types";
+import { getComplaintStateWithEnum } from "../../../functions/ComplaintStatesFunc";
 
 const CaseExpertSignUp = () => {
   const { complaintId } = useParams();
@@ -395,9 +397,9 @@ const CaseExpertSignUp = () => {
                               void updateComplaint({
                                 variables: {
                                   input: {
-                                    complaintState:
-                                      ComplaintState.DeterminingMeetingByMailRoomExpert,
-                                    councilExpertId: expertId,
+                                    complaintStateId:
+                                    getComplaintStateWithEnum(ComplaintStateStatus.DeterminingMeetingByMailRoomExpert).id,
+                                    councilExpertIds: [expertId || ""],
                                     id: parseInt(complaintId || "0"),
                                   },
                                 },

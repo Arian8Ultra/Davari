@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { SpaceDashboardOutlined } from "@mui/icons-material";
-import { BsPeopleFill, BsPersonCircle } from "react-icons/bs";
+import { BsGearWideConnected, BsInputCursorText, BsPeopleFill, BsPersonCircle, BsPostage, BsTextRight } from "react-icons/bs";
 import { FaBalanceScale, FaHome } from "react-icons/fa";
 import { Titles } from "./Titles";
 
@@ -73,15 +73,24 @@ export const SideBarMenu = [
         hasCollapse: false,
         mailRoom: true,
         justMailRoom: false,
-        // accessNeeded: ["SUPER_ADMIN","SENIOR_USER"],
+        accessNeeded: ["SUPER_ADMIN","SENIOR_USER"],
       },
-      // {
-      //   primary: Titles.formManager,
-      //   to: "/admin/formanager",
-      //   icon: <BsInputCursorText />,
-      //   hasLink: true,
-      //   hasCollapse: false,
-      // },
+      {
+        primary: Titles.generalSettingsManagement,
+        to: "/admin/settings",
+        icon: <BsGearWideConnected />,
+        hasLink: true,
+        hasCollapse: false,
+        accessNeeded: ["SUPER_ADMIN"],
+      },
+      {
+        primary: Titles.stateManagement,
+        to: "/admin/stateManagement",
+        icon: <BsTextRight />,
+        hasLink: true,
+        hasCollapse: false,
+        accessNeeded: ["SUPER_ADMIN"],
+      },
     ],
   },
 ];
@@ -101,7 +110,7 @@ export type SideBarLinkType = {
     "SUPER_ADMIN",
     "MAIL_ROOM",
     "JURY_EXPERT"
-  ];
+  ] | string[];
   mailRoom?: boolean;
   justMailRoom?: boolean;
 };

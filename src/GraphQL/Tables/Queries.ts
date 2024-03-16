@@ -51,7 +51,7 @@ export const GET_INSTALLMENT_TABLE_BY_CONTRACT_ID = gql`
           paymentTotal
           remainingPayment
           filledBy
-          contract{
+          contract {
             accuserDepartmentUserId
             accusedDepartmentUserId
           }
@@ -60,7 +60,57 @@ export const GET_INSTALLMENT_TABLE_BY_CONTRACT_ID = gql`
             id
             userType
           }
-          
+
+          userId
+          installments {
+            installmentTableId
+            title
+            amount
+            date
+            filledBy
+            id
+            createdDate
+            isDeleted
+            installmentParts {
+              amount
+              date
+              filledBy
+              id
+            }
+          }
+          createdDate
+          isDeleted
+        }
+      }
+      status
+    }
+  }
+`;
+export const GET_INSTALLMENT_TABLE_FULL = gql`
+  query GetInstallmentTablesFull(
+    $where: InstallmentTableFilterInput
+    $order: [InstallmentTableSortInput!]
+  ) {
+    installmentTable_getInstallmentTables {
+      result(where: $where, order: $order, take: 20000) {
+        items {
+          id
+          createdDate
+          lastModifiedDate
+          contractId
+          paymentTotal
+          remainingPayment
+          filledBy
+          contract {
+            accuserDepartmentUserId
+            accusedDepartmentUserId
+          }
+          user {
+            parentId
+            id
+            userType
+          }
+
           userId
           installments {
             installmentTableId
@@ -76,6 +126,8 @@ export const GET_INSTALLMENT_TABLE_BY_CONTRACT_ID = gql`
               id
             }
           }
+          createdDate
+          isDeleted
         }
       }
       status
@@ -95,6 +147,7 @@ export const GET_INSTALLMENT = gql`
         amount
         date
         filledBy
+
         installmentParts {
           amount
           date
@@ -132,9 +185,7 @@ export const GET_INSTALLMENT_PART = gql`
 
 export const GET_ADJUSTMENT_STATEMENT_TABLE = gql`
   query GetAdjustmentStatementTable($id: Int!) {
-    adjustmentStatementTable_getAdjustmentStatementTable(
-      entityId: $id
-    ) {
+    adjustmentStatementTable_getAdjustmentStatementTable(entityId: $id) {
       result {
         id
         createdDate
@@ -145,6 +196,10 @@ export const GET_ADJUSTMENT_STATEMENT_TABLE = gql`
           parentId
           id
           userType
+        }
+        contract {
+          accuserDepartmentUserId
+          accusedDepartmentUserId
         }
         userId
         adjustmentStatements {
@@ -182,6 +237,10 @@ export const GET_ADJUSTMENT_STATEMENT_TABLE_BY_CONTRACT_ID = gql`
           lastModifiedDate
           contractId
           filledBy
+          contract {
+            accuserDepartmentUserId
+            accusedDepartmentUserId
+          }
           user {
             parentId
             id
@@ -204,6 +263,100 @@ export const GET_ADJUSTMENT_STATEMENT_TABLE_BY_CONTRACT_ID = gql`
             filledBy
             title
           }
+        }
+      }
+      status
+    }
+  }
+`;
+export const GET_ADJUSTMENT_STATEMENT_TABLES_FULL = gql`
+  query GetAdjustmentStatementTablesFull(
+    $where: AdjustmentStatementTableFilterInput
+    $order: [AdjustmentStatementTableSortInput!]
+  ) {
+    adjustmentStatementTable_getAdjustmentStatementTables {
+      result(where: $where, order: $order, take: 20000) {
+        items {
+          id
+          createdDate
+          lastModifiedDate
+          contractId
+          filledBy
+          contract {
+            accuserDepartmentUserId
+            accusedDepartmentUserId
+          }
+          user {
+            parentId
+            id
+            userType
+          }
+          userId
+          adjustmentStatements {
+            id
+            adjustmentStatementTableId
+            amountApprovedByEmployer
+            amountConfirmedByConsultant
+            amountPaid
+            amountProvidedByContractor
+            dateApprovedByEmployer
+            dateConfirmedByConsultant
+            datePaid
+            dateProvidedByContractor
+            operationPeriodEndDate
+            operationPeriodStartDate
+            filledBy
+            title
+          }
+        }
+      }
+      status
+    }
+  }
+`;
+export const GET_ADJUSTMENT_STATEMENTS_FULL = gql`
+  query GetAdjustmentStatementsFull(
+    $filter: AdjustmentStatementFilterInput
+    $orderBy: [AdjustmentStatementSortInput!]
+  ) {
+    adjustmentStatement_getAdjustmentStatements {
+      result(where: $filter, order: $orderBy, take: 20000) {
+        items {
+          id
+          createdDate
+          lastModifiedDate
+          adjustmentStatementTableId
+          adjustmentStatementTable {
+            contractId
+            contract {
+              accuserDepartmentUserId
+              accusedDepartmentUserId
+            }
+            user {
+              parentId
+              id
+              userType
+            }
+            userId
+          }
+          filledBy
+          id
+          adjustmentStatementTableId
+          amountApprovedByEmployer
+          amountConfirmedByConsultant
+          amountPaid
+          amountProvidedByContractor
+          dateApprovedByEmployer
+          dateConfirmedByConsultant
+          datePaid
+          dateProvidedByContractor
+          operationPeriodEndDate
+          operationPeriodStartDate
+          filledBy
+          title
+          isDeleted
+          createdDate
+          lastModifiedDate
         }
       }
       status
@@ -258,9 +411,7 @@ export const GET_ADJUSTMENT_STATEMENT = gql`
 
 export const GET_ADJUSTMENT_STATEMENT_PART = gql`
   query GetAdjustmentStatementPart($id: Int!) {
-    adjustmentStatementPart_getAdjustmentStatementPart(
-      entityId: $id
-    ) {
+    adjustmentStatementPart_getAdjustmentStatementPart(entityId: $id) {
       result {
         id
         amountApprovedByEmployer
@@ -285,9 +436,7 @@ export const GET_ADJUSTMENT_STATEMENT_PART = gql`
 
 export const GET_WORK_CONDITION_STATEMENT_TABLE = gql`
   query GetWorkConditionStatementTable($id: Int!) {
-    workConditionStatementTable_getWorkConditionStatementTable(
-      entityId: $id
-    ) {
+    workConditionStatementTable_getWorkConditionStatementTable(entityId: $id) {
       result {
         id
         createdDate
@@ -340,6 +489,10 @@ export const GET_WORK_CONDITION_STATEMENT_TABLE_BY_CONTRACT_ID = gql`
             id
             userType
           }
+          contract {
+            accuserDepartmentUserId
+            accusedDepartmentUserId
+          }
           userId
           workConditionStatements {
             id
@@ -357,6 +510,99 @@ export const GET_WORK_CONDITION_STATEMENT_TABLE_BY_CONTRACT_ID = gql`
             filledBy
             title
           }
+        }
+      }
+      status
+    }
+  }
+`;
+export const GET_WORK_CONDITION_STATEMENT_TABLES_FULL = gql`
+  query GetWorkConditionStatementTablesFull(
+    $where: WorkConditionStatementTableFilterInput
+  ) {
+    workConditionStatementTable_getWorkConditionStatementTables {
+      result(where: $where, take: 20000) {
+        items {
+          id
+          createdDate
+          lastModifiedDate
+          contractId
+          filledBy
+          user {
+            parentId
+            id
+            userType
+          }
+          contract {
+            accuserDepartmentUserId
+            accusedDepartmentUserId
+          }
+          userId
+          workConditionStatements {
+            id
+            workConditionStatementTableId
+            amountApprovedByEmployer
+            amountConfirmedByConsultant
+            amountPaid
+            amountProvidedByContractor
+            dateApprovedByEmployer
+            dateConfirmedByConsultant
+            datePaid
+            dateProvidedByContractor
+            operationPeriodEndDate
+            operationPeriodStartDate
+            filledBy
+            title
+          }
+        }
+      }
+      status
+    }
+  }
+`;
+
+export const GET_WORK_CONDITION_STATEMENTS_FULL = gql`
+  query GetWorkConditionStatementsFull(
+    $filter: WorkConditionStatementFilterInput
+    $orderBy: [WorkConditionStatementSortInput!]
+  ) {
+    workConditionStatement_getWorkConditionStatements {
+      result(where: $filter, order: $orderBy, take: 20000) {
+        items {
+          id
+          createdDate
+          lastModifiedDate
+          workConditionStatementTableId
+          workConditionStatementTable {
+            contractId
+            contract {
+              accuserDepartmentUserId
+              accusedDepartmentUserId
+            }
+            user {
+              parentId
+              id
+              userType
+            }
+            userId
+          }
+          filledBy
+          id
+          amountApprovedByEmployer
+          amountConfirmedByConsultant
+          amountPaid
+          amountProvidedByContractor
+          dateApprovedByEmployer
+          dateConfirmedByConsultant
+          datePaid
+          dateProvidedByContractor
+          operationPeriodEndDate
+          operationPeriodStartDate
+          filledBy
+          title
+          isDeleted
+          createdDate
+          lastModifiedDate
         }
       }
       status
@@ -412,9 +658,7 @@ export const GET_WORK_CONDITION_STATEMENT = gql`
 
 export const GET_WORK_CONDITION_STATEMENT_PART = gql`
   query GetWorkConditionStatementPart($id: Int!) {
-    workConditionStatementPart_getWorkConditionStatementPart(
-      entityId: $id
-    ) {
+    workConditionStatementPart_getWorkConditionStatementPart(entityId: $id) {
       result {
         id
         amountApprovedByEmployer

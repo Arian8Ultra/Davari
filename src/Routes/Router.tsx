@@ -35,6 +35,14 @@ import DeterminingCaseExpert from "../pages/Complaints/DeterminingCaseExpert/Det
 import RequestDocs from "../pages/Expert/Docs/RequestDocs";
 import UploadDocs from "../pages/Expert/Docs/UploadDocs";
 import ReviewCase from "../pages/Expert/ReviewCase";
+import VerdictPage from "../pages/Complaints/Verdict/VerdictPage";
+import NewContractPage from "../pages/Complaints/Contract/ContractPage";
+import RequestCorrectionPage from "../pages/Complaints/RequestCorrection/RequestCorrectionPage";
+import ConfirmPage from "../pages/Complaints/Confrm/ConfirmPage";
+import SettingsPage from "../pages/Admin/Settings/SettingsPage";
+import StateManagementPage from "../pages/Admin/StateManagment/StateManagementPage";
+import DeterminingCaseList from "../pages/Complaints/DeterminingCaseExpert/DeterminingCaseList";
+import ProfilePage from "../pages/Profile/ProfilePage";
 const Complaints = lazy(
   () => import("../pages/Complaints/Complaints")
 );
@@ -78,6 +86,8 @@ const router = createBrowserRouter(
         <Route path="" element={<Home />} />
         <Route path="home" element={<Home />} />
         <Route path="complaints" element={<Complaints />} />
+        <Route path="profile" element={<ProfilePage />} />
+
         <Route
           path="complaints/addContract"
           element={<AddContract />}
@@ -93,10 +103,7 @@ const router = createBrowserRouter(
             path="determiningCaseExpert/newUser/:complaintId"
             element={<CaseExpertSignUp />}
           />
-
         </Route>
-
-
 
         <Route
           path="determiningCaseExpert/:complaintId"
@@ -105,6 +112,18 @@ const router = createBrowserRouter(
         <Route
           path="complaints/createContractPage"
           element={<CreateContractPage />}
+        />
+        <Route
+          path="complaints/:contractId/:complaintId/:type/contractPageToFill"
+          element={<NewContractPage />}
+        />
+        <Route
+          path="complaints/:contractId/:type/contractPageToFill"
+          element={<NewContractPage />}
+        />
+        <Route
+          path="complaints/:type/contractPageToFill"
+          element={<NewContractPage />}
         />
         <Route
           path="complaints/:contractId/createContractPage"
@@ -139,7 +158,7 @@ const router = createBrowserRouter(
           element={<FilePage />}
         />
         <Route
-          path="complaints/:complaintId/pay/:amount"
+          path="complaints/:complaintId/pay/:turn"
           element={<PaymentPage />}
         />
         <Route
@@ -162,6 +181,10 @@ const router = createBrowserRouter(
           path="complaints/:complaintId/expertReview"
           element={<ReviewCase />}
         />
+        <Route
+          path="complaints/:complaintId/verdict"
+          element={<VerdictPage />}
+        />
 
         <Route path="contracts" element={<Contracts />} />
         <Route path="portal" element={<Protal />} />
@@ -182,10 +205,10 @@ const router = createBrowserRouter(
           path="contract/:contractId/:complaintId"
           element={<ContractDetailsPage />}
         />
-        <Route
+        {/* <Route
           path="contract/:contractId/:complaintId/old"
           element={<ContractPage />}
-        />
+        /> */}
         <Route
           path="contract/:contractId/:complaintId/details"
           element={<ContractDetailsPage />}
@@ -193,6 +216,164 @@ const router = createBrowserRouter(
         <Route
           path="admin/usermanagement"
           element={<UserManagement />}
+        />
+
+        <Route path="expertPortal" element={<ExpertPortal />} />
+
+        <Route path="test" element={<Test />} />
+      </Route>
+      <Route path="" element={<MainLayout />}>
+        <Route path="" element={<Home />} />
+        <Route path="home" element={<Home />} />
+        <Route path="complaints" element={<Complaints />} />
+        <Route
+          path="complaints/addContract"
+          element={<AddContract />}
+        />
+        <Route path="signUp" element={<SignUp />}>
+          <Route path="" element={<PersonInfo />} />
+          <Route
+            path=":userName/:password"
+            element={<ConfirmUser />}
+          />
+
+          <Route
+            path="determiningCaseExpert/newUser/:complaintId"
+            element={<CaseExpertSignUp />}
+          />
+        </Route>
+
+        <Route
+          path="determiningCaseExpert/:complaintId"
+          element={<DeterminingCaseExpert />}
+        />
+        <Route
+          path="complaints/createContractPage"
+          element={<CreateContractPage />}
+        />
+        <Route
+          path="complaints/:contractId/:complaintId/:type/contractPageToFill"
+          element={<NewContractPage />}
+        />
+        <Route
+          path="complaints/:contractId/:type/contractPageToFill"
+          element={<NewContractPage />}
+        />
+        <Route
+          path="complaints/:type/contractPageToFill"
+          element={<NewContractPage />}
+        />
+        <Route
+          path="complaints/:contractId/createContractPage"
+          element={<CreateContractPage />}
+        />
+        <Route
+          path="complaints/:contractId/:complaintId/UpdateContractPage"
+          element={<UpdateContractPage />}
+        />
+        <Route
+          path="complaints/:contractId/:complaintId/UpdateContractAccuserPage"
+          element={<UpdateContractAccuserPage />}
+        />
+        <Route
+          path="complaints/:contractId/:complaintId/addComplaint"
+          element={<AddComplaint />}
+        />
+        <Route
+          path="complaints/:contractId/:complaintId/addArguements/:state"
+          element={<AddArgument />}
+        />
+        <Route
+          path="complaints/:contractId/:complaintId/tablesPage"
+          element={<TablesPage />}
+        />
+        <Route
+          path="complaints/:contractId/:complaintId/tables"
+          element={<TablesPage />}
+        />
+        <Route
+          path="complaints/:complaintId/files"
+          element={<FilePage />}
+        />
+        <Route
+          path="complaints/:complaintId/pay/:turn"
+          element={<PaymentPage />}
+        />
+        <Route
+          path="complaints/:complaintId/pay"
+          element={<PaymentPage />}
+        />
+        <Route
+          path="complaints/:complaintId/setMeeting"
+          element={<AddMeetingPage />}
+        />
+        <Route
+          path="complaints/:complaintId/docReq"
+          element={<RequestDocs />}
+        />
+        <Route
+          path="complaints/:complaintId/docUpload"
+          element={<UploadDocs />}
+        />
+        <Route
+          path="complaints/:complaintId/expertReview"
+          element={<ReviewCase />}
+        />
+        <Route
+          path="complaints/:complaintId/verdict"
+          element={<VerdictPage />}
+        />
+        <Route
+          path="complaints/:complaintId/confirmComplaint"
+          element={<ConfirmPage />}
+        />
+        <Route
+          path="complaints/:complaintId/requestCorrection"
+          element={<RequestCorrectionPage />}
+        />
+
+        <Route path="contracts" element={<Contracts />} />
+        <Route path="portal" element={<Protal />} />
+        <Route path="portal/messages" element={<Messages />} />
+        <Route
+          path="portal/employee_management"
+          element={<Protal />}
+        />
+        <Route
+          path="portal/council_List"
+          element={<CouncilListPage />}
+        />
+        <Route
+          path="portal/determining_List"
+          element={<DeterminingCaseList />}
+        />
+        <Route
+          path="portal/complain_answers"
+          element={<ComplainAnswers />}
+        />
+        <Route
+          path="contract/:contractId/:complaintId"
+          element={<ContractDetailsPage />}
+        />
+        {/* <Route
+          path="contract/:contractId/:complaintId/old"
+          element={<ContractPage />}
+        /> */}
+        <Route
+          path="contract/:contractId/:complaintId/details"
+          element={<ContractDetailsPage />}
+        />
+        <Route
+          path="admin/usermanagement"
+          element={<UserManagement />}
+        />
+        <Route
+          path="admin/settings"
+          element={<SettingsPage />}
+        />
+        <Route
+          path="admin/stateManagement"
+          element={<StateManagementPage />}
         />
 
         <Route path="expertPortal" element={<ExpertPortal />} />

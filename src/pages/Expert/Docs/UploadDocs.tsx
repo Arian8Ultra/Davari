@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import {
   Box,
@@ -20,9 +21,13 @@ import {
   useUpdateComplaintFullMutation,
 } from "../../../../generated-types";
 import { useUserStore } from "../../../Context/UserStore";
-import { ComplaintState, TargetType } from "../../../gql/graphql";
-import { primary, secondary } from "../../../theme/color";
 import UploadDocCard from "../../../components/Docs/UploadDocCard";
+import { getComplaintStateWithEnum } from "../../../functions/ComplaintStatesFunc";
+import {
+  ComplaintStateStatus,
+  TargetType
+} from "../../../gql/graphql";
+import { primary, secondary } from "../../../theme/color";
 
 const UploadDocs = () => {
   const { complaintId } = useParams<{ complaintId: string }>();
@@ -39,23 +44,21 @@ const UploadDocs = () => {
       void GetAccused();
     },
   });
-  const [updateComplaint, { loading }] =
-    useUpdateComplaintFullMutation();
+  const [updateComplaint, { loading }] = useUpdateComplaintFullMutation();
 
-  const [GetAccuser, { data: AccuserData }] =
-    useGetUserWithFilterLazyQuery({
-      variables: {
-        filter: {
-          id: {
-            eq: complaint?.complaint_getComplaints.result?.items?.[0]
-              ?.contract?.accuserDepartmentUserId,
-          },
+  const [GetAccuser, { data: AccuserData }] = useGetUserWithFilterLazyQuery({
+    variables: {
+      filter: {
+        id: {
+          eq: complaint?.complaint_getComplaints.result?.items?.[0]?.contract
+            ?.accuserDepartmentUserId,
         },
       },
-      onCompleted() {
-        void getRequests();
-      },
-    });
+    },
+    onCompleted() {
+      void getRequests();
+    },
+  });
 
   const [
     getRequests,
@@ -75,7 +78,9 @@ const UploadDocs = () => {
                 target: {
                   eq:
                     user?.id ==
-                    AccuserData?.user_getUsers.result?.items?.[0]?.id
+                      AccuserData?.user_getUsers.result?.items?.[0]?.id ||
+                    user.parentId ==
+                      AccuserData?.user_getUsers.result?.items?.[0]?.id
                       ? TargetType.Accuser
                       : TargetType.Accused,
                 },
@@ -100,29 +105,26 @@ const UploadDocs = () => {
     },
   });
 
-  const { data: allRequests, refetch } = useGetReqestedDocsQueryQuery(
-    {
-      variables: {
-        filter: {
-          complaintId: {
-            eq: parseInt(complaintId || "") || 0,
-          },
+  const { data: allRequests, refetch } = useGetReqestedDocsQueryQuery({
+    variables: {
+      filter: {
+        complaintId: {
+          eq: parseInt(complaintId || "") || 0,
         },
       },
-    }
-  );
+    },
+  });
 
-  const [GetAccused] =
-    useGetUserWithFilterLazyQuery({
-      variables: {
-        filter: {
-          id: {
-            eq: complaint?.complaint_getComplaints.result?.items?.[0]
-              ?.contract?.accusedDepartmentUserId,
-          },
+  const [GetAccused] = useGetUserWithFilterLazyQuery({
+    variables: {
+      filter: {
+        id: {
+          eq: complaint?.complaint_getComplaints.result?.items?.[0]?.contract
+            ?.accusedDepartmentUserId,
         },
       },
-    });
+    },
+  });
   return (
     <>
       <Box
@@ -227,8 +229,14 @@ const UploadDocs = () => {
                   id={item.id}
                   requestedDocumentName={item.requestedDocumentName}
                   userId={item.userId}
-                  requestedDocumentFileName={
-                    item.requestedDocumentFileName
+                  requestedDocumentFileNameAccuser={
+                    item.requestedDocumentFileNameAccuser
+                  }
+                  requestedDocumentFileNameAccused={
+                    item.requestedDocumentFileNameAccused
+                  }
+                  accuser={
+                    user.id == AccuserData?.user_getUsers.result?.items?.[0].id
                   }
                   target={item.target as TargetType}
                   key={item.id}
@@ -261,33 +269,43 @@ const UploadDocs = () => {
             },
           }}
           onClick={() => {
-            const agree = confirm(
-              "آیا از ثبت نهایی اطلاعات اطمینان دارید؟"
-            );
+            const agree = confirm("آیا از ثبت نهایی اطلاعات اطمینان دارید؟");
             if (agree) {
               if (
                 allRequests?.documentRequest_getDocumentRequests.result?.items?.some(
-                  (item) => item.requestedDocumentFileName == null
+                  (a) => {
+                    ((a.target == TargetType.Accuser ||
+                      a.target == TargetType.Both) &&
+                      a.requestedDocumentFileNameAccuser == null) ||
+                      ((a.target == TargetType.Accuser ||
+                        a.target == TargetType.Both) &&
+                        a.requestedDocumentFileNameAccused == null);
+                  }
                 )
               ) {
                 if (
-                  requestedDocsData?.documentRequest_getDocumentRequests.result?.items?.some(
-                    (item) => item.requestedDocumentFileName == null
+                  user?.id ==
+                    AccuserData?.user_getUsers.result?.items?.[0].id &&
+                  allRequests?.documentRequest_getDocumentRequests.result?.items?.some(
+                    (a) => {
+                      (a.target == TargetType.Accuser ||
+                        a.target == TargetType.Both) &&
+                        a.requestedDocumentFileNameAccuser == null;
+                    }
                   )
                 ) {
-                  alert("لطفا تمامی مدارک را آپلود کنید");
-                  return;
+                  alert("مدارک مورد نیاز طرف مقابل ثبت نشده است");
                 } else {
-                  alert("طرف مقابل هنوز مدارک را آپلود نکرده است");
-                  navigate(`/complaints`);
+                  alert("مدارک مورد نیاز شما ثبت نشده است");
                 }
               } else {
                 void updateComplaint({
                   variables: {
                     input: {
                       id: parseInt(complaintId || "") || 0,
-                      complaintState:
-                        ComplaintState.ReviewingCaseByCaseExpert,
+                      complaintStateId: getComplaintStateWithEnum(
+                        ComplaintStateStatus.ReviewingCaseByCaseExpert
+                      ).id,
                     },
                   },
                   onCompleted(data) {

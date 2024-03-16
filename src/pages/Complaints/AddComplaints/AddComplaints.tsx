@@ -1,10 +1,12 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { RoundedCorner } from "@mui/icons-material";
+import { useMutation } from "@apollo/client";
+import { CancelRounded, CheckBoxRounded } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -16,32 +18,35 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
-import { BsUpload } from "react-icons/bs";
-import BackButton from "../../../components/BackButton";
-import FileButton from "../../../components/FileButton";
-import {
-  Green,
-  GreenLight,
-  primary,
-  secondary,
-  secondaryLight,
-} from "../../../theme/color";
 import { useNavigate, useParams } from "react-router-dom";
-import { useMutation, useQuery } from "@apollo/client";
-import { GET_CONTRACT } from "../../../GraphQL/Contracts/Queries";
-import {
-  CREATE_ARBITRATION_TERMS_FORM,
-  UPDATE_COMPLAINT,
-} from "../../../GraphQL/Complaints/Mutations";
 import { useUserStore } from "../../../Context/UserStore";
+import {
+  CREATE_ARBITRATION_TERMS_FORM
+} from "../../../GraphQL/Complaints/Mutations";
+import { GET_CONTRACT } from "../../../GraphQL/Contracts/Queries";
+import { MutationWrapper } from "../../../GraphQL/MutationWrapper";
+import { QueryWrapper } from "../../../GraphQL/QueryWrapper";
+import BackButton from "../../../components/BackButton";
 import FaTypography from "../../../components/FaComponents/FaTypography";
 import FileBox from "../../../components/FileBox";
-import { QueryWrapper } from "../../../GraphQL/QueryWrapper";
-import { MutationWrapper } from "../../../GraphQL/MutationWrapper";
-import { newStates, newStatesObj } from "../../../static/States";
 import TimeLine from "../../../components/TimeLine";
+import {
+  Green,
+  Red,
+  primary,
+  primaryLight,
+  secondary,
+  secondaryDark
+} from "../../../theme/color";
 // @ts-ignore
-import {API_FILE_SHIVENAME} from "../../../../config";
+import { API_FILE_SHIVENAME } from "../../../../config";
+import {
+  UpdateComplaintDocument,
+  useGetComplaintsWithFilterQuery,
+  useSmsComplaintAddedMutation
+} from "../../../../generated-types";
+import { getComplaintStateWithEnum } from "../../../functions/ComplaintStatesFunc";
+import { ComplaintStateStatus } from "../../../gql/graphql";
 
 const AddComplaint = () => {
   const navigate = useNavigate();
@@ -69,9 +74,7 @@ const AddComplaint = () => {
   });
   const [AgreeWithTerms, setAgreeWithTerms] = React.useState(false);
 
-  const complaints = JSON.parse(
-    localStorage.getItem("complaints") || "{}"
-  );
+  const complaints = JSON.parse(localStorage.getItem("complaints") || "{}");
 
   const { contractId, complaintId } = useParams();
 
@@ -81,6 +84,12 @@ const AddComplaint = () => {
     { id: contractId && parseInt(contractId) }
   );
   console.log(data);
+
+  const [sendSms] = useSmsComplaintAddedMutation({
+    variables: {
+      id: complaintId ? parseInt(complaintId) : 0,
+    },
+  });
 
   const [createForm] = useMutation(CREATE_ARBITRATION_TERMS_FORM, {
     variables: {
@@ -105,16 +114,13 @@ const AddComplaint = () => {
     },
   });
 
-  const {
-    handleMutation: createFormMutation,
-    loading: createFormLoadingMutation,
-  } = MutationWrapper(
+  const { handleMutation: createFormMutation } = MutationWrapper(
     CREATE_ARBITRATION_TERMS_FORM,
     "arbitrationTermsForm_addArbitrationTermsForm"
   );
 
   React.useEffect(() => {
-    if (complaints?.FisrtCondition) {
+    if (complaints?.FisrtCondition && complaints?.ComplaintId == complaintId) {
       setFisrtCondition(complaints.FisrtCondition);
       setSecondCondition(complaints.SecondCondition);
       setThirdCondition(complaints.ThirdCondition);
@@ -123,10 +129,7 @@ const AddComplaint = () => {
     }
   }, []);
 
-  const firstConditionItems = [
-    "عمرانی (تملک دارایی سرمایه ای)",
-    "غیرعمرانی",
-  ];
+  const firstConditionItems = ["عمرانی (تملک دارایی سرمایه ای)", "غیرعمرانی"];
   const secondConditionItems = [
     "در ماده حل اختلاف قرارداد، داوری شورای عالی فنی درج شده است.",
     "طرفین پس از عقد قرارداد، بر داوری شورا تراضی نموده اند.",
@@ -145,45 +148,54 @@ const AddComplaint = () => {
     "رای قطعی در خصوص دعاوی مورد درخواست توسط مراجع قضایی صادر شده است.",
     "رای قطعی در خصوص دعاوی مورد درخواست توسط شورا صادر شده است.",
     "قرار عدم صلاحیت (استماع) توسط مراجع قضایی صادر شده است.",
+    "در دادگاه مطرح نشده. (در صورت انتخاب این گزینه، فایلی برای آپلود نیاز نیست)",
+    "در دست رسیدگی در دادگاه میباشد.",
   ];
 
-  const [updateCompaint] = useMutation(UPDATE_COMPLAINT, {
+  const [updateCompaint] = useMutation(UpdateComplaintDocument, {
     variables: {
       id: complaintId ? parseInt(complaintId) : 0,
-      complaintState:
+      complaintStateId:
         data?.items[0]?.accuserDepartmentUserId == user.id ||
         data?.items[0]?.accuserDepartmentUserId == user.parentId
-          ? newStatesObj.waitingForAccuserToRegisterArguments.cap
-          : newStatesObj.waitingForAccusedToAnswerArguments.cap,
+          ? getComplaintStateWithEnum(
+              ComplaintStateStatus.WaitingForAccuserToRegisterArguments
+            ).id
+          : getComplaintStateWithEnum(
+              ComplaintStateStatus.WaitingForAccusedToAnswerArguments
+            ).id,
     },
     onCompleted() {
-      console.log(
-        "state",
-        data?.items[0]?.accuserDepartmentUserId == user.id ||
-          data?.items[0]?.accuserDepartmentUserId == user.parentId
-          ? newStatesObj.waitingForAccuserToRegisterArguments.cap
-          : newStatesObj.waitingForAccusedToAnswerArguments.cap
-      );
       console.log(data);
       alert("ثبت شد");
       if (
         data?.items[0]?.accuserDepartmentUserId == user.id ||
         data?.items[0]?.accuserDepartmentUserId == user.parentId
       ) {
-        navigate(
-          `/complaints/${contractId}/${complaintId}/addArguements/0`
-        );
-      }else{
-        navigate(
-          `/complaints/${contractId}/${complaintId}/addArguements/1`
-        );
+        navigate(`/complaints/${contractId}/${complaintId}/addArguements/0`);
+        // sendSms();
+      } else {
+        navigate(`/complaints/${contractId}/${complaintId}/addArguements/1`);
       }
+    },
+  });
+
+  const { data: complaintData } = useGetComplaintsWithFilterQuery({
+    variables: {
+      filter: {
+        id: {
+          eq: parseInt(complaintId || "") || 0,
+        },
+      },
     },
   });
   return (
     <>
       <TimeLine stage={4} />
-      <BackButton to={`/complaints/${contractId}/${complaintId}/tablesPage`} label=" و ویرایش"/>
+      <BackButton
+        to={`/complaints/${contractId}/${complaintId}/tablesPage`}
+        label=" و ویرایش"
+      />
       <Box
         display={"grid"}
         gridTemplateColumns={"repeat(12, 1fr)"}
@@ -191,7 +203,7 @@ const AddComplaint = () => {
         justifyContent={"center"}
         gap={2}
         padding={"3rem"}
-        my={'3rem'}
+        my={"3rem"}
         border={`2px solid ${secondary}`}
         borderRadius={"1rem"}
         position={"relative"}
@@ -244,25 +256,28 @@ const AddComplaint = () => {
               disableRipple
               disableTouchRipple
               disableFocusRipple
-              icon={<RoundedCorner />}
+              icon={
+                <CancelRounded
+                  sx={{
+                    color: Red,
+                  }}
+                />
+              }
+              checkedIcon={
+                <CheckBoxRounded
+                  sx={{
+                    color: Green,
+                  }}
+                />
+              }
               sx={{
                 cursor: "default",
               }}
             />
           }
         />
-        <Box sx={{ gridColumn: "span 3" }}>
-          <FileButton
-            text="افزودن مستندات"
-            textColor={primary}
-            borderRadius="0.5rem"
-          >
-            <BsUpload
-              style={{
-                marginInline: "0.5rem",
-              }}
-            />
-          </FileButton>
+        <Box sx={{ gridColumn: "span 2" }}>
+          <FileBox />
         </Box>
         <FormGroup
           sx={{
@@ -299,11 +314,13 @@ const AddComplaint = () => {
           />
         </FormGroup>
 
-        
         <TextField
           label="شماره طرح"
           variant="outlined"
-          sx={{ gridColumn: "span 6",display: FisrtCondition.checked[0]? "grid" : "none"}}
+          sx={{
+            gridColumn: "span 6",
+            display: FisrtCondition.checked[0] ? "grid" : "none",
+          }}
           value={ProjectName}
           onChange={(e) => {
             setProjectName(e.target.value);
@@ -313,7 +330,10 @@ const AddComplaint = () => {
         <TextField
           label="شماره پروژه"
           variant="outlined"
-          sx={{ gridColumn: "span 6",display: FisrtCondition.checked[0]? "grid" : "none"}}
+          sx={{
+            gridColumn: "span 6",
+            display: FisrtCondition.checked[0] ? "grid" : "none",
+          }}
           value={ProjectNumber}
           onChange={(e) => {
             setProjectNumber(e.target.value);
@@ -351,29 +371,32 @@ const AddComplaint = () => {
               disableRipple
               disableTouchRipple
               disableFocusRipple
-              icon={<RoundedCorner />}
+              icon={
+                <CancelRounded
+                  sx={{
+                    color: Red,
+                  }}
+                />
+              }
+              checkedIcon={
+                <CheckBoxRounded
+                  sx={{
+                    color: Green,
+                  }}
+                />
+              }
               sx={{
                 cursor: "default",
               }}
             />
           }
         />
-        <Box sx={{ gridColumn: "span 3" }}>
-          <FileButton
-            text="افزودن مستندات"
-            textColor={primary}
-            borderRadius="0.5rem"
-          >
-            <BsUpload
-              style={{
-                marginInline: "0.5rem",
-              }}
-            />
-          </FileButton>
+        <Box sx={{ gridColumn: "span 2" }}>
+          <FileBox />
         </Box>
         <FormGroup
           sx={{
-            gridColumn: "2/span 11",
+            gridColumn: "2/span 9",
           }}
         >
           <FormControlLabel
@@ -393,9 +416,7 @@ const AddComplaint = () => {
             }
           />
           <FormControlLabel
-            label={
-              "طرفین پس از عقد قرارداد، بر داوری شورا تراضی نموده اند."
-            }
+            label={"طرفین پس از عقد قرارداد، بر داوری شورا تراضی نموده اند."}
             control={
               <Checkbox
                 checked={SecondCondition.checked[1] || false}
@@ -409,9 +430,7 @@ const AddComplaint = () => {
             }
           />
           <FormControlLabel
-            label={
-              "فاقد تراضی روی داوری شورا در حین قرارداد یا پس از آن."
-            }
+            label={"فاقد تراضی روی داوری شورا در حین قرارداد یا پس از آن."}
             control={
               <Checkbox
                 checked={SecondCondition.checked[2] || false}
@@ -452,7 +471,20 @@ const AddComplaint = () => {
                 ThirdCondition.checked[2] ||
                 false
               }
-              icon={<RoundedCorner />}
+              icon={
+                <CancelRounded
+                  sx={{
+                    color: Red,
+                  }}
+                />
+              }
+              checkedIcon={
+                <CheckBoxRounded
+                  sx={{
+                    color: Green,
+                  }}
+                />
+              }
               onChange={(e) => {
                 console.log(e.target.checked);
               }}
@@ -465,22 +497,12 @@ const AddComplaint = () => {
             />
           }
         />
-        <Box sx={{ gridColumn: "span 3" }}>
-          <FileButton
-            text="افزودن مستندات"
-            textColor={primary}
-            borderRadius="0.5rem"
-          >
-            <BsUpload
-              style={{
-                marginInline: "0.5rem",
-              }}
-            />
-          </FileButton>
-        </Box>
+        {/* <Box sx={{ gridColumn: "span 2" }}>
+          <FileBox />
+        </Box> */}
         <FormGroup
           sx={{
-            gridColumn: "2/span 11",
+            gridColumn: "2/span 8",
           }}
         >
           <FormControlLabel
@@ -545,6 +567,20 @@ const AddComplaint = () => {
           />
         </FormGroup>
 
+        <Box
+          gridColumn={"span 2"}
+          display={"flex"}
+          flexDirection={"column"}
+          gap={2}
+        >
+          <FileBox title="صورت حساب نهایی" />
+          <FileBox title="نامه ابلاغ" />
+          <FileBox
+            disabled={!(ThirdCondition.checked[2] || ThirdCondition.checked[1])}
+            title="مستندات اعتراض پیمانکار"
+          />
+        </Box>
+
         <div
           style={{
             gridColumn: "span 12",
@@ -576,31 +612,68 @@ const AddComplaint = () => {
               disableRipple
               disableTouchRipple
               disableFocusRipple
-              icon={<RoundedCorner />}
+              icon={
+                <CancelRounded
+                  sx={{
+                    color: Red,
+                  }}
+                />
+              }
+              checkedIcon={
+                <CheckBoxRounded
+                  sx={{
+                    color: Green,
+                  }}
+                />
+              }
               sx={{
                 cursor: "default",
               }}
             />
           }
         />
-        <Box sx={{ gridColumn: "span 3" }}>
-          <FileButton
-            text="افزودن مستندات"
-            textColor={primary}
-            borderRadius="0.5rem"
-          >
-            <BsUpload
-              style={{
-                marginInline: "0.5rem",
-              }}
-            />
-          </FileButton>
-        </Box>
         <FormGroup
           sx={{
-            gridColumn: "2/span 7",
+            gridColumn: "2/span 8",
           }}
         >
+          {/* <FormControlLabel
+            label={
+              "در دادگاه مطرح نشده. (در صورت انتخاب این گزینه، فایلی برای آپلود نیاز نیست)"
+            }
+            control={
+              <Checkbox
+                checked={FourthCondition.checked[4] || false}
+                onChange={(e) => {
+                  setFourthCondition({
+                    ...FourthCondition,
+                    checked: [false, false, false,false, e.target.checked],
+                  });
+                }}
+              />
+            }
+          /> */}
+          <FormControlLabel
+            label={"در دست رسیدگی در دادگاه میباشد."}
+            control={
+              <Checkbox
+                checked={FourthCondition.checked[5] || false}
+                onChange={(e) => {
+                  setFourthCondition({
+                    ...FourthCondition,
+                    checked: [
+                      false,
+                      false,
+                      false,
+                      false,
+                      false,
+                      e.target.checked,
+                    ],
+                  });
+                }}
+              />
+            }
+          />
           <FormControlLabel
             label={
               "رای قطعی در خصوص دعاوی مورد درخواست توسط مراجع قضایی و شورا صادر نشده است."
@@ -650,9 +723,7 @@ const AddComplaint = () => {
             }
           />
           <FormControlLabel
-            label={
-              "قرار عدم صلاحیت (استماع) توسط مراجع قضایی صادر شده است."
-            }
+            label={"قرار عدم صلاحیت (استماع) توسط مراجع قضایی صادر شده است."}
             control={
               <Checkbox
                 checked={FourthCondition.checked[3] || false}
@@ -673,8 +744,12 @@ const AddComplaint = () => {
           flexDirection={"column"}
           gap={2}
         >
+          <FileBox disabled={!FourthCondition.checked[5]} />
+          <div className=""></div>
+          <div className=""></div>
           <FileBox disabled={!FourthCondition.checked[1]} />
           <FileBox disabled={!FourthCondition.checked[2]} />
+          <FileBox disabled={!FourthCondition.checked[3]} />
         </Box>
 
         <div
@@ -688,11 +763,17 @@ const AddComplaint = () => {
             gridColumn: "span 12",
           }}
         />
-
+        {/* خواهان خوانده نمیشه به دلیل شرایط */}
         <FormControlLabel
-          label={
-            "این خواهان/خوانده شیوه نامه داوری شورای عالی فنی را مطالعه نموده و موافقت خود را با آن اعلام می دارد."
-          }
+          label={`این ${
+            complaintData?.complaint_getComplaints?.result?.items?.[0]?.contract
+              ?.accuserDepartmentUserId == user.id
+              ? "خواهان"
+              : complaintData?.complaint_getComplaints?.result?.items?.[0]
+                  ?.contract?.accuserDepartmentUserId == user.parentId
+              ? "خواهان"
+              : "خوانده"
+          } شیوه نامه داوری شورای عالی فنی را مطالعه نموده و موافقت خود را با آن اعلام می دارد.`}
           sx={{
             gridColumn: "span 6",
           }}
@@ -719,149 +800,184 @@ const AddComplaint = () => {
           دانلود شیوه نامه داوری شورای عالی فنی
         </Button>
 
-        <Button
-          variant="contained"
+        <Typography
+          variant="body1"
+          sx={{ gridColumn: "span 12", textAlign: "start" }}
+        >
+          با توجه به اظهار{" "}
+          {complaintData?.complaint_getComplaints?.result?.items?.[0]?.contract
+            ?.accuserDepartmentUserId == user.id ||
+          complaintData?.complaint_getComplaints?.result?.items?.[0]?.contract
+            ?.accuserDepartmentUserId == user.parentId
+            ? "خواهان"
+            : "خوانده"}
+          ،{" "}
+          <span
+            style={{
+              color:
+                (FourthCondition.checked[0] || FourthCondition.checked[3]) &&
+                (ThirdCondition.checked[0] ||
+                  ThirdCondition.checked[1] ||
+                  ThirdCondition.checked[2]) &&
+                (SecondCondition.checked[0] || SecondCondition.checked[1]) &&
+                FisrtCondition.checked[0]
+                  ? Green
+                  : Red,
+            }}
+          >
+            {(FourthCondition.checked[0] || FourthCondition.checked[3]) &&
+            (ThirdCondition.checked[0] ||
+              ThirdCondition.checked[1] ||
+              ThirdCondition.checked[2]) &&
+            (SecondCondition.checked[0] || SecondCondition.checked[1]) &&
+            FisrtCondition.checked[0]
+              ? "حائز "
+              : "فاقد "}
+          </span>
+          شرایط داوری است و نتیجه قطعی پس از بررسی های لازم اعلام خواهد شد.
+        </Typography>
+
+        <Box
           sx={{
-            gridColumn: "span 6",
-            background: secondary,
-            color: "white",
-            width: "max-content",
-            justifySelf: "center",
-            padding: "0.5rem 3rem",
-            "&:hover": {
-              background: secondaryLight,
-              color: primary,
-            },
-          }}
-          onClick={() => {
-            localStorage.setItem(
-              "complaints",
-              JSON.stringify({
-                FisrtCondition,
-                SecondCondition,
-                ThirdCondition,
-                FourthCondition,
-                AgreeWithTerms,
-              })
-            );
-            alert("ذخیره شد");
+            gridColumn: "span 12",
+            display: "flex",
+            gap: 2,
+            justifyContent: "flex-end",
           }}
         >
-          ذخیره موقت
-        </Button>
-        <Button
-          variant="contained"
-          sx={{
-            gridColumn: "span 6",
-            background: Green,
-            color: "white",
-            width: "max-content",
-            justifySelf: "center",
-            padding: "0.5rem 3rem",
-            "&:hover": {
-              background: GreenLight,
-              color: Green,
-            },
-          }}
-          onClick={() => {
-            localStorage.setItem(
-              "complaints",
-              JSON.stringify({
-                FisrtCondition,
-                SecondCondition,
-                ThirdCondition,
-                FourthCondition,
-                AgreeWithTerms,
-              })
-            );
-            console.log("FisrtCondition", FisrtCondition);
-            console.log(
-              "FisrtConditionSelected",
-              firstConditionItems[
-                FisrtCondition.checked.indexOf(true)
-              ]
-            );
-            console.log("SecondCondition", SecondCondition);
-            console.log(
-              "SecondConditionSelected",
-              secondConditionItems[
-                SecondCondition.checked.indexOf(true)
-              ]
-            );
-            console.log("ThirdCondition", ThirdCondition);
-            console.log(
-              "ThirdConditionSelected",
-              thirdConditionItems[
-                ThirdCondition.checked.indexOf(true)
-              ]
-            );
-            console.log("FourthCondition", FourthCondition);
-            console.log(
-              "FourthConditionSelected",
-              fourthConditionItems[
-                FourthCondition.checked.indexOf(true)
-              ]
-            );
-            console.log("AgreeWithTerms", AgreeWithTerms);
-            contractId &&
-              complaintId &&
-              void createFormMutation({
-                variables: {
-                  complaintId: complaintId && parseInt(complaintId),
-                  userId: user.id,
-                  filledBy:
-                    data?.items[0]?.accuserDepartmentUserId ==
-                      user.id ||
-                    data?.items[0]?.accuserDepartmentUserId ==
-                      user.parentId
-                      ? "ACCUSER"
-                      : "ACCUSED",
-                  firstCondition:
-                    firstConditionItems[
-                      FisrtCondition.checked.indexOf(true)
-                    ],
-                  firstConditionFileName:
-                    FisrtCondition.fileName || undefined,
-                  secondCondition:
-                    secondConditionItems[
-                      SecondCondition.checked.indexOf(true)
-                    ],
-                  secondConditionFileName:
-                    SecondCondition.fileName || undefined,
-                  thirdCondition:
-                    thirdConditionItems[
-                      ThirdCondition.checked.indexOf(true)
-                    ],
-                  thirdConditionFileName:
-                    ThirdCondition.fileName || undefined,
-                  fourthCondition:
-                    fourthConditionItems[
-                      FourthCondition.checked.indexOf(true)
-                    ],
-                  fourthConditionFileName:
-                    FourthCondition.fileName || undefined,
-                  projectName: ProjectName,
-                  projectNumber: ProjectNumber,
-                  hasReadAgreement: AgreeWithTerms,
-                },
-                options: {
-                  onCompleted(data, clientOptions) {
-                    console.log(data);
+          <Button
+            variant="outlined"
+            sx={{
+              justifySelf: "center",
+              padding: "0.5rem 3rem",
+              borderRadius: "2rem",
+              boxShadow: "none",
+              // "&:hover": {
+              //   background: secondaryLight,
+              //   color: primary,
+              // },
+            }}
+            onClick={() => {
+              localStorage.setItem(
+                "complaints",
+                JSON.stringify({
+                  ComplaintId: complaintId,
+                  FisrtCondition,
+                  SecondCondition,
+                  ThirdCondition,
+                  FourthCondition,
+                  AgreeWithTerms,
+                })
+              );
+              alert("ذخیره شد");
+            }}
+          >
+            ذخیره موقت
+          </Button>
+          <Button
+            variant="contained"
+            sx={{
+              background: primary,
+              color: secondaryDark,
+              borderRadius: "2rem",
+              boxShadow: "none",
+              justifySelf: "center",
+              padding: "0.5rem 3rem",
+              fontWeight: "bold",
+              "&:hover": {
+                background: primaryLight,
+                color: secondaryDark,
+                boxShadow: "none",
+              },
+            }}
+            onClick={() => {
+              localStorage.setItem(
+                "complaints",
+                JSON.stringify({
+                  ComplaintId: complaintId,
+                  FisrtCondition,
+                  SecondCondition,
+                  ThirdCondition,
+                  FourthCondition,
+                  AgreeWithTerms,
+                })
+              );
+              console.log("FisrtCondition", FisrtCondition);
+              console.log(
+                "FisrtConditionSelected",
+                firstConditionItems[FisrtCondition.checked.indexOf(true)]
+              );
+              console.log("SecondCondition", SecondCondition);
+              console.log(
+                "SecondConditionSelected",
+                secondConditionItems[SecondCondition.checked.indexOf(true)]
+              );
+              console.log("ThirdCondition", ThirdCondition);
+              console.log(
+                "ThirdConditionSelected",
+                thirdConditionItems[ThirdCondition.checked.indexOf(true)]
+              );
+              console.log("FourthCondition", FourthCondition);
+              console.log(
+                "FourthConditionSelected",
+                fourthConditionItems[FourthCondition.checked.indexOf(true)]
+              );
+              console.log("AgreeWithTerms", AgreeWithTerms);
+              contractId &&
+                complaintId &&
+                void createFormMutation({
+                  variables: {
+                    complaintId: complaintId && parseInt(complaintId),
+                    userId: user.id,
+                    filledBy:
+                      data?.items[0]?.accuserDepartmentUserId == user.id ||
+                      data?.items[0]?.accuserDepartmentUserId == user.parentId
+                        ? "ACCUSER"
+                        : "ACCUSED",
+                    firstCondition:
+                      firstConditionItems[FisrtCondition.checked.indexOf(true)],
+                    firstConditionFileName:
+                      FisrtCondition.fileName || undefined,
+                    secondCondition:
+                      secondConditionItems[
+                        SecondCondition.checked.indexOf(true)
+                      ],
+                    secondConditionFileName:
+                      SecondCondition.fileName || undefined,
+                    thirdCondition:
+                      thirdConditionItems[ThirdCondition.checked.indexOf(true)],
+                    // thirdConditionFileName:
+                    //   ThirdCondition.fileName || undefined,
+                    fourthCondition:
+                      fourthConditionItems[
+                        FourthCondition.checked.indexOf(true)
+                      ],
+                    fourthConditionFileName:
+                      FourthCondition.fileName || undefined,
+                    projectName: ProjectName,
+                    projectNumber: ProjectNumber,
+                    hasReadAgreement: AgreeWithTerms,
                   },
-                },
-              }).then((res: any) => {
-                if (res instanceof Error) {
-                  setGraphError({
-                    message: res.message,
-                  });
-                } else {
-                  void updateCompaint();
-                }
-              });
-          }}
-        >
-          ادامه
-        </Button>
+                  options: {
+                    onCompleted(data, clientOptions) {
+                      console.log(data);
+                    },
+                  },
+                }).then((res: any) => {
+                  if (res instanceof Error) {
+                    setGraphError({
+                      message: res.message,
+                    });
+                  } else {
+                    void updateCompaint();
+                  }
+                });
+            }}
+          >
+            ادامه
+          </Button>
+        </Box>
+
         {graphError.message && (
           <Typography
             variant="body1"

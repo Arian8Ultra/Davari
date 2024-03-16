@@ -1,8 +1,11 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { useState } from "react";
 import ComplaintsList from "../../components/Complaints/ComplaintsList";
 import NewModal from "../../components/Modals";
-import { Box, Button, TextField } from "@mui/material";
+import { Box, Button, Skeleton, TextField } from "@mui/material";
 import {
   Green,
   GreenLight,
@@ -21,27 +24,43 @@ import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import { CREATE_COMPLAINT } from "../../GraphQL/Complaints/Mutations";
 import FaTextField from "../../components/FaComponents/FaTextField";
 import theme from "../../theme/theme";
+import { useGetPublicContractsLazyQuery } from "../../../generated-types";
+import ContractCard from "../../components/Contract/ContractCard";
 
 const Complaints = () => {
   const [addModal, setAddModal] = useState({
     open: false as boolean,
-    contractId: "" as string,
+    contractId: 0 as number,
+    search: "" as string,
   });
   const navigate = useNavigate();
 
   const user = useUserStore((state) => state.user);
 
-  const [getContract] = useLazyQuery(GET_CONTRACT, {
-    variables: {
-      id: parseFloat(addModal.contractId),
-    },
-  });
+  // const [getContract] = useLazyQuery(GET_CONTRACT, {
+  //   variables: {
+  //     id: parseFloat(addModal.contractId),
+  //   },
+  // });
 
   const [addComplaint] = useMutation(CREATE_COMPLAINT, {
     onCompleted(data, clientOptions) {
       console.log(data);
     },
   });
+
+  const [getPublicContract, { data: contracts, loading }] =
+    useGetPublicContractsLazyQuery({
+      variables: {
+        take: 1000,
+        filter: {
+          or: [
+            { fullName: { contains: addModal.search } },
+            { contractID: { contains: addModal.search } },
+          ],
+        },
+      },
+    });
   return (
     <>
       <Box
@@ -49,14 +68,17 @@ const Complaints = () => {
         justifyContent={"flex-start"}
         alignItems={"center"}
         paddingY={1}
-        position={'relative'}
+        position={"relative"}
       >
         <Button
           variant="contained"
           endIcon={<AiFillFileAdd />}
-          onClick={() => [setAddModal({ ...addModal, open: true })]}
+          onClick={() => {
+            void getPublicContract();
+            setAddModal({ ...addModal, open: true });
+          }}
           sx={{
-            borderRadius: '0.7rem',
+            borderRadius: "0.7rem",
             backgroundColor: primary,
             fontWeight: 400,
             fontStyle: "normal",
@@ -65,14 +87,16 @@ const Complaints = () => {
             position: "fixed",
             top: theme.spacing(10),
             right: 20,
-            color:secondaryDark,
+            color: secondaryDark,
             "&:hover": {
               backgroundColor: GreenLight,
               color: secondary,
-              boxShadow:'none'
+              boxShadow: "none",
             },
             display: user?.userRoles?.some(
-              (role) => role.roleType === "SENIOR_USER" || role.roleType === "EXPERT"
+              (role) =>
+                role.roleType === "SENIOR_USER" ||
+                role.roleType === "EXPERT"
             )
               ? "flex"
               : "none",
@@ -96,7 +120,12 @@ const Complaints = () => {
         ) && (
           <ComplaintsList
             type="accuser"
-            departmentId={user.userType === "CONTRACTOR_OR_CONSULTANT" || user.userType === "ORGANIZATION" ? user.id : user.parentId}
+            departmentId={
+              user.userType === "CONTRACTOR_OR_CONSULTANT" ||
+              user.userType === "ORGANIZATION"
+                ? user.id
+                : user.parentId
+            }
           />
         )}
 
@@ -105,7 +134,12 @@ const Complaints = () => {
         ) && (
           <ComplaintsList
             type="accused"
-            departmentId={user.userType === "CONTRACTOR_OR_CONSULTANT" || user.userType === "ORGANIZATION" ? user.id : user.parentId}
+            departmentId={
+              user.userType === "CONTRACTOR_OR_CONSULTANT" ||
+              user.userType === "ORGANIZATION"
+                ? user.id
+                : user.parentId
+            }
           />
         )}
 
@@ -120,19 +154,17 @@ const Complaints = () => {
         )}
         {user?.userRoles?.some(
           (role) => role.roleType === "SUPER_ADMIN"
-        ) && (
-          <ComplaintsList
-            type="all"
-          />
-        )}
+        ) && <ComplaintsList type="all" />}
       </Box>
 
       <NewModal
         name="ثبت درخواست داوری"
         width={{
           xs: "90%",
-          sm: "60%",
-          md: "40%",
+          sm: "90%",
+          md: "80%",
+          lg: "60%",
+          xl: "50%",
         }}
         isCloseable={true}
         open={addModal.open}
@@ -145,7 +177,9 @@ const Complaints = () => {
             display: "grid",
             gridTemplateColumns: {
               xs: "1fr",
-              lg: "repeat(2, 1fr)",
+              sm: "1fr",
+              md: "1fr 1fr",
+              lg: "repeat(4, 1fr)",
             },
             justifyContent: "center",
             alignItems: "stretch",
@@ -153,15 +187,33 @@ const Complaints = () => {
           }}
         >
           <FaTextField
-            label="شماره قرارداد"
+            label="جستجو"
             variant="outlined"
-            value={addModal.contractId}
-            onChange={(e) =>
+            value={addModal.search}
+            onChange={(e) => {
               setAddModal({
                 ...addModal,
-                contractId: e.target.value,
-              })
-            }
+                search: e.target.value,
+              });
+              void getPublicContract({
+                variables: {
+                  take: 100,
+                  filter: {
+                    or: [
+                      { fullName: { contains: e.target.value } },
+                      { contractID: { contains: e.target.value } },
+                    ],
+                  },
+                },
+              });
+            }}
+            sx={{
+              gridColumn: {
+                xs: 'span 1',
+                md: 'span 2',
+                lg: 'span 3',
+              },
+            }}
           />
           <Button
             variant="contained"
@@ -172,20 +224,101 @@ const Complaints = () => {
               fontStyle: "normal",
               fontSize: "1rem",
               boxShadow: "none",
+              gridColumn: {
+                xs: 'span 1',
+                md: 'span 2',
+                lg: 'span 1',
+              },
               // height: "max-content",
               color: secondaryDark,
               "&:hover": {
                 backgroundColor: GreenLight,
-                boxShadow:'none'
+                boxShadow: "none",
               },
             }}
             onClick={() => {
-              navigate("createContractPage");
+              void getPublicContract({
+                variables: {
+                  take: 100,
+                  filter: {
+                    or: [
+                      { fullName: { contains: addModal.search } },
+                      { contractID: { contains: addModal.search } },
+                    ],
+                  },
+                },
+              });
             }}
           >
-            نداشتن کد قرارداد و ادامه
+            جستجو
           </Button>
           <Button
+            variant="contained"
+            sx={{
+              borderRadius: 2,
+              backgroundColor: primary,
+              fontWeight: 400,
+              fontStyle: "normal",
+              fontSize: "1rem",
+              boxShadow: "none",
+              gridColumn: {
+                xs: 'span 1',
+                md: 'span 2',
+                lg: 'span 4',
+              },
+              // height: "max-content",
+              color: secondaryDark,
+              "&:hover": {
+                backgroundColor: GreenLight,
+                boxShadow: "none",
+              },
+            }}
+            onClick={() => {
+              navigate("create/contractPageToFill/");
+            }}
+          >
+            نبود قرارداد و ادامه
+          </Button>
+          {loading &&
+            [...Array(10)].map((item) => (
+              <Skeleton
+                variant="rectangular"
+                key={item}
+                width="100%"
+                height={100}
+                sx={{
+                  borderRadius: "1rem",
+                }}
+              />
+            ))}
+          {contracts?.publicContract_getPublicContracts.result?.items?.map(
+            (item) => (
+              <Box
+                display={"flex"}
+                gridColumn={"span 2"}
+                onClick={() => {
+                  setAddModal({
+                    ...addModal,
+                    contractId: item?.id,
+                  });
+                  navigate(`/complaints/${item?.id}/create/contractPageToFill/`);
+                }}
+              >
+                <ContractCard
+                  type="small"
+                  key={item?.id}
+                  contractID={item?.contractID}
+                  fullName={item?.contractSubject}
+                  executiveTitle={item?.executiveTitle}
+                  id={item?.id}
+                  agreeDate={item?.agreeDate}
+                  createdDate={item?.createdDate}
+                  isDeleted={item?.isDeleted}
+                />
+              </Box>
+            )
+          )}
+          {/* <Button
             variant="contained"
             sx={{
               borderRadius: 2,
@@ -202,7 +335,7 @@ const Complaints = () => {
               "&:hover": {
                 backgroundColor: GreenLight,
                 color: Green,
-                boxShadow:'none'
+                boxShadow: "none",
               },
             }}
             onClick={() => {
@@ -252,7 +385,7 @@ const Complaints = () => {
             }}
           >
             ادامه
-          </Button>
+          </Button> */}
         </Box>
       </NewModal>
     </>

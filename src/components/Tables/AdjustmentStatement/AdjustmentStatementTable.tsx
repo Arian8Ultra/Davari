@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
@@ -18,22 +19,27 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
+import { DatePicker } from "@mui/x-date-pickers";
 import React from "react";
 import { BsPlusCircle } from "react-icons/bs";
 import { useParams } from "react-router-dom";
+import {
+  useCreate_Adjustment_StatementMutation,
+  useCreate_Adjustment_Statement_PartMutation,
+  useCreate_Adjustment_Statement_TableMutation,
+  useGetAdjustmentStatementTablesQuery,
+  useGetAdjustmentStatementsFullLazyQuery,
+} from "../../../../generated-types";
 import { useUserStore } from "../../../Context/UserStore";
-import { GET_CONTRACT } from "../../../GraphQL/Contracts/Queries";
 import { MutationWrapper } from "../../../GraphQL/MutationWrapper";
-import { QueryWrapper } from "../../../GraphQL/QueryWrapper";
 import {
   AdjustmentStatement,
   AdjustmentStatementPart,
   CREATE_ADJUSTMENT_STATEMENT,
   CREATE_ADJUSTMENT_STATEMENT_PART,
-  CREATE_ADJUSTMENT_STATEMENT_TABLE,
   UPDATE_ADJUSTMENT_STATEMENT,
 } from "../../../GraphQL/Tables/Mutations";
-import { GET_ADJUSTMENT_STATEMENT_TABLE_BY_CONTRACT_ID } from "../../../GraphQL/Tables/Queries";
+import { RegistrarType } from "../../../gql/graphql";
 import {
   Red,
   background,
@@ -41,15 +47,13 @@ import {
   primaryLight,
   secondary,
   secondaryDark,
-  secondaryLight,
-  secondaryLighter,
 } from "../../../theme/color";
 import DateButton from "../../DateButton";
 import FaTextField from "../../FaComponents/FaTextField";
 import FaTypography from "../../FaComponents/FaTypography";
 import NewModal from "../../Modals";
 import AdjustmentStatementCard from "./AdjustmentStatementCard";
-import { DatePicker } from "@mui/x-date-pickers";
+import FileBox from "../../FileBox";
 
 const currencies = [
   {
@@ -81,238 +85,188 @@ const currencies = [
 interface Props extends TableContainerProps {
   AdjustmentStatementTableId?: number;
   type?: "ACCUSED" | "ACCUSER";
+  isConsultant?: boolean;
 }
 const AdjustmentStatementTable = (props: Props) => {
   const { contractId } = useParams<{ contractId: string }>();
   const user = useUserStore((state) => state.user);
   const [editMode, setEditMode] = React.useState<boolean>(false);
   const [TableHeader, setTableHeader] = React.useState<string>();
-  const [TableHeaderOther, setTableHeaderOther] =
-    React.useState<string>();
-  const [AdjustmentStatement, setAdjustmentStatements] =
-    React.useState<AdjustmentStatement[]>([
-      // {
-      //   amount: 100000,
-      //   filledBy: "ACCUSED",
-      //   id: 1,
-      //   date: new Date(),
-      //   title: "قسط اول",
-      //   AdjustmentStatementTableId: 1,
-      // },
-    ]);
+  const [TableHeaderOther, setTableHeaderOther] = React.useState<string>();
+  const [refetchBoolean, setRefetchBoolean] = React.useState<boolean>(false);
+  const [AdjustmentStatement, setAdjustmentStatements] = React.useState<
+    AdjustmentStatement[]
+  >([
+    // {
+    //   amount: 100000,
+    //   filledBy: "ACCUSED",
+    //   id: 1,
+    //   date: new Date(),
+    //   title: "پیش پرداخت اول",
+    //   AdjustmentStatementTableId: 1,
+    // },
+  ]);
   const [pageError, setPageError] = React.useState<string>();
   const [tableId, setTableId] = React.useState<number>();
-  const [
-    addAdjustmentStatementPartModal,
-    setAddAdjustmentStatementPartModal,
-  ] = React.useState<{
-    open: boolean;
-    AdjustmentStatementPart: AdjustmentStatementPart;
-    AdjustmentStatementId?: number;
-  }>({
-    open: false,
-    AdjustmentStatementPart: {} as AdjustmentStatementPart,
-  });
+  const [DefiniteAdjustmentStatementPart, setDefiniteAdjustmentStatementPart] =
+    React.useState<AdjustmentStatement>({} as AdjustmentStatement);
+  const [addAdjustmentStatementPartModal, setAddAdjustmentStatementPartModal] =
+    React.useState<{
+      open: boolean;
+      AdjustmentStatementPart: AdjustmentStatementPart;
+      AdjustmentStatementId?: number;
+    }>({
+      open: false,
+      AdjustmentStatementPart: {} as AdjustmentStatementPart,
+    });
 
   const [newAdjustmentStatement, setNewAdjustmentStatement] =
     React.useState<AdjustmentStatement>({} as AdjustmentStatement);
 
-  const { handleMutation: addAdjustmentStatement } = MutationWrapper(
-    CREATE_ADJUSTMENT_STATEMENT,
-    "adjustmentStatement_addAdjustmentStatement"
-  );
-  const { handleMutation: addAdjustmentStatementTable } =
-    MutationWrapper(
-      CREATE_ADJUSTMENT_STATEMENT_TABLE,
-      "adjustmentStatementTable_addAdjustmentStatementTable"
-    );
+  const [addAdjustmentStatement] = useCreate_Adjustment_StatementMutation();
+
+  const [addAdjustmentStatementTable] =
+    useCreate_Adjustment_Statement_TableMutation();
 
   const { handleMutation: editAdjustmentStatement } = MutationWrapper(
     UPDATE_ADJUSTMENT_STATEMENT,
     "adjustmentStatement_updateAdjustmentStatement"
   );
 
-  const { data, refetch } = QueryWrapper(
-    GET_ADJUSTMENT_STATEMENT_TABLE_BY_CONTRACT_ID,
-    "adjustmentStatementTable_getAdjustmentStatementTables",
-    {
-      id: contractId && parseInt(contractId),
+  const { data } = useGetAdjustmentStatementTablesQuery({
+    variables: {
+      id: (contractId && parseInt(contractId)) || 0,
     },
-    {
+    onCompleted(data) {
+      console.log("OnComplete", data);
+      const userType =
+        data?.adjustmentStatementTable_getAdjustmentStatementTables?.result
+          ?.items?.[0]?.contract?.accuserDepartmentUserId == user.parentId
+          ? "ACCUSER"
+          : "ACCUSED";
+
+      void getStatements({
+        variables: {
+          filter: {
+            adjustmentStatementTableId: {
+              eq:
+                data?.adjustmentStatementTable_getAdjustmentStatementTables
+                  ?.result?.items?.[0]?.id || null,
+            },
+            filledBy: {
+              eq:
+                data?.adjustmentStatementTable_getAdjustmentStatementTables
+                  ?.result?.items?.[0]?.contract?.accuserDepartmentUserId ==
+                user.parentId
+                  ? RegistrarType.Accuser
+                  : RegistrarType.Accused,
+            },
+          },
+        },
+      });
+
+      // setAdjustmentStatements(
+      //   data.items[0].adjustmentStatements.filter(
+      //     (adjustmentStatement: AdjustmentStatement) =>
+      //       adjustmentStatement.filledBy == userType
+      //   )
+      // );
+    },
+    onError(error) {
+      console.log("error", error);
+    },
+  });
+
+  const [getStatements, { data: adjustmentStatements, refetch }] =
+    useGetAdjustmentStatementsFullLazyQuery({
+      variables: {
+        filter: {
+          adjustmentStatementTableId: {
+            eq:
+              data?.adjustmentStatementTable_getAdjustmentStatementTables
+                ?.result?.items?.[0]?.id || null,
+          },
+          filledBy: {
+            eq:
+              data?.adjustmentStatementTable_getAdjustmentStatementTables
+                ?.result?.items?.[0]?.contract?.accuserDepartmentUserId ==
+              user.parentId
+                ? RegistrarType.Accuser
+                : RegistrarType.Accused,
+          },
+        },
+      },
       onCompleted(data) {
-        console.log("OnComplete", data);
-        const userType =
-          data?.items[0]?.accuserDepartmentUserId == user.parentId
-            ? "ACCUSER"
-            : "ACCUSED";
-
-        setAdjustmentStatements(
-          data.items[0].adjustmentStatements.filter(
-            (adjustmentStatement: AdjustmentStatement) =>
-              adjustmentStatement.filledBy == userType
-          )
-        );
+        console.log("😊 OnComplete", data);
       },
-      onError(error) {
-        console.log("error", error);
-      },
-    }
-  );
+    });
 
-  const { handleMutation: createAdjustmentStatementPart } =
-    MutationWrapper(
-      CREATE_ADJUSTMENT_STATEMENT_PART,
-      "adjustmentStatementPart_addAdjustmentStatementPart"
-    );
+  // const { handleMutation: createAdjustmentStatementPart } =
+  //   MutationWrapper(
+  //     CREATE_ADJUSTMENT_STATEMENT_PART,
+  //     "adjustmentStatementPart_addAdjustmentStatementPart"
+  //   );
+
+  const [createAdjustmentStatementPart] =
+    useCreate_Adjustment_Statement_PartMutation();
 
   React.useEffect(() => {
-    console.log("GET_AdjustmentStatement_TABLE_BY_CONTRACT_ID", data);
     const userType =
-      data?.items[0]?.accuserDepartmentUserId == user.parentId
+      data?.adjustmentStatementTable_getAdjustmentStatementTables?.result
+        ?.items?.[0]?.contract?.accuserDepartmentUserId == user.parentId
         ? "ACCUSER"
         : "ACCUSED";
     console.warn("userType", userType);
-    if (data?.items?.length > 0) {
-      console.log("TestNew", data);
+    if (
+      data?.adjustmentStatementTable_getAdjustmentStatementTables?.result?.items
+        ?.length &&
+      data?.adjustmentStatementTable_getAdjustmentStatementTables?.result?.items
+        ?.length > 0
+    ) {
       const userType =
-        data?.items[0]?.accuserDepartmentUserId == user.parentId
+        data?.adjustmentStatementTable_getAdjustmentStatementTables.result
+          ?.items?.[0]?.contract?.accuserDepartmentUserId == user.id ||
+        data?.adjustmentStatementTable_getAdjustmentStatementTables.result
+          ?.items?.[0]?.contract?.accuserDepartmentUserId == user.parentId
           ? "ACCUSER"
           : "ACCUSED";
-      setAdjustmentStatements(
-        data.items[0].adjustmentStatements.filter(
-          (adjustmentStatement: AdjustmentStatement) =>
-            adjustmentStatement.filledBy == userType
-        )
-      );
-      // setAdjustmentStatements(data?.items[0]?.adjustmentStatements && data?.items[0]?.adjustmentStatements);
-      // setNewInstallment({
-      //   ...newInstallment,
-      //   installmentTableId: data?.items[0]?.id,
-      // })
-
-      setTableId(data?.items[0]?.id);
-    } else {
-      // console.log("else",data?.items?.length);
-      if (data instanceof Error) {
-        console.log("adding");
-        void addAdjustmentStatementTable({
-          variables: {
-            contractId: contractId && parseInt(contractId),
-            userId: user.id,
-          },
-          options: {
-            onCompleted(data, clientOptions) {
-              console.log("addAdjustmentStatementTable", data);
-              setTableId(data?.id);
-              void refetch();
-            },
-          },
-        });
-      } else {
-        if (data?.items?.length == 0) {
-          console.log("adding");
-          void addAdjustmentStatementTable({
-            variables: {
-              contractId: contractId && parseInt(contractId),
-              userId: user.id,
-            },
-            options: {
-              onCompleted(data, clientOptions) {
-                console.log("addAdjustmentStatementTable", data);
-                setTableId(data?.id);
-                void refetch();
+      console.warn("userType", userType);
+      void getStatements({
+        variables: {
+          filter: {
+            and: [
+              {
+                adjustmentStatementTableId: {
+                  eq:
+                    data?.adjustmentStatementTable_getAdjustmentStatementTables
+                      ?.result?.items?.[0]?.id || null,
+                },
               },
-            },
-          });
-        }
-      }
+              {
+                filledBy: {
+                  eq:
+                    userType == "ACCUSER"
+                      ? RegistrarType.Accuser
+                      : RegistrarType.Accused,
+                },
+              },
+            ],
+          },
+        },
+      });
+      setTableId(
+        data?.adjustmentStatementTable_getAdjustmentStatementTables?.result
+          ?.items?.[0]?.id
+      );
     }
-  }, [data, refetch]);
-  //   if (data?.items?.length > 0 && loading == false) {
-  //     console.log("GET_AdjustmentStatement_TABLE_BY_CONTRACT_ID", data);
-  //     setAdjustmentStatements(data?.items[0]?.AdjustmentStatements);
-  //     // setNewAdjustmentStatement({
-  //     //   ...newAdjustmentStatement,
-  //     //   AdjustmentStatementTableId: data?.items[0]?.id,
-  //     // })
-
-  //     setTableId(data?.items[0]?.id);
-  //   } else {
-  //     console.log("GET_AdjustmentStatement_TABLE_BY_CONTRACT_ID", data);
-
-  //     if (data instanceof Error) {
-  //       void addAdjustmentStatementTable({
-  //         variables: {
-  //           contractId: contractId && parseInt(contractId),
-  //           userId: user.id,
-  //           filledBy:
-  //             contractData?.items[0]?.accuserDepartmentUserId == user.id ||
-  //             contractData?.items[0]?.accuserDepartmentUserId == user.parentId
-  //               ? "ACCUSER"
-  //               : "ACCUSED",
-  //         },
-  //         options: {
-  //           onCompleted(data, clientOptions) {
-  //             console.log("addAdjustmentStatementTable", data);
-  //             void refetch();
-  //           },
-  //         },
-  //       });
-  //     } else {
-  //       if(!data) {
-  //         void addAdjustmentStatementTable({
-  //           variables: {
-  //             contractId: contractId && parseInt(contractId),
-  //             userId: user.id,
-  //             filledBy:
-  //             contractData?.items[0]?.accuserDepartmentUserId == user.id ||
-  //             contractData?.items[0]?.accuserDepartmentUserId == user.parentId
-  //               ? "ACCUSER"
-  //               : "ACCUSED",
-  //           },
-  //           options: {
-  //             onCompleted(data, clientOptions) {
-  //               console.log("addAdjustmentStatementTable", data);
-  //               void refetch();
-  //             },
-  //           },
-  //         });
-  //       }
-  //       if (data?.items?.length > 0) {
-  //         void addAdjustmentStatementTable({
-  //           variables: {
-  //             contractId: contractId && parseInt(contractId),
-  //             userId: user.id,
-  //             filledBy:
-  //             contractData?.items[0]?.accuserDepartmentUserId == user.id ||
-  //             contractData?.items[0]?.accuserDepartmentUserId == user.parentId
-  //               ? "ACCUSER"
-  //               : "ACCUSED",
-  //           },
-  //           options: {
-  //             onCompleted(data, clientOptions) {
-  //               console.log("addAdjustmentStatementTable", data);
-  //               void refetch();
-  //             },
-  //           },
-  //         });
-  //       }
-  //     }
-
-  //     // void addAdjustmentStatementTable({
-  //     //   variables: {
-  //     //     contractId: contractId && parseInt(contractId),
-  //     //     userId: user.id,
-  //     //   },
-  //     //   options: {
-  //     //     onCompleted(data, clientOptions) {
-  //     //       console.log("addAdjustmentStatementTable", data);
-  //     //       void refetch();
-  //     //     },
-  //     //   },
-  //     // });
-  //   }
-  // }, [data]);
+  }, [
+    addAdjustmentStatementTable,
+    contractId,
+    data,
+    getStatements,
+    user.id,
+    user.parentId,
+  ]);
 
   const handleEmptyFields = () => {
     if (!newAdjustmentStatement.title) {
@@ -367,7 +321,7 @@ const AdjustmentStatementTable = (props: Props) => {
 
         // change padding of cells
         "& td": {
-          padding: "0.75rem",
+          padding: "0.5rem 0.1rem",
         },
       }}
     >
@@ -388,111 +342,135 @@ const AdjustmentStatementTable = (props: Props) => {
       >
         <TableHead>
           <TableRow>
-            <TableCell
-              colSpan={12}
-              sx={{
-                textAlign: "center",
-                position: "relative",
-                height: "4rem",
-              }}
-            >
-              <Box
+            {props.isConsultant ? (
+              <TableCell
+                colSpan={12}
                 sx={{
-                  // background: primary,
+                  textAlign: "center",
+                  position: "relative",
+                  height: "3.5rem",
                   color: primary,
-                  // padding: "0.5rem 1rem",
-                  userSelect: "none",
-                  width: "max-content",
-                  zIndex: 1000,
-                  justifySelf: "center",
-                  position: "absolute",
-                  top: "50%",
-                  left: "50%",
-                  transform: "translate(-50%,-50%)",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "1rem",
                 }}
               >
-                <FaTypography variant="h6" textAlign={"center"}>
-                  جدول صورت حساب
-                </FaTypography>
-                <FaTextField
-                  label="انتخاب کنید"
-                  select
+                <FaTypography
+                  variant="h6"
+                  textAlign={"center"}
                   sx={{
                     color: primary,
-                    width: "130px",
-                  }}
-                  InputLabelProps={{
-                    sx: {
-                      color: primary,
-                    },
-                  }}
-                  value={TableHeader}
-                  onChange={(e) => {
-                    setTableHeader(e.target.value);
-                  }}
-                  InputProps={{
-                    sx: {
-                      // change the color of text in select
-                      color: primary,
-                      fontSize: "1.2rem",
-                    },
                   }}
                 >
-                  <MenuItem value="REDUCE">تعدیل</MenuItem>
-                  <MenuItem value="CASH">ارز</MenuItem>
-                  <MenuItem value="MATERIAL">مصالح</MenuItem>
-                  <MenuItem value="OTHER">سایر</MenuItem>
-                </FaTextField>
-
-                <FaTextField
-                  value={TableHeaderOther}
-                  label="سایر"
-                  onChange={(e) => {
-                    setTableHeaderOther(e.target.value);
-                  }}
+                  صورت حساب کارکرد
+                </FaTypography>
+              </TableCell>
+            ) : (
+              <TableCell
+                colSpan={12}
+                sx={{
+                  textAlign: "center",
+                  position: "relative",
+                  height: "3.5rem",
+                }}
+              >
+                <Box
                   sx={{
+                    // background: primary,
                     color: primary,
-                    display:
-                      TableHeader === "OTHER" ? "flex" : "none",
+                    // padding: "0.5rem 1rem",
+                    userSelect: "none",
+                    width: "max-content",
+                    zIndex: 1000,
+                    justifySelf: "center",
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%,-50%)",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "1rem",
                   }}
-                  InputLabelProps={{
-                    sx: {
+                >
+                  <FaTypography variant="h6" textAlign={"center"}>
+                    جدول صورت حساب
+                  </FaTypography>
+                  <FaTextField
+                    label="انتخاب کنید"
+                    select
+                    sx={{
                       color: primary,
-                    },
-                  }}
-                  InputProps={{
-                    sx: {
-                      // change the color of text in select
-                      color: primary,
-                      fontSize: "1.3rem",
-                    },
-                  }}
-                />
+                      width: "130px",
+                    }}
+                    InputLabelProps={{
+                      sx: {
+                        color: primary,
+                      },
+                    }}
+                    value={TableHeader}
+                    onChange={(e) => {
+                      setTableHeader(e.target.value);
+                    }}
+                    InputProps={{
+                      sx: {
+                        // change the color of text in select
+                        color: primary,
+                        fontSize: "1.2rem",
+                      },
+                    }}
+                  >
+                    <MenuItem value="REDUCE">تعدیل</MenuItem>
+                    <MenuItem value="CASH">ارز</MenuItem>
+                    <MenuItem value="MATERIAL">مصالح</MenuItem>
+                    <MenuItem value="OTHER">سایر</MenuItem>
+                  </FaTextField>
 
-                <FaTextField
-                  label="شماره بخشنامه"
-                  sx={{
-                    color: primary,
-                    display:
-                      TableHeader === "REDUCE" ? "flex" : "none",
-                  }}
-                  InputLabelProps={{
-                    sx: {
+                  <FaTextField
+                    value={TableHeaderOther}
+                    label="سایر"
+                    onChange={(e) => {
+                      setTableHeaderOther(e.target.value);
+                    }}
+                    sx={{
                       color: primary,
-                    },
-                  }}
-                  InputProps={{
-                    sx: {
-                      // change the color of text in select
+                      display: TableHeader === "OTHER" ? "flex" : "none",
+                    }}
+                    InputLabelProps={{
+                      sx: {
+                        color: primary,
+                      },
+                    }}
+                    InputProps={{
+                      sx: {
+                        // change the color of text in select
+                        color: primary,
+                        fontSize: "1.3rem",
+                      },
+                    }}
+                  />
+
+                  <FaTextField
+                    label="شماره بخشنامه"
+                    sx={{
                       color: primary,
-                      fontSize: "1.3rem",
-                    },
-                  }}
-                />
-                {/* <FaTextField
+                      display:
+                        TableHeader === "REDUCE" ||
+                        TableHeader === "MATERIAL" ||
+                        TableHeader === "CASH"
+                          ? "flex"
+                          : "none",
+                    }}
+                    InputLabelProps={{
+                      sx: {
+                        color: primary,
+                      },
+                    }}
+                    InputProps={{
+                      sx: {
+                        // change the color of text in select
+                        color: primary,
+                        fontSize: "1.3rem",
+                      },
+                    }}
+                  />
+                  {/* <FaTextField
                   label="تاریخ بخشنامه"
                   sx={{
                     color: primary,
@@ -513,25 +491,29 @@ const AdjustmentStatementTable = (props: Props) => {
                   }}
                   type="date"
                 /> */}
-                <DatePicker
-                  label="تاریخ بخشنامه"
-                  value={new Date()}
-                  onChange={(date) => console.log(date)}
-                  disableFuture
-                  sx={{
-                    display:
-                      TableHeader === "REDUCE" ? "flex" : "none",
-                    // change the color of label
-                    "& label": {
-                      color: primary,
-                    },
-                    // change the color of text
-                    "& .MuiInputBase-input": {
-                      color: primary,
-                    },
-                  }}
-                />
-                {/* <FaTextField
+                  <DatePicker
+                    label="تاریخ بخشنامه"
+                    value={new Date()}
+                    onChange={(date) => console.log(date)}
+                    disableFuture
+                    sx={{
+                      display:
+                        TableHeader === "REDUCE" ||
+                        TableHeader === "MATERIAL" ||
+                        TableHeader === "CASH"
+                          ? "flex"
+                          : "none",
+                      // change the color of label
+                      "& label": {
+                        color: primary,
+                      },
+                      // change the color of text
+                      "& .MuiInputBase-input": {
+                        color: primary,
+                      },
+                    }}
+                  />
+                  {/* <FaTextField
                   label="ارزی"
                   sx={{
                     color: primary,
@@ -556,8 +538,9 @@ const AdjustmentStatementTable = (props: Props) => {
                     </MenuItem>
                   ))}
                 </FaTextField> */}
-              </Box>
-            </TableCell>
+                </Box>
+              </TableCell>
+            )}
           </TableRow>
           <TableRow>
             <TableCell
@@ -608,6 +591,15 @@ const AdjustmentStatementTable = (props: Props) => {
             <TableCell
               sx={{
                 textAlign: "center",
+                borderRight: "1px solid white",
+              }}
+              colSpan={1}
+            >
+              روکش مالی
+            </TableCell>
+            <TableCell
+              sx={{
+                textAlign: "center",
               }}
             >
               ...
@@ -677,6 +669,14 @@ const AdjustmentStatementTable = (props: Props) => {
               }}
             >
               تاريخ
+            </TableCell>
+            <TableCell
+              sx={{
+                textAlign: "center",
+                borderRight: "1px solid white",
+              }}
+            >
+              روکش مالی
             </TableCell>
             <TableCell
               sx={{
@@ -692,12 +692,6 @@ const AdjustmentStatementTable = (props: Props) => {
             <TableCell>
               <FaTextField
                 label="عنوان"
-                onChange={(e) =>
-                  setNewAdjustmentStatement({
-                    ...newAdjustmentStatement,
-                    title: e.target.value,
-                  })
-                }
                 InputLabelProps={{
                   sx: {
                     fontSize: "12px",
@@ -709,11 +703,14 @@ const AdjustmentStatementTable = (props: Props) => {
                   },
                 }}
                 value={
-                  newAdjustmentStatement.title
-                    ? newAdjustmentStatement.title
-                    : ""
+                  "صورت حساب" +
+                  " " +
+                  (adjustmentStatements
+                    ?.adjustmentStatement_getAdjustmentStatements.result?.items
+                    ?.length || 0 + 1)
                 }
-                focused={newAdjustmentStatement.title ? true : false}
+                disabled
+                focused={true}
                 fullWidth
               />
             </TableCell>
@@ -723,9 +720,7 @@ const AdjustmentStatementTable = (props: Props) => {
                 onChange={(e) =>
                   setNewAdjustmentStatement({
                     ...newAdjustmentStatement,
-                    amountProvidedByContractor: parseInt(
-                      e.target.value
-                    ),
+                    amountProvidedByContractor: parseInt(e.target.value),
                   })
                 }
                 value={
@@ -753,7 +748,17 @@ const AdjustmentStatementTable = (props: Props) => {
               />
             </TableCell>
             <TableCell>
-              <DateButton
+              <DatePicker
+                label="تاریخ پرداخت"
+                value={newAdjustmentStatement.dateProvidedByContractor}
+                onChange={(date) =>
+                  setNewAdjustmentStatement({
+                    ...newAdjustmentStatement,
+                    dateProvidedByContractor: date || new Date(),
+                  })
+                }
+              />
+              {/* <DateButton
                 label="تاریخ پرداخت"
                 fontSize={"12px"}
                 setDate={(date) =>
@@ -765,7 +770,7 @@ const AdjustmentStatementTable = (props: Props) => {
                 }
                 direction="column"
                 date={newAdjustmentStatement.dateProvidedByContractor}
-              />
+              /> */}
             </TableCell>
             <TableCell>
               <FaTextField
@@ -773,9 +778,7 @@ const AdjustmentStatementTable = (props: Props) => {
                 onChange={(e) =>
                   setNewAdjustmentStatement({
                     ...newAdjustmentStatement,
-                    amountConfirmedByConsultant: parseInt(
-                      e.target.value
-                    ),
+                    amountConfirmedByConsultant: parseInt(e.target.value),
                   })
                 }
                 InputLabelProps={{
@@ -803,7 +806,17 @@ const AdjustmentStatementTable = (props: Props) => {
               />
             </TableCell>
             <TableCell>
-              <DateButton
+              <DatePicker
+                label="تاریخ پرداخت"
+                value={newAdjustmentStatement.dateConfirmedByConsultant}
+                onChange={(date) =>
+                  setNewAdjustmentStatement({
+                    ...newAdjustmentStatement,
+                    dateConfirmedByConsultant: date || new Date(),
+                  })
+                }
+              />
+              {/* <DateButton
                 label="تاریخ پرداخت"
                 fontSize={"12px"}
                 setDate={(date) =>
@@ -814,10 +827,8 @@ const AdjustmentStatementTable = (props: Props) => {
                   })
                 }
                 direction="column"
-                date={
-                  newAdjustmentStatement.dateConfirmedByConsultant
-                }
-              />
+                date={newAdjustmentStatement.dateConfirmedByConsultant}
+              /> */}
             </TableCell>
             <TableCell>
               <FaTextField
@@ -825,9 +836,7 @@ const AdjustmentStatementTable = (props: Props) => {
                 onChange={(e) =>
                   setNewAdjustmentStatement({
                     ...newAdjustmentStatement,
-                    amountApprovedByEmployer: parseInt(
-                      e.target.value
-                    ),
+                    amountApprovedByEmployer: parseInt(e.target.value),
                   })
                 }
                 value={
@@ -837,7 +846,301 @@ const AdjustmentStatementTable = (props: Props) => {
                 }
                 fullWidth
                 focused={
-                  newAdjustmentStatement.amountApprovedByEmployer
+                  newAdjustmentStatement.amountApprovedByEmployer ? true : false
+                }
+                InputLabelProps={{
+                  sx: {
+                    fontSize: "12px",
+                  },
+                }}
+                InputProps={{
+                  sx: {
+                    fontSize: "12px",
+                  },
+                }}
+                type="number"
+              />
+            </TableCell>
+            <TableCell>
+              <DatePicker
+                label="تاریخ پرداخت"
+                value={newAdjustmentStatement.dateApprovedByEmployer}
+                onChange={(date) =>
+                  setNewAdjustmentStatement({
+                    ...newAdjustmentStatement,
+                    dateApprovedByEmployer: date || new Date(),
+                  })
+                }
+              />
+              {/* <DateButton
+                label="تاریخ پرداخت"
+                fontSize={"12px"}
+                setDate={(date) =>
+                  setNewAdjustmentStatement({
+                    ...newAdjustmentStatement,
+                    // @ts-ignore
+                    dateApprovedByEmployer: date || new Date(),
+                  })
+                }
+                direction="column"
+                date={newAdjustmentStatement.dateApprovedByEmployer}
+              /> */}
+            </TableCell>
+            <TableCell>
+              <FaTextField
+                label="مبلغ"
+                onChange={(e) =>
+                  setNewAdjustmentStatement({
+                    ...newAdjustmentStatement,
+                    amountPaid: parseInt(e.target.value),
+                  })
+                }
+                value={
+                  newAdjustmentStatement.amountPaid
+                    ? newAdjustmentStatement.amountPaid
+                    : ""
+                }
+                fullWidth
+                focused={newAdjustmentStatement.amountPaid ? true : false}
+                InputLabelProps={{
+                  sx: {
+                    fontSize: "12px",
+                  },
+                }}
+                InputProps={{
+                  sx: {
+                    fontSize: "12px",
+                  },
+                }}
+                type="number"
+              />
+            </TableCell>
+            <TableCell>
+              <DatePicker
+                label="تاریخ پرداخت"
+                value={newAdjustmentStatement.datePaid}
+                onChange={(date) =>
+                  setNewAdjustmentStatement({
+                    ...newAdjustmentStatement,
+                    datePaid: date || new Date(),
+                  })
+                }
+              />
+              {/* <DateButton
+                label="تاریخ پرداخت"
+                fontSize={"12px"}
+                setDate={(date) =>
+                  setNewAdjustmentStatement({
+                    ...newAdjustmentStatement,
+                    // @ts-ignore
+                    datePaid: date || new Date(),
+                  })
+                }
+                direction="column"
+                date={newAdjustmentStatement.datePaid}
+              /> */}
+            </TableCell>
+            <TableCell>
+              <FileBox />
+            </TableCell>
+            <TableCell>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  gap: "1rem",
+                }}
+              >
+                {editMode ? (
+                  <IconButton
+                    onClick={() => {
+                      void editAdjustmentStatement({
+                        variables: {
+                          adjustmentStatementTableId: tableId && tableId,
+                          amountApprovedByEmployer:
+                            newAdjustmentStatement.amountApprovedByEmployer,
+                          dateApprovedByEmployer:
+                            newAdjustmentStatement.dateApprovedByEmployer,
+                          amountConfirmedByConsultant:
+                            newAdjustmentStatement.amountConfirmedByConsultant,
+                          dateConfirmedByConsultant:
+                            newAdjustmentStatement.dateConfirmedByConsultant,
+                          amountPaid: newAdjustmentStatement.amountPaid,
+                          datePaid: newAdjustmentStatement.datePaid,
+                          amountProvidedByContractor:
+                            newAdjustmentStatement.amountProvidedByContractor,
+                          dateProvidedByContractor:
+                            newAdjustmentStatement.dateProvidedByContractor,
+                          title: newAdjustmentStatement.title,
+                          filledBy:
+                            data
+                              ?.adjustmentStatementTable_getAdjustmentStatementTables
+                              .result?.items?.[0]?.contract
+                              ?.accuserDepartmentUserId == user.id ||
+                            data
+                              ?.adjustmentStatementTable_getAdjustmentStatementTables
+                              .result?.items?.[0]?.contract
+                              ?.accuserDepartmentUserId == user.parentId
+                              ? "ACCUSER"
+                              : "ACCUSED",
+                          id: newAdjustmentStatement.id,
+                        },
+                      }).then((res) => {
+                        void getStatements();
+                        setEditMode(false);
+                        setNewAdjustmentStatement({} as AdjustmentStatement);
+                      });
+                    }}
+                    sx={{
+                      borderRadius: "10px",
+                      background: primary,
+                      color: secondaryDark,
+                      "&:hover": {
+                        background: primaryLight,
+                      },
+                      gap: "0.5rem",
+                      width: "100%",
+                    }}
+                  >
+                    <FaTypography variant="body2" textAlign={"center"}>
+                      ویرایش
+                    </FaTypography>
+                    <EditOutlined />
+                  </IconButton>
+                ) : (
+                  <IconButton
+                    onClick={() => {
+                      // if(handleEmptyFields()) return;
+                      void addAdjustmentStatement({
+                        variables: {
+                          adjustmentStatementTableId: tableId || 0,
+                          amountApprovedByEmployer:
+                            newAdjustmentStatement.amountApprovedByEmployer,
+                          dateApprovedByEmployer:
+                            newAdjustmentStatement.dateApprovedByEmployer,
+                          amountConfirmedByConsultant:
+                            newAdjustmentStatement.amountConfirmedByConsultant,
+                          dateConfirmedByConsultant:
+                            newAdjustmentStatement.dateConfirmedByConsultant,
+                          amountPaid: newAdjustmentStatement.amountPaid,
+                          datePaid: newAdjustmentStatement.datePaid,
+                          amountProvidedByContractor:
+                            newAdjustmentStatement.amountProvidedByContractor,
+                          dateProvidedByContractor:
+                            newAdjustmentStatement.dateProvidedByContractor,
+                          title:
+                            "صورت وضعیت" +
+                            " " +
+                            (adjustmentStatements
+                              ?.adjustmentStatement_getAdjustmentStatements
+                              ?.result?.items?.length || 0 + 1),
+                          filledBy:
+                            data
+                              ?.adjustmentStatementTable_getAdjustmentStatementTables
+                              .result?.items?.[0]?.contract
+                              ?.accuserDepartmentUserId == user.id ||
+                            data
+                              ?.adjustmentStatementTable_getAdjustmentStatementTables
+                              .result?.items?.[0]?.contract
+                              ?.accuserDepartmentUserId == user.parentId
+                              ? RegistrarType.Accuser
+                              : RegistrarType.Accused,
+                        },
+                      })
+                        .then((res) => {
+                          setNewAdjustmentStatement({} as AdjustmentStatement);
+                          void getStatements();
+                          setPageError("");
+                        })
+                        .catch((err) => {
+                          alert("خطا در افزودن پیش پرداخت");
+                        });
+                    }}
+                    sx={{
+                      borderRadius: "10px",
+                      background: primary,
+                      color: secondaryDark,
+                      "&:hover": {
+                        background: primaryLight,
+                      },
+                      gap: "0.5rem",
+                      width: "100%",
+                    }}
+                  >
+                    {/* {tableId} */}
+                    <FaTypography variant="body2" textAlign={"center"}>
+                      ثبت
+                    </FaTypography>
+                    <BsPlusCircle />
+                  </IconButton>
+                )}
+              </Box>
+            </TableCell>
+          </TableRow>
+          {/* {tableId} */}
+          {pageError && <Typography color={Red}>{pageError}</Typography>}
+          {adjustmentStatements?.adjustmentStatement_getAdjustmentStatements.result?.items?.map(
+            (AdjustmentStatement) => (
+              <AdjustmentStatementCard
+                AdjustmentStatement={{
+                  adjustmentStatementTableId:
+                    AdjustmentStatement.adjustmentStatementTableId,
+                  amountApprovedByEmployer:
+                    AdjustmentStatement.amountApprovedByEmployer,
+                  amountPaid: AdjustmentStatement.amountPaid,
+                  amountConfirmedByConsultant:
+                    AdjustmentStatement.amountConfirmedByConsultant,
+                  amountProvidedByContractor:
+                    AdjustmentStatement.amountProvidedByContractor,
+                  dateApprovedByEmployer:
+                    AdjustmentStatement.dateApprovedByEmployer,
+                  dateConfirmedByConsultant:
+                    AdjustmentStatement.dateConfirmedByConsultant,
+                  datePaid: AdjustmentStatement.datePaid,
+                  dateProvidedByContractor:
+                    AdjustmentStatement.dateProvidedByContractor,
+                  filledBy: AdjustmentStatement.filledBy || "ACCUSER",
+                  id: AdjustmentStatement.id,
+                  operationPeriodEndDate:
+                    AdjustmentStatement.operationPeriodEndDate,
+                  operationPeriodStartDate:
+                    AdjustmentStatement.operationPeriodStartDate,
+                  title: AdjustmentStatement.title,
+                }}
+                refetch={getStatements}
+                setEditMode={setEditMode}
+                setNewAdjustmentStatement={setNewAdjustmentStatement}
+                key={AdjustmentStatement.id}
+                isConsultant={props.isConsultant}
+                refetchBoolean={refetchBoolean}
+                setAddAdjustmentStatementPartModal={
+                  setAddAdjustmentStatementPartModal
+                }
+              />
+            )
+          )}
+
+          <TableRow>
+            <TableCell>
+              <FaTypography textAlign={"center"}>صورت حساب قطعی</FaTypography>
+            </TableCell>
+            <TableCell>
+              <FaTextField
+                label="مبلغ"
+                onChange={(e) =>
+                  setDefiniteAdjustmentStatementPart({
+                    ...DefiniteAdjustmentStatementPart,
+                    amountProvidedByContractor: parseInt(e.target.value),
+                  })
+                }
+                value={
+                  DefiniteAdjustmentStatementPart.amountProvidedByContractor
+                    ? DefiniteAdjustmentStatementPart.amountProvidedByContractor
+                    : ""
+                }
+                fullWidth
+                focused={
+                  DefiniteAdjustmentStatementPart.amountProvidedByContractor
                     ? true
                     : false
                 }
@@ -855,37 +1158,145 @@ const AdjustmentStatementTable = (props: Props) => {
               />
             </TableCell>
             <TableCell>
-              <DateButton
-                label="تاریخ پرداخت"
+              <DatePicker
+                label="تاریخ"
+                value={DefiniteAdjustmentStatementPart.dateProvidedByContractor}
+                onChange={(date) =>
+                  setDefiniteAdjustmentStatementPart({
+                    ...DefiniteAdjustmentStatementPart,
+                    dateProvidedByContractor: date || new Date(),
+                  })
+                }
+              />
+              {/* <DateButton
+                label="تاریخ"
                 fontSize={"12px"}
                 setDate={(date) =>
-                  setNewAdjustmentStatement({
-                    ...newAdjustmentStatement,
+                  setDefiniteAdjustmentStatementPart({
+                    ...DefiniteAdjustmentStatementPart,
                     // @ts-ignore
-                    dateApprovedByEmployer: date || new Date(),
+                    dateProvidedByContractor: date || new Date(),
                   })
                 }
                 direction="column"
-                date={newAdjustmentStatement.dateApprovedByEmployer}
-              />
+                date={DefiniteAdjustmentStatementPart.dateProvidedByContractor}
+              /> */}
+              {/* <DateButton
+                label="تاریخ"
+                fontSize={"12px"}
+                setDate={(date) =>
+                  setDefiniteAdjustmentStatementPart({
+                    ...DefiniteAdjustmentStatementPart,
+                    // @ts-ignore
+                    dateProvidedByContractor: date || new Date(),
+                  })
+                }
+                direction="column"
+                date={DefiniteAdjustmentStatementPart.dateProvidedByContractor}
+              /> */}
             </TableCell>
+            {!props.isConsultant && (
+              <>
+                <TableCell>
+                  <FaTextField
+                    label="مبلغ"
+                    onChange={(e) =>
+                      setDefiniteAdjustmentStatementPart({
+                        ...DefiniteAdjustmentStatementPart,
+                        amountConfirmedByConsultant: parseInt(e.target.value),
+                      })
+                    }
+                    InputLabelProps={{
+                      sx: {
+                        fontSize: "12px",
+                      },
+                    }}
+                    InputProps={{
+                      sx: {
+                        fontSize: "12px",
+                      },
+                    }}
+                    value={
+                      DefiniteAdjustmentStatementPart.amountConfirmedByConsultant
+                        ? DefiniteAdjustmentStatementPart.amountConfirmedByConsultant
+                        : ""
+                    }
+                    fullWidth
+                    focused={
+                      DefiniteAdjustmentStatementPart.amountConfirmedByConsultant
+                        ? true
+                        : false
+                    }
+                    type="number"
+                  />
+                </TableCell>
+                <TableCell>
+                  <DatePicker
+                    label="تاریخ"
+                    onChange={(date) =>
+                      setDefiniteAdjustmentStatementPart({
+                        ...DefiniteAdjustmentStatementPart,
+                        // @ts-ignore
+                        dateConfirmedByConsultant: date || new Date(),
+                      })
+                    }
+                    value={
+                      DefiniteAdjustmentStatementPart.dateConfirmedByConsultant
+                    }
+                  />
+                  {/* <DateButton
+                    label="تاریخ"
+                    fontSize={"12px"}
+                    setDate={(date) =>
+                      setDefiniteAdjustmentStatementPart({
+                        ...DefiniteAdjustmentStatementPart,
+                        // @ts-ignore
+                        dateConfirmedByConsultant: date || new Date(),
+                      })
+                    }
+                    direction="column"
+                    date={
+                      DefiniteAdjustmentStatementPart.dateConfirmedByConsultant
+                    }
+                  /> */}
+                  {/* <DateButton
+                    label="تاریخ"
+                    fontSize={"12px"}
+                    setDate={(date) =>
+                      setDefiniteAdjustmentStatementPart({
+                        ...DefiniteAdjustmentStatementPart,
+                        // @ts-ignore
+                        dateConfirmedByConsultant: date || new Date(),
+                      })
+                    }
+                    direction="column"
+                    date={
+                      DefiniteAdjustmentStatementPart.dateConfirmedByConsultant
+                    }
+                  /> */}
+                </TableCell>
+              </>
+            )}
+
             <TableCell>
               <FaTextField
                 label="مبلغ"
                 onChange={(e) =>
-                  setNewAdjustmentStatement({
-                    ...newAdjustmentStatement,
-                    amountPaid: parseInt(e.target.value),
+                  setDefiniteAdjustmentStatementPart({
+                    ...DefiniteAdjustmentStatementPart,
+                    amountApprovedByEmployer: parseInt(e.target.value),
                   })
                 }
                 value={
-                  newAdjustmentStatement.amountPaid
-                    ? newAdjustmentStatement.amountPaid
+                  DefiniteAdjustmentStatementPart.amountApprovedByEmployer
+                    ? DefiniteAdjustmentStatementPart.amountApprovedByEmployer
                     : ""
                 }
                 fullWidth
                 focused={
-                  newAdjustmentStatement.amountPaid ? true : false
+                  DefiniteAdjustmentStatementPart.amountApprovedByEmployer
+                    ? true
+                    : false
                 }
                 InputLabelProps={{
                   sx: {
@@ -901,19 +1312,89 @@ const AdjustmentStatementTable = (props: Props) => {
               />
             </TableCell>
             <TableCell>
-              <DateButton
-                label="تاریخ پرداخت"
+              <DatePicker
+                label="تاریخ"
+                value={DefiniteAdjustmentStatementPart.dateApprovedByEmployer}
+                onChange={(date) => {
+                  setDefiniteAdjustmentStatementPart({
+                    ...DefiniteAdjustmentStatementPart,
+                    // @ts-ignore
+                    dateApprovedByEmployer: date || new Date(),
+                  });
+                }}
+              />
+              {/* <DateButton
+                label="تاریخ"
                 fontSize={"12px"}
                 setDate={(date) =>
-                  setNewAdjustmentStatement({
-                    ...newAdjustmentStatement,
+                  setDefiniteAdjustmentStatementPart({
+                    ...DefiniteAdjustmentStatementPart,
+                    // @ts-ignore
+                    dateApprovedByEmployer: date || new Date(),
+                  })
+                }
+                date={DefiniteAdjustmentStatementPart.dateApprovedByEmployer}
+              /> */}
+              {/* <DateButton
+                label="تاریخ"
+                fontSize={"12px"}
+                setDate={(date) =>
+                  setDefiniteAdjustmentStatementPart({
+                    ...DefiniteAdjustmentStatementPart,
+                    // @ts-ignore
+                    dateApprovedByEmployer: date || new Date(),
+                  })
+                }
+                direction="column"
+                date={DefiniteAdjustmentStatementPart.dateApprovedByEmployer}
+              /> */}
+            </TableCell>
+            <TableCell>
+              <FaTextField
+                label="مبلغ"
+                onChange={(e) =>
+                  setDefiniteAdjustmentStatementPart({
+                    ...DefiniteAdjustmentStatementPart,
+                    amountPaid: parseInt(e.target.value),
+                  })
+                }
+                value={
+                  DefiniteAdjustmentStatementPart.amountPaid
+                    ? DefiniteAdjustmentStatementPart.amountPaid
+                    : ""
+                }
+                fullWidth
+                focused={
+                  DefiniteAdjustmentStatementPart.amountPaid ? true : false
+                }
+                InputLabelProps={{
+                  sx: {
+                    fontSize: "12px",
+                  },
+                }}
+                InputProps={{
+                  sx: {
+                    fontSize: "12px",
+                  },
+                }}
+                type="number"
+              />
+            </TableCell>
+            <TableCell>
+              <DatePicker
+                label="تاریخ"
+                onChange={(date) =>
+                  setDefiniteAdjustmentStatementPart({
+                    ...DefiniteAdjustmentStatementPart,
                     // @ts-ignore
                     datePaid: date || new Date(),
                   })
                 }
-                direction="column"
-                date={newAdjustmentStatement.datePaid}
+                value={DefiniteAdjustmentStatementPart.datePaid}
               />
+            </TableCell>
+            <TableCell>
+              <FileBox />
             </TableCell>
             <TableCell>
               <Box
@@ -928,37 +1409,40 @@ const AdjustmentStatementTable = (props: Props) => {
                     onClick={() => {
                       void editAdjustmentStatement({
                         variables: {
-                          adjustmentStatementTableId:
-                            tableId && tableId,
+                          workConditionStatementTableId: tableId && tableId,
                           amountApprovedByEmployer:
-                            newAdjustmentStatement.amountApprovedByEmployer,
+                            DefiniteAdjustmentStatementPart.amountApprovedByEmployer,
                           dateApprovedByEmployer:
-                            newAdjustmentStatement.dateApprovedByEmployer,
+                            DefiniteAdjustmentStatementPart.dateApprovedByEmployer,
                           amountConfirmedByConsultant:
-                            newAdjustmentStatement.amountConfirmedByConsultant,
+                            DefiniteAdjustmentStatementPart.amountConfirmedByConsultant,
                           dateConfirmedByConsultant:
-                            newAdjustmentStatement.dateConfirmedByConsultant,
+                            DefiniteAdjustmentStatementPart.dateConfirmedByConsultant,
                           amountPaid:
-                            newAdjustmentStatement.amountPaid,
-                          datePaid: newAdjustmentStatement.datePaid,
+                            DefiniteAdjustmentStatementPart.amountPaid,
+                          datePaid: DefiniteAdjustmentStatementPart.datePaid,
                           amountProvidedByContractor:
-                            newAdjustmentStatement.amountProvidedByContractor,
+                            DefiniteAdjustmentStatementPart.amountProvidedByContractor,
                           dateProvidedByContractor:
-                            newAdjustmentStatement.dateProvidedByContractor,
-                          title: newAdjustmentStatement.title,
+                            DefiniteAdjustmentStatementPart.dateProvidedByContractor,
+                          title: "صورت وضعیت قطعی",
                           filledBy:
-                            data?.items[0]?.accuserDepartmentUserId ==
-                              user.id ||
-                            data?.items[0]?.accuserDepartmentUserId ==
-                              user.parentId
+                            data
+                              ?.adjustmentStatementTable_getAdjustmentStatementTables
+                              .result?.items?.[0]?.contract
+                              ?.accuserDepartmentUserId == user.id ||
+                            data
+                              ?.adjustmentStatementTable_getAdjustmentStatementTables
+                              .result?.items?.[0]?.contract
+                              ?.accuserDepartmentUserId == user.parentId
                               ? "ACCUSER"
                               : "ACCUSED",
                           id: newAdjustmentStatement.id,
                         },
-                      }).then((res) => {
-                        void refetch();
+                      }).then(() => {
+                        void getStatements();
                         setEditMode(false);
-                        setNewAdjustmentStatement(
+                        setDefiniteAdjustmentStatementPart(
                           {} as AdjustmentStatement
                         );
                       });
@@ -974,10 +1458,7 @@ const AdjustmentStatementTable = (props: Props) => {
                       width: "100%",
                     }}
                   >
-                    <FaTypography
-                      variant="body2"
-                      textAlign={"center"}
-                    >
+                    <FaTypography variant="body2" textAlign={"center"}>
                       ویرایش
                     </FaTypography>
                     <EditOutlined />
@@ -988,42 +1469,45 @@ const AdjustmentStatementTable = (props: Props) => {
                       // if(handleEmptyFields()) return;
                       void addAdjustmentStatement({
                         variables: {
-                          adjustmentStatementTableId:
-                            tableId && tableId,
+                          adjustmentStatementTableId: tableId || 0,
                           amountApprovedByEmployer:
-                            newAdjustmentStatement.amountApprovedByEmployer,
+                            DefiniteAdjustmentStatementPart.amountApprovedByEmployer,
                           dateApprovedByEmployer:
-                            newAdjustmentStatement.dateApprovedByEmployer,
+                            DefiniteAdjustmentStatementPart.dateApprovedByEmployer,
                           amountConfirmedByConsultant:
-                            newAdjustmentStatement.amountConfirmedByConsultant,
+                            DefiniteAdjustmentStatementPart.amountConfirmedByConsultant,
                           dateConfirmedByConsultant:
-                            newAdjustmentStatement.dateConfirmedByConsultant,
+                            DefiniteAdjustmentStatementPart.dateConfirmedByConsultant,
                           amountPaid:
-                            newAdjustmentStatement.amountPaid,
-                          datePaid: newAdjustmentStatement.datePaid,
+                            DefiniteAdjustmentStatementPart.amountPaid,
+                          datePaid: DefiniteAdjustmentStatementPart.datePaid,
                           amountProvidedByContractor:
-                            newAdjustmentStatement.amountProvidedByContractor,
+                            DefiniteAdjustmentStatementPart.amountProvidedByContractor,
                           dateProvidedByContractor:
-                            newAdjustmentStatement.dateProvidedByContractor,
-                          title: newAdjustmentStatement.title,
+                            DefiniteAdjustmentStatementPart.dateProvidedByContractor,
+                          title: "صورت وضعیت قطعی",
                           filledBy:
-                            data?.items[0]?.accuserDepartmentUserId ==
-                              user.id ||
-                            data?.items[0]?.accuserDepartmentUserId ==
-                              user.parentId
-                              ? "ACCUSER"
-                              : "ACCUSED",
+                            data
+                              ?.adjustmentStatementTable_getAdjustmentStatementTables
+                              .result?.items?.[0]?.contract
+                              ?.accuserDepartmentUserId == user.id ||
+                            data
+                              ?.adjustmentStatementTable_getAdjustmentStatementTables
+                              .result?.items?.[0]?.contract
+                              ?.accuserDepartmentUserId == user.parentId
+                              ? RegistrarType.Accuser
+                              : RegistrarType.Accused,
                         },
                       })
-                        .then((res) => {
-                          setNewAdjustmentStatement(
+                        .then(() => {
+                          setDefiniteAdjustmentStatementPart(
                             {} as AdjustmentStatement
                           );
-                          void refetch();
+                          void getStatements();
                           setPageError("");
                         })
-                        .catch((err) => {
-                          alert("خطا در افزودن قسط");
+                        .catch(() => {
+                          alert("خطا در افزودن پیش پرداخت");
                         });
                     }}
                     sx={{
@@ -1038,10 +1522,7 @@ const AdjustmentStatementTable = (props: Props) => {
                     }}
                   >
                     {/* {tableId} */}
-                    <FaTypography
-                      variant="body2"
-                      textAlign={"center"}
-                    >
+                    <FaTypography variant="body2" textAlign={"center"}>
                       ثبت
                     </FaTypography>
                     <BsPlusCircle />
@@ -1050,24 +1531,6 @@ const AdjustmentStatementTable = (props: Props) => {
               </Box>
             </TableCell>
           </TableRow>
-          {/* {tableId} */}
-          {pageError && (
-            <Typography color={Red}>{pageError}</Typography>
-          )}
-          {AdjustmentStatement &&
-            AdjustmentStatement.length > 0 &&
-            AdjustmentStatement.map((AdjustmentStatement) => (
-              <AdjustmentStatementCard
-                AdjustmentStatement={AdjustmentStatement}
-                refetch={refetch}
-                setEditMode={setEditMode}
-                setNewAdjustmentStatement={setNewAdjustmentStatement}
-                key={AdjustmentStatement.id}
-                setAddAdjustmentStatementPartModal={
-                  setAddAdjustmentStatementPartModal
-                }
-              />
-            ))}
         </TableBody>
         <NewModal
           title="افزودن زیرمجموعه"
@@ -1084,67 +1547,13 @@ const AdjustmentStatementTable = (props: Props) => {
         >
           <Box
             display={"grid"}
-            gridTemplateColumns={"1fr 1fr 1fr 1fr"}
+            gridTemplateColumns={"1fr"}
             gap={"1rem"}
             width={"100%"}
           >
             <Box
               display={"grid"}
-              gridTemplateColumns={"1fr"}
-              gap={"1rem"}
-              width={"100%"}
-              gridColumn={"span 1"}
-              sx={{
-                borderRadius: "10px",
-                outline: `2px solid ${secondary}`,
-                padding: "0.5rem",
-              }}
-            >
-              <FaTypography textAlign={"center"}>
-                ارائه شده توسط پیمانکار
-              </FaTypography>
-              <FaTextField
-                label="مبلغ"
-                onChange={(e) =>
-                  setAddAdjustmentStatementPartModal({
-                    ...addAdjustmentStatementPartModal,
-                    AdjustmentStatementPart: {
-                      ...addAdjustmentStatementPartModal.AdjustmentStatementPart,
-                      amountProvidedByContractor: parseInt(
-                        e.target.value
-                      ),
-                    },
-                  })
-                }
-                value={
-                  addAdjustmentStatementPartModal
-                    .AdjustmentStatementPart
-                    .amountProvidedByContractor
-                }
-                fullWidth
-                type="number"
-              />
-              <DateButton
-                label="تاریخ پرداخت"
-                setDate={(date) =>
-                  setAddAdjustmentStatementPartModal({
-                    ...addAdjustmentStatementPartModal,
-                    AdjustmentStatementPart: {
-                      ...addAdjustmentStatementPartModal.AdjustmentStatementPart,
-                      // @ts-ignore
-                      dateProvidedByContractor: date || new Date(),
-                    },
-                  })
-                }
-                date={
-                  addAdjustmentStatementPartModal
-                    .AdjustmentStatementPart.dateProvidedByContractor
-                }
-              />
-            </Box>
-            <Box
-              display={"grid"}
-              gridTemplateColumns={"1fr"}
+              gridTemplateColumns={"1fr 1fr"}
               gap={"1rem"}
               width={"100%"}
               gridColumn={"span 1"}
@@ -1155,120 +1564,7 @@ const AdjustmentStatementTable = (props: Props) => {
               }}
             >
               <FaTypography
-                gridColumn={"span 1"}
-                textAlign={"center"}
-              >
-                تایید شده توسط مشاور
-              </FaTypography>
-              <FaTextField
-                label="مبلغ"
-                onChange={(e) =>
-                  setAddAdjustmentStatementPartModal({
-                    ...addAdjustmentStatementPartModal,
-                    AdjustmentStatementPart: {
-                      ...addAdjustmentStatementPartModal.AdjustmentStatementPart,
-                      amountConfirmedByConsultant: parseInt(
-                        e.target.value
-                      ),
-                    },
-                  })
-                }
-                value={
-                  addAdjustmentStatementPartModal
-                    .AdjustmentStatementPart
-                    .amountConfirmedByConsultant
-                }
-                fullWidth
-                type="number"
-              />
-              <DateButton
-                label="تاریخ پرداخت"
-                setDate={(date) =>
-                  setAddAdjustmentStatementPartModal({
-                    ...addAdjustmentStatementPartModal,
-                    AdjustmentStatementPart: {
-                      ...addAdjustmentStatementPartModal.AdjustmentStatementPart,
-                      // @ts-ignore
-                      dateConfirmedByConsultant: date || new Date(),
-                    },
-                  })
-                }
-                date={
-                  addAdjustmentStatementPartModal
-                    .AdjustmentStatementPart.dateConfirmedByConsultant
-                }
-              />
-            </Box>
-            <Box
-              display={"grid"}
-              gridTemplateColumns={"1fr"}
-              gap={"1rem"}
-              width={"100%"}
-              gridColumn={"span 1"}
-              sx={{
-                borderRadius: "10px",
-                outline: `2px solid ${secondary}`,
-                padding: "0.5rem",
-              }}
-            >
-              <FaTypography
-                gridColumn={"span 1"}
-                textAlign={"center"}
-              >
-                تایید شده توسط کارفرما
-              </FaTypography>
-              <FaTextField
-                label="مبلغ"
-                onChange={(e) =>
-                  setAddAdjustmentStatementPartModal({
-                    ...addAdjustmentStatementPartModal,
-                    AdjustmentStatementPart: {
-                      ...addAdjustmentStatementPartModal.AdjustmentStatementPart,
-                      amountApprovedByEmployer: parseInt(
-                        e.target.value
-                      ),
-                    },
-                  })
-                }
-                value={
-                  addAdjustmentStatementPartModal
-                    .AdjustmentStatementPart.amountApprovedByEmployer
-                }
-                fullWidth
-                type="number"
-              />
-              <DateButton
-                label="تاریخ پرداخت"
-                setDate={(date) =>
-                  setAddAdjustmentStatementPartModal({
-                    ...addAdjustmentStatementPartModal,
-                    AdjustmentStatementPart: {
-                      ...addAdjustmentStatementPartModal.AdjustmentStatementPart,
-                      // @ts-ignore
-                      dateApprovedByEmployer: date || new Date(),
-                    },
-                  })
-                }
-                date={
-                  addAdjustmentStatementPartModal
-                    .AdjustmentStatementPart.dateApprovedByEmployer
-                }
-              />
-            </Box>
-            <Box
-              display={"grid"}
-              gridTemplateColumns={"1fr"}
-              gap={"1rem"}
-              width={"100%"}
-              gridColumn={"span 1"}
-              sx={{
-                borderRadius: "10px",
-                outline: `2px solid ${secondary}`,
-                padding: "0.5rem",
-              }}
-            >
-              <FaTypography
-                gridColumn={"span 1"}
+                gridColumn={"span 2"}
                 textAlign={"center"}
                 sx={
                   {
@@ -1290,8 +1586,8 @@ const AdjustmentStatementTable = (props: Props) => {
                   })
                 }
                 value={
-                  addAdjustmentStatementPartModal
-                    .AdjustmentStatementPart.amountPaid
+                  addAdjustmentStatementPartModal.AdjustmentStatementPart
+                    .amountPaid
                 }
                 fullWidth
                 type="number"
@@ -1309,8 +1605,8 @@ const AdjustmentStatementTable = (props: Props) => {
                   })
                 }
                 date={
-                  addAdjustmentStatementPartModal
-                    .AdjustmentStatementPart.datePaid
+                  addAdjustmentStatementPartModal.AdjustmentStatementPart
+                    .datePaid
                 }
               />
             </Box>
@@ -1326,69 +1622,62 @@ const AdjustmentStatementTable = (props: Props) => {
                   void createAdjustmentStatementPart({
                     variables: {
                       adjustmentStatementId:
-                        addAdjustmentStatementPartModal.AdjustmentStatementId,
+                        addAdjustmentStatementPartModal.AdjustmentStatementId ||
+                        0,
                       amountApprovedByEmployer:
-                        addAdjustmentStatementPartModal
-                          .AdjustmentStatementPart
+                        addAdjustmentStatementPartModal.AdjustmentStatementPart
                           .amountApprovedByEmployer,
                       amountConfirmedByConsultant:
-                        addAdjustmentStatementPartModal
-                          .AdjustmentStatementPart
+                        addAdjustmentStatementPartModal.AdjustmentStatementPart
                           .amountConfirmedByConsultant,
                       amountPaid:
-                        addAdjustmentStatementPartModal
-                          .AdjustmentStatementPart.amountPaid,
+                        addAdjustmentStatementPartModal.AdjustmentStatementPart
+                          .amountPaid,
                       amountProvidedByContractor:
-                        addAdjustmentStatementPartModal
-                          .AdjustmentStatementPart
+                        addAdjustmentStatementPartModal.AdjustmentStatementPart
                           .amountProvidedByContractor,
                       dateApprovedByEmployer:
-                        addAdjustmentStatementPartModal
-                          .AdjustmentStatementPart
+                        addAdjustmentStatementPartModal.AdjustmentStatementPart
                           .dateApprovedByEmployer,
                       dateConfirmedByConsultant:
-                        addAdjustmentStatementPartModal
-                          .AdjustmentStatementPart
+                        addAdjustmentStatementPartModal.AdjustmentStatementPart
                           .dateConfirmedByConsultant,
                       datePaid:
-                        addAdjustmentStatementPartModal
-                          .AdjustmentStatementPart.datePaid,
+                        addAdjustmentStatementPartModal.AdjustmentStatementPart
+                          .datePaid,
                       dateProvidedByContractor:
-                        addAdjustmentStatementPartModal
-                          .AdjustmentStatementPart
+                        addAdjustmentStatementPartModal.AdjustmentStatementPart
                           .dateProvidedByContractor,
                       operationPeriodEndDate:
-                        addAdjustmentStatementPartModal
-                          .AdjustmentStatementPart
+                        addAdjustmentStatementPartModal.AdjustmentStatementPart
                           .operationPeriodEndDate,
                       operationPeriodStartDate:
-                        addAdjustmentStatementPartModal
-                          .AdjustmentStatementPart
+                        addAdjustmentStatementPartModal.AdjustmentStatementPart
                           .operationPeriodStartDate,
                       filledBy:
-                        data?.items[0]?.accuserDepartmentUserId ==
-                          user.id ||
-                        data?.items[0]?.accuserDepartmentUserId ==
-                          user.parentId
-                          ? "ACCUSER"
-                          : "ACCUSED",
+                        data
+                          ?.adjustmentStatementTable_getAdjustmentStatementTables
+                          ?.result?.items?.[0]?.contract
+                          ?.accuserDepartmentUserId == user.id ||
+                        data
+                          ?.adjustmentStatementTable_getAdjustmentStatementTables
+                          ?.result?.items?.[0]?.contract
+                          ?.accuserDepartmentUserId == user.parentId
+                          ? RegistrarType.Accuser
+                          : RegistrarType.Accused,
                     },
-                  })
-                    .then((res) => {
+                    onCompleted(data, clientOptions) {
+                      void getStatements();
+                      setRefetchBoolean(!refetchBoolean);
+                      void refetch();
                       alert("زیرمجموعه با موفقیت افزوده شد");
                       setAddAdjustmentStatementPartModal({
                         ...addAdjustmentStatementPartModal,
-                        AdjustmentStatementPart:
-                          {} as AdjustmentStatementPart,
+                        AdjustmentStatementPart: {} as AdjustmentStatementPart,
                         open: false,
                       });
-                      window.location.reload();
-                      void refetch();
-                    })
-                    .catch((err) => {
-                      alert("خطا در افزودن زیرمجموعه");
-                      void refetch();
-                    });
+                    },
+                  });
                 }}
                 sx={{
                   borderRadius: "10px",

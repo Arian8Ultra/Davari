@@ -3,7 +3,8 @@ mutation UpdateRequestedDoc($input: DocumentRequestInput!) {
     result {
       userId
       requestedDocumentName
-      requestedDocumentFileName
+      requestedDocumentFileNameAccuser
+      requestedDocumentFileNameAccused
       target
       id
       complaintId

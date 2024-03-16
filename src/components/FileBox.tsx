@@ -24,16 +24,18 @@ import {
 import React, { useEffect } from "react";
 import { Red } from "../theme/color";
 interface Props extends ButtonProps {
-  setFiles?: (file: File) => void;
-  files?: File;
+  setFiles?: (file: File) => void | ((files: File[]) => void);
+  files?: File | File[];
   fileTypes?: string[];
-  // multiple?: boolean;
+  title?: string;
+  multiple?: boolean;
 }
 const FileBox = ({
+  title,
   setFiles,
   files,
   fileTypes,
-  // multiple = false,
+  multiple = false,
   ...props
 }: Props) => {
   const [file, setFile] = React.useState(files);
@@ -47,8 +49,10 @@ const FileBox = ({
     const newFiles = e.target.files;
     console.log(newFiles);
     setFile(newFiles[0]);
-    setFiles && setFiles(newFiles[0]);
-    setFileName(newFiles[0].name.split(".")[0]);
+    multiple && setFiles && setFiles(newFiles);
+    multiple && setFileName(newFiles.map((file: File) => file.name).join(","));
+    !multiple && setFiles && setFiles(newFiles[0]);
+    !multiple && setFileName(newFiles[0].name.split(".")[0]);
   };
   return (
     //   @ts-ignore
@@ -58,6 +62,7 @@ const FileBox = ({
       sx={{
         position: "relative",
         display: "flex",
+        flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
       }}
@@ -65,7 +70,7 @@ const FileBox = ({
     >
       <input
         type="file"
-        multiple={true}
+        multiple={multiple}
         onChange={handleFile}
         hidden
         // just accept image and pdf
@@ -85,11 +90,13 @@ const FileBox = ({
           display: "flex",
           alignItems: "center",
           //   border: "1px dotted #ccc",
+          flexDirection: "column",
           borderRadius: "5px",
         }}
       >
         {fileName == "" && <UploadFileOutlined />}
         {fileName == "" && props.children}
+        <Typography variant="body2">{title}</Typography>
 
         {/* {fileNames?.length > 0 &&
           fileNames.map((name, index) => (
@@ -98,6 +105,7 @@ const FileBox = ({
               {name}
             </Box>
           ))} */}
+
         {fileName != "" && (
           <Box
             sx={{
@@ -112,19 +120,19 @@ const FileBox = ({
             {props.children}
 
             <IconButton
-            sx={{
-              position:'absolute',
-              zIndex:1000,
-              top:-20,
-              left:-20,
-              padding:'3px',
-              background:'white',
-              color:Red,
-              "&:hover": {
-                background: Red,
-                color: "white",
-              }
-            }}
+              sx={{
+                position: "absolute",
+                zIndex: 1000,
+                top: -20,
+                left: -20,
+                padding: "3px",
+                background: "white",
+                color: Red,
+                "&:hover": {
+                  background: Red,
+                  color: "white",
+                },
+              }}
               onClick={() => {
                 setFile(undefined);
                 setFileName("");

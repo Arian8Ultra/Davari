@@ -13,11 +13,14 @@ interface InfoCardProps {
   }[];
   columns?: string | object;
   rows?: string;
+  topColor?: string;
+  backgrounColor?: string;
 }
 
-const InfoCard = ({ data, columns, rows }: InfoCardProps) => {
+const InfoCard = ({ data, columns, rows,topColor,backgrounColor }: InfoCardProps) => {
   return (
     <Card
+    elevation={0}
       sx={{
         width: "100%",
         height: "100%",
@@ -27,7 +30,7 @@ const InfoCard = ({ data, columns, rows }: InfoCardProps) => {
         flexDirection: "column",
         justifyContent: "start",
         alignItems: "center",
-        background: primary,
+        background: backgrounColor || primary,
         borderRadius: "1rem",
         
         // padding:'2rem',
@@ -39,7 +42,7 @@ const InfoCard = ({ data, columns, rows }: InfoCardProps) => {
         component="h2"
         textAlign={"center"}
         sx={{
-          background: "rgba(255,255,255,0.3)",
+          background: topColor || "rgba(255,255,255,0.3)",
           width: "100%",
           padding: "1rem",
           paddingInline:'3rem'
@@ -59,7 +62,7 @@ const InfoCard = ({ data, columns, rows }: InfoCardProps) => {
           width: "100%",
         }}
       >
-        <Typography variant="h5" component="h2">
+        <Typography variant="h6" component="h2" textAlign={'center'}>
           {data[0].title}
         </Typography>
         <Typography variant="body1" component="h2" textAlign={'justify'} sx={{

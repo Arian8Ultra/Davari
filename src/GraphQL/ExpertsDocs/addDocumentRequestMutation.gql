@@ -4,7 +4,8 @@ mutation AddDocsRequestMutation($input: DocumentRequestInput!) {
       userId
       complaintId
       requestedDocumentName
-      requestedDocumentFileName
+      requestedDocumentFileNameAccuser
+      requestedDocumentFileNameAccused
       id
     }
   }

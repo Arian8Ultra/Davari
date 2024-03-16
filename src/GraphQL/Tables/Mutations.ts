@@ -1,4 +1,5 @@
 import { gql } from "@apollo/client";
+import { RegistrarType } from "../../gql/graphql";
 
 export const CREATE_INSTALLMENT_TABLE = gql`
   mutation CREATE_INSTALLMENT_TABLE(
@@ -12,7 +13,7 @@ export const CREATE_INSTALLMENT_TABLE = gql`
       input: {
         contractId: $contractId
         paymentTotal: $paymentTotal
-        registrarType: $registrarType
+        filledBy: $registrarType
         remainingPayment: $remainingPayment
         userId: $userId
       }
@@ -44,7 +45,7 @@ export const UPDATE_INSTALLMENT_TABLE = gql`
       input: {
         contractId: $contractId
         paymentTotal: $paymentTotal
-        registrarType: $registrarType
+        filledBy: $registrarType
         remainingPayment: $remainingPayment
         userId: $userId
         id: $id
@@ -101,7 +102,6 @@ export const CREATE_INSTALLMENT = gql`
         date: $date
         registrarType: $registrarType
         title: $title
-        
       }
     ) {
       result {
@@ -174,7 +174,7 @@ export type Installment = {
   filledBy: "ACCUSER" | "ACCUSED";
   title: string;
   id?: number;
-  registrarType?: "ACCUSER" | "ACCUSED";
+  registrarType?: "ACCUSER" | "ACCUSED" ;
   installmentParts?: InstallmentPart[];
 };
 
@@ -503,7 +503,7 @@ export type AdjustmentStatement = {
   dateProvidedByContractor: Date;
   operationPeriodEndDate: Date;
   operationPeriodStartDate: Date;
-  filledBy: "ACCUSER" | "ACCUSED";
+  filledBy: "ACCUSER" | "ACCUSED" | RegistrarType | null | undefined;
   title: string;
   id: number;
 };
@@ -655,12 +655,14 @@ export const CREATE_WORK_CONDITION_STATEMENT_TABLE = gql`
     $contractId: Int
     $filledBy: RegistrarType
     $userId: String
+    $workConditionType: String
   ) {
     workConditionStatementTable_addWorkConditionStatementTable(
       input: {
         contractId: $contractId
         filledBy: $filledBy
         userId: $userId
+        workConditionType: $workConditionType
       }
     ) {
       result {
@@ -866,7 +868,7 @@ export type WorkConditionStatement = {
   dateProvidedByContractor: Date;
   operationPeriodEndDate: Date;
   operationPeriodStartDate: Date;
-  filledBy: "ACCUSER" | "ACCUSED";
+  filledBy: "ACCUSER" | "ACCUSED" | RegistrarType | null | undefined;
   id: number;
 };
 

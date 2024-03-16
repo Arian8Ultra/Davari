@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
+import { Add, Delete } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -19,6 +20,7 @@ import {
 import React from "react";
 import { useParams } from "react-router-dom";
 import {
+  ComplaintStateStatus,
   useAddDocsRequestMutationMutation,
   useDeleteRequestedDocMutationMutation,
   useGetArgumentsWithFilterQuery,
@@ -27,15 +29,14 @@ import {
   useGetUserWithFilterLazyQuery,
   useUpdateComplaintFullMutation,
 } from "../../../../generated-types";
+import { useUserStore } from "../../../Context/UserStore";
 import ArgumentInfoModal from "../../../components/Arguments/ArgumentInfoModal";
+import { getComplaintStateWithEnum } from "../../../functions/ComplaintStatesFunc";
 import {
   ComplaintArgument,
-  ComplaintState,
-  TargetType,
+  TargetType
 } from "../../../gql/graphql";
 import { Green, Red, primary, secondary } from "../../../theme/color";
-import { useUserStore } from "../../../Context/UserStore";
-import { Add, Delete } from "@mui/icons-material";
 
 const RequestDocs = () => {
   const { complaintId } = useParams<{ complaintId: string }>();
@@ -1081,9 +1082,9 @@ const RequestDocs = () => {
                       textAlign: "center",
                     }}
                   >
-                    {item?.target === TargetType.Accused
+                    {item?.target === TargetType.Accuser
                       ? "خواهان"
-                      : item?.target === TargetType.Accuser
+                      : item?.target === TargetType.Accused
                       ? "خوانده"
                       : "هردو"}
                   </TableCell>
@@ -1142,10 +1143,13 @@ const RequestDocs = () => {
               void updateComplaint({
                 variables: {
                   input: {
-                    complaintState:
-                      ComplaintState.UploadingDocumentsByAccuserAndAccused,
+                    complaintStateId:
+                    getComplaintStateWithEnum(ComplaintStateStatus.UploadingDocumentsByAccuser).id,
                     id: parseInt(complaintId || "") || 0,
                   },
+                },
+                onCompleted() {
+                  window.location.href = "/expertPortal";
                 },
               });
             }

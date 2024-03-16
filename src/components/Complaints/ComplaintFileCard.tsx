@@ -82,13 +82,12 @@ const ComplaintFileCard = (props: Props) => {
           onClick={() => {
             props.fileName &&
               window.open(
-                "http://172.16.23.50:7030/files/letters/" +
-                  props.fileName +
-                  ".docx"
+                "http://172.16.23.50:7030/files/" +
+                  props.fileName 
               );
           }}
           // href={
-          //   "http://172.16.23.50:7030/files/letters/" +
+          //   "http://172.16.23.50:7030/files/" +
           //   props.fileName +
           //   ".docx"
           // }

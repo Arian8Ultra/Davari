@@ -1,87 +1,106 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
+import { useMutation } from "@apollo/client";
 import {
   Box,
   Button,
   LinearProgress,
+  MenuItem,
   TextField,
   Typography,
   colors,
 } from "@mui/material";
+import { DatePicker, TimeClock, TimePicker } from "@mui/x-date-pickers";
 import React from "react";
 import { useParams } from "react-router-dom";
-import { primary } from "../../../theme/color";
+import { useGenerateComplaintDecreeMutation } from "../../../../generated-types";
+import { useUserStore } from "../../../Context/UserStore";
+import BackButton from "../../../components/BackButton";
 import FaTypography from "../../../components/FaComponents/FaTypography";
+import { getComplaintStateWithEnum } from "../../../functions/ComplaintStatesFunc";
 import { convertToPersianDigits } from "../../../functions/Functions";
-import { useMutation } from "@apollo/client";
 import {
-  ComplaintState,
+  ComplaintStateStatus,
   SendCallToMeetingSmsDocument,
-  UpdateComplaintDocument,
   UpdateComplaintFullDocument,
 } from "../../../gql/graphql";
-import {
-  DateCalendar,
-  DatePicker,
-  StaticTimePicker,
-  TimeClock,
-  TimePicker,
-} from "@mui/x-date-pickers";
-import BackButton from "../../../components/BackButton";
+import { primary } from "../../../theme/color";
 
 const AddMeetingPage = () => {
   const { complaintId } = useParams();
   const [date, setDate] = React.useState<Date | null>(new Date());
   const [time, setTime] = React.useState<Date | null>(new Date());
+  const [hour, setHour] = React.useState<number>(0);
+  const [minute, setMinute] = React.useState<number>(0);
   const [place, setPlace] = React.useState<string>("");
+  const user = useUserStore.getState().user;
 
-  const [sendSms, { loading, error }] = useMutation(
-    SendCallToMeetingSmsDocument,
-    {
-      variables: {
-        input: {
-          complaintId: parseInt(complaintId || "") || 0,
-          meetingDate: date?.toDateString() || "",
-          meetingTime:
-            "PT" +
-              time?.getHours() +
-              "H" +
-              time?.getMinutes() +
-              "M" || "",
-          meetingPlace: place,
+  const [sendSms, { loading }] = useMutation(SendCallToMeetingSmsDocument, {
+    variables: {
+      input: {
+        complaintId: parseInt(complaintId || "") || 0,
+        meetingDate: date?.toDateString() || "",
+        meetingTime:
+          "PT" + hour + "H" + minute + "M" || "",
+        meetingPlace: place,
+      },
+    },
+    onCompleted: (data) => {
+      console.log(data);
+      // if (data.sms_sendInviteToMeetingSMS.code === 1) {
+      void updateComplaint({
+        onCompleted(data) {
+          console.log(data);
+          if (data.complaint_updateComplaint.status.code === 1) {
+            alert("با موفقیت ارسال شد");
+            void generateDecree({
+              onCompleted(data) {
+                console.log("generateDecree", data);
+              },
+              onError(error) {
+                console.log("generateDecree", error);
+              },
+            });
+          } else {
+            alert("خطا در ارسال");
+          }
         },
-      },
-      onCompleted: (data) => {
-        console.log(data);
-        if (data.sms_sendInviteToMeetingSMS.code === 1) {
-          void updateComplaint({
-            onCompleted(data, clientOptions) {
-              console.log(data);
-              if (data.complaint_updateComplaint.status.code === 1) {
-                alert("با موفقیت ارسال شد");
-              } else {
-                alert("خطا در ارسال");
-              }
-            },
-          });
-        }else{
-          alert("خطا در ارسال پیامک")
-        }
-      },
-    }
-  );
+      });
+      // } else {
+      //   alert("خطا در ارسال پیامک");
+      // }
+    },
+  });
 
-  const [updateComplaint, { loading: updateLoading }] = useMutation(
-    UpdateComplaintFullDocument,
-    {
-      variables: {
-        input: {
-          id: parseInt(complaintId || "") || 0,
-          complaintState:
-            ComplaintState.CheckingAndUploadingTheSignedDecree,
-        },
+  const [updateComplaint] = useMutation(UpdateComplaintFullDocument, {
+    variables: {
+      input: {
+        id: parseInt(complaintId || "") || 0,
+        complaintStateId: getComplaintStateWithEnum(
+          ComplaintStateStatus.CheckingAndUploadingTheSignedDecree
+        ).id,
       },
-    }
-  );
+    },
+  });
+  const [generateDecree] = useGenerateComplaintDecreeMutation({
+    variables: {
+      input: {
+        complaintId: parseInt(complaintId || "") || 0,
+        // accusedSignDate: new Date().toDateString(),
+        // accuserSignDate: new Date().toDateString(),
+        canonDate: new Date().toDateString(),
+        canonDate2: new Date().toDateString(),
+        canonNum: "0",
+        canonNum2: "0",
+        circularDate: new Date().toDateString(),
+        circularNum: "0",
+        clause: "0",
+        deliveryDate: new Date().toDateString(),
+        userId: user.id,
+      },
+    },
+  });
   return (
     <>
       <BackButton />
@@ -150,17 +169,71 @@ const AddMeetingPage = () => {
           disablePast
         />
 
-        <TimePicker
+        <FaTypography
+          sx={{
+            gridColumn: "span 1",
+            mt: "50px",
+          }}
+        >
+          زمان جلسه :
+        </FaTypography>
+
+        <TextField
+          label="ساعت"
+          variant="outlined"
+          sx={{
+            gridColumn: "span 1",
+            mt: "50px",
+          }}
+          size="medium"
+          type="number"
+          onChange={(e) => {
+            setHour(parseInt(e.target.value));
+          }}
+          value={hour}
+          select
+        >
+          {[...Array(24)].map((_, i) => (
+            <MenuItem key={i} value={i}>
+              {convertToPersianDigits(i)}
+            </MenuItem>
+          ))}
+        </TextField>
+
+        <TextField
+          label="دقیقه"
+          variant="outlined"
+          sx={{
+            gridColumn: "span 1",
+            mt: "50px",
+          }}
+          size="medium"
+          type="number"
+          onChange={(e) => {
+            setMinute(parseInt(e.target.value));
+          }}
+          value={minute}
+          select
+        >
+          {[...Array(60)].map((_, i) => (
+            <MenuItem key={i} value={i}>
+              {convertToPersianDigits(i)}
+            </MenuItem>
+          ))}
+        </TextField>
+
+        {/* <TimeClock
           value={time}
           onChange={(newValue) => {
             setTime(newValue);
           }}
+
           sx={{
             gridColumn: "span 3",
             mt: "50px",
           }}
           ampm={false}
-        />
+        /> */}
 
         <TextField
           label="محل برگزاری جلسه"

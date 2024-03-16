@@ -1,5 +1,5 @@
 export const Titles = {
-    mainTitle:'سامانه هوشمند داوری',
+    mainTitle:'سامانه هوشمند داوری شورای عالی فنی',
     send:'ارسال',
     cancel:'انصراف',
     save:'ذخیره',
@@ -35,6 +35,10 @@ export const Titles = {
     portalList: 'لیست پورتال',
     admin: 'مدیریت',
     adminPanel: 'پنل مدیریت',
+    generalSettings: 'تنظیمات عمومی',
+    generalSettingsManagement: 'مدیریت تنظیمات عمومی',
+    stateManagement: 'مدیریت وضعیت ها',
+    state: 'وضعیت',
     users: 'کاربران',
     usersList: 'لیست کاربران',
     usersCreate: 'ثبت کاربر',

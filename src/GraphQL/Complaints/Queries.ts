@@ -1,4 +1,5 @@
 import { gql } from "@apollo/client";
+import { ComplaintState } from "../../gql/graphql";
 
 export const GET_COMPLAINTS = gql`
   query GET_COMPLAINTS {
@@ -17,11 +18,20 @@ export const GET_COMPLAINTS = gql`
             secondCondition
             secondConditionFileName
             thirdCondition
-            thirdConditionFileName
+            thirdConditionFinalBillFileName
+            thirdConditionNotificationLetterFileName
+            thirdConditionContractorsObjectionDocumentsFileName
             fourthCondition
             fourthConditionFileName
           }
-          complaintState
+          complaintState {
+            id
+            persianName
+            responsibleRole
+            priority
+            isDeleted
+            createdDate
+          }
           complaintCode
           assignedUser {
             userName
@@ -57,11 +67,21 @@ export const GET_COMPLAINT = gql`
           secondCondition
           secondConditionFileName
           thirdCondition
-          thirdConditionFileName
+          thirdConditionFinalBillFileName
+          thirdConditionNotificationLetterFileName
+          thirdConditionContractorsObjectionDocumentsFileName
           fourthCondition
           fourthConditionFileName
         }
-        complaintState
+        complaintState {
+          id
+          persianName
+          responsibleRole
+          priority
+          englishName
+          isDeleted
+          createdDate
+        }
         complaintCode
         assignedUser {
           userName
@@ -86,9 +106,7 @@ export const GET_ACCUSED_COMPLAINTS = gql`
   query GET_ACCUSED_COMPLAINTS($departmentId: String!) {
     complaint_getComplaints {
       result(
-        where: {
-          contract: { accusedDepartmentUserId: { eq: $departmentId } }
-        }
+        where: { contract: { accusedDepartmentUserId: { eq: $departmentId } } }
         order: { createdDate: DESC }
       ) {
         items {
@@ -104,11 +122,22 @@ export const GET_ACCUSED_COMPLAINTS = gql`
             secondCondition
             secondConditionFileName
             thirdCondition
-            thirdConditionFileName
+            thirdConditionFinalBillFileName
+            thirdConditionNotificationLetterFileName
+            thirdConditionContractorsObjectionDocumentsFileName
             fourthCondition
             fourthConditionFileName
           }
-          complaintState
+          complaintState {
+            id
+            persianName
+            englishName
+            priority
+            state
+            responsibleRole
+            isDeleted
+            createdDate
+          }
           complaintCode
           assignedUser {
             userName
@@ -132,9 +161,7 @@ export const GET_ACCUSER_COMPLAINTS = gql`
   query GET_ACCUSER_COMPLAINTS($departmentId: String!) {
     complaint_getComplaints {
       result(
-        where: {
-          contract: { accuserDepartmentUserId: { eq: $departmentId } }
-        }
+        where: { contract: { accuserDepartmentUserId: { eq: $departmentId } } }
         order: { createdDate: DESC }
       ) {
         items {
@@ -150,11 +177,22 @@ export const GET_ACCUSER_COMPLAINTS = gql`
             secondCondition
             secondConditionFileName
             thirdCondition
-            thirdConditionFileName
+            thirdConditionFinalBillFileName
+            thirdConditionNotificationLetterFileName
+            thirdConditionContractorsObjectionDocumentsFileName
             fourthCondition
             fourthConditionFileName
           }
-          complaintState
+          complaintState {
+            id
+            persianName
+            englishName
+            priority
+            state
+            responsibleRole
+            isDeleted
+            createdDate
+          }
           complaintCode
           assignedUser {
             userName
@@ -179,20 +217,24 @@ export const GET_CHIEF_COMPLAINTS = gql`
       result(
         where: {
           or: [
-            { complaintState: { eq: WAITING_FOR_CHIEF_TO_ASSIGN } }
+            { complaintState: { state: { eq: WAITING_FOR_CHIEF_TO_ASSIGN } } }
             {
               complaintState: {
-                eq: WAITING_FOR_CHIEF_TO_APPROVE_EXPERTS_ANSWERS_TO_ARGUMENTS
+                state: {
+                  eq: WAITING_FOR_CHIEF_TO_APPROVE_EXPERTS_ANSWERS_TO_ARGUMENTS
+                }
               }
             }
             {
               complaintState: {
-                eq: WAITING_FOR_CHIEF_TO_APPROVE_EXPERTS_ANSWERS_TO_ARGUMENTS
+                state: {
+                  eq: WAITING_FOR_CHIEF_TO_APPROVE_EXPERTS_ANSWERS_TO_ARGUMENTS
+                }
               }
             }
             {
               complaintState: {
-                eq: MAIL_ROOM_CHIEF_REVIEWING_THE_FINAL_REPORT
+                state: { eq: MAIL_ROOM_CHIEF_REVIEWING_THE_FINAL_REPORT }
               }
             }
           ]
@@ -212,11 +254,22 @@ export const GET_CHIEF_COMPLAINTS = gql`
             secondCondition
             secondConditionFileName
             thirdCondition
-            thirdConditionFileName
+            thirdConditionFinalBillFileName
+            thirdConditionNotificationLetterFileName
+            thirdConditionContractorsObjectionDocumentsFileName
             fourthCondition
             fourthConditionFileName
           }
-          complaintState
+          complaintState {
+            id
+            persianName
+            englishName
+            priority
+            state
+            responsibleRole
+            isDeleted
+            createdDate
+          }
           complaintCode
           assignedUser {
             userName
@@ -244,9 +297,11 @@ export const GET_COMPLAINT_ARGUMENTS = gql`
           id
           accusedResponse
           accusedResponseFileName
-          approvedAmount
+          netApprovedAmount
+          grossApprovedAmount
           complaintId
-          councilApprovedAmount
+          netCouncilApprovedAmount
+          grossCouncilApprovedAmount
           description
           expertId
           expertOpinion
@@ -254,8 +309,10 @@ export const GET_COMPLAINT_ARGUMENTS = gql`
           expertVerdict
           fileName
           filledBy
-          mailRoomChiefSuggestedAmount
-          mailRoomExpertApprovedAmount
+          netMailRoomChiefSuggestedAmount
+          grossMailRoomChiefSuggestedAmount
+          netMailRoomExpertApprovedAmount
+          grossMailRoomExpertApprovedAmount
           accuserAnswerToAccusedResponse
           suggestedAmount
           summary
@@ -284,11 +341,22 @@ export const GET_COMPLAINT_ASSIGNED = gql`
             secondCondition
             secondConditionFileName
             thirdCondition
-            thirdConditionFileName
+            thirdConditionFinalBillFileName
+            thirdConditionNotificationLetterFileName
+            thirdConditionContractorsObjectionDocumentsFileName
             fourthCondition
             fourthConditionFileName
           }
-          complaintState
+          complaintState {
+            id
+            persianName
+            englishName
+            state
+            priority
+            responsibleRole
+            isDeleted
+            createdDate
+          }
           complaintCode
           assignedUser {
             userName
@@ -320,7 +388,9 @@ export const GET_ARBITRATION_TERMS_FORM_BY_COMPLAINT_ID = gql`
           secondCondition
           secondConditionFileName
           thirdCondition
-          thirdConditionFileName
+          thirdConditionFinalBillFileName
+          thirdConditionNotificationLetterFileName
+          thirdConditionContractorsObjectionDocumentsFileName
           fourthCondition
           fourthConditionFileName
           filledBy
@@ -382,20 +452,10 @@ export const GET_COMPLAINTS_NOTES = gql`
   }
 `;
 
-export const GetComplaintsWithFilter = gql`
-  query GetComplaintsWithFilter(
-    $filter: ComplaintFilterInput
-    $take: Int
-    $skip: Int
-    $order: [ComplaintSortInput!] = [{ createdDate: DESC }]
-  ) {
-    complaint_getComplaints {
-      result(
-        where: $filter
-        order: $order
-        take: $take
-        skip: $skip
-      ) {
+export const GetExpertComplaints = gql`
+  query GetExpertComplaints($userId: String!) {
+    complaint_getExpertComplaints(userId: $userId) {
+      result {
         items {
           userId
           id
@@ -409,77 +469,212 @@ export const GetComplaintsWithFilter = gql`
             secondCondition
             secondConditionFileName
             thirdCondition
-            thirdConditionFileName
+            thirdConditionFinalBillFileName
+            thirdConditionNotificationLetterFileName
+            thirdConditionContractorsObjectionDocumentsFileName
             fourthCondition
             fourthConditionFileName
+            filledBy
+            projectNumber
+            projectName
           }
-          complaintState
+          complaintState {
+            id
+            persianName
+            englishName
+            state
+            priority
+            responsibleRole
+            isDeleted
+            createdDate
+          }
           complaintCode
-          councilExpertId
+          councilExpertIds
           assignedUser {
             userName
             fullName
             phoneNumber
           }
+          isFirstPaymentPaid
+          isSecondPaymentPaid
           contract {
             id
-          accuserDepartmentUserId
-          accusedDepartmentUserId
-          accuserNationality
-          accusedNationality
-          accuserRelatedPeopleByAccuser
-          accuserRelatedPeopleByAccused
-          accusedRelatedPeopleByAccuser
-          accusedRelatedPeopleByAccused
-          contractTypeByAccused
-          contractTypeByAccuser
-          otherContractTypeByAccused
-          otherContractTypeByAccuser
-          circularNumberByAccused
-          circularNumberByAccuser
-          circularDateByAccused
-          circularDateByAccuser
-          contractSubjectByAccused
-          contractSubjectByAccuser
-          contractNumberByAccused
-          contractNumberByAccuser
-          contractDateByAccused
-          contractDateByAccuser
-          initialBudgetByAccused
-          initialBudgetByAccuser
-          initialTimePeriodByAccused
-          initialTimePeriodByAccuser
-          priceListOfBasicUnitOfFieldByAccused
-          priceListOfBasicUnitOfFieldByAccuser
-          isSpecialPriceListAttachedToContractByAccused
-          isSpecialPriceListAttachedToContractByAccuser
-          recommendedCoefficientByAccused
-          recommendedCoefficientByAccuser
-          coefficientTypeByAccused
-          coefficientTypeByAccuser
-          assigningTypeByAccused
-          assigningTypeByAccuser
-          doesContainAdjustmentByAccused
-          doesContainAdjustmentByAccuser
-          baseIndexPeriodByAccused
-          baseIndexPeriodByAccuser
-          operationStartDateByAccused
-          operationStartDateByAccuser
-          physicalProgressInArbitrationDateByAccused
-          physicalProgressInArbitrationDateByAccuser
-          financialProgressInArbitrationDateByAccused
-          financialProgressInArbitrationDateByAccuser
-          contractStatusAndDateInArbitrationByAccused
-          contractStatusAndDateInArbitrationByAccuser
-          supervisionDepartmentByAccused
-          supervisionDepartmentByAccuser
-          authorizedDelaysByAccused
-          authorizedDelaysByAccuser
-          unauthorizedDelaysByAccused
-          unauthorizedDelaysByAccuser
-          isExecutive
-          fileNamesByAccused
-          fileNamesByAccuser
+            accuserDepartmentUserId
+            accusedDepartmentUserId
+            accuserNationality
+            accusedNationality
+            accuserRelatedPeopleByAccuser
+            accuserRelatedPeopleByAccused
+            accusedRelatedPeopleByAccuser
+            accusedRelatedPeopleByAccused
+            contractTypeByAccused
+            contractTypeByAccuser
+            otherContractTypeByAccused
+            otherContractTypeByAccuser
+            circularNumberByAccused
+            circularNumberByAccuser
+            circularDateByAccused
+            circularDateByAccuser
+            contractSubjectByAccused
+            contractSubjectByAccuser
+            contractNumberByAccused
+            contractNumberByAccuser
+            contractDateByAccused
+            contractDateByAccuser
+            initialBudgetByAccused
+            initialBudgetByAccuser
+            initialTimePeriodByAccused
+            initialTimePeriodByAccuser
+            priceListOfBasicUnitOfFieldByAccused
+            priceListOfBasicUnitOfFieldByAccuser
+            isSpecialPriceListAttachedToContractByAccused
+            isSpecialPriceListAttachedToContractByAccuser
+            recommendedCoefficientByAccused
+            recommendedCoefficientByAccuser
+            coefficientTypeByAccused
+            coefficientTypeByAccuser
+            assigningTypeByAccused
+            assigningTypeByAccuser
+            doesContainAdjustmentByAccused
+            doesContainAdjustmentByAccuser
+            baseIndexPeriodByAccused
+            baseIndexPeriodByAccuser
+            operationStartDateByAccused
+            operationStartDateByAccuser
+            physicalProgressInArbitrationDateByAccused
+            physicalProgressInArbitrationDateByAccuser
+            financialProgressInArbitrationDateByAccused
+            financialProgressInArbitrationDateByAccuser
+            contractStatusAndDateInArbitrationByAccused
+            contractStatusAndDateInArbitrationByAccuser
+            supervisionDepartmentByAccused
+            supervisionDepartmentByAccuser
+            authorizedDelaysByAccused
+            authorizedDelaysByAccuser
+            unauthorizedDelaysByAccused
+            unauthorizedDelaysByAccuser
+            isExecutiveByAccused
+            isExecutiveByAccuser
+            isExecutiveByExpert
+            fileNamesByAccused
+            fileNamesByAccuser
+          }
+        }
+      }
+    }
+  }
+`;
+export const GetComplaintsWithFilter = gql`
+  query GetComplaintsWithFilter(
+    $filter: ComplaintFilterInput
+    $take: Int
+    $skip: Int
+    $order: [ComplaintSortInput!] = [{ createdDate: DESC }]
+  ) {
+    complaint_getComplaints {
+      result(where: $filter, order: $order, take: $take, skip: $skip) {
+        items {
+          userId
+          id
+          contractId
+          createdDate
+          isApprovedByChief
+          councilListStatus
+          arbitrationTermsForms {
+            firstCondition
+            firstConditionFileName
+            secondCondition
+            secondConditionFileName
+            thirdCondition
+            thirdConditionFinalBillFileName
+            thirdConditionNotificationLetterFileName
+            thirdConditionContractorsObjectionDocumentsFileName
+            fourthCondition
+            fourthConditionFileName
+            filledBy
+            projectNumber
+            projectName
+          }
+          complaintState {
+            id
+            persianName
+            englishName
+            state
+            priority
+            responsibleRole
+            isDeleted
+            createdDate
+          }
+          complaintCode
+          councilExpertIds
+          assignedUser {
+            userName
+            fullName
+            phoneNumber
+          }
+          isFirstPaymentPaid
+          isSecondPaymentPaid
+          contract {
+            id
+            accuserDepartmentUserId
+            accusedDepartmentUserId
+            accuserNationality
+            accusedNationality
+            accuserRelatedPeopleByAccuser
+            accuserRelatedPeopleByAccused
+            accusedRelatedPeopleByAccuser
+            accusedRelatedPeopleByAccused
+            contractTypeByAccused
+            contractTypeByAccuser
+            otherContractTypeByAccused
+            otherContractTypeByAccuser
+            circularNumberByAccused
+            circularNumberByAccuser
+            circularDateByAccused
+            circularDateByAccuser
+            contractSubjectByAccused
+            contractSubjectByAccuser
+            contractNumberByAccused
+            contractNumberByAccuser
+            contractDateByAccused
+            contractDateByAccuser
+            initialBudgetByAccused
+            initialBudgetByAccuser
+            initialTimePeriodByAccused
+            initialTimePeriodByAccuser
+            priceListOfBasicUnitOfFieldByAccused
+            priceListOfBasicUnitOfFieldByAccuser
+            isSpecialPriceListAttachedToContractByAccused
+            isSpecialPriceListAttachedToContractByAccuser
+            recommendedCoefficientByAccused
+            recommendedCoefficientByAccuser
+            coefficientTypeByAccused
+            coefficientTypeByAccuser
+            assigningTypeByAccused
+            assigningTypeByAccuser
+            doesContainAdjustmentByAccused
+            doesContainAdjustmentByAccuser
+            baseIndexPeriodByAccused
+            baseIndexPeriodByAccuser
+            operationStartDateByAccused
+            operationStartDateByAccuser
+            physicalProgressInArbitrationDateByAccused
+            physicalProgressInArbitrationDateByAccuser
+            financialProgressInArbitrationDateByAccused
+            financialProgressInArbitrationDateByAccuser
+            contractStatusAndDateInArbitrationByAccused
+            contractStatusAndDateInArbitrationByAccuser
+            supervisionDepartmentByAccused
+            supervisionDepartmentByAccuser
+            authorizedDelaysByAccused
+            authorizedDelaysByAccuser
+            unauthorizedDelaysByAccused
+            unauthorizedDelaysByAccuser
+            isExecutiveByAccused
+            isExecutiveByAccuser
+            isExecutiveByExpert
+            fileNamesByAccused
+            fileNamesByAccuser
           }
         }
       }
@@ -495,22 +690,20 @@ export const GetArgumentsWithFilter = gql`
     $order: [ComplaintArgumentSortInput!] = [{ createdDate: DESC }]
   ) {
     complaintArgument_getComplaintArguments {
-      result(
-        where: $filter
-        order: $order
-        take: $take
-        skip: $skip
-      ) {
+      result(where: $filter, order: $order, take: $take, skip: $skip) {
         items {
           id
           accusedResponse
           accusedResponseFileName
-          approvedAmount
+          netApprovedAmount
+          grossApprovedAmount
           complaintId
-          councilApprovedAmount
+          netCouncilApprovedAmount
+          grossCouncilApprovedAmount
           councilOpinion
           justiceExpertOpinion
-          justiceExpertApprovedAmount
+          netJusticeExpertApprovedAmount
+          grossJusticeExpertApprovedAmount
           description
           expertId
           expertOpinion
@@ -518,8 +711,10 @@ export const GetArgumentsWithFilter = gql`
           expertVerdict
           fileName
           filledBy
-          mailRoomChiefSuggestedAmount
-          mailRoomExpertApprovedAmount
+          netMailRoomChiefSuggestedAmount
+          grossMailRoomChiefSuggestedAmount
+          netMailRoomExpertApprovedAmount
+          grossMailRoomExpertApprovedAmount
           mailRoomExpertOpinionOnExpertOpinion
           mailRoomChiefOpinionOnArgument
           mailRoomExpertOpinionOnArgument
@@ -529,9 +724,41 @@ export const GetArgumentsWithFilter = gql`
           userId
           createdDate
           isDeleted
+          financialSituation
+          filledBy
         }
       }
       status
+    }
+  }
+`;
+
+export const getCorrectionRequestsFull = gql`
+  query getCorrectionRequestsFullQuery(
+    $filter: CorrectionRequestFilterInput
+    $orderBy: [CorrectionRequestSortInput!]
+    $skip: Int
+    $take: Int
+  ) {
+    correctionRequest_getCorrectionRequests {
+      result(where: $filter, order: $orderBy, skip: $skip, take: $take) {
+        items {
+          complaintId
+          createdDate
+          clause
+          reason
+          suggestion
+          id
+          complaintId
+          complaint {
+            id
+            contract {
+              accuserDepartmentUserId
+              accusedDepartmentUserId
+            }
+          }
+        }
+      }
     }
   }
 `;
@@ -541,7 +768,7 @@ export type Complaint = {
   id: number;
   contractId: number;
   arbitrationTermsForms: ArbitrationTermsForms;
-  complaintState: string;
+  complaintState: ComplaintState;
   complaintCode: string;
   createdDate: string;
   isApprovedByChief: boolean;

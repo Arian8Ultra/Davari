@@ -5,7 +5,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { gql, useMutation, useQuery } from "@apollo/client";
-import { CheckCircle } from "@mui/icons-material";
+import { CheckCircle, DeleteOutlineTwoTone } from "@mui/icons-material";
 import {
   Alert,
   Box,
@@ -16,18 +16,26 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableHead,
   TableRow,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
-import { BsCheck, BsPlusCircleDotted } from "react-icons/bs";
-import { useNavigate, useParams } from "react-router-dom";
-import { useUserStore } from "../../../Context/UserStore";
-import { UPDATE_COMPLAINT } from "../../../GraphQL/Complaints/Mutations";
+import React, { useEffect, useState } from "react";
 import {
-  GET_COMPLAINT,
-  GET_COMPLAINT_ARGUMENTS,
-} from "../../../GraphQL/Complaints/Queries";
+  BsCloudDownloadFill,
+  BsDownload,
+  BsPlusCircleDotted,
+} from "react-icons/bs";
+import { useNavigate, useParams } from "react-router-dom";
+import {
+  useDeleteNonFeasibleArgumentMutation,
+  useGetArgumentsWithFilterQuery,
+  useGetComplaintStatesQuery,
+  useGetNonFeasibleArgumentsLazyQuery,
+  useSmsComplaintAddedMutation,
+} from "../../../../generated-types";
+import { useUserStore } from "../../../Context/UserStore";
+import { GET_COMPLAINT } from "../../../GraphQL/Complaints/Queries";
 import ArgumentCard from "../../../components/Arguments/ArgumentCard";
 import ArgumentHeader from "../../../components/Arguments/ArgumentHeader";
 import ArgumentInfoModal from "../../../components/Arguments/ArgumentInfoModal";
@@ -36,22 +44,20 @@ import FaTextField from "../../../components/FaComponents/FaTextField";
 import FaTypography from "../../../components/FaComponents/FaTypography";
 import NewModal from "../../../components/Modals";
 import TimeLine from "../../../components/TimeLine";
+import { getComplaintStateWithEnum } from "../../../functions/ComplaintStatesFunc";
 import { convertToPersianDigits } from "../../../functions/Functions";
 import {
   AddComplaintNoteDocument,
   ComplaintArgument,
-  ComplaintState,
+  ComplaintStateStatus,
   GetComplaintsNotesDocument,
   NoteType,
+  RegistrarType,
   SendAccusedRespondedSmsDocument,
+  UpdateComplaintDocument,
 } from "../../../gql/graphql";
 import NoAccess from "../../../layout/NoAccess";
-import { newStatesObj } from "../../../static/States";
-import {
-  Argument,
-  OptionalArgument,
-  OptionalArgumentSamll,
-} from "../../../static/Types";
+import { Argument } from "../../../static/Types";
 import states from "../../../static/states.json";
 import {
   GreenLight,
@@ -60,13 +66,10 @@ import {
   background,
   onSecondary,
   primary,
+  primaryDark,
   secondary,
   secondaryDark,
 } from "../../../theme/color";
-import {
-  useGetArgumentsWithFilterQuery,
-  useGetComplaintArgumentsQuery,
-} from "../../../../generated-types";
 
 const AddArgument = () => {
   const { complaintId, state } = useParams();
@@ -74,9 +77,7 @@ const AddArgument = () => {
   const complaintIdInt = complaintId && parseInt(complaintId);
   const user = useUserStore((state) => state.user);
   const stateInt = state ? parseInt(state) : 0;
-  const [arguements, setArguements] = React.useState<
-    OptionalArgument[]
-  >([]);
+  const [arguements, setArguements] = React.useState<ComplaintArgument[]>([]);
   const [addModal, setAddModal] = React.useState({
     open: false,
     Argument: {} as Argument,
@@ -100,10 +101,13 @@ const AddArgument = () => {
     argument: {} as ComplaintArgument,
   });
 
-  const [updateCompaint] = useMutation(UPDATE_COMPLAINT, {
+  const [updateCompaint] = useMutation(UpdateComplaintDocument, {
     variables: {
-      id: complaintIdInt,
-      complaintState: states.AccuserApprovedArguments.cap,
+      id: complaintIdInt || 0,
+      // error for the next line with status
+      complaintStateId: getComplaintStateWithEnum(
+        ComplaintStateStatus.WaitingForAccuserToApproveAccusedAnswers
+      ).id,
     },
     onCompleted(data) {
       console.log("state", states.AccuserApprovedArguments.cap);
@@ -117,14 +121,11 @@ const AddArgument = () => {
       id: parseInt(complaintId || "") || 0,
     },
     onCompleted(data) {
-      if (
-        !data?.complaintNote_getComplaintNotes.result?.items?.length
-      )
-        return;
+      if (!data?.complaintNote_getComplaintNotes.result?.items?.length) return;
       setNoteModal({
         note:
-          data?.complaintNote_getComplaintNotes.result?.items?.[0]
-            ?.content || "",
+          data?.complaintNote_getComplaintNotes.result?.items?.[0]?.content ||
+          "",
         open: true,
       });
     },
@@ -138,6 +139,11 @@ const AddArgument = () => {
         userId: user.id,
         noteType: NoteType.MailRoomChiefOpinionOnRejectingComplaint,
       },
+    },
+  });
+  const [sendSms] = useSmsComplaintAddedMutation({
+    variables: {
+      id: complaintId ? parseInt(complaintId) : 0,
     },
   });
 
@@ -154,6 +160,22 @@ const AddArgument = () => {
     },
   });
 
+  const [
+    getNonFeasibleArguments,
+    { data: NonFeasibleArguments, refetch: NonFeasibleRefetch },
+  ] = useGetNonFeasibleArgumentsLazyQuery({
+    variables: {
+      filer: {
+        complaintId: {
+          eq: complaintIdInt || 0,
+        },
+        isDeleted: {
+          eq: false,
+        },
+      },
+    },
+  });
+
   const { loading: compaintLoading } = useQuery(GET_COMPLAINT, {
     variables: {
       id: complaintId && parseInt(complaintId),
@@ -164,13 +186,11 @@ const AddArgument = () => {
         state &&
         parseInt(state) == 1 &&
         user.id ==
-          data?.complaint_getComplaint?.result?.contract
-            ?.accuserDepartmentId
+          data?.complaint_getComplaint?.result?.contract?.accuserDepartmentId
       ) {
         console.log(
           "accuserDepartmentId",
-          data?.complaint_getComplaint.result.contract
-            ?.accuserDepartmentId
+          data?.complaint_getComplaint.result.contract?.accuserDepartmentId
         );
         setNoAccess(true);
         return <NoAccess />;
@@ -178,35 +198,30 @@ const AddArgument = () => {
         state &&
         parseInt(state) == 0 &&
         user.id !=
-          data?.complaint_getComplaint?.result?.contract
-            ?.accuserDepartmentId
+          data?.complaint_getComplaint?.result?.contract?.accuserDepartmentId
       ) {
         setNoAccess(true);
         console.log(
           "accuserDepartmentId",
-          data?.complaint_getComplaint.result.contract
-            ?.accuserDepartmentId
+          data?.complaint_getComplaint.result.contract?.accuserDepartmentId
         );
       } else {
         setNoAccess(false);
 
         console.log(
           "accuserDepartmentId",
-          data?.complaint_getComplaint.result.contract
-            ?.accuserDepartmentId
+          data?.complaint_getComplaint.result.contract?.accuserDepartmentId
         );
       }
       if (
         state &&
         parseInt(state) == 0 &&
         user.id ==
-          data?.complaint_getComplaint?.result?.contract
-            ?.accusedDepartmentId
+          data?.complaint_getComplaint?.result?.contract?.accusedDepartmentId
       ) {
         console.log(
           "accusedDepartmentId",
-          data?.complaint_getComplaint.result.contract
-            ?.accusedDepartmentId
+          data?.complaint_getComplaint.result.contract?.accusedDepartmentId
         );
         setNoAccess(true);
         return <NoAccess />;
@@ -214,8 +229,7 @@ const AddArgument = () => {
         setNoAccess(false);
         console.log(
           "accusedDepartmentId",
-          data?.complaint_getComplaint.result.contract
-            ?.accusedDepartmentId
+          data?.complaint_getComplaint.result.contract?.accusedDepartmentId
         );
       }
     },
@@ -248,32 +262,37 @@ const AddArgument = () => {
 
   const [sendSMS] = useMutation(SendAccusedRespondedSmsDocument);
 
+  const [DeleteNonFeasibleArgument] = useDeleteNonFeasibleArgumentMutation();
+
+  useEffect(() => {
+    if (parseInt(state || "0") == 0) {
+      void getNonFeasibleArguments();
+    }
+  }, [getNonFeasibleArguments, state]);
+
   return (
     <>
       <Box
         display={!compaintLoading && noAccess ? "none" : "block"}
         position={"relative"}
       >
-        {notes?.complaintNote_getComplaintNotes.result?.items
-          ?.length &&
-          notes?.complaintNote_getComplaintNotes.result?.items?.map(
-            (note) => (
-              <Alert
-                severity="info"
-                sx={{
-                  position: "absolute",
-                  bottom: "10%",
-                  left: "50%",
-                  transform: "translateY(-50%) translateX(-50%)",
-                  width: "20%",
-                  zIndex: 1000,
-                  borderRadius: "1rem",
-                }}
-              >
-                {note.content}
-              </Alert>
-            )
-          )}
+        {notes?.complaintNote_getComplaintNotes.result?.items?.length &&
+          notes?.complaintNote_getComplaintNotes.result?.items?.map((note) => (
+            <Alert
+              severity="info"
+              sx={{
+                position: "absolute",
+                bottom: "10%",
+                left: "50%",
+                transform: "translateY(-50%) translateX(-50%)",
+                width: "20%",
+                zIndex: 1000,
+                borderRadius: "1rem",
+              }}
+            >
+              {note.content}
+            </Alert>
+          ))}
         <NewModal
           title="ثبت نظر"
           open={newNoteModal.open}
@@ -293,13 +312,7 @@ const AddArgument = () => {
             justifyContent={"center"}
             gap={"1rem"}
           >
-            <FaTextField
-              label="نظر"
-              fullWidth
-              multiline
-              minRows={4}
-              required
-            />
+            <FaTextField label="نظر" fullWidth multiline minRows={4} required />
             <Button
               variant="contained"
               sx={{
@@ -321,9 +334,10 @@ const AddArgument = () => {
                       if (!agreed) return;
                       void updateCompaint({
                         variables: {
-                          id: complaintIdInt,
-                          complaintState:
-                            ComplaintState.MailRoomExpertReviewingTheFinalReport,
+                          id: complaintIdInt || 0,
+                          complaintStateId: getComplaintStateWithEnum(
+                            ComplaintStateStatus.MailRoomExpertReviewingTheFinalReport
+                          ).id,
                         },
                         onCompleted() {
                           alert("ثبت شد");
@@ -335,9 +349,10 @@ const AddArgument = () => {
                       if (!agreed) return;
                       void updateCompaint({
                         variables: {
-                          id: complaintIdInt,
-                          complaintState:
-                            ComplaintState.RequestingDocuments,
+                          id: complaintIdInt || 0,
+                          complaintStateId: getComplaintStateWithEnum(
+                            ComplaintStateStatus.RequestingDocuments
+                          ).id,
                         },
                         onCompleted() {
                           alert("ثبت شد");
@@ -347,15 +362,11 @@ const AddArgument = () => {
                     } else if (stateInt == 3) {
                       void updateCompaint({
                         variables: {
-                          id: complaintIdInt,
-                          complaintState:
-                            newStatesObj.checkingForBeingConstructive
-                              .cap,
+                          id: complaintIdInt || 0,
+                          complaintStateId: getComplaintStateWithEnum(
+                            ComplaintStateStatus.CheckingForBeingConstructive
+                          ).id,
                           isApprovedByChief: false,
-                        } as {
-                          id: number | "" | undefined;
-                          complaintState: string;
-                          isApprovedByChief: boolean;
                         },
                         onCompleted() {
                           alert("ثبت شد");
@@ -429,6 +440,7 @@ const AddArgument = () => {
             backgroundColor: "rgb(220,220,220)",
             // padding: "0.1rem",
             display: "flex",
+            gap: "3rem",
             flexDirection: "column",
             alignItems: "flex-start",
             justifyContent: "center",
@@ -442,10 +454,27 @@ const AddArgument = () => {
             }}
           >
             <ArgumentHeader state={stateInt} />
-            <TableBody>
+            <TableBody
+              sx={{
+                "& td": {
+                  padding: "0.5rem",
+                  borderBottom: `1px solid ${secondary}`,
+                  borderRight: `1px solid ${secondary}`,
+                },
+                // add border to first column
+                "& td:first-child": {
+                  borderRight: `1px solid ${secondary}`,
+                  width: "max-content",
+                },
+                // add border to last column
+                "& td:last-child": {
+                  borderLeft: `1px solid ${secondary}`,
+                  borderRight: `0px solid ${secondary}`,
+                },
+              }}
+            >
               {loading && <Skeleton />}
-              {data?.complaintArgument_getComplaintArguments
-                ?.result &&
+              {data?.complaintArgument_getComplaintArguments?.result &&
                 data?.complaintArgument_getComplaintArguments?.result?.items?.map(
                   (arguement, index) =>
                     ArgumentCard({
@@ -465,11 +494,48 @@ const AddArgument = () => {
                       setVewMoreModal: setViewMoreModal,
                     })
                 )}
+              {/* {NonFeasibleArguments?.complaintNonFeasibleArgument_getComplaintNonFeasibleArguments.result?.items?.map(
+                (item, index) =>
+                  ArgumentCard({
+                    state: stateInt,
+                    addModal: addModal,
+                    arguement: {
+                      complaintId: item.complaintId,
+                      createdDate: item.createdDate,
+                      id: item.id,
+                      filledBy: RegistrarType.Accuser,
+                      isDeleted: item.isDeleted,
+                      userId: item.userId,
+                      summary: item.summary,
+                      description: item.description,
+                      financialSituation: item.financialSituation,
+                      suggestedAmount: "",
+                      fileName: item.financialStatusFileName,
+                    },
+                    id: index,
+                    setAddModal: setAddModal,
+                    setSelectedArgument: setSelectedArgument,
+                    deleteArgument(id) {
+                      void DeleteArgument({
+                        variables: {
+                          id: id,
+                        },
+                      });
+                    },
+                    setVewMoreModal: setViewMoreModal,
+                  })
+              )} */}
               <TableRow
                 sx={{
-                  display: stateInt != 0 ? "none" : "table-row",
+                  display: stateInt != 2 ? "none" : "table-row",
                 }}
               >
+                <TableCell
+                  sx={{
+                    fontWeight: "bold",
+                    color: "white",
+                  }}
+                ></TableCell>
                 <TableCell
                   sx={{
                     fontWeight: "bold",
@@ -494,13 +560,10 @@ const AddArgument = () => {
                     color: secondary,
                   }}
                 >
-                  جمع کل مبلغ خواسته شده ادعا:
+                  جمع کل  مبلغ مورد تایید کارشناس:
                   {convertToPersianDigits(
                     data?.complaintArgument_getComplaintArguments?.result?.items
-                      ?.reduce(
-                        (a, b) => a + (b?.suggestedAmount ?? 0),
-                        0
-                      )
+                      ?.reduce((a, b) => a + (b?.netMailRoomExpertApprovedAmount ?? 0), 0)
                       .toString()
                       .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                   ) + " ریال"}
@@ -544,10 +607,72 @@ const AddArgument = () => {
                 <TableCell
                   sx={{
                     fontWeight: "bold",
+                    color: "white",
+                  }}
+                ></TableCell>
+                <TableCell
+                  sx={{
+                    fontWeight: "bold",
                     color: secondary,
                   }}
                 >
-                  مبلغ داوری :
+                  جمع کل مبلغ خواسته شده ادعا:
+                  {convertToPersianDigits(
+                    data?.complaintArgument_getComplaintArguments?.result?.items
+                      ?.reduce((a, b) => a + (b?.suggestedAmount ?? 0), 0)
+                      .toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                  ) + " ریال"}
+                </TableCell>
+                <TableCell
+                  sx={{
+                    fontWeight: "bold",
+                    color: "white",
+                  }}
+                ></TableCell>
+                <TableCell
+                  sx={{
+                    fontWeight: "bold",
+                    color: "white",
+                  }}
+                ></TableCell>
+              </TableRow>
+              <TableRow
+                sx={{
+                  display: stateInt != 0 ? "none" : "table-row",
+                }}
+              >
+                <TableCell
+                  sx={{
+                    fontWeight: "bold",
+                    color: "white",
+                  }}
+                ></TableCell>
+                <TableCell
+                  sx={{
+                    fontWeight: "bold",
+                    color: "white",
+                  }}
+                ></TableCell>
+                <TableCell
+                  sx={{
+                    fontWeight: "bold",
+                    color: "white",
+                  }}
+                ></TableCell>
+                <TableCell
+                  sx={{
+                    fontWeight: "bold",
+                    color: "white",
+                  }}
+                ></TableCell>
+                <TableCell
+                  sx={{
+                    fontWeight: "bold",
+                    color: secondary,
+                  }}
+                >
+                  هزینه داوری :
                   {
                     // 10% of all suggestedAmounts
                     convertToPersianDigits(
@@ -577,6 +702,178 @@ const AddArgument = () => {
               </TableRow>
             </TableBody>
           </Table>
+
+          {parseInt(state || "0") == 0 && NonFeasibleArguments?.complaintNonFeasibleArgument_getComplaintNonFeasibleArguments.result?.items?.length ? (
+            <Table
+              sx={{
+                // backgroundColor: primaryGreyLightTransparent,
+                // center every text
+                "& thead": {
+                  borderRadius: "2rem",
+                  "& tr": {
+                    "& th": {
+                      color: "#fff",
+                      background: secondary,
+                      textAlign: "center",
+                    },
+                  },
+                },
+              }}
+            >
+              <TableHead
+                sx={{
+                  background: secondary,
+                  borderRadius: "0.5rem",
+                  color: "white",
+                }}
+              >
+                <TableRow>
+                  <TableCell
+                    colSpan={5}
+                    sx={{
+                      fontWeight: "bold",
+                      color: "white",
+                    }}
+                  >
+                    دعاوی غیر قابل رسیدگی
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell
+                    sx={{
+                      fontWeight: "bold",
+                      color: "white",
+                    }}
+                  >
+                    شناسه
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      fontWeight: "bold",
+                      color: "white",
+                    }}
+                  >
+                    نوع بار مالی
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      fontWeight: "bold",
+                      color: "white",
+                    }}
+                  >
+                    فایل پیوست
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      fontWeight: "bold",
+                      color: "white",
+                    }}
+                  >
+                    ...
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody
+                sx={{
+                  "& td": {
+                    padding: "0.5rem",
+                    borderBottom: `1px solid ${secondary}`,
+                    borderRight: `1px solid ${secondary}`,
+                  },
+                  // add border to first column
+                  "& td:first-child": {
+                    borderRight: `1px solid ${secondary}`,
+                    width: "max-content",
+                  },
+                  // add border to last column
+                  "& td:last-child": {
+                    borderLeft: `1px solid ${secondary}`,
+                    borderRight: `0px solid ${secondary}`,
+                  },
+                }}
+              >
+                {loading && <Skeleton />}
+                {NonFeasibleArguments?.complaintNonFeasibleArgument_getComplaintNonFeasibleArguments.result?.items?.map(
+                  (item, index) => (
+                    <TableRow>
+                      <TableCell>{convertToPersianDigits(index + 1)}</TableCell>
+                      <TableCell>
+                        {item?.financialSituation &&
+                          (JSON.parse(item?.financialSituation)?.title ==
+                          "withFinancialEffects"
+                            ? "دارای بار مالی"
+                            : JSON.parse(item?.financialSituation)?.title ==
+                              "withoutFinancialEffects"
+                            ? "بدون بار مالی"
+                            : "") +
+                            "، " +
+                            JSON.parse(item?.financialSituation)?.subtitle}
+                      </TableCell>
+                      <TableCell>
+                        <Button
+                          fullWidth
+                          variant="text"
+                          onClick={() => {
+                            window.open(
+                              "http://172.16.23.50:7030/files/" +
+                                item.financialStatusFileName
+                            );
+                          }}
+                          sx={{
+                            color: primaryDark,
+                            display: "flex",
+                            gap: 3,
+                            // outline:"2px solid",
+                            // fontWeight:"bold",
+                            fontSize: "1rem",
+                          }}
+                        >
+                          <BsCloudDownloadFill />
+                          دانلود فایل پیوست
+                        </Button>
+                      </TableCell>
+                      <TableCell>
+                        <Box
+                          display="flex"
+                          justifyContent="center"
+                          alignItems="center"
+                          width="100%"
+                        >
+                          <Button
+                            variant="text"
+                            onClick={() => {
+                              void DeleteNonFeasibleArgument({
+                                variables: {
+                                  input: item.id,
+                                },
+                                onCompleted(data) {
+                                  console.log(data);
+
+                                  void NonFeasibleRefetch();
+                                },
+                              });
+                            }}
+                            color="error"
+                            sx={{
+                              display: "flex",
+                              gap: 3,
+                              justifySelf: "center",
+                              "&:hover": {
+                                color: Red,
+                              },
+                            }}
+                          >
+                            <DeleteOutlineTwoTone />
+                            حذف
+                          </Button>
+                        </Box>
+                      </TableCell>
+                    </TableRow>
+                  )
+                )}
+              </TableBody>
+            </Table>
+          ) : ""}
           <IconButton
             onClick={() => {
               setAddModal({
@@ -603,179 +900,205 @@ const AddArgument = () => {
             <BsPlusCircleDotted />
           </IconButton>
         </Box>
-        <IconButton
+        <Box
           sx={{
-            background: primary,
-            color: secondaryDark,
-            position: "fixed",
-            bottom: 10,
-            right: 10,
-            fontSize: "3rem",
-            borderRadius: "1.5rem",
-            "&:hover": {
-              backgroundColor: GreenLight,
-              color: secondaryDark,
-            },
+            display: "flex",
+            justifyContent: "flex-end",
+            gap: 2,
           }}
-          onClick={() => {
-            if (stateInt == 0) {
-              const agreed = confirm("آیا مطمئن هستید؟");
-              if (!agreed) return;
-              void updateCompaint({
-                variables: {
-                  id: complaintIdInt,
-                  complaintState:
-                    newStatesObj.waitingForAccusedToRegisterContract
-                      .cap,
-                },
-                onCompleted() {
-                  alert("ثبت شد");
-                  navigate("/complaints");
-                },
+        >
+          <IconButton
+            sx={{
+              background: Red,
+              color: "white",
+              // position: "fixed",
+              // bottom: 10,
+              // right: 200,
+              fontSize: "3rem",
+              display: 2 < stateInt && stateInt < 6 ? "flex" : "none",
+              borderRadius: "1.5rem",
+              "&:hover": {
+                backgroundColor: RedLight,
+                color: Red,
+              },
+            }}
+            onClick={() => {
+              setNewNoteModal({
+                ...newNoteModal,
+                open: true,
               });
-            } else if (stateInt == 1) {
-              const agreed = confirm("آیا مطمئن هستید؟");
-              if (!agreed) return;
-              void updateCompaint({
-                variables: {
-                  id: complaintIdInt,
-                  complaintState:
-                    newStatesObj.waitingForAccuserToViewArguments.cap,
-                },
-                onCompleted() {
-                  alert("ثبت شد");
-                  navigate("/complaints");
+            }}
+          >
+            {/* <BsCheck /> */}
+            <Typography
+              fontSize={"1.2rem"}
+              sx={{
+                marginInline: "1rem",
+              }}
+            >
+              عدم تایید
+            </Typography>
+          </IconButton>
 
-                  // here we goooooooooooooooooo
-                  void sendSMS({
-                    variables: {
-                      complaintId: complaintIdInt || 0,
-                    },
-                  });
-                },
-              });
-            } else if (stateInt == -1) {
-              const agreed = confirm("آیا مطمئن هستید؟");
-              if (!agreed) return;
-              void updateCompaint({
-                variables: {
-                  id: complaintIdInt,
-                  complaintState:
-                    newStatesObj.waitingForChiefToAssign.cap,
-                },
-                onCompleted() {
-                  alert("ثبت شد");
-                  navigate("/complaints");
-                },
-              });
-            } else if (stateInt == 2) {
-              const agreed = confirm("آیا مطمئن هستید؟");
-              if (!agreed) return;
-              void updateCompaint({
-                variables: {
-                  id: complaintIdInt,
-                  complaintState:
-                    newStatesObj
-                      .waitingForChiefToApproveExpertsAnswersToArguments
-                      .cap,
-                },
-                onCompleted() {
-                  alert("ثبت شد");
-                  navigate("/portal");
-                },
-              });
-            } else if (stateInt == 3) {
-              const agreed = confirm("آیا مطمئن هستید؟");
-              if (!agreed) return;
-              void updateCompaint({
-                variables: {
-                  id: complaintIdInt,
-                  complaintState:
-                    newStatesObj.givingTrackingCodeToComplaint.cap,
-                  isApprovedByChief: true,
-                } as {
-                  id: number | "" | undefined;
-                  complaintState: string;
-                  isApprovedByChief: boolean;
-                },
-                onCompleted() {
-                  alert("ثبت شد");
-                  navigate("/portal");
-                },
-              });
-            } else if (stateInt == 4) {
-              const agreed = confirm("آیا مطمئن هستید؟");
-              if (!agreed) return;
-              void updateCompaint({
-                variables: {
-                  id: complaintIdInt,
-                  complaintState:
-                    ComplaintState.MailRoomChiefReviewingTheFinalReport,
-                },
-                onCompleted() {
-                  alert("ثبت شد");
-                  navigate("/portal");
-                },
-              });
-            } else if (stateInt == 5) {
-              const agreed = confirm("آیا مطمئن هستید؟");
-              if (!agreed) return;
-              void updateCompaint({
-                variables: {
-                  id: complaintIdInt,
-                  complaintState:
-                    ComplaintState.WaitingForCouncilResult,
-                },
-                onCompleted() {
-                  alert("ثبت شد");
-                  navigate("/portal");
-                },
-              });
-            }
-          }}
-        >
-          <BsCheck />
-          <Typography
-            fontSize={"1.2rem"}
+          <IconButton
             sx={{
-              marginInline: "1rem",
+              background: primary,
+              color: secondaryDark,
+              // position: "fixed",
+              // bottom: 10,
+              // right: 10,
+              fontSize: "3rem",
+              borderRadius: "1.5rem",
+              "&:hover": {
+                backgroundColor: GreenLight,
+                color: secondaryDark,
+              },
+            }}
+            onClick={() => {
+              if (stateInt == 0) {
+                const agreed = confirm("آیا مطمئن هستید؟");
+                if (!agreed) return;
+                void updateCompaint({
+                  variables: {
+                    id: complaintIdInt || 0,
+                    complaintStateId: getComplaintStateWithEnum(
+                      ComplaintStateStatus.WaitingForAccusedToRegisterContract
+                    ).id,
+                  },
+                  onCompleted() {
+                    alert("ثبت شد");
+                    navigate(
+                      `/complaints/${complaintId || ""}/confirmComplaint`
+                    );
+                    void sendSms();
+                  },
+                });
+              } else if (stateInt == 1) {
+                const agreed = confirm("آیا مطمئن هستید؟");
+                if (!agreed) return;
+                void updateCompaint({
+                  variables: {
+                    id: complaintIdInt || 0,
+                    complaintStateId: getComplaintStateWithEnum(
+                      ComplaintStateStatus.WaitingForAccuserToViewArguments
+                    ).id,
+                  },
+                  onCompleted() {
+                    alert("ثبت شد");
+                    navigate("/complaints");
+                    // here we goooooooooooooooooo
+                    void sendSMS({
+                      variables: {
+                        complaintId: complaintIdInt || 0,
+                      },
+                    });
+                  },
+                });
+              } else if (stateInt == -1) {
+                const agreed = confirm("آیا مطمئن هستید؟");
+                if (!agreed) return;
+                void updateCompaint({
+                  variables: {
+                    id: complaintIdInt || 0,
+                    complaintStateId: getComplaintStateWithEnum(
+                      ComplaintStateStatus.WaitingForChiefToAssign
+                    ).id,
+                  },
+                  onCompleted() {
+                    alert("ثبت شد");
+                    navigate("/complaints");
+                  },
+                });
+              } else if (stateInt == 2) {
+                const agreed = confirm("آیا مطمئن هستید؟");
+                if (!agreed) return;
+                void updateCompaint({
+                  variables: {
+                    id: complaintIdInt || 0,
+                    complaintStateId: getComplaintStateWithEnum(
+                      ComplaintStateStatus.WaitingForChiefToApproveExpertsAnswersToArguments
+                    ).id,
+                  },
+                  onCompleted() {
+                    alert("ثبت شد");
+                    navigate("/portal");
+                  },
+                });
+              } else if (stateInt == 3) {
+                const agreed = confirm("آیا مطمئن هستید؟");
+                if (!agreed) return;
+                void updateCompaint({
+                  variables: {
+                    id: complaintIdInt || 0,
+                    complaintStateId: getComplaintStateWithEnum(
+                      ComplaintStateStatus.GivingTrackingCodeToComplaint
+                    ).id,
+                    isApprovedByChief: true,
+                  },
+                  onCompleted() {
+                    alert("ثبت شد");
+                    navigate("/portal");
+                  },
+                });
+              } else if (stateInt == 4) {
+                const agreed = confirm("آیا مطمئن هستید؟");
+                if (!agreed) return;
+                void updateCompaint({
+                  variables: {
+                    id: complaintIdInt || 0,
+                    complaintStateId: getComplaintStateWithEnum(
+                      ComplaintStateStatus.MailRoomChiefReviewingTheFinalReport
+                    ).id,
+                  },
+                  onCompleted() {
+                    alert("ثبت شد");
+                    navigate("/portal");
+                  },
+                });
+              } else if (stateInt == 5) {
+                const agreed = confirm("آیا مطمئن هستید؟");
+                if (!agreed) return;
+                void updateCompaint({
+                  variables: {
+                    id: complaintIdInt || 0,
+                    complaintStateId: getComplaintStateWithEnum(
+                      ComplaintStateStatus.WaitingForCouncilResult
+                    ).id,
+                  },
+                  onCompleted() {
+                    alert("ثبت شد");
+                    navigate("/portal");
+                  },
+                });
+              } else if (stateInt == 6) {
+                const agreed = confirm("آیا مطمئن هستید؟");
+                if (!agreed) return;
+                void updateCompaint({
+                  variables: {
+                    id: complaintIdInt || 0,
+                    complaintStateId: getComplaintStateWithEnum(
+                      ComplaintStateStatus.WaitingForFinalResultUpload
+                    ).id,
+                  },
+                  onCompleted() {
+                    alert("ثبت شد");
+                    navigate("/portal");
+                  },
+                });
+              }
             }}
           >
-            تایید
-          </Typography>
-        </IconButton>
-        <IconButton
-          sx={{
-            background: Red,
-            color: "white",
-            position: "fixed",
-            bottom: 10,
-            right: 200,
-            fontSize: "3rem",
-            display: stateInt < 3 ? "none" : "flex",
-            borderRadius: "1.5rem",
-            "&:hover": {
-              backgroundColor: RedLight,
-              color: Red,
-            },
-          }}
-          onClick={() => {
-            setNewNoteModal({
-              ...newNoteModal,
-              open: true,
-            });
-          }}
-        >
-          <BsCheck />
-          <Typography
-            fontSize={"1.2rem"}
-            sx={{
-              marginInline: "1rem",
-            }}
-          >
-            رد
-          </Typography>
-        </IconButton>
+            {/* <BsCheck /> */}
+            <Typography
+              fontSize={"1.2rem"}
+              sx={{
+                marginInline: "1rem",
+              }}
+            >
+              تایید و ادامه
+            </Typography>
+          </IconButton>
+        </Box>
       </Box>
       <Box display={!compaintLoading && noAccess ? "block" : "none"}>
         <NoAccess />
@@ -820,6 +1143,7 @@ const AddArgument = () => {
         ArgumentFromParent={selectedArgument}
         refetch={() => {
           void refetch();
+          void NonFeasibleRefetch();
         }}
       />
     </>

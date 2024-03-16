@@ -3,12 +3,12 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import { DocumentScannerRounded } from "@mui/icons-material";
 import {
   Box,
   Button,
   Divider,
   LinearProgress,
-  Modal,
   Table,
   TableBody,
   TableCell,
@@ -17,18 +17,24 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
+import { FaEdit } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
 import {
+  ComplaintStateStatus,
   TargetType,
-  useDeleteRequestedDocMutationMutation,
   useGetArgumentsWithFilterQuery,
   useGetComplaintsWithFilterQuery,
   useGetReqestedDocsQueryQuery,
   useGetUserWithFilterLazyQuery,
   useUpdateArgumentFullMutation,
-  useUpdateArgumentMutation,
   useUpdateComplaintFullMutation,
 } from "../../../generated-types";
+import ArgumentInfoModal from "../../components/Arguments/ArgumentInfoModal";
+import FaTextField from "../../components/FaComponents/FaTextField";
+import NewModal from "../../components/Modals";
+import { getComplaintStateWithEnum } from "../../functions/ComplaintStatesFunc";
+import { convertToPersianDigits } from "../../functions/Functions";
+import { ComplaintArgument } from "../../gql/graphql";
 import {
   Green,
   background,
@@ -36,18 +42,17 @@ import {
   secondary,
   secondaryDark,
 } from "../../theme/color";
-import { ComplaintArgument, ComplaintState } from "../../gql/graphql";
-import ArgumentInfoModal from "../../components/Arguments/ArgumentInfoModal";
-import { DocumentScannerRounded } from "@mui/icons-material";
-import { FaEdit } from "react-icons/fa";
-import { lightGreen } from "@mui/material/colors";
-import ArgumentModal from "../../components/Arguments/ArgumentModal";
-import { Argument } from "../../static/Types";
-import NewModal from "../../components/Modals";
-import FaTextField from "../../components/FaComponents/FaTextField";
-import { convertToPersianDigits } from "../../functions/Functions";
+import { useAlertStore } from "../../Context/AlertStore";
 
 const ReviewCase = () => {
+  const {
+    alertOpen,
+    alertType,
+    alertMessage,
+    setAlertOpen,
+    setAlertMessage,
+    setAlertType,
+  } = useAlertStore();
   const { complaintId } = useParams<{ complaintId: string }>();
   const navigate = useNavigate();
   const [infoModal, setInfoModal] = React.useState<{
@@ -60,7 +65,9 @@ const ReviewCase = () => {
     open: boolean;
     argument?: ComplaintArgument;
     justicExpertOpinion?: string;
-    justicExpertApprovedAmount?: number;
+    // justicExpertApprovedAmount?: number;
+    netJusticeExpertApprovedAmount?: number;
+    grossJusticeExpertApprovedAmount?: number;
   }>({
     open: false,
   });
@@ -76,6 +83,11 @@ const ReviewCase = () => {
       onCompleted(data) {
         console.log(data);
       },
+      onError(error) {
+        setAlertOpen(true);
+        setAlertMessage(error.message);
+        setAlertType("error");
+      },
     });
 
   const { data: complaint } = useGetComplaintsWithFilterQuery({
@@ -88,60 +100,69 @@ const ReviewCase = () => {
       void GetAccuser();
       void GetAccused();
     },
-  });
-
-  const { data: requestedDocsData, refetch: requestedDocsRefetch } =
-    useGetReqestedDocsQueryQuery({
-      variables: {
-        filter: {
-          complaintId: {
-            eq: parseInt(complaintId || "") || 0,
-          },
-        },
-      },
-    });
-
-  const [deleteDoc] = useDeleteRequestedDocMutationMutation({
-    onCompleted() {
-      void requestedDocsRefetch();
+    onError(error) {
+      setAlertOpen(true);
+      setAlertMessage(error.message);
+      setAlertType("error");
     },
   });
 
-  const [GetAccuser, { data: AccuserData }] =
-    useGetUserWithFilterLazyQuery({
-      variables: {
-        filter: {
-          id: {
-            eq: complaint?.complaint_getComplaints.result?.items?.[0]
-              ?.contract?.accuserDepartmentUserId,
-          },
+  const { data: requestedDocsData } = useGetReqestedDocsQueryQuery({
+    variables: {
+      filter: {
+        complaintId: {
+          eq: parseInt(complaintId || "") || 0,
         },
       },
-    });
+    },
+    onError(error) {
+      setAlertOpen(true);
+      setAlertMessage(error.message);
+      setAlertType("error");
+    },
+  });
 
-  const [GetAccused, { data: AccusedData }] =
-    useGetUserWithFilterLazyQuery({
-      variables: {
-        filter: {
-          id: {
-            eq: complaint?.complaint_getComplaints.result?.items?.[0]
-              ?.contract?.accusedDepartmentUserId,
-          },
+  // const [deleteDoc] = useDeleteRequestedDocMutationMutation({
+  //   onCompleted() {
+  //     void requestedDocsRefetch();
+  //   },
+  // });
+
+  const [GetAccuser, { data: AccuserData }] = useGetUserWithFilterLazyQuery({
+    variables: {
+      filter: {
+        id: {
+          eq: complaint?.complaint_getComplaints.result?.items?.[0]?.contract
+            ?.accuserDepartmentUserId,
         },
       },
-    });
+    },
+  });
+
+  const [GetAccused, { data: AccusedData }] = useGetUserWithFilterLazyQuery({
+    variables: {
+      filter: {
+        id: {
+          eq: complaint?.complaint_getComplaints.result?.items?.[0]?.contract
+            ?.accusedDepartmentUserId,
+        },
+      },
+    },
+    onError(error) {
+      setAlertOpen(true);
+      setAlertMessage(error.message);
+      setAlertType("error");
+    },
+  });
 
   const [updateArgument] = useUpdateArgumentFullMutation();
 
-  const [updateComplaint, { loading }] =
-    useUpdateComplaintFullMutation();
+  const [updateComplaint, { loading }] = useUpdateComplaintFullMutation();
   return (
     <div>
       <ArgumentInfoModal
         open={infoModal.open}
-        handleClose={() =>
-          setInfoModal({ ...infoModal, open: false })
-        }
+        handleClose={() => setInfoModal({ ...infoModal, open: false })}
         fullArgument={infoModal.argument}
         state={-2}
       />
@@ -174,12 +195,25 @@ const ReviewCase = () => {
             minRows={4}
           />
           <FaTextField
-            label="مبلغ مورد تایید کارشناس دادگستری"
-            value={argumentModal.justicExpertApprovedAmount}
+            label="مبلغ خالص مورد تایید کارشناس دادگستری"
+            value={argumentModal.netJusticeExpertApprovedAmount || undefined}
             onChange={(e) =>
               setArgumentModal({
                 ...argumentModal,
-                justicExpertApprovedAmount: parseInt(
+                netJusticeExpertApprovedAmount: parseInt(e.target.value || "0"),
+              })
+            }
+            InputProps={{
+              endAdornment: "ریال",
+            }}
+          />
+          <FaTextField
+            label="مبلغ ناخالص مورد تایید کارشناس دادگستری"
+            value={argumentModal.grossJusticeExpertApprovedAmount || undefined}
+            onChange={(e) =>
+              setArgumentModal({
+                ...argumentModal,
+                grossJusticeExpertApprovedAmount: parseInt(
                   e.target.value || "0"
                 ),
               })
@@ -197,15 +231,21 @@ const ReviewCase = () => {
                 variables: {
                   input: {
                     id: argumentModal.argument?.id || 0,
-                    justiceExpertOpinion:
-                      argumentModal.justicExpertOpinion,
-                    justiceExpertApprovedAmount:
-                      argumentModal.justicExpertApprovedAmount,
+                    justiceExpertOpinion: argumentModal.justicExpertOpinion,
+                    netJusticeExpertApprovedAmount:
+                      argumentModal.netJusticeExpertApprovedAmount,
+                    grossJusticeExpertApprovedAmount:
+                      argumentModal.grossJusticeExpertApprovedAmount,
                   },
                 },
                 onCompleted(data) {
                   console.log("🚀 ~ onCompleted ~ data:", data);
                   void ArgumentRefetch();
+                },
+                onError(error) {
+                  setAlertOpen(true);
+                  setAlertMessage(error.message);
+                  setAlertType("error");
                 },
               });
               void setArgumentModal({ open: false });
@@ -340,16 +380,16 @@ const ReviewCase = () => {
                   textAlign: "center",
                 }}
               >
-                {complaint?.complaint_getComplaints.result?.items?.[0]
-                  .contract?.contractSubjectByAccuser || "-"}
+                {complaint?.complaint_getComplaints.result?.items?.[0].contract
+                  ?.contractSubjectByAccuser || "-"}
               </TableCell>
               <TableCell
                 sx={{
                   textAlign: "center",
                 }}
               >
-                {complaint?.complaint_getComplaints.result?.items?.[0]
-                  .contract?.contractSubjectByAccused || "-"}
+                {complaint?.complaint_getComplaints.result?.items?.[0].contract
+                  ?.contractSubjectByAccused || "-"}
               </TableCell>
             </TableRow>
             <TableRow>
@@ -365,16 +405,16 @@ const ReviewCase = () => {
                   textAlign: "center",
                 }}
               >
-                {complaint?.complaint_getComplaints.result?.items?.[0]
-                  .contract?.contractNumberByAccuser || "-"}
+                {complaint?.complaint_getComplaints.result?.items?.[0].contract
+                  ?.contractNumberByAccuser || "-"}
               </TableCell>
               <TableCell
                 sx={{
                   textAlign: "center",
                 }}
               >
-                {complaint?.complaint_getComplaints.result?.items?.[0]
-                  .contract?.contractNumberByAccused || "-"}
+                {complaint?.complaint_getComplaints.result?.items?.[0].contract
+                  ?.contractNumberByAccused || "-"}
               </TableCell>
             </TableRow>
             <TableRow>
@@ -390,12 +430,11 @@ const ReviewCase = () => {
                   textAlign: "center",
                 }}
               >
-                {complaint?.complaint_getComplaints.result?.items?.[0]
-                  .contract?.contractDateByAccuser
+                {complaint?.complaint_getComplaints.result?.items?.[0].contract
+                  ?.contractDateByAccuser
                   ? new Date(
-                      (complaint?.complaint_getComplaints.result
-                        ?.items?.[0].contract
-                        ?.contractDateByAccuser as string) || ""
+                      (complaint?.complaint_getComplaints.result?.items?.[0]
+                        .contract?.contractDateByAccuser as string) || ""
                     ).toLocaleDateString("fa-IR")
                   : "-"}
               </TableCell>
@@ -404,12 +443,11 @@ const ReviewCase = () => {
                   textAlign: "center",
                 }}
               >
-                {complaint?.complaint_getComplaints.result?.items?.[0]
-                  .contract?.contractDateByAccused
+                {complaint?.complaint_getComplaints.result?.items?.[0].contract
+                  ?.contractDateByAccused
                   ? new Date(
-                      (complaint?.complaint_getComplaints.result
-                        ?.items?.[0].contract
-                        ?.contractDateByAccused as string) || ""
+                      (complaint?.complaint_getComplaints.result?.items?.[0]
+                        .contract?.contractDateByAccused as string) || ""
                     ).toLocaleDateString("fa-IR")
                   : "-"}
               </TableCell>
@@ -427,16 +465,16 @@ const ReviewCase = () => {
                   textAlign: "center",
                 }}
               >
-                {complaint?.complaint_getComplaints.result?.items?.[0]
-                  .contract?.initialBudgetByAccuser || "-"}
+                {complaint?.complaint_getComplaints.result?.items?.[0].contract
+                  ?.initialBudgetByAccuser || "-"}
               </TableCell>
               <TableCell
                 sx={{
                   textAlign: "center",
                 }}
               >
-                {complaint?.complaint_getComplaints.result?.items?.[0]
-                  .contract?.initialBudgetByAccused || "-"}
+                {complaint?.complaint_getComplaints.result?.items?.[0].contract
+                  ?.initialBudgetByAccused || "-"}
               </TableCell>
             </TableRow>
             <TableRow>
@@ -452,16 +490,16 @@ const ReviewCase = () => {
                   textAlign: "center",
                 }}
               >
-                {complaint?.complaint_getComplaints.result?.items?.[0]
-                  .contract?.initialTimePeriodByAccuser || "-"}
+                {complaint?.complaint_getComplaints.result?.items?.[0].contract
+                  ?.initialTimePeriodByAccuser || "-"}
               </TableCell>
               <TableCell
                 sx={{
                   textAlign: "center",
                 }}
               >
-                {complaint?.complaint_getComplaints.result?.items?.[0]
-                  .contract?.initialTimePeriodByAccused || "-"}
+                {complaint?.complaint_getComplaints.result?.items?.[0].contract
+                  ?.initialTimePeriodByAccused || "-"}
               </TableCell>
             </TableRow>
             <TableRow>
@@ -477,20 +515,14 @@ const ReviewCase = () => {
                   textAlign: "center",
                 }}
               >
-                {
-                  AccuserData?.user_getUsers.result?.items?.[0]
-                    ?.fullName
-                }
+                {AccuserData?.user_getUsers.result?.items?.[0]?.fullName}
               </TableCell>
               <TableCell
                 sx={{
                   textAlign: "center",
                 }}
               >
-                {
-                  AccusedData?.user_getUsers.result?.items?.[0]
-                    ?.fullName
-                }
+                {AccusedData?.user_getUsers.result?.items?.[0]?.fullName}
               </TableCell>
             </TableRow>
 
@@ -507,16 +539,16 @@ const ReviewCase = () => {
                   textAlign: "center",
                 }}
               >
-                {complaint?.complaint_getComplaints.result?.items?.[0]
-                  .contract?.accuserNationality || "-"}
+                {complaint?.complaint_getComplaints.result?.items?.[0].contract
+                  ?.accuserNationality || "-"}
               </TableCell>
               <TableCell
                 sx={{
                   textAlign: "center",
                 }}
               >
-                {complaint?.complaint_getComplaints.result?.items?.[0]
-                  .contract?.accusedNationality || "-"}
+                {complaint?.complaint_getComplaints.result?.items?.[0].contract
+                  ?.accusedNationality || "-"}
               </TableCell>
             </TableRow>
             <TableRow>
@@ -532,16 +564,16 @@ const ReviewCase = () => {
                   textAlign: "center",
                 }}
               >
-                {complaint?.complaint_getComplaints.result?.items?.[0]
-                  .contract?.recommendedCoefficientByAccuser || "-"}
+                {complaint?.complaint_getComplaints.result?.items?.[0].contract
+                  ?.recommendedCoefficientByAccuser || "-"}
               </TableCell>
               <TableCell
                 sx={{
                   textAlign: "center",
                 }}
               >
-                {complaint?.complaint_getComplaints.result?.items?.[0]
-                  .contract?.recommendedCoefficientByAccused || "-"}
+                {complaint?.complaint_getComplaints.result?.items?.[0].contract
+                  ?.recommendedCoefficientByAccused || "-"}
               </TableCell>
             </TableRow>
             <TableRow>
@@ -557,12 +589,11 @@ const ReviewCase = () => {
                   textAlign: "center",
                 }}
               >
-                {complaint?.complaint_getComplaints.result?.items?.[0]
-                  .contract?.operationStartDateByAccuser
+                {complaint?.complaint_getComplaints.result?.items?.[0].contract
+                  ?.operationStartDateByAccuser
                   ? new Date(
-                      complaint?.complaint_getComplaints.result
-                        ?.items?.[0].contract
-                        .operationStartDateByAccuser as string
+                      complaint?.complaint_getComplaints.result?.items?.[0]
+                        .contract.operationStartDateByAccuser as string
                     ).toLocaleDateString("fa-IR")
                   : "-"}
               </TableCell>
@@ -571,12 +602,11 @@ const ReviewCase = () => {
                   textAlign: "center",
                 }}
               >
-                {complaint?.complaint_getComplaints.result?.items?.[0]
-                  .contract?.operationStartDateByAccused
+                {complaint?.complaint_getComplaints.result?.items?.[0].contract
+                  ?.operationStartDateByAccused
                   ? new Date(
-                      complaint?.complaint_getComplaints.result
-                        ?.items?.[0].contract
-                        ?.operationStartDateByAccused as string
+                      complaint?.complaint_getComplaints.result?.items?.[0]
+                        .contract?.operationStartDateByAccused as string
                     ).toLocaleDateString("fa-IR")
                   : "-"}
               </TableCell>
@@ -594,8 +624,7 @@ const ReviewCase = () => {
                   textAlign: "center",
                 }}
               >
-                {complaint?.complaint_getComplaints.result?.items?.[0]
-                  .contract
+                {complaint?.complaint_getComplaints.result?.items?.[0].contract
                   ?.physicalProgressInArbitrationDateByAccuser || "-"}
               </TableCell>
               <TableCell
@@ -603,8 +632,7 @@ const ReviewCase = () => {
                   textAlign: "center",
                 }}
               >
-                {complaint?.complaint_getComplaints.result?.items?.[0]
-                  .contract
+                {complaint?.complaint_getComplaints.result?.items?.[0].contract
                   ?.physicalProgressInArbitrationDateByAccused || "-"}
               </TableCell>
             </TableRow>
@@ -621,20 +649,16 @@ const ReviewCase = () => {
                   textAlign: "center",
                 }}
               >
-                {complaint?.complaint_getComplaints.result?.items?.[0]
-                  .contract
-                  ?.financialProgressInArbitrationDateByAccuser ||
-                  "-"}
+                {complaint?.complaint_getComplaints.result?.items?.[0].contract
+                  ?.financialProgressInArbitrationDateByAccuser || "-"}
               </TableCell>
               <TableCell
                 sx={{
                   textAlign: "center",
                 }}
               >
-                {complaint?.complaint_getComplaints.result?.items?.[0]
-                  .contract
-                  ?.financialProgressInArbitrationDateByAccused ||
-                  "-"}
+                {complaint?.complaint_getComplaints.result?.items?.[0].contract
+                  ?.financialProgressInArbitrationDateByAccused || "-"}
               </TableCell>
             </TableRow>
             <TableRow>
@@ -697,16 +721,16 @@ const ReviewCase = () => {
                   textAlign: "center",
                 }}
               >
-                {complaint?.complaint_getComplaints.result?.items?.[0]
-                  .contract?.supervisionDepartmentByAccuser || "-"}
+                {complaint?.complaint_getComplaints.result?.items?.[0].contract
+                  ?.supervisionDepartmentByAccuser || "-"}
               </TableCell>
               <TableCell
                 sx={{
                   textAlign: "center",
                 }}
               >
-                {complaint?.complaint_getComplaints.result?.items?.[0]
-                  .contract?.supervisionDepartmentByAccused || "-"}
+                {complaint?.complaint_getComplaints.result?.items?.[0].contract
+                  ?.supervisionDepartmentByAccused || "-"}
               </TableCell>
             </TableRow>
             <TableRow>
@@ -722,16 +746,16 @@ const ReviewCase = () => {
                   textAlign: "center",
                 }}
               >
-                {complaint?.complaint_getComplaints.result?.items?.[0]
-                  .contract?.authorizedDelaysByAccuser || "-"}
+                {complaint?.complaint_getComplaints.result?.items?.[0].contract
+                  ?.authorizedDelaysByAccuser || "-"}
               </TableCell>
               <TableCell
                 sx={{
                   textAlign: "center",
                 }}
               >
-                {complaint?.complaint_getComplaints.result?.items?.[0]
-                  .contract?.authorizedDelaysByAccused || "-"}
+                {complaint?.complaint_getComplaints.result?.items?.[0].contract
+                  ?.authorizedDelaysByAccused || "-"}
               </TableCell>
             </TableRow>
             <TableRow>
@@ -747,16 +771,16 @@ const ReviewCase = () => {
                   textAlign: "center",
                 }}
               >
-                {complaint?.complaint_getComplaints.result?.items?.[0]
-                  .contract?.unauthorizedDelaysByAccuser || "-"}
+                {complaint?.complaint_getComplaints.result?.items?.[0].contract
+                  ?.unauthorizedDelaysByAccuser || "-"}
               </TableCell>
               <TableCell
                 sx={{
                   textAlign: "center",
                 }}
               >
-                {complaint?.complaint_getComplaints.result?.items?.[0]
-                  .contract?.unauthorizedDelaysByAccused || "-"}
+                {complaint?.complaint_getComplaints.result?.items?.[0].contract
+                  ?.unauthorizedDelaysByAccused || "-"}
               </TableCell>
             </TableRow>
           </TableBody>
@@ -855,7 +879,15 @@ const ReviewCase = () => {
                   color: "white",
                 }}
               >
-                فایل
+                فایل خواهان
+              </TableCell>
+              <TableCell
+                sx={{
+                  fontWeight: "bold",
+                  color: "white",
+                }}
+              >
+                فایل خوانده
               </TableCell>
             </TableRow>
           </TableHead>
@@ -915,6 +947,9 @@ const ReviewCase = () => {
                         fontWeight: "bold",
                         borderRadius: "0rem",
                         boxShadow: "none",
+                        display: item?.requestedDocumentFileNameAccuser
+                          ? "flex"
+                          : "none",
                         "&:hover": {
                           backgroundColor: secondary,
                           color: primary,
@@ -925,7 +960,43 @@ const ReviewCase = () => {
                           `${
                             import.meta.env.VITE_FILE_URL ||
                             "http://172.16.23.50:7030/files"
-                          }/${item?.requestedDocumentFileName}`,
+                          }/${item?.requestedDocumentFileNameAccuser}`,
+                          "_blank"
+                        );
+                      }}
+                    >
+                      دانلود فایل {item?.requestedDocumentName}
+                    </Button>
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      textAlign: "center",
+                    }}
+                  >
+                    <Button
+                      variant={"contained"}
+                      color={"primary"}
+                      fullWidth
+                      sx={{
+                        backgroundColor: primary,
+                        color: secondary,
+                        fontWeight: "bold",
+                        borderRadius: "0rem",
+                        boxShadow: "none",
+                        display: item?.requestedDocumentFileNameAccused
+                          ? "flex"
+                          : "none",
+                        "&:hover": {
+                          backgroundColor: secondary,
+                          color: primary,
+                        },
+                      }}
+                      onClick={() => {
+                        window.open(
+                          `${
+                            import.meta.env.VITE_FILE_URL ||
+                            "http://172.16.23.50:7030/files"
+                          }/${item?.requestedDocumentFileNameAccused}`,
                           "_blank"
                         );
                       }}
@@ -1139,9 +1210,9 @@ const ReviewCase = () => {
                       textAlign: "center",
                     }}
                   >
-                    {item.justiceExpertApprovedAmount
+                    {item.netJusticeExpertApprovedAmount
                       ? convertToPersianDigits(
-                          item.justiceExpertApprovedAmount
+                          item.netJusticeExpertApprovedAmount
                             ?.toString()
                             .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                         ) + " ریال"
@@ -1198,15 +1269,18 @@ const ReviewCase = () => {
                         setArgumentModal({
                           open: true,
                           argument: item,
-                          justicExpertApprovedAmount:
-                            item?.justiceExpertApprovedAmount,
-                          justicExpertOpinion:
-                            item?.justiceExpertOpinion || "",
+                          netJusticeExpertApprovedAmount:
+                            item?.netJusticeExpertApprovedAmount,
+                          grossJusticeExpertApprovedAmount:
+                            item?.grossJusticeExpertApprovedAmount,
+                          justicExpertOpinion: item?.justiceExpertOpinion || "",
                         })
                       }
                     >
                       <FaEdit />
-                      ویرایش
+                      {item.netJusticeExpertApprovedAmount
+                        ? "ویرایش"
+                        : "ثبت نظر"}
                     </Button>
                   </TableCell>
                 </TableRow>
@@ -1232,20 +1306,24 @@ const ReviewCase = () => {
             },
           }}
           onClick={() => {
-            const agree = confirm(
-              "آیا از ثبت نهایی اطلاعات اطمینان دارید؟"
-            );
+            const agree = confirm("آیا از ثبت نهایی اطلاعات اطمینان دارید؟");
             if (agree) {
               void updateComplaint({
                 variables: {
                   input: {
-                    complaintState:
-                      ComplaintState.MailRoomExpertReviewingTheFinalReport,
+                    complaintStateId: getComplaintStateWithEnum(
+                      ComplaintStateStatus.MailRoomExpertReviewingTheFinalReport
+                    ).id,
                     id: parseInt(complaintId || "") || 0,
                   },
                 },
                 onCompleted() {
                   navigate("/expertPortal");
+                },
+                onError(error) {
+                  setAlertOpen(true);
+                  setAlertMessage(error.message);
+                  setAlertType("error");
                 },
               });
             }

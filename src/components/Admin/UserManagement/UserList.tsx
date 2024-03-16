@@ -82,17 +82,16 @@ const UserList = () => {
           //   lg: "repeat(6, 1fr)",
           // },
           gap: 1,
-          gridTemplateAreas: {
-            xs: `"fullName department role userName type" "operation operation operation"`,
-            md: `"fullName department role userName type" "operation operation operation"`,
-            lg: `"fullName  department role userName type operation"`,
-            xl: `"fullName department role userName type operation"`,
+          gridTemplateColumns:{
+            xs: "repeat(3,1fr)",
+            md: "repeat(3,1fr)",
+            lg: "repeat(6,1fr)",
+            xl: "repeat(6,1fr)",
           },
           gridAutoColumns: "1fr",
         }}
       >
         <Typography
-          gridArea={"fullName"}
           textAlign={"center"}
           fontSize={{
             xs: 10,
@@ -107,7 +106,6 @@ const UserList = () => {
         <Typography
           display={{ xs: "none", md: "block" }}
           textAlign={"center"}
-          gridArea={"department"}
           fontSize={{
             xs: 10,
             sm: 11,
@@ -121,7 +119,6 @@ const UserList = () => {
         <Typography
           display={{ xs: "none", md: "block" }}
           textAlign={"center"}
-          gridArea={"userName"}
           fontSize={{
             xs: 10,
             sm: 11,
@@ -134,7 +131,6 @@ const UserList = () => {
         <Typography
           display={{ xs: "none", md: "block" }}
           textAlign={"center"}
-          gridArea={"role"}
           fontSize={{
             xs: 10,
             sm: 11,
@@ -147,7 +143,6 @@ const UserList = () => {
         <Typography
           display={{ xs: "none", md: "block" }}
           textAlign={"center"}
-          gridArea={"type"}
           fontSize={{
             xs: 10,
             sm: 11,
@@ -158,7 +153,6 @@ const UserList = () => {
           نوع کاربر
         </Typography>
         <Typography
-          gridArea={"operation"}
           textAlign={"center"}
           fontSize={{
             xs: 10,

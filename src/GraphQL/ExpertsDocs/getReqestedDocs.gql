@@ -9,7 +9,8 @@ query GetReqestedDocsQuery(
       items {
         complaintId
         requestedDocumentName
-        requestedDocumentFileName
+        requestedDocumentFileNameAccuser
+        requestedDocumentFileNameAccused
         isDeleted
         createdDate
         id

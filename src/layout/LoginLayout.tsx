@@ -4,6 +4,7 @@ import { Outlet } from "react-router-dom";
 import sazmanImage from "../assets/Sazman.jpeg";
 import { background } from "../theme/color";
 import pboLogo from "../assets/PboLogo.png";
+import judge from "../assets/LOGO.png";
 import { FaBalanceScale } from "react-icons/fa";
 
 const LoginLayout = () => {
@@ -85,8 +86,12 @@ const LoginLayout = () => {
                 fontSize: "2rem",
               }}
             >
-              <FaBalanceScale size="3rem" />
-              سامانه هوشمند داوری
+              <img src={judge} width={200} style={{
+                // borderRadius: "50%",
+                // border: "2px solid #353535",
+                userSelect: "none",
+              }}/>
+              سامانه هوشمند داوری شورای عالی فنی
             </Box>
             <Outlet />
           </Box>

@@ -5,37 +5,35 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { useMutation, useQuery } from "@apollo/client";
+import { Box, Button, Modal, Typography } from "@mui/material";
 import React from "react";
+import { BsCashStack } from "react-icons/bs";
+import { useParams } from "react-router-dom";
+import FileBox from "../../../components/FileBox";
+import { getComplaintStateWithEnum } from "../../../functions/ComplaintStatesFunc";
+import { convertToPersianDigits } from "../../../functions/Functions";
 import {
-  ComplaintState,
+  ComplaintStateStatus,
   CouncilListStatus,
   GetArgumentsWithFilterDocument,
-  GetComplaintDocument,
-  UpdateComplaintDocument,
-  UpdateComplaintFullDocument,
+  UpdateComplaintFullDocument
 } from "../../../gql/graphql";
-import { useParams } from "react-router-dom";
-import { useUserStore } from "../../../Context/UserStore";
-import { Box, Button, Modal, Typography } from "@mui/material";
 import { background, primary, secondary } from "../../../theme/color";
-import FileBox from "../../../components/FileBox";
-import { convertToPersianDigits } from "../../../functions/Functions";
-import { BsCash, BsCashStack } from "react-icons/bs";
 
 const PaymentPage = () => {
   const { complaintId } = useParams();
-  const { amount } = useParams();
-  const user = useUserStore((state) => state.user);
+  const { turn } = useParams();
+  // const user = useUserStore((state) => state.user);
   const [paymentModal, setPaymentModal] = React.useState(false);
-  const [totalAmount, setTotalAmount] = React.useState(0);
-  const { data } = useQuery(GetComplaintDocument, {
-    variables: {
-      id: parseInt(complaintId || "0"),
-    },
-    onCompleted(data) {
-      console.log(data);
-    },
-  });
+  // const [totalAmount, setTotalAmount] = React.useState(0);
+  // const { data } = useQuery(GetComplaintDocument, {
+  //   variables: {
+  //     id: parseInt(complaintId || "0"),
+  //   },
+  //   onCompleted(data) {
+  //     console.log(data);
+  //   },
+  // });
 
   const { data: args } = useQuery(GetArgumentsWithFilterDocument, {
     variables: {
@@ -52,11 +50,14 @@ const PaymentPage = () => {
   const [updateComplaint] = useMutation(UpdateComplaintFullDocument, {
     variables: {
       input: {
-        complaintState: amount
-          ? ComplaintState.DeterminingCaseExpert
-          : ComplaintState.WaitingForMailRoomExpertToDownloadDecree,
+        complaintStateId:
+          turn === "1"
+            ? getComplaintStateWithEnum(ComplaintStateStatus.WaitingForRegisteringHandlingType).id
+            : turn === "2"
+            ? getComplaintStateWithEnum(ComplaintStateStatus.WaitingForMailRoomExpertToDownloadDecree).id
+            : getComplaintStateWithEnum(ComplaintStateStatus.ComplaintDetermined).id,
         id: parseInt(complaintId || "0"),
-        isFirstPaymentPaid: amount ? false : true,
+        isFirstPaymentPaid: turn === "1" ? true : false,
         councilListStatus: CouncilListStatus.AfterCouncilList,
       },
     },

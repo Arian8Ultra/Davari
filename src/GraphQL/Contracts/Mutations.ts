@@ -12,7 +12,9 @@ export const CREATE_CONTRACT = gql`
     $ContractNumber: String
     $ContractDate: Date
     $InitialBudget: Decimal
-    $InitialTimePeriod: Int
+    $InitialTimePeriod: Float
+    # $ExecutionProvinceByAccused:String
+    # $ExecutionProvinceByAccuser:String
     $PriceListOfBasicUnitOfField: String
     $IsSpecialPriceListAttachedToContract: String
     $RecommendedCoefficient: Float
@@ -23,12 +25,19 @@ export const CREATE_CONTRACT = gql`
     $OperationStartDateAccuser: Date
     $PhysicalProgressInArbitrationDateAccuser: Int
     $FinancialProgressInArbitrationDateAccuser: Int
-    $ContractStatusInArbitration: [String!]
+    $ContractStatusInArbitration: String!
     $SupervisionDepartment: String
     $AuthorizedDelaysAccuser: Int
     $UnauthorizedDelaysAccuser: Int
     $AccusedDepartmentId: String
     $AccuserDepartmentId: String
+    $Currency: String
+    $fileNamesByAccuser: [String!]
+    $generalConditionsFileName: String
+    $ContractGeneralType: ContractGeneralType
+    $agreementFileName: String
+    $privateTermsFileName: String
+    $otherAttachmentFileName: [String!]
   ) {
     contract_addContract(
       input: {
@@ -59,6 +68,15 @@ export const CREATE_CONTRACT = gql`
         unauthorizedDelaysByAccuser: $UnauthorizedDelaysAccuser
         accusedDepartmentUserId: $AccusedDepartmentId
         accuserDepartmentUserId: $AccuserDepartmentId
+        currencyByAccuser: $Currency
+        fileNamesByAccuser: $fileNamesByAccuser
+        generalConditionsFileNameByAccuser: $generalConditionsFileName
+        contractGeneralTypeByAccuser:$ContractGeneralType
+        agreementFileNameByAccuser: $agreementFileName
+        privateTermsFileNameByAccuser: $privateTermsFileName
+        otherAttachmentFileNamesByAccuser: $otherAttachmentFileName
+        # executionProvinceByAccuser:$ExecutionProvinceByAccuser
+        # executionProvinceByAccused:$ExecutionProvinceByAccused
       }
     ) {
       result {
@@ -83,7 +101,7 @@ export const UPDATE_CONTRACT_BY_ACCUSED = gql`
     $ContractNumber: String
     $ContractDate: Date
     $InitialBudget: Decimal
-    $InitialTimePeriod: Int
+    $InitialTimePeriod: Float
     $PriceListOfBasicUnitOfField: String
     $IsSpecialPriceListAttachedToContract: String
     $RecommendedCoefficient: Float
@@ -94,11 +112,18 @@ export const UPDATE_CONTRACT_BY_ACCUSED = gql`
     $OperationStartDateAccuser: Date
     $PhysicalProgressInArbitrationDateAccuser: Int
     $FinancialProgressInArbitrationDateAccuser: Int
-    $ContractStatusInArbitration: [String!]
+    $ContractStatusInArbitration: String!
     $SupervisionDepartment: String
     $AuthorizedDelaysAccuser: Int
     $UnauthorizedDelaysAccuser: Int
     $id: Int!
+    $Currency: String
+    $fileNamesByAccused: [String!]
+    $generalConditionsFileName: String
+    $ContractGeneralType: ContractGeneralType
+    $agreementFileName: String
+    $privateTermsFileName: String
+    $otherAttachmentFileName: [String!]
   ) {
     contract_updateContract(
       input: {
@@ -128,6 +153,13 @@ export const UPDATE_CONTRACT_BY_ACCUSED = gql`
         supervisionDepartmentByAccused: $SupervisionDepartment
         authorizedDelaysByAccused: $AuthorizedDelaysAccuser
         unauthorizedDelaysByAccused: $UnauthorizedDelaysAccuser
+        currencyByAccused: $Currency
+        fileNamesByAccused: $fileNamesByAccused
+        generalConditionsFileNameByAccused: $generalConditionsFileName
+        contractGeneralTypeByAccused:$ContractGeneralType
+        agreementFileNameByAccused: $agreementFileName
+        privateTermsFileNameByAccused: $privateTermsFileName
+        otherAttachmentFileNamesByAccused: $otherAttachmentFileName
       }
     ) {
       result {
@@ -153,7 +185,7 @@ export const UPDATE_CONTRACT_BY_ACCUSER = gql`
     $ContractNumber: String
     $ContractDate: Date
     $InitialBudget: Decimal
-    $InitialTimePeriod: Int
+    $InitialTimePeriod: Float
     $PriceListOfBasicUnitOfField: String
     $IsSpecialPriceListAttachedToContract: String
     $RecommendedCoefficient: Float
@@ -164,13 +196,20 @@ export const UPDATE_CONTRACT_BY_ACCUSER = gql`
     $OperationStartDateAccuser: Date
     $PhysicalProgressInArbitrationDateAccuser: Int
     $FinancialProgressInArbitrationDateAccuser: Int
-    $ContractStatusInArbitration: [String!]
+    $ContractStatusInArbitration: String!
     $SupervisionDepartment: String
     $AuthorizedDelaysAccuser: Int
     $UnauthorizedDelaysAccuser: Int
     $id: Int!
     $AccusedDepartmentId: String
     $AccuserDepartmentId: String
+    $Currency: String
+    $fileNamesByAccuser: [String!]
+    $generalConditionsFileName: String
+    $ContractGeneralType: ContractGeneralType
+    $agreementFileName: String
+    $privateTermsFileName: String
+    $otherAttachmentFileName: [String!]
   ) {
     contract_updateContract(
       input: {
@@ -202,6 +241,13 @@ export const UPDATE_CONTRACT_BY_ACCUSER = gql`
         unauthorizedDelaysByAccuser: $UnauthorizedDelaysAccuser
         accusedDepartmentUserId: $AccusedDepartmentId
         accuserDepartmentUserId: $AccuserDepartmentId
+        currencyByAccuser: $Currency
+        fileNamesByAccuser: $fileNamesByAccuser
+        generalConditionsFileNameByAccuser: $generalConditionsFileName
+        contractGeneralTypeByAccuser:$ContractGeneralType
+        agreementFileNameByAccuser: $agreementFileName
+        privateTermsFileNameByAccuser: $privateTermsFileName
+        otherAttachmentFileNamesByAccuser: $otherAttachmentFileName
       }
     ) {
       result {
@@ -221,11 +267,13 @@ export const UPDATE_CONTRACT_BY_EXPERT = gql`
     $id: Int!
   ) {
     contract_updateContract(
-      input: { id: $id, isExecutive: $isExecutive }
+      input: { id: $id, isExecutiveByExpert: $isExecutive }
     ) {
       result {
         id
-        isExecutive
+        isExecutiveByAccused
+        isExecutiveByAccuser
+        isExecutiveByExpert
       }
       status {
         code
@@ -248,8 +296,6 @@ export const DELETE_CONTRACT = gql`
     }
   }
 `;
-
-
 
 export type Contract = {
   AccuserDepartmentId: number;
@@ -308,6 +354,7 @@ export type Contract = {
   UnauthorizedDelaysByAccuser?: number;
   IsExecutiveByAccused?: boolean;
   IsExecutiveByAccuser?: boolean;
+  isExecutiveByExpret?: boolean;
   FileNamesByAccused?: string[];
   FileNamesByAccuser?: string[];
 };

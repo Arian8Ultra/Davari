@@ -52,6 +52,7 @@ const AddContract = () => {
       phone: "" as string,
     },
   ]);
+  const [currency,setCurrency]=useState<"ریال"|"دلار"|"یورو"|null>()
   const [RelatedPeopleError, setRelatedPeopleError] = React.useState({
     error: false as boolean,
     text: "" as string,
@@ -912,7 +913,7 @@ const AddContract = () => {
             control={<Checkbox />}
             label={
               <FaTypography>
-                • موافقتنامه و شرایط عمومی و شرایط خصوصی پیمان‌ها-
+                • موافقتنامه و شرایط عمومی و شرایط خصوصی قرارداد‌ها-
                 نشریه شماره ۴۳۱۱ – بخشنامه شماره 842/54-1088/102 مورخ
                 ۱۳۷۸/۰۳/۰۳
               </FaTypography>
@@ -935,7 +936,7 @@ const AddContract = () => {
             control={<Checkbox />}
             label={
               <FaTypography>
-                • انعقاد پیمان اجرای کارهای ساختمانی به صورت سرجمع-
+                • انعقاد قرارداد اجرای کارهای ساختمانی به صورت سرجمع-
                 بخشنامه شماره ۹۶/۱۲۹۹۱۸۸ مورخ 1396/05/04
               </FaTypography>
             }
@@ -957,7 +958,7 @@ const AddContract = () => {
             control={<Checkbox />}
             label={
               <FaTypography>
-                • انعقاد پیمان اجرای کارهای ساختمانی به صورت سرجمع-
+                • انعقاد قرارداد اجرای کارهای ساختمانی به صورت سرجمع-
                 بخشنامه شماره 100/6405 مورخ 1389/02/04
               </FaTypography>
             }
@@ -979,7 +980,7 @@ const AddContract = () => {
             control={<Checkbox />}
             label={
               <FaTypography>
-                • انعقاد پیمان بر اساس فهرست بهای تجمیع شده راه، باند
+                • انعقاد قرارداد بر اساس فهرست بهای تجمیع شده راه، باند
                 فرودگاه و زیرسازی راه آهن – شماره 65637/100 مورخ
                 1391/08/14
               </FaTypography>
@@ -1051,7 +1052,7 @@ const AddContract = () => {
           />
           <FormControlLabel
             control={<Checkbox />}
-            label="•	موافقتنامه، پیوست‌ها، شرایط عمومی و شرایط خصوصی پیمان‌های مهندسی، تأمین کالا و تجهیزات، ساختمان و نصب به صورت توأم (EPC) برای کارهای صنعتی - نشریه شماره ۵۴۹۰ مورخ ۰۱/۰۳/۱۳۸۱ "
+            label="•	موافقتنامه، پیوست‌ها، شرایط عمومی و شرایط خصوصی قرارداد‌های مهندسی، تأمین کالا و تجهیزات، ساختمان و نصب به صورت توأم (EPC) برای کارهای صنعتی - نشریه شماره ۵۴۹۰ مورخ ۰۱/۰۳/۱۳۸۱ "
             onChange={(e) => {
               setContratDetails({
                 ...contratDetails,
@@ -1068,7 +1069,7 @@ const AddContract = () => {
           />
           <FormControlLabel
             control={<Checkbox />}
-            label="•	موافقتنامه، پیوست‌ها، شرایط عمومی و شرایط خصوصی پیمان‌های تامین کالا و تجهیزات، ساختمان و نصب به صورت توام  (PC)، برای کارهای صنعتی مورخ  ۱۸/۱۲/۱۳۸۳ "
+            label="•	موافقتنامه، پیوست‌ها، شرایط عمومی و شرایط خصوصی قرارداد‌های تامین کالا و تجهیزات، ساختمان و نصب به صورت توام  (PC)، برای کارهای صنعتی مورخ  ۱۸/۱۲/۱۳۸۳ "
             onChange={(e) => {
               setContratDetails({
                 ...contratDetails,

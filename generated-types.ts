@@ -19,35 +19,53 @@ export type Scalars = {
   Date: { input: any; output: any; }
   DateTime: { input: any; output: any; }
   Decimal: { input: any; output: any; }
+  Long: { input: any; output: any; }
   TimeSpan: { input: any; output: any; }
+  UUID: { input: any; output: any; }
 };
 
 export type AccusedDocsAfterCouncilRequestLetterDtoInput = {
-  canonDate: Scalars['String']['input'];
+  canonDate: Scalars['Date']['input'];
   canonNum: Scalars['String']['input'];
   clause: Scalars['String']['input'];
   complaintId: Scalars['Int']['input'];
-  letterDate: Scalars['String']['input'];
+  letterDate: Scalars['Date']['input'];
   letterNum: Scalars['String']['input'];
   userId: Scalars['String']['input'];
 };
 
 export type AccusedDocsRequestLetterDtoInput = {
   complaintId: Scalars['Int']['input'];
-  previousLetterDate: Scalars['String']['input'];
+  previousLetterDate: Scalars['Date']['input'];
   previousLetterNum: Scalars['String']['input'];
   userId: Scalars['String']['input'];
 };
 
 export type AccuserDidNotRespondLetterDtoInput = {
-  canonDate: Scalars['String']['input'];
+  canonDate: Scalars['Date']['input'];
   canonNum: Scalars['String']['input'];
   complaintId: Scalars['Int']['input'];
-  previousLetterDate: Scalars['String']['input'];
-  previousLetterDate2: Scalars['String']['input'];
+  previousLetterDate: Scalars['Date']['input'];
+  previousLetterDate2: Scalars['Date']['input'];
   previousLetterNum: Scalars['String']['input'];
   previousLetterNum2: Scalars['String']['input'];
   previousLetterNum3: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
+};
+
+export type AccuserSalaryAnnouncementDtoInput = {
+  complaintId: Scalars['Int']['input'];
+  letterDate: Scalars['Date']['input'];
+  letterDate2: Scalars['Date']['input'];
+  letterNum: Scalars['String']['input'];
+  letterNum2: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
+};
+
+export type AccuserSalaryAnnouncementRequestDtoInput = {
+  complaintIds: Array<Scalars['Int']['input']>;
+  letterDate: Scalars['Date']['input'];
+  letterNum: Scalars['String']['input'];
   userId: Scalars['String']['input'];
 };
 
@@ -66,6 +84,7 @@ export type AdjustmentStatement = {
   datePaid: Scalars['Date']['output'];
   dateProvidedByContractor: Scalars['Date']['output'];
   filledBy?: Maybe<RegistrarType>;
+  financialCoverFileName?: Maybe<Scalars['String']['output']>;
   id: Scalars['Int']['output'];
   isDeleted: Scalars['Boolean']['output'];
   lastModifiedDate?: Maybe<Scalars['DateTime']['output']>;
@@ -97,6 +116,7 @@ export type AdjustmentStatementFilterInput = {
   datePaid?: InputMaybe<ComparableDateOnlyOperationFilterInput>;
   dateProvidedByContractor?: InputMaybe<ComparableDateOnlyOperationFilterInput>;
   filledBy?: InputMaybe<NullableOfRegistrarTypeOperationFilterInput>;
+  financialCoverFileName?: InputMaybe<StringOperationFilterInput>;
   id?: InputMaybe<ComparableInt32OperationFilterInput>;
   isDeleted?: InputMaybe<BooleanOperationFilterInput>;
   lastModifiedDate?: InputMaybe<ComparableNullableOfDateTimeOperationFilterInput>;
@@ -117,6 +137,7 @@ export type AdjustmentStatementInput = {
   datePaid?: InputMaybe<Scalars['Date']['input']>;
   dateProvidedByContractor?: InputMaybe<Scalars['Date']['input']>;
   filledBy?: InputMaybe<RegistrarType>;
+  financialCoverFileName?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   operationPeriodEndDate?: InputMaybe<Scalars['Date']['input']>;
   operationPeriodStartDate?: InputMaybe<Scalars['Date']['input']>;
@@ -223,6 +244,7 @@ export type AdjustmentStatementSortInput = {
   datePaid?: InputMaybe<SortEnumType>;
   dateProvidedByContractor?: InputMaybe<SortEnumType>;
   filledBy?: InputMaybe<SortEnumType>;
+  financialCoverFileName?: InputMaybe<SortEnumType>;
   id?: InputMaybe<SortEnumType>;
   isDeleted?: InputMaybe<SortEnumType>;
   lastModifiedDate?: InputMaybe<SortEnumType>;
@@ -294,8 +316,8 @@ export enum ApplyPolicy {
 
 export type ArbitrationRejectionLetterDtoInput = {
   complaintId: Scalars['Int']['input'];
-  letterDate: Scalars['String']['input'];
-  letterDate2: Scalars['String']['input'];
+  letterDate: Scalars['Date']['input'];
+  letterDate2: Scalars['Date']['input'];
   letterNum: Scalars['String']['input'];
   letterNum2: Scalars['String']['input'];
   statement: Scalars['String']['input'];
@@ -321,7 +343,9 @@ export type ArbitrationTermsForm = {
   secondCondition: Scalars['String']['output'];
   secondConditionFileName?: Maybe<Scalars['String']['output']>;
   thirdCondition: Scalars['String']['output'];
-  thirdConditionFileName?: Maybe<Scalars['String']['output']>;
+  thirdConditionContractorsObjectionDocumentsFileName?: Maybe<Scalars['String']['output']>;
+  thirdConditionFinalBillFileName?: Maybe<Scalars['String']['output']>;
+  thirdConditionNotificationLetterFileName?: Maybe<Scalars['String']['output']>;
   user?: Maybe<User>;
   userId: Scalars['String']['output'];
 };
@@ -354,7 +378,9 @@ export type ArbitrationTermsFormFilterInput = {
   secondCondition?: InputMaybe<StringOperationFilterInput>;
   secondConditionFileName?: InputMaybe<StringOperationFilterInput>;
   thirdCondition?: InputMaybe<StringOperationFilterInput>;
-  thirdConditionFileName?: InputMaybe<StringOperationFilterInput>;
+  thirdConditionContractorsObjectionDocumentsFileName?: InputMaybe<StringOperationFilterInput>;
+  thirdConditionFinalBillFileName?: InputMaybe<StringOperationFilterInput>;
+  thirdConditionNotificationLetterFileName?: InputMaybe<StringOperationFilterInput>;
   user?: InputMaybe<UserFilterInput>;
   userId?: InputMaybe<StringOperationFilterInput>;
 };
@@ -373,7 +399,9 @@ export type ArbitrationTermsFormInput = {
   secondCondition?: InputMaybe<Scalars['String']['input']>;
   secondConditionFileName?: InputMaybe<Scalars['String']['input']>;
   thirdCondition?: InputMaybe<Scalars['String']['input']>;
-  thirdConditionFileName?: InputMaybe<Scalars['String']['input']>;
+  thirdConditionContractorsObjectionDocumentsFileName?: InputMaybe<Scalars['String']['input']>;
+  thirdConditionFinalBillFileName?: InputMaybe<Scalars['String']['input']>;
+  thirdConditionNotificationLetterFileName?: InputMaybe<Scalars['String']['input']>;
   userId?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -395,14 +423,16 @@ export type ArbitrationTermsFormSortInput = {
   secondCondition?: InputMaybe<SortEnumType>;
   secondConditionFileName?: InputMaybe<SortEnumType>;
   thirdCondition?: InputMaybe<SortEnumType>;
-  thirdConditionFileName?: InputMaybe<SortEnumType>;
+  thirdConditionContractorsObjectionDocumentsFileName?: InputMaybe<SortEnumType>;
+  thirdConditionFinalBillFileName?: InputMaybe<SortEnumType>;
+  thirdConditionNotificationLetterFileName?: InputMaybe<SortEnumType>;
   user?: InputMaybe<UserSortInput>;
   userId?: InputMaybe<SortEnumType>;
 };
 
 export type AssignToExpertLetterDtoInput = {
   complaintId: Scalars['Int']['input'];
-  letterDate: Scalars['String']['input'];
+  letterDate: Scalars['Date']['input'];
   letterNum: Scalars['String']['input'];
   meetingDate: Scalars['Date']['input'];
   meetingTime: Scalars['TimeSpan']['input'];
@@ -415,7 +445,7 @@ export type BooleanOperationFilterInput = {
 };
 
 export type CallToMeetingLetterDtoInput = {
-  canonDate: Scalars['String']['input'];
+  canonDate: Scalars['Date']['input'];
   canonNum: Scalars['String']['input'];
   clause: Scalars['String']['input'];
   complaintId: Scalars['Int']['input'];
@@ -440,6 +470,90 @@ export type CollectionSegmentInfo = {
   hasNextPage: Scalars['Boolean']['output'];
   /** Indicates whether more items exist prior the set defined by the clients arguments. */
   hasPreviousPage: Scalars['Boolean']['output'];
+};
+
+export type CompanyProfile = {
+  __typename?: 'CompanyProfile';
+  activityEndDate?: Maybe<Scalars['Date']['output']>;
+  addressDesc?: Maybe<Scalars['String']['output']>;
+  createdDate: Scalars['DateTime']['output'];
+  emailAddress?: Maybe<Scalars['String']['output']>;
+  fixPhoneNumber?: Maybe<Scalars['String']['output']>;
+  id: Scalars['Int']['output'];
+  isDeleted: Scalars['Boolean']['output'];
+  issuanceDate?: Maybe<Scalars['Date']['output']>;
+  lastModifiedDate?: Maybe<Scalars['DateTime']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+  nationalCode?: Maybe<Scalars['String']['output']>;
+  postCode?: Maybe<Scalars['String']['output']>;
+  registerDate?: Maybe<Scalars['Date']['output']>;
+  registerNumber?: Maybe<Scalars['String']['output']>;
+  smsNumber?: Maybe<Scalars['String']['output']>;
+  webAddress?: Maybe<Scalars['String']['output']>;
+};
+
+export type CompanyProfileCollectionSegment = {
+  __typename?: 'CompanyProfileCollectionSegment';
+  items?: Maybe<Array<CompanyProfile>>;
+  /** Information to aid in pagination. */
+  pageInfo: CollectionSegmentInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type CompanyProfileFilterInput = {
+  activityEndDate?: InputMaybe<ComparableNullableOfDateOnlyOperationFilterInput>;
+  addressDesc?: InputMaybe<StringOperationFilterInput>;
+  and?: InputMaybe<Array<CompanyProfileFilterInput>>;
+  createdDate?: InputMaybe<ComparableDateTimeOperationFilterInput>;
+  emailAddress?: InputMaybe<StringOperationFilterInput>;
+  fixPhoneNumber?: InputMaybe<StringOperationFilterInput>;
+  id?: InputMaybe<ComparableInt32OperationFilterInput>;
+  isDeleted?: InputMaybe<BooleanOperationFilterInput>;
+  issuanceDate?: InputMaybe<ComparableNullableOfDateOnlyOperationFilterInput>;
+  lastModifiedDate?: InputMaybe<ComparableNullableOfDateTimeOperationFilterInput>;
+  name?: InputMaybe<StringOperationFilterInput>;
+  nationalCode?: InputMaybe<StringOperationFilterInput>;
+  or?: InputMaybe<Array<CompanyProfileFilterInput>>;
+  postCode?: InputMaybe<StringOperationFilterInput>;
+  registerDate?: InputMaybe<ComparableNullableOfDateOnlyOperationFilterInput>;
+  registerNumber?: InputMaybe<StringOperationFilterInput>;
+  smsNumber?: InputMaybe<StringOperationFilterInput>;
+  webAddress?: InputMaybe<StringOperationFilterInput>;
+};
+
+export type CompanyProfileInput = {
+  activityEndDate?: InputMaybe<Scalars['Date']['input']>;
+  addressDesc?: InputMaybe<Scalars['String']['input']>;
+  emailAddress?: InputMaybe<Scalars['String']['input']>;
+  fixPhoneNumber?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  issuanceDate?: InputMaybe<Scalars['Date']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  nationalCode?: InputMaybe<Scalars['String']['input']>;
+  postCode?: InputMaybe<Scalars['String']['input']>;
+  registerDate?: InputMaybe<Scalars['Date']['input']>;
+  registerNumber?: InputMaybe<Scalars['String']['input']>;
+  smsNumber?: InputMaybe<Scalars['String']['input']>;
+  webAddress?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type CompanyProfileSortInput = {
+  activityEndDate?: InputMaybe<SortEnumType>;
+  addressDesc?: InputMaybe<SortEnumType>;
+  createdDate?: InputMaybe<SortEnumType>;
+  emailAddress?: InputMaybe<SortEnumType>;
+  fixPhoneNumber?: InputMaybe<SortEnumType>;
+  id?: InputMaybe<SortEnumType>;
+  isDeleted?: InputMaybe<SortEnumType>;
+  issuanceDate?: InputMaybe<SortEnumType>;
+  lastModifiedDate?: InputMaybe<SortEnumType>;
+  name?: InputMaybe<SortEnumType>;
+  nationalCode?: InputMaybe<SortEnumType>;
+  postCode?: InputMaybe<SortEnumType>;
+  registerDate?: InputMaybe<SortEnumType>;
+  registerNumber?: InputMaybe<SortEnumType>;
+  smsNumber?: InputMaybe<SortEnumType>;
+  webAddress?: InputMaybe<SortEnumType>;
 };
 
 export type ComparableDateOnlyOperationFilterInput = {
@@ -577,6 +691,21 @@ export type ComparableNullableOfDoubleOperationFilterInput = {
   nlte?: InputMaybe<Scalars['Float']['input']>;
 };
 
+export type ComparableNullableOfGuidOperationFilterInput = {
+  eq?: InputMaybe<Scalars['UUID']['input']>;
+  gt?: InputMaybe<Scalars['UUID']['input']>;
+  gte?: InputMaybe<Scalars['UUID']['input']>;
+  in?: InputMaybe<Array<InputMaybe<Scalars['UUID']['input']>>>;
+  lt?: InputMaybe<Scalars['UUID']['input']>;
+  lte?: InputMaybe<Scalars['UUID']['input']>;
+  neq?: InputMaybe<Scalars['UUID']['input']>;
+  ngt?: InputMaybe<Scalars['UUID']['input']>;
+  ngte?: InputMaybe<Scalars['UUID']['input']>;
+  nin?: InputMaybe<Array<InputMaybe<Scalars['UUID']['input']>>>;
+  nlt?: InputMaybe<Scalars['UUID']['input']>;
+  nlte?: InputMaybe<Scalars['UUID']['input']>;
+};
+
 export type ComparableNullableOfInt32OperationFilterInput = {
   eq?: InputMaybe<Scalars['Int']['input']>;
   gt?: InputMaybe<Scalars['Int']['input']>;
@@ -592,6 +721,21 @@ export type ComparableNullableOfInt32OperationFilterInput = {
   nlte?: InputMaybe<Scalars['Int']['input']>;
 };
 
+export type ComparableNullableOfInt64OperationFilterInput = {
+  eq?: InputMaybe<Scalars['Long']['input']>;
+  gt?: InputMaybe<Scalars['Long']['input']>;
+  gte?: InputMaybe<Scalars['Long']['input']>;
+  in?: InputMaybe<Array<InputMaybe<Scalars['Long']['input']>>>;
+  lt?: InputMaybe<Scalars['Long']['input']>;
+  lte?: InputMaybe<Scalars['Long']['input']>;
+  neq?: InputMaybe<Scalars['Long']['input']>;
+  ngt?: InputMaybe<Scalars['Long']['input']>;
+  ngte?: InputMaybe<Scalars['Long']['input']>;
+  nin?: InputMaybe<Array<InputMaybe<Scalars['Long']['input']>>>;
+  nlt?: InputMaybe<Scalars['Long']['input']>;
+  nlte?: InputMaybe<Scalars['Long']['input']>;
+};
+
 export type Complaint = {
   __typename?: 'Complaint';
   accusedFinalOpinion?: Maybe<Scalars['String']['output']>;
@@ -602,14 +746,17 @@ export type Complaint = {
   assignedUserId?: Maybe<Scalars['String']['output']>;
   complaintCode?: Maybe<Scalars['String']['output']>;
   complaintFiles?: Maybe<Array<ComplaintFile>>;
-  complaintState: ComplaintState;
+  complaintNonFeasibleArguments?: Maybe<Array<ComplaintNonFeasibleArgument>>;
+  complaintState?: Maybe<ComplaintState>;
+  complaintStateId?: Maybe<Scalars['Int']['output']>;
   contract?: Maybe<Contract>;
   contractId: Scalars['Int']['output'];
   correctionRequests?: Maybe<Array<CorrectionRequest>>;
-  councilExpertId?: Maybe<Scalars['String']['output']>;
+  councilExpertIds?: Maybe<Array<Scalars['String']['output']>>;
   councilListStatus: CouncilListStatus;
   createdDate: Scalars['DateTime']['output'];
   eventHistories?: Maybe<Array<EventHistory>>;
+  handlingType?: Maybe<HandlingType>;
   id: Scalars['Int']['output'];
   isApprovedByChief: Scalars['Boolean']['output'];
   isDeleted: Scalars['Boolean']['output'];
@@ -618,6 +765,7 @@ export type Complaint = {
   lastModifiedDate?: Maybe<Scalars['DateTime']['output']>;
   user?: Maybe<User>;
   userId: Scalars['String']['output'];
+  verdictFileName?: Maybe<Scalars['String']['output']>;
 };
 
 export type ComplaintArgument = {
@@ -626,11 +774,9 @@ export type ComplaintArgument = {
   accusedResponseFileName?: Maybe<Scalars['String']['output']>;
   accuserAnswerToAccusedResponse?: Maybe<Scalars['String']['output']>;
   accuserAnswerToAccusedResponseFileName?: Maybe<Scalars['String']['output']>;
-  approvedAmount?: Maybe<Scalars['Decimal']['output']>;
   complaint?: Maybe<Complaint>;
   complaintId: Scalars['Int']['output'];
-  councilApprovedAmount?: Maybe<Scalars['Decimal']['output']>;
-  councilOpinion?: Maybe<Scalars['Decimal']['output']>;
+  councilOpinion?: Maybe<Scalars['String']['output']>;
   createdDate: Scalars['DateTime']['output'];
   description?: Maybe<Scalars['String']['output']>;
   expertId?: Maybe<Scalars['String']['output']>;
@@ -639,17 +785,27 @@ export type ComplaintArgument = {
   expertVerdict?: Maybe<Scalars['String']['output']>;
   fileName?: Maybe<Scalars['String']['output']>;
   filledBy: RegistrarType;
+  financialSituation?: Maybe<Scalars['String']['output']>;
+  financialStatus?: Maybe<FinancialStatus>;
+  financialStatusFileName?: Maybe<Scalars['String']['output']>;
+  grossApprovedAmount?: Maybe<Scalars['Decimal']['output']>;
+  grossCouncilApprovedAmount?: Maybe<Scalars['Decimal']['output']>;
+  grossJusticeExpertApprovedAmount?: Maybe<Scalars['Decimal']['output']>;
+  grossMailRoomChiefSuggestedAmount?: Maybe<Scalars['Decimal']['output']>;
+  grossMailRoomExpertApprovedAmount?: Maybe<Scalars['Decimal']['output']>;
   id: Scalars['Int']['output'];
   isDeleted: Scalars['Boolean']['output'];
-  justiceExpertApprovedAmount?: Maybe<Scalars['Decimal']['output']>;
   justiceExpertOpinion?: Maybe<Scalars['String']['output']>;
   lastModifiedDate?: Maybe<Scalars['DateTime']['output']>;
   mailRoomChiefOpinionOnArgument?: Maybe<Scalars['String']['output']>;
   mailRoomChiefOpinionOnExpertOpinion?: Maybe<Scalars['String']['output']>;
-  mailRoomChiefSuggestedAmount?: Maybe<Scalars['Decimal']['output']>;
-  mailRoomExpertApprovedAmount?: Maybe<Scalars['Decimal']['output']>;
   mailRoomExpertOpinionOnArgument?: Maybe<Scalars['String']['output']>;
   mailRoomExpertOpinionOnExpertOpinion?: Maybe<Scalars['String']['output']>;
+  netApprovedAmount?: Maybe<Scalars['Decimal']['output']>;
+  netCouncilApprovedAmount?: Maybe<Scalars['Decimal']['output']>;
+  netJusticeExpertApprovedAmount?: Maybe<Scalars['Decimal']['output']>;
+  netMailRoomChiefSuggestedAmount?: Maybe<Scalars['Decimal']['output']>;
+  netMailRoomExpertApprovedAmount?: Maybe<Scalars['Decimal']['output']>;
   suggestedAmount: Scalars['Decimal']['output'];
   summary?: Maybe<Scalars['String']['output']>;
   user?: Maybe<User>;
@@ -671,11 +827,9 @@ export type ComplaintArgumentFilterInput = {
   accuserAnswerToAccusedResponse?: InputMaybe<StringOperationFilterInput>;
   accuserAnswerToAccusedResponseFileName?: InputMaybe<StringOperationFilterInput>;
   and?: InputMaybe<Array<ComplaintArgumentFilterInput>>;
-  approvedAmount?: InputMaybe<ComparableNullableOfDecimalOperationFilterInput>;
   complaint?: InputMaybe<ComplaintFilterInput>;
   complaintId?: InputMaybe<ComparableInt32OperationFilterInput>;
-  councilApprovedAmount?: InputMaybe<ComparableNullableOfDecimalOperationFilterInput>;
-  councilOpinion?: InputMaybe<ComparableNullableOfDecimalOperationFilterInput>;
+  councilOpinion?: InputMaybe<StringOperationFilterInput>;
   createdDate?: InputMaybe<ComparableDateTimeOperationFilterInput>;
   description?: InputMaybe<StringOperationFilterInput>;
   expertId?: InputMaybe<StringOperationFilterInput>;
@@ -684,17 +838,27 @@ export type ComplaintArgumentFilterInput = {
   expertVerdict?: InputMaybe<StringOperationFilterInput>;
   fileName?: InputMaybe<StringOperationFilterInput>;
   filledBy?: InputMaybe<RegistrarTypeOperationFilterInput>;
+  financialSituation?: InputMaybe<StringOperationFilterInput>;
+  financialStatus?: InputMaybe<NullableOfFinancialStatusOperationFilterInput>;
+  financialStatusFileName?: InputMaybe<StringOperationFilterInput>;
+  grossApprovedAmount?: InputMaybe<ComparableNullableOfDecimalOperationFilterInput>;
+  grossCouncilApprovedAmount?: InputMaybe<ComparableNullableOfDecimalOperationFilterInput>;
+  grossJusticeExpertApprovedAmount?: InputMaybe<ComparableNullableOfDecimalOperationFilterInput>;
+  grossMailRoomChiefSuggestedAmount?: InputMaybe<ComparableNullableOfDecimalOperationFilterInput>;
+  grossMailRoomExpertApprovedAmount?: InputMaybe<ComparableNullableOfDecimalOperationFilterInput>;
   id?: InputMaybe<ComparableInt32OperationFilterInput>;
   isDeleted?: InputMaybe<BooleanOperationFilterInput>;
-  justiceExpertApprovedAmount?: InputMaybe<ComparableNullableOfDecimalOperationFilterInput>;
   justiceExpertOpinion?: InputMaybe<StringOperationFilterInput>;
   lastModifiedDate?: InputMaybe<ComparableNullableOfDateTimeOperationFilterInput>;
   mailRoomChiefOpinionOnArgument?: InputMaybe<StringOperationFilterInput>;
   mailRoomChiefOpinionOnExpertOpinion?: InputMaybe<StringOperationFilterInput>;
-  mailRoomChiefSuggestedAmount?: InputMaybe<ComparableNullableOfDecimalOperationFilterInput>;
-  mailRoomExpertApprovedAmount?: InputMaybe<ComparableNullableOfDecimalOperationFilterInput>;
   mailRoomExpertOpinionOnArgument?: InputMaybe<StringOperationFilterInput>;
   mailRoomExpertOpinionOnExpertOpinion?: InputMaybe<StringOperationFilterInput>;
+  netApprovedAmount?: InputMaybe<ComparableNullableOfDecimalOperationFilterInput>;
+  netCouncilApprovedAmount?: InputMaybe<ComparableNullableOfDecimalOperationFilterInput>;
+  netJusticeExpertApprovedAmount?: InputMaybe<ComparableNullableOfDecimalOperationFilterInput>;
+  netMailRoomChiefSuggestedAmount?: InputMaybe<ComparableNullableOfDecimalOperationFilterInput>;
+  netMailRoomExpertApprovedAmount?: InputMaybe<ComparableNullableOfDecimalOperationFilterInput>;
   or?: InputMaybe<Array<ComplaintArgumentFilterInput>>;
   suggestedAmount?: InputMaybe<ComparableDecimalOperationFilterInput>;
   summary?: InputMaybe<StringOperationFilterInput>;
@@ -708,10 +872,8 @@ export type ComplaintArgumentInput = {
   accusedResponseFileName?: InputMaybe<Scalars['String']['input']>;
   accuserAnswerToAccusedResponse?: InputMaybe<Scalars['String']['input']>;
   accuserAnswerToAccusedResponseFileName?: InputMaybe<Scalars['String']['input']>;
-  approvedAmount?: InputMaybe<Scalars['Decimal']['input']>;
   complaintId?: InputMaybe<Scalars['Int']['input']>;
-  councilApprovedAmount?: InputMaybe<Scalars['Decimal']['input']>;
-  councilOpinion?: InputMaybe<Scalars['Decimal']['input']>;
+  councilOpinion?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   expertId?: InputMaybe<Scalars['String']['input']>;
   expertOpinion?: InputMaybe<Scalars['String']['input']>;
@@ -719,15 +881,25 @@ export type ComplaintArgumentInput = {
   expertVerdict?: InputMaybe<Scalars['String']['input']>;
   fileName?: InputMaybe<Scalars['String']['input']>;
   filledBy?: InputMaybe<RegistrarType>;
+  financialSituation?: InputMaybe<Scalars['String']['input']>;
+  financialStatus?: InputMaybe<FinancialStatus>;
+  financialStatusFileName?: InputMaybe<Scalars['String']['input']>;
+  grossApprovedAmount?: InputMaybe<Scalars['Decimal']['input']>;
+  grossCouncilApprovedAmount?: InputMaybe<Scalars['Decimal']['input']>;
+  grossJusticeExpertApprovedAmount?: InputMaybe<Scalars['Decimal']['input']>;
+  grossMailRoomChiefSuggestedAmount?: InputMaybe<Scalars['Decimal']['input']>;
+  grossMailRoomExpertApprovedAmount?: InputMaybe<Scalars['Decimal']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
-  justiceExpertApprovedAmount?: InputMaybe<Scalars['Decimal']['input']>;
   justiceExpertOpinion?: InputMaybe<Scalars['String']['input']>;
   mailRoomChiefOpinionOnArgument?: InputMaybe<Scalars['String']['input']>;
   mailRoomChiefOpinionOnExpertOpinion?: InputMaybe<Scalars['String']['input']>;
-  mailRoomChiefSuggestedAmount?: InputMaybe<Scalars['Decimal']['input']>;
-  mailRoomExpertApprovedAmount?: InputMaybe<Scalars['Decimal']['input']>;
   mailRoomExpertOpinionOnArgument?: InputMaybe<Scalars['String']['input']>;
   mailRoomExpertOpinionOnExpertOpinion?: InputMaybe<Scalars['String']['input']>;
+  netApprovedAmount?: InputMaybe<Scalars['Decimal']['input']>;
+  netCouncilApprovedAmount?: InputMaybe<Scalars['Decimal']['input']>;
+  netJusticeExpertApprovedAmount?: InputMaybe<Scalars['Decimal']['input']>;
+  netMailRoomChiefSuggestedAmount?: InputMaybe<Scalars['Decimal']['input']>;
+  netMailRoomExpertApprovedAmount?: InputMaybe<Scalars['Decimal']['input']>;
   suggestedAmount?: InputMaybe<Scalars['Decimal']['input']>;
   summary?: InputMaybe<Scalars['String']['input']>;
   userId?: InputMaybe<Scalars['String']['input']>;
@@ -739,10 +911,8 @@ export type ComplaintArgumentSortInput = {
   accusedResponseFileName?: InputMaybe<SortEnumType>;
   accuserAnswerToAccusedResponse?: InputMaybe<SortEnumType>;
   accuserAnswerToAccusedResponseFileName?: InputMaybe<SortEnumType>;
-  approvedAmount?: InputMaybe<SortEnumType>;
   complaint?: InputMaybe<ComplaintSortInput>;
   complaintId?: InputMaybe<SortEnumType>;
-  councilApprovedAmount?: InputMaybe<SortEnumType>;
   councilOpinion?: InputMaybe<SortEnumType>;
   createdDate?: InputMaybe<SortEnumType>;
   description?: InputMaybe<SortEnumType>;
@@ -752,17 +922,27 @@ export type ComplaintArgumentSortInput = {
   expertVerdict?: InputMaybe<SortEnumType>;
   fileName?: InputMaybe<SortEnumType>;
   filledBy?: InputMaybe<SortEnumType>;
+  financialSituation?: InputMaybe<SortEnumType>;
+  financialStatus?: InputMaybe<SortEnumType>;
+  financialStatusFileName?: InputMaybe<SortEnumType>;
+  grossApprovedAmount?: InputMaybe<SortEnumType>;
+  grossCouncilApprovedAmount?: InputMaybe<SortEnumType>;
+  grossJusticeExpertApprovedAmount?: InputMaybe<SortEnumType>;
+  grossMailRoomChiefSuggestedAmount?: InputMaybe<SortEnumType>;
+  grossMailRoomExpertApprovedAmount?: InputMaybe<SortEnumType>;
   id?: InputMaybe<SortEnumType>;
   isDeleted?: InputMaybe<SortEnumType>;
-  justiceExpertApprovedAmount?: InputMaybe<SortEnumType>;
   justiceExpertOpinion?: InputMaybe<SortEnumType>;
   lastModifiedDate?: InputMaybe<SortEnumType>;
   mailRoomChiefOpinionOnArgument?: InputMaybe<SortEnumType>;
   mailRoomChiefOpinionOnExpertOpinion?: InputMaybe<SortEnumType>;
-  mailRoomChiefSuggestedAmount?: InputMaybe<SortEnumType>;
-  mailRoomExpertApprovedAmount?: InputMaybe<SortEnumType>;
   mailRoomExpertOpinionOnArgument?: InputMaybe<SortEnumType>;
   mailRoomExpertOpinionOnExpertOpinion?: InputMaybe<SortEnumType>;
+  netApprovedAmount?: InputMaybe<SortEnumType>;
+  netCouncilApprovedAmount?: InputMaybe<SortEnumType>;
+  netJusticeExpertApprovedAmount?: InputMaybe<SortEnumType>;
+  netMailRoomChiefSuggestedAmount?: InputMaybe<SortEnumType>;
+  netMailRoomExpertApprovedAmount?: InputMaybe<SortEnumType>;
   suggestedAmount?: InputMaybe<SortEnumType>;
   summary?: InputMaybe<SortEnumType>;
   user?: InputMaybe<UserSortInput>;
@@ -846,14 +1026,17 @@ export type ComplaintFilterInput = {
   assignedUserId?: InputMaybe<StringOperationFilterInput>;
   complaintCode?: InputMaybe<StringOperationFilterInput>;
   complaintFiles?: InputMaybe<ListFilterInputTypeOfComplaintFileFilterInput>;
-  complaintState?: InputMaybe<ComplaintStateOperationFilterInput>;
+  complaintNonFeasibleArguments?: InputMaybe<ListFilterInputTypeOfComplaintNonFeasibleArgumentFilterInput>;
+  complaintState?: InputMaybe<ComplaintStateFilterInput>;
+  complaintStateId?: InputMaybe<ComparableNullableOfInt32OperationFilterInput>;
   contract?: InputMaybe<ContractFilterInput>;
   contractId?: InputMaybe<ComparableInt32OperationFilterInput>;
   correctionRequests?: InputMaybe<ListFilterInputTypeOfCorrectionRequestFilterInput>;
-  councilExpertId?: InputMaybe<StringOperationFilterInput>;
+  councilExpertIds?: InputMaybe<ListStringOperationFilterInput>;
   councilListStatus?: InputMaybe<CouncilListStatusOperationFilterInput>;
   createdDate?: InputMaybe<ComparableDateTimeOperationFilterInput>;
   eventHistories?: InputMaybe<ListFilterInputTypeOfEventHistoryFilterInput>;
+  handlingType?: InputMaybe<NullableOfHandlingTypeOperationFilterInput>;
   id?: InputMaybe<ComparableInt32OperationFilterInput>;
   isApprovedByChief?: InputMaybe<BooleanOperationFilterInput>;
   isDeleted?: InputMaybe<BooleanOperationFilterInput>;
@@ -863,11 +1046,12 @@ export type ComplaintFilterInput = {
   or?: InputMaybe<Array<ComplaintFilterInput>>;
   user?: InputMaybe<UserFilterInput>;
   userId?: InputMaybe<StringOperationFilterInput>;
+  verdictFileName?: InputMaybe<StringOperationFilterInput>;
 };
 
 export type ComplaintGotCancelledLetterDtoInput = {
   complaintId: Scalars['Int']['input'];
-  letterDate: Scalars['String']['input'];
+  letterDate: Scalars['Date']['input'];
   letterNum: Scalars['String']['input'];
   userId: Scalars['String']['input'];
 };
@@ -876,15 +1060,87 @@ export type ComplaintInput = {
   accusedFinalOpinion?: InputMaybe<Scalars['String']['input']>;
   arbitrationCost?: InputMaybe<Scalars['Decimal']['input']>;
   assignedUserId?: InputMaybe<Scalars['String']['input']>;
-  complaintState?: InputMaybe<ComplaintState>;
+  complaintStateId?: InputMaybe<Scalars['Int']['input']>;
   contractId?: InputMaybe<Scalars['Int']['input']>;
-  councilExpertId?: InputMaybe<Scalars['String']['input']>;
+  councilExpertIds?: InputMaybe<Array<Scalars['String']['input']>>;
   councilListStatus?: InputMaybe<CouncilListStatus>;
+  handlingType?: InputMaybe<HandlingType>;
   id?: InputMaybe<Scalars['Int']['input']>;
   isApprovedByChief?: InputMaybe<Scalars['Boolean']['input']>;
   isFirstPaymentPaid?: InputMaybe<Scalars['Boolean']['input']>;
   isSecondPaymentPaid?: InputMaybe<Scalars['Boolean']['input']>;
   userId?: InputMaybe<Scalars['String']['input']>;
+  verdictFileName?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type ComplaintNonFeasibleArgument = {
+  __typename?: 'ComplaintNonFeasibleArgument';
+  complaint?: Maybe<Complaint>;
+  complaintId: Scalars['Int']['output'];
+  createdDate: Scalars['DateTime']['output'];
+  description?: Maybe<Scalars['String']['output']>;
+  financialSituation?: Maybe<Scalars['String']['output']>;
+  financialStatus?: Maybe<FinancialStatus>;
+  financialStatusFileName?: Maybe<Scalars['String']['output']>;
+  id: Scalars['Int']['output'];
+  isDeleted: Scalars['Boolean']['output'];
+  lastModifiedDate?: Maybe<Scalars['DateTime']['output']>;
+  summary?: Maybe<Scalars['String']['output']>;
+  user?: Maybe<User>;
+  userId: Scalars['String']['output'];
+};
+
+export type ComplaintNonFeasibleArgumentCollectionSegment = {
+  __typename?: 'ComplaintNonFeasibleArgumentCollectionSegment';
+  items?: Maybe<Array<ComplaintNonFeasibleArgument>>;
+  /** Information to aid in pagination. */
+  pageInfo: CollectionSegmentInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type ComplaintNonFeasibleArgumentFilterInput = {
+  and?: InputMaybe<Array<ComplaintNonFeasibleArgumentFilterInput>>;
+  complaint?: InputMaybe<ComplaintFilterInput>;
+  complaintId?: InputMaybe<ComparableInt32OperationFilterInput>;
+  createdDate?: InputMaybe<ComparableDateTimeOperationFilterInput>;
+  description?: InputMaybe<StringOperationFilterInput>;
+  financialSituation?: InputMaybe<StringOperationFilterInput>;
+  financialStatus?: InputMaybe<NullableOfFinancialStatusOperationFilterInput>;
+  financialStatusFileName?: InputMaybe<StringOperationFilterInput>;
+  id?: InputMaybe<ComparableInt32OperationFilterInput>;
+  isDeleted?: InputMaybe<BooleanOperationFilterInput>;
+  lastModifiedDate?: InputMaybe<ComparableNullableOfDateTimeOperationFilterInput>;
+  or?: InputMaybe<Array<ComplaintNonFeasibleArgumentFilterInput>>;
+  summary?: InputMaybe<StringOperationFilterInput>;
+  user?: InputMaybe<UserFilterInput>;
+  userId?: InputMaybe<StringOperationFilterInput>;
+};
+
+export type ComplaintNonFeasibleArgumentInput = {
+  complaintId: Scalars['Int']['input'];
+  description?: InputMaybe<Scalars['String']['input']>;
+  financialSituation?: InputMaybe<Scalars['String']['input']>;
+  financialStatus?: InputMaybe<FinancialStatus>;
+  financialStatusFileName?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  summary?: InputMaybe<Scalars['String']['input']>;
+  userId: Scalars['String']['input'];
+};
+
+export type ComplaintNonFeasibleArgumentSortInput = {
+  complaint?: InputMaybe<ComplaintSortInput>;
+  complaintId?: InputMaybe<SortEnumType>;
+  createdDate?: InputMaybe<SortEnumType>;
+  description?: InputMaybe<SortEnumType>;
+  financialSituation?: InputMaybe<SortEnumType>;
+  financialStatus?: InputMaybe<SortEnumType>;
+  financialStatusFileName?: InputMaybe<SortEnumType>;
+  id?: InputMaybe<SortEnumType>;
+  isDeleted?: InputMaybe<SortEnumType>;
+  lastModifiedDate?: InputMaybe<SortEnumType>;
+  summary?: InputMaybe<SortEnumType>;
+  user?: InputMaybe<UserSortInput>;
+  userId?: InputMaybe<SortEnumType>;
 };
 
 export type ComplaintNote = {
@@ -951,12 +1207,13 @@ export type ComplaintSortInput = {
   assignedUser?: InputMaybe<UserSortInput>;
   assignedUserId?: InputMaybe<SortEnumType>;
   complaintCode?: InputMaybe<SortEnumType>;
-  complaintState?: InputMaybe<SortEnumType>;
+  complaintState?: InputMaybe<ComplaintStateSortInput>;
+  complaintStateId?: InputMaybe<SortEnumType>;
   contract?: InputMaybe<ContractSortInput>;
   contractId?: InputMaybe<SortEnumType>;
-  councilExpertId?: InputMaybe<SortEnumType>;
   councilListStatus?: InputMaybe<SortEnumType>;
   createdDate?: InputMaybe<SortEnumType>;
+  handlingType?: InputMaybe<SortEnumType>;
   id?: InputMaybe<SortEnumType>;
   isApprovedByChief?: InputMaybe<SortEnumType>;
   isDeleted?: InputMaybe<SortEnumType>;
@@ -965,12 +1222,69 @@ export type ComplaintSortInput = {
   lastModifiedDate?: InputMaybe<SortEnumType>;
   user?: InputMaybe<UserSortInput>;
   userId?: InputMaybe<SortEnumType>;
+  verdictFileName?: InputMaybe<SortEnumType>;
 };
 
-export enum ComplaintState {
+export type ComplaintState = {
+  __typename?: 'ComplaintState';
+  complaints?: Maybe<Array<Complaint>>;
+  createdDate: Scalars['DateTime']['output'];
+  englishName: Scalars['String']['output'];
+  id: Scalars['Int']['output'];
+  isDeleted: Scalars['Boolean']['output'];
+  lastModifiedDate?: Maybe<Scalars['DateTime']['output']>;
+  persianName: Scalars['String']['output'];
+  priority: Scalars['Int']['output'];
+  responsibleRole?: Maybe<ResponsibleUserType>;
+  state: ComplaintStateStatus;
+};
+
+export type ComplaintStateCollectionSegment = {
+  __typename?: 'ComplaintStateCollectionSegment';
+  items?: Maybe<Array<ComplaintState>>;
+  /** Information to aid in pagination. */
+  pageInfo: CollectionSegmentInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type ComplaintStateFilterInput = {
+  and?: InputMaybe<Array<ComplaintStateFilterInput>>;
+  complaints?: InputMaybe<ListFilterInputTypeOfComplaintFilterInput>;
+  createdDate?: InputMaybe<ComparableDateTimeOperationFilterInput>;
+  englishName?: InputMaybe<StringOperationFilterInput>;
+  id?: InputMaybe<ComparableInt32OperationFilterInput>;
+  isDeleted?: InputMaybe<BooleanOperationFilterInput>;
+  lastModifiedDate?: InputMaybe<ComparableNullableOfDateTimeOperationFilterInput>;
+  or?: InputMaybe<Array<ComplaintStateFilterInput>>;
+  persianName?: InputMaybe<StringOperationFilterInput>;
+  priority?: InputMaybe<ComparableInt32OperationFilterInput>;
+  responsibleRole?: InputMaybe<NullableOfResponsibleUserTypeOperationFilterInput>;
+  state?: InputMaybe<ComplaintStateStatusOperationFilterInput>;
+};
+
+export type ComplaintStateInput = {
+  englishName: Scalars['String']['input'];
+  id?: InputMaybe<Scalars['Int']['input']>;
+  persianName: Scalars['String']['input'];
+  priority: Scalars['Int']['input'];
+  responsibleRole?: InputMaybe<ResponsibleUserType>;
+  state: ComplaintStateStatus;
+};
+
+export type ComplaintStateSortInput = {
+  createdDate?: InputMaybe<SortEnumType>;
+  englishName?: InputMaybe<SortEnumType>;
+  id?: InputMaybe<SortEnumType>;
+  isDeleted?: InputMaybe<SortEnumType>;
+  lastModifiedDate?: InputMaybe<SortEnumType>;
+  persianName?: InputMaybe<SortEnumType>;
+  priority?: InputMaybe<SortEnumType>;
+  responsibleRole?: InputMaybe<SortEnumType>;
+  state?: InputMaybe<SortEnumType>;
+};
+
+export enum ComplaintStateStatus {
   AcceptedForBeingConstructive = 'ACCEPTED_FOR_BEING_CONSTRUCTIVE',
-  AccusedNotifiedOfOfferorChangingResult = 'ACCUSED_NOTIFIED_OF_OFFEROR_CHANGING_RESULT',
-  AccuserNotifiedOfSuccessfulChangingOfTheOfferor = 'ACCUSER_NOTIFIED_OF_SUCCESSFUL_CHANGING_OF_THE_OFFEROR',
   CheckingAndUploadingTheSignedDecree = 'CHECKING_AND_UPLOADING_THE_SIGNED_DECREE',
   CheckingForBeingConstructive = 'CHECKING_FOR_BEING_CONSTRUCTIVE',
   ComplaintDetermined = 'COMPLAINT_DETERMINED',
@@ -980,14 +1294,15 @@ export enum ComplaintState {
   GivingTrackingCodeToComplaint = 'GIVING_TRACKING_CODE_TO_COMPLAINT',
   MailRoomChiefReviewingTheFinalReport = 'MAIL_ROOM_CHIEF_REVIEWING_THE_FINAL_REPORT',
   MailRoomExpertReviewingTheFinalReport = 'MAIL_ROOM_EXPERT_REVIEWING_THE_FINAL_REPORT',
-  NewOfferorNotified = 'NEW_OFFEROR_NOTIFIED',
   NotAcceptedForBeingConstructive = 'NOT_ACCEPTED_FOR_BEING_CONSTRUCTIVE',
   RedeterminingCaseExpert = 'REDETERMINING_CASE_EXPERT',
   RequestingDocuments = 'REQUESTING_DOCUMENTS',
   ResultNotifiedAbilityToViewScannedPhysicalResult = 'RESULT_NOTIFIED_ABILITY_TO_VIEW_SCANNED_PHYSICAL_RESULT',
   ReviewingCaseByCaseExpert = 'REVIEWING_CASE_BY_CASE_EXPERT',
   ReviewingExpertOpinionOnOfferorChanging = 'REVIEWING_EXPERT_OPINION_ON_OFFEROR_CHANGING',
-  UploadingDocumentsByAccuserAndAccused = 'UPLOADING_DOCUMENTS_BY_ACCUSER_AND_ACCUSED',
+  UploadingDocumentsAndReviewingComplaint = 'UPLOADING_DOCUMENTS_AND_REVIEWING_COMPLAINT',
+  UploadingDocumentsByAccused = 'UPLOADING_DOCUMENTS_BY_ACCUSED',
+  UploadingDocumentsByAccuser = 'UPLOADING_DOCUMENTS_BY_ACCUSER',
   WaitingForAccusedToAnswerArguments = 'WAITING_FOR_ACCUSED_TO_ANSWER_ARGUMENTS',
   WaitingForAccusedToApproveArgumentsAnswers = 'WAITING_FOR_ACCUSED_TO_APPROVE_ARGUMENTS_ANSWERS',
   WaitingForAccusedToRegisterArbitrationTerms = 'WAITING_FOR_ACCUSED_TO_REGISTER_ARBITRATION_TERMS',
@@ -1006,6 +1321,7 @@ export enum ComplaintState {
   WaitingForChiefToApproveExpertsAnswersToArguments = 'WAITING_FOR_CHIEF_TO_APPROVE_EXPERTS_ANSWERS_TO_ARGUMENTS',
   WaitingForChiefToAssign = 'WAITING_FOR_CHIEF_TO_ASSIGN',
   WaitingForCouncilResult = 'WAITING_FOR_COUNCIL_RESULT',
+  WaitingForDeterminingExpertsCouncilPayment = 'WAITING_FOR_DETERMINING_EXPERTS_COUNCIL_PAYMENT',
   WaitingForExpertsCouncilPayment = 'WAITING_FOR_EXPERTS_COUNCIL_PAYMENT',
   WaitingForExpertToAddComplaintToComplaintList = 'WAITING_FOR_EXPERT_TO_ADD_COMPLAINT_TO_COMPLAINT_LIST',
   WaitingForFinalReportRegistration = 'WAITING_FOR_FINAL_REPORT_REGISTRATION',
@@ -1016,35 +1332,27 @@ export enum ComplaintState {
   WaitingForMailRoomExpertToGiveAnswersToArguments = 'WAITING_FOR_MAIL_ROOM_EXPERT_TO_GIVE_ANSWERS_TO_ARGUMENTS',
   WaitingForMinistersCouncilToAnswerLetter = 'WAITING_FOR_MINISTERS_COUNCIL_TO_ANSWER_LETTER',
   WaitingForNewOfferorsInfo = 'WAITING_FOR_NEW_OFFERORS_INFO',
+  WaitingForRegisteringHandlingType = 'WAITING_FOR_REGISTERING_HANDLING_TYPE',
   WaitingForRelatedFormsCompletionAndCommentingOnOfferorChanging = 'WAITING_FOR_RELATED_FORMS_COMPLETION_AND_COMMENTING_ON_OFFEROR_CHANGING',
   WaitingForSecondPayment = 'WAITING_FOR_SECOND_PAYMENT',
   WaitingToDetermineIfTheOldOrTheNewOfferorIsTheAccused = 'WAITING_TO_DETERMINE_IF_THE_OLD_OR_THE_NEW_OFFEROR_IS_THE_ACCUSED'
 }
 
-export type ComplaintStateOperationFilterInput = {
-  eq?: InputMaybe<ComplaintState>;
-  in?: InputMaybe<Array<ComplaintState>>;
-  neq?: InputMaybe<ComplaintState>;
-  nin?: InputMaybe<Array<ComplaintState>>;
+export type ComplaintStateStatusOperationFilterInput = {
+  eq?: InputMaybe<ComplaintStateStatus>;
+  in?: InputMaybe<Array<ComplaintStateStatus>>;
+  neq?: InputMaybe<ComplaintStateStatus>;
+  nin?: InputMaybe<Array<ComplaintStateStatus>>;
 };
 
 export type ComplaintVerdictLetterDtoInput = {
-  accusedContractStatus: Scalars['String']['input'];
-  accuserContractStatus: Scalars['String']['input'];
-  canonDate: Scalars['String']['input'];
-  canonNum: Scalars['String']['input'];
   complaintId: Scalars['Int']['input'];
-  councilApprovedDate: Scalars['String']['input'];
-  letterDate: Scalars['String']['input'];
-  letterDate2: Scalars['String']['input'];
-  letterDate3: Scalars['String']['input'];
-  letterNum: Scalars['String']['input'];
-  letterNum2: Scalars['String']['input'];
-  letterNum3: Scalars['String']['input'];
-  signByPreviousMembersDate: Scalars['String']['input'];
+  paymentDate: Scalars['Date']['input'];
+  paymentNum: Scalars['String']['input'];
+  requestDate: Scalars['Date']['input'];
+  requestNum: Scalars['String']['input'];
+  signByPreviousMembersDate: Scalars['Date']['input'];
   userId: Scalars['String']['input'];
-  verdictDate: Scalars['String']['input'];
-  verdictNum: Scalars['String']['input'];
 };
 
 export type ConfirmVerificationDtoInput = {
@@ -1063,6 +1371,8 @@ export type Contract = {
   accuserRelatedPeopleByAccused?: Maybe<Scalars['String']['output']>;
   accuserRelatedPeopleByAccuser?: Maybe<Scalars['String']['output']>;
   adjustmentStatementTables?: Maybe<Array<AdjustmentStatementTable>>;
+  agreementFileNameByAccused?: Maybe<Scalars['String']['output']>;
+  agreementFileNameByAccuser?: Maybe<Scalars['String']['output']>;
   assigningTypeByAccused?: Maybe<Scalars['String']['output']>;
   assigningTypeByAccuser?: Maybe<Scalars['String']['output']>;
   authorizedDelaysByAccused?: Maybe<Scalars['Int']['output']>;
@@ -1078,53 +1388,76 @@ export type Contract = {
   complaints?: Maybe<Array<Complaint>>;
   contractDateByAccused?: Maybe<Scalars['Date']['output']>;
   contractDateByAccuser?: Maybe<Scalars['Date']['output']>;
+  contractGeneralTypeByAccused?: Maybe<ContractGeneralType>;
+  contractGeneralTypeByAccuser?: Maybe<ContractGeneralType>;
   contractHasAdjustmentByAccused?: Maybe<Scalars['Boolean']['output']>;
   contractHasAdjustmentByAccuser?: Maybe<Scalars['Boolean']['output']>;
   contractNumberByAccused?: Maybe<Scalars['String']['output']>;
   contractNumberByAccuser?: Maybe<Scalars['String']['output']>;
-  contractStatusAndDateInArbitrationByAccused?: Maybe<Array<Scalars['String']['output']>>;
-  contractStatusAndDateInArbitrationByAccuser?: Maybe<Array<Scalars['String']['output']>>;
+  contractStatusAndDateInArbitrationByAccused?: Maybe<Scalars['String']['output']>;
+  contractStatusAndDateInArbitrationByAccuser?: Maybe<Scalars['String']['output']>;
   contractSubjectByAccused?: Maybe<Scalars['String']['output']>;
   contractSubjectByAccuser?: Maybe<Scalars['String']['output']>;
   contractTypeByAccused?: Maybe<Array<Scalars['String']['output']>>;
   contractTypeByAccuser?: Maybe<Array<Scalars['String']['output']>>;
+  contractorReportFileNameByAccused?: Maybe<Scalars['String']['output']>;
+  contractorReportFileNameByAccuser?: Maybe<Scalars['String']['output']>;
   createdDate: Scalars['DateTime']['output'];
   currencyByAccused?: Maybe<Scalars['String']['output']>;
   currencyByAccuser?: Maybe<Scalars['String']['output']>;
+  delayHandlingReportFileNameByAccused?: Maybe<Scalars['String']['output']>;
+  delayHandlingReportFileNameByAccuser?: Maybe<Scalars['String']['output']>;
+  delayHandlingResultFileNameByAccused?: Maybe<Scalars['String']['output']>;
+  delayHandlingResultFileNameByAccuser?: Maybe<Scalars['String']['output']>;
   departmentUser?: Maybe<User>;
   doesContainAdjustmentByAccused?: Maybe<Scalars['String']['output']>;
   doesContainAdjustmentByAccuser?: Maybe<Scalars['String']['output']>;
+  executionProvinceByAccused?: Maybe<Scalars['String']['output']>;
+  executionProvinceByAccuser?: Maybe<Scalars['String']['output']>;
   fileNamesByAccused?: Maybe<Array<Scalars['String']['output']>>;
   fileNamesByAccuser?: Maybe<Array<Scalars['String']['output']>>;
   finalBudgetByAccused?: Maybe<Scalars['Decimal']['output']>;
   finalBudgetByAccuser?: Maybe<Scalars['Decimal']['output']>;
   financialProgressInArbitrationDateByAccused?: Maybe<Scalars['Int']['output']>;
   financialProgressInArbitrationDateByAccuser?: Maybe<Scalars['Int']['output']>;
+  generalConditionsFileNameByAccused?: Maybe<Scalars['String']['output']>;
+  generalConditionsFileNameByAccuser?: Maybe<Scalars['String']['output']>;
   id: Scalars['Int']['output'];
   incrementalDecreasingCommunicationByAccused?: Maybe<Scalars['Boolean']['output']>;
   incrementalDecreasingCommunicationByAccuser?: Maybe<Scalars['Boolean']['output']>;
   initialBudgetByAccused?: Maybe<Scalars['Decimal']['output']>;
   initialBudgetByAccuser?: Maybe<Scalars['Decimal']['output']>;
-  initialTimePeriodByAccused?: Maybe<Scalars['Int']['output']>;
-  initialTimePeriodByAccuser?: Maybe<Scalars['Int']['output']>;
+  initialTimePeriodByAccused?: Maybe<Scalars['Float']['output']>;
+  initialTimePeriodByAccuser?: Maybe<Scalars['Float']['output']>;
   installmentTables?: Maybe<Array<InstallmentTable>>;
   isDeleted: Scalars['Boolean']['output'];
-  isExecutive?: Maybe<Scalars['Boolean']['output']>;
+  isExecutiveByAccused?: Maybe<Scalars['Boolean']['output']>;
+  isExecutiveByAccuser?: Maybe<Scalars['Boolean']['output']>;
+  isExecutiveByExpert?: Maybe<Scalars['Boolean']['output']>;
+  isExecutiveBySystem?: Maybe<Scalars['Boolean']['output']>;
   isSpecialPriceListAttachedToContractByAccused?: Maybe<Scalars['String']['output']>;
   isSpecialPriceListAttachedToContractByAccuser?: Maybe<Scalars['String']['output']>;
   isTransferred?: Maybe<Scalars['Boolean']['output']>;
   lastModifiedDate?: Maybe<Scalars['DateTime']['output']>;
   newAccusedDepartmentUserId?: Maybe<Scalars['String']['output']>;
   operationStartDateByAccused?: Maybe<Scalars['Date']['output']>;
+  operationStartDateByAccusedFileName?: Maybe<Scalars['String']['output']>;
   operationStartDateByAccuser?: Maybe<Scalars['Date']['output']>;
+  operationStartDateByAccuserFileName?: Maybe<Scalars['String']['output']>;
+  otherAttachmentFileNamesByAccused?: Maybe<Array<Scalars['String']['output']>>;
+  otherAttachmentFileNamesByAccuser?: Maybe<Array<Scalars['String']['output']>>;
   otherContractTypeByAccused?: Maybe<Scalars['String']['output']>;
   otherContractTypeByAccuser?: Maybe<Scalars['String']['output']>;
   physicalProgressInArbitrationDateByAccused?: Maybe<Scalars['Int']['output']>;
   physicalProgressInArbitrationDateByAccuser?: Maybe<Scalars['Int']['output']>;
   priceListOfBasicUnitOfFieldByAccused?: Maybe<Scalars['String']['output']>;
   priceListOfBasicUnitOfFieldByAccuser?: Maybe<Scalars['String']['output']>;
+  privateTermsFileNameByAccused?: Maybe<Scalars['String']['output']>;
+  privateTermsFileNameByAccuser?: Maybe<Scalars['String']['output']>;
   recommendedCoefficientByAccused?: Maybe<Scalars['Float']['output']>;
   recommendedCoefficientByAccuser?: Maybe<Scalars['Float']['output']>;
+  schedulesFileNameByAccused?: Maybe<Scalars['String']['output']>;
+  schedulesFileNameByAccuser?: Maybe<Scalars['String']['output']>;
   supervisionDepartmentByAccused?: Maybe<Scalars['String']['output']>;
   supervisionDepartmentByAccuser?: Maybe<Scalars['String']['output']>;
   unauthorizedDelaysByAccused?: Maybe<Scalars['Int']['output']>;
@@ -1150,6 +1483,8 @@ export type ContractFilterInput = {
   accuserRelatedPeopleByAccused?: InputMaybe<StringOperationFilterInput>;
   accuserRelatedPeopleByAccuser?: InputMaybe<StringOperationFilterInput>;
   adjustmentStatementTables?: InputMaybe<ListFilterInputTypeOfAdjustmentStatementTableFilterInput>;
+  agreementFileNameByAccused?: InputMaybe<StringOperationFilterInput>;
+  agreementFileNameByAccuser?: InputMaybe<StringOperationFilterInput>;
   and?: InputMaybe<Array<ContractFilterInput>>;
   assigningTypeByAccused?: InputMaybe<StringOperationFilterInput>;
   assigningTypeByAccuser?: InputMaybe<StringOperationFilterInput>;
@@ -1166,60 +1501,89 @@ export type ContractFilterInput = {
   complaints?: InputMaybe<ListFilterInputTypeOfComplaintFilterInput>;
   contractDateByAccused?: InputMaybe<ComparableNullableOfDateOnlyOperationFilterInput>;
   contractDateByAccuser?: InputMaybe<ComparableNullableOfDateOnlyOperationFilterInput>;
+  contractGeneralTypeByAccused?: InputMaybe<NullableOfContractGeneralTypeOperationFilterInput>;
+  contractGeneralTypeByAccuser?: InputMaybe<NullableOfContractGeneralTypeOperationFilterInput>;
   contractHasAdjustmentByAccused?: InputMaybe<BooleanOperationFilterInput>;
   contractHasAdjustmentByAccuser?: InputMaybe<BooleanOperationFilterInput>;
   contractNumberByAccused?: InputMaybe<StringOperationFilterInput>;
   contractNumberByAccuser?: InputMaybe<StringOperationFilterInput>;
-  contractStatusAndDateInArbitrationByAccused?: InputMaybe<ListStringOperationFilterInput>;
-  contractStatusAndDateInArbitrationByAccuser?: InputMaybe<ListStringOperationFilterInput>;
+  contractStatusAndDateInArbitrationByAccused?: InputMaybe<StringOperationFilterInput>;
+  contractStatusAndDateInArbitrationByAccuser?: InputMaybe<StringOperationFilterInput>;
   contractSubjectByAccused?: InputMaybe<StringOperationFilterInput>;
   contractSubjectByAccuser?: InputMaybe<StringOperationFilterInput>;
   contractTypeByAccused?: InputMaybe<ListStringOperationFilterInput>;
   contractTypeByAccuser?: InputMaybe<ListStringOperationFilterInput>;
+  contractorReportFileNameByAccused?: InputMaybe<StringOperationFilterInput>;
+  contractorReportFileNameByAccuser?: InputMaybe<StringOperationFilterInput>;
   createdDate?: InputMaybe<ComparableDateTimeOperationFilterInput>;
   currencyByAccused?: InputMaybe<StringOperationFilterInput>;
   currencyByAccuser?: InputMaybe<StringOperationFilterInput>;
+  delayHandlingReportFileNameByAccused?: InputMaybe<StringOperationFilterInput>;
+  delayHandlingReportFileNameByAccuser?: InputMaybe<StringOperationFilterInput>;
+  delayHandlingResultFileNameByAccused?: InputMaybe<StringOperationFilterInput>;
+  delayHandlingResultFileNameByAccuser?: InputMaybe<StringOperationFilterInput>;
   departmentUser?: InputMaybe<UserFilterInput>;
   doesContainAdjustmentByAccused?: InputMaybe<StringOperationFilterInput>;
   doesContainAdjustmentByAccuser?: InputMaybe<StringOperationFilterInput>;
+  executionProvinceByAccused?: InputMaybe<StringOperationFilterInput>;
+  executionProvinceByAccuser?: InputMaybe<StringOperationFilterInput>;
   fileNamesByAccused?: InputMaybe<ListStringOperationFilterInput>;
   fileNamesByAccuser?: InputMaybe<ListStringOperationFilterInput>;
   finalBudgetByAccused?: InputMaybe<ComparableNullableOfDecimalOperationFilterInput>;
   finalBudgetByAccuser?: InputMaybe<ComparableNullableOfDecimalOperationFilterInput>;
   financialProgressInArbitrationDateByAccused?: InputMaybe<ComparableNullableOfInt32OperationFilterInput>;
   financialProgressInArbitrationDateByAccuser?: InputMaybe<ComparableNullableOfInt32OperationFilterInput>;
+  generalConditionsFileNameByAccused?: InputMaybe<StringOperationFilterInput>;
+  generalConditionsFileNameByAccuser?: InputMaybe<StringOperationFilterInput>;
   id?: InputMaybe<ComparableInt32OperationFilterInput>;
   incrementalDecreasingCommunicationByAccused?: InputMaybe<BooleanOperationFilterInput>;
   incrementalDecreasingCommunicationByAccuser?: InputMaybe<BooleanOperationFilterInput>;
   initialBudgetByAccused?: InputMaybe<ComparableNullableOfDecimalOperationFilterInput>;
   initialBudgetByAccuser?: InputMaybe<ComparableNullableOfDecimalOperationFilterInput>;
-  initialTimePeriodByAccused?: InputMaybe<ComparableNullableOfInt32OperationFilterInput>;
-  initialTimePeriodByAccuser?: InputMaybe<ComparableNullableOfInt32OperationFilterInput>;
+  initialTimePeriodByAccused?: InputMaybe<ComparableNullableOfDoubleOperationFilterInput>;
+  initialTimePeriodByAccuser?: InputMaybe<ComparableNullableOfDoubleOperationFilterInput>;
   installmentTables?: InputMaybe<ListFilterInputTypeOfInstallmentTableFilterInput>;
   isDeleted?: InputMaybe<BooleanOperationFilterInput>;
-  isExecutive?: InputMaybe<BooleanOperationFilterInput>;
+  isExecutiveByAccused?: InputMaybe<BooleanOperationFilterInput>;
+  isExecutiveByAccuser?: InputMaybe<BooleanOperationFilterInput>;
+  isExecutiveByExpert?: InputMaybe<BooleanOperationFilterInput>;
+  isExecutiveBySystem?: InputMaybe<BooleanOperationFilterInput>;
   isSpecialPriceListAttachedToContractByAccused?: InputMaybe<StringOperationFilterInput>;
   isSpecialPriceListAttachedToContractByAccuser?: InputMaybe<StringOperationFilterInput>;
   isTransferred?: InputMaybe<BooleanOperationFilterInput>;
   lastModifiedDate?: InputMaybe<ComparableNullableOfDateTimeOperationFilterInput>;
   newAccusedDepartmentUserId?: InputMaybe<StringOperationFilterInput>;
   operationStartDateByAccused?: InputMaybe<ComparableNullableOfDateOnlyOperationFilterInput>;
+  operationStartDateByAccusedFileName?: InputMaybe<StringOperationFilterInput>;
   operationStartDateByAccuser?: InputMaybe<ComparableNullableOfDateOnlyOperationFilterInput>;
+  operationStartDateByAccuserFileName?: InputMaybe<StringOperationFilterInput>;
   or?: InputMaybe<Array<ContractFilterInput>>;
+  otherAttachmentFileNamesByAccused?: InputMaybe<ListStringOperationFilterInput>;
+  otherAttachmentFileNamesByAccuser?: InputMaybe<ListStringOperationFilterInput>;
   otherContractTypeByAccused?: InputMaybe<StringOperationFilterInput>;
   otherContractTypeByAccuser?: InputMaybe<StringOperationFilterInput>;
   physicalProgressInArbitrationDateByAccused?: InputMaybe<ComparableNullableOfInt32OperationFilterInput>;
   physicalProgressInArbitrationDateByAccuser?: InputMaybe<ComparableNullableOfInt32OperationFilterInput>;
   priceListOfBasicUnitOfFieldByAccused?: InputMaybe<StringOperationFilterInput>;
   priceListOfBasicUnitOfFieldByAccuser?: InputMaybe<StringOperationFilterInput>;
+  privateTermsFileNameByAccused?: InputMaybe<StringOperationFilterInput>;
+  privateTermsFileNameByAccuser?: InputMaybe<StringOperationFilterInput>;
   recommendedCoefficientByAccused?: InputMaybe<ComparableNullableOfDoubleOperationFilterInput>;
   recommendedCoefficientByAccuser?: InputMaybe<ComparableNullableOfDoubleOperationFilterInput>;
+  schedulesFileNameByAccused?: InputMaybe<StringOperationFilterInput>;
+  schedulesFileNameByAccuser?: InputMaybe<StringOperationFilterInput>;
   supervisionDepartmentByAccused?: InputMaybe<StringOperationFilterInput>;
   supervisionDepartmentByAccuser?: InputMaybe<StringOperationFilterInput>;
   unauthorizedDelaysByAccused?: InputMaybe<ComparableNullableOfInt32OperationFilterInput>;
   unauthorizedDelaysByAccuser?: InputMaybe<ComparableNullableOfInt32OperationFilterInput>;
   workConditionStatementTables?: InputMaybe<ListFilterInputTypeOfWorkConditionStatementTableFilterInput>;
 };
+
+export enum ContractGeneralType {
+  Consultant = 'CONSULTANT',
+  Contractor = 'CONTRACTOR',
+  PlanAndExecution = 'PLAN_AND_EXECUTION'
+}
 
 export type ContractInput = {
   accusedDepartmentUserId?: InputMaybe<Scalars['String']['input']>;
@@ -1230,6 +1594,8 @@ export type ContractInput = {
   accuserNationality?: InputMaybe<Scalars['String']['input']>;
   accuserRelatedPeopleByAccused?: InputMaybe<Scalars['String']['input']>;
   accuserRelatedPeopleByAccuser?: InputMaybe<Scalars['String']['input']>;
+  agreementFileNameByAccused?: InputMaybe<Scalars['String']['input']>;
+  agreementFileNameByAccuser?: InputMaybe<Scalars['String']['input']>;
   assigningTypeByAccused?: InputMaybe<Scalars['String']['input']>;
   assigningTypeByAccuser?: InputMaybe<Scalars['String']['input']>;
   authorizedDelaysByAccused?: InputMaybe<Scalars['Int']['input']>;
@@ -1244,48 +1610,71 @@ export type ContractInput = {
   coefficientTypeByAccuser?: InputMaybe<Scalars['String']['input']>;
   contractDateByAccused?: InputMaybe<Scalars['Date']['input']>;
   contractDateByAccuser?: InputMaybe<Scalars['Date']['input']>;
+  contractGeneralTypeByAccused?: InputMaybe<ContractGeneralType>;
+  contractGeneralTypeByAccuser?: InputMaybe<ContractGeneralType>;
   contractHasAdjustmentByAccused?: InputMaybe<Scalars['Boolean']['input']>;
   contractHasAdjustmentByAccuser?: InputMaybe<Scalars['Boolean']['input']>;
   contractNumberByAccused?: InputMaybe<Scalars['String']['input']>;
   contractNumberByAccuser?: InputMaybe<Scalars['String']['input']>;
-  contractStatusAndDateInArbitrationByAccused?: InputMaybe<Array<Scalars['String']['input']>>;
-  contractStatusAndDateInArbitrationByAccuser?: InputMaybe<Array<Scalars['String']['input']>>;
+  contractStatusAndDateInArbitrationByAccused?: InputMaybe<Scalars['String']['input']>;
+  contractStatusAndDateInArbitrationByAccuser?: InputMaybe<Scalars['String']['input']>;
   contractSubjectByAccused?: InputMaybe<Scalars['String']['input']>;
   contractSubjectByAccuser?: InputMaybe<Scalars['String']['input']>;
   contractTypeByAccused?: InputMaybe<Array<Scalars['String']['input']>>;
   contractTypeByAccuser?: InputMaybe<Array<Scalars['String']['input']>>;
+  contractorReportFileNameByAccused?: InputMaybe<Scalars['String']['input']>;
+  contractorReportFileNameByAccuser?: InputMaybe<Scalars['String']['input']>;
   currencyByAccused?: InputMaybe<Scalars['String']['input']>;
   currencyByAccuser?: InputMaybe<Scalars['String']['input']>;
+  delayHandlingReportFileNameByAccused?: InputMaybe<Scalars['String']['input']>;
+  delayHandlingReportFileNameByAccuser?: InputMaybe<Scalars['String']['input']>;
+  delayHandlingResultFileNameByAccused?: InputMaybe<Scalars['String']['input']>;
+  delayHandlingResultFileNameByAccuser?: InputMaybe<Scalars['String']['input']>;
   doesContainAdjustmentByAccused?: InputMaybe<Scalars['String']['input']>;
   doesContainAdjustmentByAccuser?: InputMaybe<Scalars['String']['input']>;
+  executionProvinceByAccused?: InputMaybe<Scalars['String']['input']>;
+  executionProvinceByAccuser?: InputMaybe<Scalars['String']['input']>;
   fileNamesByAccused?: InputMaybe<Array<Scalars['String']['input']>>;
   fileNamesByAccuser?: InputMaybe<Array<Scalars['String']['input']>>;
   finalBudgetByAccused?: InputMaybe<Scalars['Decimal']['input']>;
   finalBudgetByAccuser?: InputMaybe<Scalars['Decimal']['input']>;
   financialProgressInArbitrationDateByAccused?: InputMaybe<Scalars['Int']['input']>;
   financialProgressInArbitrationDateByAccuser?: InputMaybe<Scalars['Int']['input']>;
+  generalConditionsFileNameByAccused?: InputMaybe<Scalars['String']['input']>;
+  generalConditionsFileNameByAccuser?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   incrementalDecreasingCommunicationByAccused?: InputMaybe<Scalars['Boolean']['input']>;
   incrementalDecreasingCommunicationByAccuser?: InputMaybe<Scalars['Boolean']['input']>;
   initialBudgetByAccused?: InputMaybe<Scalars['Decimal']['input']>;
   initialBudgetByAccuser?: InputMaybe<Scalars['Decimal']['input']>;
-  initialTimePeriodByAccused?: InputMaybe<Scalars['Int']['input']>;
-  initialTimePeriodByAccuser?: InputMaybe<Scalars['Int']['input']>;
-  isExecutive?: InputMaybe<Scalars['Boolean']['input']>;
+  initialTimePeriodByAccused?: InputMaybe<Scalars['Float']['input']>;
+  initialTimePeriodByAccuser?: InputMaybe<Scalars['Float']['input']>;
+  isExecutiveByAccused?: InputMaybe<Scalars['Boolean']['input']>;
+  isExecutiveByAccuser?: InputMaybe<Scalars['Boolean']['input']>;
+  isExecutiveByExpert?: InputMaybe<Scalars['Boolean']['input']>;
+  isExecutiveBySystem?: InputMaybe<Scalars['Boolean']['input']>;
   isSpecialPriceListAttachedToContractByAccused?: InputMaybe<Scalars['String']['input']>;
   isSpecialPriceListAttachedToContractByAccuser?: InputMaybe<Scalars['String']['input']>;
   isTransferred?: InputMaybe<Scalars['Boolean']['input']>;
   newAccusedDepartmentUserId?: InputMaybe<Scalars['String']['input']>;
   operationStartDateByAccused?: InputMaybe<Scalars['Date']['input']>;
+  operationStartDateByAccusedFileName?: InputMaybe<Scalars['String']['input']>;
   operationStartDateByAccuser?: InputMaybe<Scalars['Date']['input']>;
+  operationStartDateByAccuserFileName?: InputMaybe<Scalars['String']['input']>;
+  otherAttachmentFileNamesByAccused?: InputMaybe<Array<Scalars['String']['input']>>;
+  otherAttachmentFileNamesByAccuser?: InputMaybe<Array<Scalars['String']['input']>>;
   otherContractTypeByAccused?: InputMaybe<Scalars['String']['input']>;
   otherContractTypeByAccuser?: InputMaybe<Scalars['String']['input']>;
   physicalProgressInArbitrationDateByAccused?: InputMaybe<Scalars['Int']['input']>;
   physicalProgressInArbitrationDateByAccuser?: InputMaybe<Scalars['Int']['input']>;
   priceListOfBasicUnitOfFieldByAccused?: InputMaybe<Scalars['String']['input']>;
   priceListOfBasicUnitOfFieldByAccuser?: InputMaybe<Scalars['String']['input']>;
+  privateTermsFileNameByAccused?: InputMaybe<Scalars['String']['input']>;
+  privateTermsFileNameByAccuser?: InputMaybe<Scalars['String']['input']>;
   recommendedCoefficientByAccused?: InputMaybe<Scalars['Float']['input']>;
   recommendedCoefficientByAccuser?: InputMaybe<Scalars['Float']['input']>;
+  schedulesFileNameByAccused?: InputMaybe<Scalars['String']['input']>;
+  schedulesFileNameByAccuser?: InputMaybe<Scalars['String']['input']>;
   supervisionDepartmentByAccused?: InputMaybe<Scalars['String']['input']>;
   supervisionDepartmentByAccuser?: InputMaybe<Scalars['String']['input']>;
   unauthorizedDelaysByAccused?: InputMaybe<Scalars['Int']['input']>;
@@ -1301,6 +1690,8 @@ export type ContractSortInput = {
   accuserNationality?: InputMaybe<SortEnumType>;
   accuserRelatedPeopleByAccused?: InputMaybe<SortEnumType>;
   accuserRelatedPeopleByAccuser?: InputMaybe<SortEnumType>;
+  agreementFileNameByAccused?: InputMaybe<SortEnumType>;
+  agreementFileNameByAccuser?: InputMaybe<SortEnumType>;
   assigningTypeByAccused?: InputMaybe<SortEnumType>;
   assigningTypeByAccuser?: InputMaybe<SortEnumType>;
   authorizedDelaysByAccused?: InputMaybe<SortEnumType>;
@@ -1315,22 +1706,36 @@ export type ContractSortInput = {
   coefficientTypeByAccuser?: InputMaybe<SortEnumType>;
   contractDateByAccused?: InputMaybe<SortEnumType>;
   contractDateByAccuser?: InputMaybe<SortEnumType>;
+  contractGeneralTypeByAccused?: InputMaybe<SortEnumType>;
+  contractGeneralTypeByAccuser?: InputMaybe<SortEnumType>;
   contractHasAdjustmentByAccused?: InputMaybe<SortEnumType>;
   contractHasAdjustmentByAccuser?: InputMaybe<SortEnumType>;
   contractNumberByAccused?: InputMaybe<SortEnumType>;
   contractNumberByAccuser?: InputMaybe<SortEnumType>;
+  contractStatusAndDateInArbitrationByAccused?: InputMaybe<SortEnumType>;
+  contractStatusAndDateInArbitrationByAccuser?: InputMaybe<SortEnumType>;
   contractSubjectByAccused?: InputMaybe<SortEnumType>;
   contractSubjectByAccuser?: InputMaybe<SortEnumType>;
+  contractorReportFileNameByAccused?: InputMaybe<SortEnumType>;
+  contractorReportFileNameByAccuser?: InputMaybe<SortEnumType>;
   createdDate?: InputMaybe<SortEnumType>;
   currencyByAccused?: InputMaybe<SortEnumType>;
   currencyByAccuser?: InputMaybe<SortEnumType>;
+  delayHandlingReportFileNameByAccused?: InputMaybe<SortEnumType>;
+  delayHandlingReportFileNameByAccuser?: InputMaybe<SortEnumType>;
+  delayHandlingResultFileNameByAccused?: InputMaybe<SortEnumType>;
+  delayHandlingResultFileNameByAccuser?: InputMaybe<SortEnumType>;
   departmentUser?: InputMaybe<UserSortInput>;
   doesContainAdjustmentByAccused?: InputMaybe<SortEnumType>;
   doesContainAdjustmentByAccuser?: InputMaybe<SortEnumType>;
+  executionProvinceByAccused?: InputMaybe<SortEnumType>;
+  executionProvinceByAccuser?: InputMaybe<SortEnumType>;
   finalBudgetByAccused?: InputMaybe<SortEnumType>;
   finalBudgetByAccuser?: InputMaybe<SortEnumType>;
   financialProgressInArbitrationDateByAccused?: InputMaybe<SortEnumType>;
   financialProgressInArbitrationDateByAccuser?: InputMaybe<SortEnumType>;
+  generalConditionsFileNameByAccused?: InputMaybe<SortEnumType>;
+  generalConditionsFileNameByAccuser?: InputMaybe<SortEnumType>;
   id?: InputMaybe<SortEnumType>;
   incrementalDecreasingCommunicationByAccused?: InputMaybe<SortEnumType>;
   incrementalDecreasingCommunicationByAccuser?: InputMaybe<SortEnumType>;
@@ -1339,22 +1744,31 @@ export type ContractSortInput = {
   initialTimePeriodByAccused?: InputMaybe<SortEnumType>;
   initialTimePeriodByAccuser?: InputMaybe<SortEnumType>;
   isDeleted?: InputMaybe<SortEnumType>;
-  isExecutive?: InputMaybe<SortEnumType>;
+  isExecutiveByAccused?: InputMaybe<SortEnumType>;
+  isExecutiveByAccuser?: InputMaybe<SortEnumType>;
+  isExecutiveByExpert?: InputMaybe<SortEnumType>;
+  isExecutiveBySystem?: InputMaybe<SortEnumType>;
   isSpecialPriceListAttachedToContractByAccused?: InputMaybe<SortEnumType>;
   isSpecialPriceListAttachedToContractByAccuser?: InputMaybe<SortEnumType>;
   isTransferred?: InputMaybe<SortEnumType>;
   lastModifiedDate?: InputMaybe<SortEnumType>;
   newAccusedDepartmentUserId?: InputMaybe<SortEnumType>;
   operationStartDateByAccused?: InputMaybe<SortEnumType>;
+  operationStartDateByAccusedFileName?: InputMaybe<SortEnumType>;
   operationStartDateByAccuser?: InputMaybe<SortEnumType>;
+  operationStartDateByAccuserFileName?: InputMaybe<SortEnumType>;
   otherContractTypeByAccused?: InputMaybe<SortEnumType>;
   otherContractTypeByAccuser?: InputMaybe<SortEnumType>;
   physicalProgressInArbitrationDateByAccused?: InputMaybe<SortEnumType>;
   physicalProgressInArbitrationDateByAccuser?: InputMaybe<SortEnumType>;
   priceListOfBasicUnitOfFieldByAccused?: InputMaybe<SortEnumType>;
   priceListOfBasicUnitOfFieldByAccuser?: InputMaybe<SortEnumType>;
+  privateTermsFileNameByAccused?: InputMaybe<SortEnumType>;
+  privateTermsFileNameByAccuser?: InputMaybe<SortEnumType>;
   recommendedCoefficientByAccused?: InputMaybe<SortEnumType>;
   recommendedCoefficientByAccuser?: InputMaybe<SortEnumType>;
+  schedulesFileNameByAccused?: InputMaybe<SortEnumType>;
+  schedulesFileNameByAccuser?: InputMaybe<SortEnumType>;
   supervisionDepartmentByAccused?: InputMaybe<SortEnumType>;
   supervisionDepartmentByAccuser?: InputMaybe<SortEnumType>;
   unauthorizedDelaysByAccused?: InputMaybe<SortEnumType>;
@@ -1441,17 +1855,24 @@ export type CouncilListStatusOperationFilterInput = {
 };
 
 export type DecreeDtoInput = {
-  accusedSignDate: Scalars['String']['input'];
-  accuserSignDate: Scalars['String']['input'];
-  canonDate: Scalars['String']['input'];
-  canonDate2: Scalars['String']['input'];
+  canonDate: Scalars['Date']['input'];
+  canonDate2: Scalars['Date']['input'];
   canonNum: Scalars['String']['input'];
   canonNum2: Scalars['String']['input'];
-  circularDate: Scalars['String']['input'];
+  circularDate: Scalars['Date']['input'];
   circularNum: Scalars['String']['input'];
   clause: Scalars['String']['input'];
   complaintId: Scalars['Int']['input'];
-  deliveryDate: Scalars['String']['input'];
+  deliveryDate: Scalars['Date']['input'];
+  userId: Scalars['String']['input'];
+};
+
+export type DepositReceiptAnnouncementDtoInput = {
+  complaintId: Scalars['Int']['input'];
+  letterDate: Scalars['Date']['input'];
+  letterDate2: Scalars['Date']['input'];
+  letterNum: Scalars['String']['input'];
+  letterNum2: Scalars['String']['input'];
   userId: Scalars['String']['input'];
 };
 
@@ -1463,7 +1884,8 @@ export type DocumentRequest = {
   id: Scalars['Int']['output'];
   isDeleted: Scalars['Boolean']['output'];
   lastModifiedDate?: Maybe<Scalars['DateTime']['output']>;
-  requestedDocumentFileName?: Maybe<Scalars['String']['output']>;
+  requestedDocumentFileNameAccused?: Maybe<Scalars['String']['output']>;
+  requestedDocumentFileNameAccuser?: Maybe<Scalars['String']['output']>;
   requestedDocumentName: Scalars['String']['output'];
   target?: Maybe<TargetType>;
   user?: Maybe<User>;
@@ -1487,7 +1909,8 @@ export type DocumentRequestFilterInput = {
   isDeleted?: InputMaybe<BooleanOperationFilterInput>;
   lastModifiedDate?: InputMaybe<ComparableNullableOfDateTimeOperationFilterInput>;
   or?: InputMaybe<Array<DocumentRequestFilterInput>>;
-  requestedDocumentFileName?: InputMaybe<StringOperationFilterInput>;
+  requestedDocumentFileNameAccused?: InputMaybe<StringOperationFilterInput>;
+  requestedDocumentFileNameAccuser?: InputMaybe<StringOperationFilterInput>;
   requestedDocumentName?: InputMaybe<StringOperationFilterInput>;
   target?: InputMaybe<NullableOfTargetTypeOperationFilterInput>;
   user?: InputMaybe<UserFilterInput>;
@@ -1497,7 +1920,8 @@ export type DocumentRequestFilterInput = {
 export type DocumentRequestInput = {
   complaintId: Scalars['Int']['input'];
   id?: InputMaybe<Scalars['Int']['input']>;
-  requestedDocumentFileName?: InputMaybe<Scalars['String']['input']>;
+  requestedDocumentFileNameAccused?: InputMaybe<Scalars['String']['input']>;
+  requestedDocumentFileNameAccuser?: InputMaybe<Scalars['String']['input']>;
   requestedDocumentName: Scalars['String']['input'];
   target?: InputMaybe<TargetType>;
   userId: Scalars['String']['input'];
@@ -1510,7 +1934,8 @@ export type DocumentRequestSortInput = {
   id?: InputMaybe<SortEnumType>;
   isDeleted?: InputMaybe<SortEnumType>;
   lastModifiedDate?: InputMaybe<SortEnumType>;
-  requestedDocumentFileName?: InputMaybe<SortEnumType>;
+  requestedDocumentFileNameAccused?: InputMaybe<SortEnumType>;
+  requestedDocumentFileNameAccuser?: InputMaybe<SortEnumType>;
   requestedDocumentName?: InputMaybe<SortEnumType>;
   target?: InputMaybe<SortEnumType>;
   user?: InputMaybe<UserSortInput>;
@@ -1592,6 +2017,16 @@ export type FileGallerySortInput = {
   userId?: InputMaybe<SortEnumType>;
 };
 
+export enum FinancialStatus {
+  MoreThanPurchasingPowerIslamicFinancialBonds = 'MORE_THAN_PURCHASING_POWER_ISLAMIC_FINANCIAL_BONDS',
+  Other = 'OTHER',
+  PaymentOfClaimsApprovedByTheEmployer = 'PAYMENT_OF_CLAIMS_APPROVED_BY_THE_EMPLOYER',
+  PaymentOfClaimsForCompletedWorksInExcessOf125PercentOfTheInitialContractAmount = 'PAYMENT_OF_CLAIMS_FOR_COMPLETED_WORKS_IN_EXCESS_OF125_PERCENT_OF_THE_INITIAL_CONTRACT_AMOUNT',
+  PredictedDamagesForLatePaymentOfClaims = 'PREDICTED_DAMAGES_FOR_LATE_PAYMENT_OF_CLAIMS',
+  PurchasingPowerIslamicFinancialBonds = 'PURCHASING_POWER_ISLAMIC_FINANCIAL_BONDS',
+  UnpredictedDamagesForLatePaymentOfClaims = 'UNPREDICTED_DAMAGES_FOR_LATE_PAYMENT_OF_CLAIMS'
+}
+
 export type ForgotPasswordDtoInput = {
   nationalCode: Scalars['String']['input'];
   phoneNumber: Scalars['String']['input'];
@@ -1607,12 +2042,19 @@ export type GetPersonDataDtoInput = {
   nationalCode: Scalars['String']['input'];
 };
 
+export enum HandlingType {
+  CouncilOfOfficialJusticeExperts = 'COUNCIL_OF_OFFICIAL_JUSTICE_EXPERTS',
+  JudiciaryExpertsCenter = 'JUDICIARY_EXPERTS_CENTER',
+  SelectedExpertsOfTheSupremeTechnicalCouncil = 'SELECTED_EXPERTS_OF_THE_SUPREME_TECHNICAL_COUNCIL'
+}
+
 export type Installment = {
   __typename?: 'Installment';
   amount: Scalars['Decimal']['output'];
   createdDate: Scalars['DateTime']['output'];
   date: Scalars['Date']['output'];
   filledBy?: Maybe<RegistrarType>;
+  financialCoverFileName?: Maybe<Scalars['String']['output']>;
   id: Scalars['Int']['output'];
   installmentParts?: Maybe<Array<InstallmentPart>>;
   installmentTable?: Maybe<InstallmentTable>;
@@ -1636,6 +2078,7 @@ export type InstallmentFilterInput = {
   createdDate?: InputMaybe<ComparableDateTimeOperationFilterInput>;
   date?: InputMaybe<ComparableDateOnlyOperationFilterInput>;
   filledBy?: InputMaybe<NullableOfRegistrarTypeOperationFilterInput>;
+  financialCoverFileName?: InputMaybe<StringOperationFilterInput>;
   id?: InputMaybe<ComparableInt32OperationFilterInput>;
   installmentParts?: InputMaybe<ListFilterInputTypeOfInstallmentPartFilterInput>;
   installmentTable?: InputMaybe<InstallmentTableFilterInput>;
@@ -1649,6 +2092,7 @@ export type InstallmentFilterInput = {
 export type InstallmentInput = {
   amount?: InputMaybe<Scalars['Decimal']['input']>;
   date?: InputMaybe<Scalars['Date']['input']>;
+  financialCoverFileName?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   installmentTableId?: InputMaybe<Scalars['Int']['input']>;
   registrarType?: InputMaybe<RegistrarType>;
@@ -1715,6 +2159,7 @@ export type InstallmentSortInput = {
   createdDate?: InputMaybe<SortEnumType>;
   date?: InputMaybe<SortEnumType>;
   filledBy?: InputMaybe<SortEnumType>;
+  financialCoverFileName?: InputMaybe<SortEnumType>;
   id?: InputMaybe<SortEnumType>;
   installmentTable?: InputMaybe<InstallmentTableSortInput>;
   installmentTableId?: InputMaybe<SortEnumType>;
@@ -1766,9 +2211,9 @@ export type InstallmentTableFilterInput = {
 
 export type InstallmentTableInput = {
   contractId?: InputMaybe<Scalars['Int']['input']>;
+  filledBy?: InputMaybe<RegistrarType>;
   id?: InputMaybe<Scalars['Int']['input']>;
   paymentTotal?: InputMaybe<Scalars['Decimal']['input']>;
-  registrarType?: InputMaybe<RegistrarType>;
   remainingPayment?: InputMaybe<Scalars['Decimal']['input']>;
   userId?: InputMaybe<Scalars['String']['input']>;
 };
@@ -1888,6 +2333,13 @@ export type ListFilterInputTypeOfComplaintFilterInput = {
   any?: InputMaybe<Scalars['Boolean']['input']>;
   none?: InputMaybe<ComplaintFilterInput>;
   some?: InputMaybe<ComplaintFilterInput>;
+};
+
+export type ListFilterInputTypeOfComplaintNonFeasibleArgumentFilterInput = {
+  all?: InputMaybe<ComplaintNonFeasibleArgumentFilterInput>;
+  any?: InputMaybe<Scalars['Boolean']['input']>;
+  none?: InputMaybe<ComplaintNonFeasibleArgumentFilterInput>;
+  some?: InputMaybe<ComplaintNonFeasibleArgumentFilterInput>;
 };
 
 export type ListFilterInputTypeOfContractFilterInput = {
@@ -2023,6 +2475,20 @@ export type ListResponseBaseOfArbitrationTermsFormResultArgs = {
   where?: InputMaybe<ArbitrationTermsFormFilterInput>;
 };
 
+export type ListResponseBaseOfCompanyProfile = {
+  __typename?: 'ListResponseBaseOfCompanyProfile';
+  result?: Maybe<CompanyProfileCollectionSegment>;
+  status?: Maybe<Scalars['Any']['output']>;
+};
+
+
+export type ListResponseBaseOfCompanyProfileResultArgs = {
+  order?: InputMaybe<Array<CompanyProfileSortInput>>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<CompanyProfileFilterInput>;
+};
+
 export type ListResponseBaseOfComplaint = {
   __typename?: 'ListResponseBaseOfComplaint';
   result?: Maybe<ComplaintCollectionSegment>;
@@ -2065,6 +2531,20 @@ export type ListResponseBaseOfComplaintFileResultArgs = {
   where?: InputMaybe<ComplaintFileFilterInput>;
 };
 
+export type ListResponseBaseOfComplaintNonFeasibleArgument = {
+  __typename?: 'ListResponseBaseOfComplaintNonFeasibleArgument';
+  result?: Maybe<ComplaintNonFeasibleArgumentCollectionSegment>;
+  status?: Maybe<Scalars['Any']['output']>;
+};
+
+
+export type ListResponseBaseOfComplaintNonFeasibleArgumentResultArgs = {
+  order?: InputMaybe<Array<ComplaintNonFeasibleArgumentSortInput>>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<ComplaintNonFeasibleArgumentFilterInput>;
+};
+
 export type ListResponseBaseOfComplaintNote = {
   __typename?: 'ListResponseBaseOfComplaintNote';
   result?: Maybe<ComplaintNoteCollectionSegment>;
@@ -2077,6 +2557,20 @@ export type ListResponseBaseOfComplaintNoteResultArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<ComplaintNoteFilterInput>;
+};
+
+export type ListResponseBaseOfComplaintState = {
+  __typename?: 'ListResponseBaseOfComplaintState';
+  result?: Maybe<ComplaintStateCollectionSegment>;
+  status?: Maybe<Scalars['Any']['output']>;
+};
+
+
+export type ListResponseBaseOfComplaintStateResultArgs = {
+  order?: InputMaybe<Array<ComplaintStateSortInput>>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<ComplaintStateFilterInput>;
 };
 
 export type ListResponseBaseOfContract = {
@@ -2205,6 +2699,20 @@ export type ListResponseBaseOfMainSettingResultArgs = {
   where?: InputMaybe<MainSettingFilterInput>;
 };
 
+export type ListResponseBaseOfPublicContract = {
+  __typename?: 'ListResponseBaseOfPublicContract';
+  result?: Maybe<PublicContractCollectionSegment>;
+  status?: Maybe<Scalars['Any']['output']>;
+};
+
+
+export type ListResponseBaseOfPublicContractResultArgs = {
+  order?: InputMaybe<Array<PublicContractSortInput>>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<PublicContractFilterInput>;
+};
+
 export type ListResponseBaseOfUser = {
   __typename?: 'ListResponseBaseOfUser';
   result?: Maybe<UserCollectionSegment>;
@@ -2310,13 +2818,25 @@ export type MainSetting = {
   __typename?: 'MainSetting';
   accusedResponsePeriod: Scalars['Int']['output'];
   accuserResponsePeriod: Scalars['Int']['output'];
+  article139OfTheConstitutionCanonClause: Scalars['String']['output'];
+  article139OfTheConstitutionCanonDate: Scalars['Date']['output'];
+  article139OfTheConstitutionCanonNum: Scalars['String']['output'];
   correctionRequestPeriod: Scalars['Int']['output'];
   councilPaymentPeriod: Scalars['Int']['output'];
   createdDate: Scalars['DateTime']['output'];
+  disputeResolutionArticleCircularDate: Scalars['Date']['output'];
+  disputeResolutionArticleCircularNum: Scalars['String']['output'];
+  expertAndAmountAssignmentCanonDate: Scalars['Date']['output'];
+  expertAndAmountAssignmentCanonNum: Scalars['String']['output'];
   firstPaymentPeriod: Scalars['Int']['output'];
   id: Scalars['Int']['output'];
   isDeleted: Scalars['Boolean']['output'];
   lastModifiedDate?: Maybe<Scalars['DateTime']['output']>;
+  ministersCouncilCanonDate: Scalars['Date']['output'];
+  ministersCouncilCanonNum: Scalars['String']['output'];
+  newMinistersCouncilMembersApprovementCanonDate: Scalars['Date']['output'];
+  newMinistersCouncilMembersCanonDate: Scalars['Date']['output'];
+  newMinistersCouncilMembersCanonNum: Scalars['String']['output'];
   secondPaymentPeriod: Scalars['Int']['output'];
 };
 
@@ -2332,13 +2852,25 @@ export type MainSettingFilterInput = {
   accusedResponsePeriod?: InputMaybe<ComparableInt32OperationFilterInput>;
   accuserResponsePeriod?: InputMaybe<ComparableInt32OperationFilterInput>;
   and?: InputMaybe<Array<MainSettingFilterInput>>;
+  article139OfTheConstitutionCanonClause?: InputMaybe<StringOperationFilterInput>;
+  article139OfTheConstitutionCanonDate?: InputMaybe<ComparableDateOnlyOperationFilterInput>;
+  article139OfTheConstitutionCanonNum?: InputMaybe<StringOperationFilterInput>;
   correctionRequestPeriod?: InputMaybe<ComparableInt32OperationFilterInput>;
   councilPaymentPeriod?: InputMaybe<ComparableInt32OperationFilterInput>;
   createdDate?: InputMaybe<ComparableDateTimeOperationFilterInput>;
+  disputeResolutionArticleCircularDate?: InputMaybe<ComparableDateOnlyOperationFilterInput>;
+  disputeResolutionArticleCircularNum?: InputMaybe<StringOperationFilterInput>;
+  expertAndAmountAssignmentCanonDate?: InputMaybe<ComparableDateOnlyOperationFilterInput>;
+  expertAndAmountAssignmentCanonNum?: InputMaybe<StringOperationFilterInput>;
   firstPaymentPeriod?: InputMaybe<ComparableInt32OperationFilterInput>;
   id?: InputMaybe<ComparableInt32OperationFilterInput>;
   isDeleted?: InputMaybe<BooleanOperationFilterInput>;
   lastModifiedDate?: InputMaybe<ComparableNullableOfDateTimeOperationFilterInput>;
+  ministersCouncilCanonDate?: InputMaybe<ComparableDateOnlyOperationFilterInput>;
+  ministersCouncilCanonNum?: InputMaybe<StringOperationFilterInput>;
+  newMinistersCouncilMembersApprovementCanonDate?: InputMaybe<ComparableDateOnlyOperationFilterInput>;
+  newMinistersCouncilMembersCanonDate?: InputMaybe<ComparableDateOnlyOperationFilterInput>;
+  newMinistersCouncilMembersCanonNum?: InputMaybe<StringOperationFilterInput>;
   or?: InputMaybe<Array<MainSettingFilterInput>>;
   secondPaymentPeriod?: InputMaybe<ComparableInt32OperationFilterInput>;
 };
@@ -2346,23 +2878,47 @@ export type MainSettingFilterInput = {
 export type MainSettingInput = {
   accusedResponsePeriod: Scalars['Int']['input'];
   accuserResponsePeriod: Scalars['Int']['input'];
+  article139OfTheConstitutionCanonClause: Scalars['String']['input'];
+  article139OfTheConstitutionCanonDate: Scalars['Date']['input'];
+  article139OfTheConstitutionCanonNum: Scalars['String']['input'];
   correctionRequestPeriod: Scalars['Int']['input'];
   councilPaymentPeriod: Scalars['Int']['input'];
+  disputeResolutionArticleCircularDate: Scalars['Date']['input'];
+  disputeResolutionArticleCircularNum: Scalars['String']['input'];
+  expertAndAmountAssignmentCanonDate: Scalars['Date']['input'];
+  expertAndAmountAssignmentCanonNum: Scalars['String']['input'];
   firstPaymentPeriod: Scalars['Int']['input'];
   id?: InputMaybe<Scalars['Int']['input']>;
+  ministersCouncilCanonDate: Scalars['Date']['input'];
+  ministersCouncilCanonNum: Scalars['String']['input'];
+  newMinistersCouncilMembersApprovementCanonDate: Scalars['Date']['input'];
+  newMinistersCouncilMembersCanonDate: Scalars['Date']['input'];
+  newMinistersCouncilMembersCanonNum: Scalars['String']['input'];
   secondPaymentPeriod: Scalars['Int']['input'];
 };
 
 export type MainSettingSortInput = {
   accusedResponsePeriod?: InputMaybe<SortEnumType>;
   accuserResponsePeriod?: InputMaybe<SortEnumType>;
+  article139OfTheConstitutionCanonClause?: InputMaybe<SortEnumType>;
+  article139OfTheConstitutionCanonDate?: InputMaybe<SortEnumType>;
+  article139OfTheConstitutionCanonNum?: InputMaybe<SortEnumType>;
   correctionRequestPeriod?: InputMaybe<SortEnumType>;
   councilPaymentPeriod?: InputMaybe<SortEnumType>;
   createdDate?: InputMaybe<SortEnumType>;
+  disputeResolutionArticleCircularDate?: InputMaybe<SortEnumType>;
+  disputeResolutionArticleCircularNum?: InputMaybe<SortEnumType>;
+  expertAndAmountAssignmentCanonDate?: InputMaybe<SortEnumType>;
+  expertAndAmountAssignmentCanonNum?: InputMaybe<SortEnumType>;
   firstPaymentPeriod?: InputMaybe<SortEnumType>;
   id?: InputMaybe<SortEnumType>;
   isDeleted?: InputMaybe<SortEnumType>;
   lastModifiedDate?: InputMaybe<SortEnumType>;
+  ministersCouncilCanonDate?: InputMaybe<SortEnumType>;
+  ministersCouncilCanonNum?: InputMaybe<SortEnumType>;
+  newMinistersCouncilMembersApprovementCanonDate?: InputMaybe<SortEnumType>;
+  newMinistersCouncilMembersCanonDate?: InputMaybe<SortEnumType>;
+  newMinistersCouncilMembersCanonNum?: InputMaybe<SortEnumType>;
   secondPaymentPeriod?: InputMaybe<SortEnumType>;
 };
 
@@ -2382,6 +2938,10 @@ export type Mutation = {
   arbitrationTermsForm_addArbitrationTermsForm: ResponseBaseOfArbitrationTermsForm;
   arbitrationTermsForm_deleteArbitrationTermsForm: ResponseBaseOfArbitrationTermsForm;
   arbitrationTermsForm_updateArbitrationTermsForm: ResponseBaseOfArbitrationTermsForm;
+  companyProfile_addCompanyProfile: ResponseBaseOfCompanyProfile;
+  companyProfile_addCompanyProfileData: ResponseBaseOfCompanyProfile;
+  companyProfile_deleteCompanyProfile: ResponseBaseOfCompanyProfile;
+  companyProfile_updateCompanyProfile: ResponseBaseOfCompanyProfile;
   complaintArgument_addComplaintArgument: ResponseBaseOfComplaintArgument;
   complaintArgument_deleteComplaintArgument: ResponseBaseOfComplaintArgument;
   complaintArgument_updateComplaintArgument: ResponseBaseOfComplaintArgument;
@@ -2391,10 +2951,16 @@ export type Mutation = {
   complaintNote_addComplaintNote: ResponseBaseOfComplaintNote;
   complaintNote_deleteComplaintNote: ResponseBaseOfComplaintNote;
   complaintNote_updateComplaintNote: ResponseBaseOfComplaintNote;
+  complaintState_addComplaintState: ResponseBaseOfComplaintState;
+  complaintState_deleteComplaintState: ResponseBaseOfComplaintState;
+  complaintState_updateComplaintState: ResponseBaseOfComplaintState;
   complaint_addComplaint: ResponseBaseOfComplaint;
   complaint_deleteComplaint: ResponseBaseOfComplaint;
   complaint_setInCouncilList: ResponseBaseOfSetInCouncilListResponseDto;
   complaint_updateComplaint: ResponseBaseOfComplaint;
+  complaintnonfeasibleargument_addComplaintNonFeasibleArgument: ResponseBaseOfComplaintNonFeasibleArgument;
+  complaintnonfeasibleargument_deleteComplaintNonFeasibleArgument: ResponseBaseOfComplaintNonFeasibleArgument;
+  complaintnonfeasibleargument_updateComplaintNonFeasibleArgument: ResponseBaseOfComplaintNonFeasibleArgument;
   contract_addContract: ResponseBaseOfContract;
   contract_deleteContract: ResponseBaseOfContract;
   contract_updateContract: ResponseBaseOfContract;
@@ -2418,25 +2984,41 @@ export type Mutation = {
   letter_updateLetter: ResponseBaseOfLetter;
   mainSetting_deleteMainSetting: ResponseBaseOfMainSetting;
   mainSetting_updateMainSetting: ResponseBaseOfMainSetting;
+  sms_sendAccusedDidNotRespondSMS: ResponseStatus;
   sms_sendAccusedRespondedSMS: ResponseStatus;
+  sms_sendArbitrationRejectionSMS: ResponseStatus;
+  sms_sendAssignToExpertSMS: ResponseStatus;
   sms_sendComplaintAddedSMS: ResponseStatus;
   sms_sendComplaintCodeSMS: ResponseStatus;
+  sms_sendComplaintCorrectionRequestSMS: ResponseStatus;
+  sms_sendComplaintGotCancelledSMS: ResponseStatus;
+  sms_sendDidNotMakeFirstPaymentSMS: ResponseStatus;
   sms_sendInviteToMeetingSMS: ResponseStatus;
+  sms_sendLetterSentToMinistersCouncilSMS: ResponseStatus;
+  sms_sendReceiveAnswerFromMinistersCouncilSMS: ResponseStatus;
+  sms_sendSecondPaymentAnnouncementSMS: ResponseStatus;
+  sms_sendViewVerdictSMS: ResponseStatus;
   test_convertNumToPersianWriting: Scalars['String']['output'];
   test_convertToGregorian: Scalars['Date']['output'];
+  test_depositReceiptAnnouncementLetter: ResponseStatus;
   test_generateAccusedDocsAfterCouncilRequestLetter: ResponseStatus;
   test_generateAccusedDocsRequestLetter: ResponseStatus;
   test_generateAccuserDidNotRespondLetter: ResponseStatus;
+  test_generateAccuserSalaryAnnouncementLetter: ResponseStatus;
+  test_generateAccuserSalaryAnnouncementRequestLetter: ResponseStatus;
   test_generateArbitrationRejectionLetter: ResponseStatus;
   test_generateAssignToExpertLetter: ResponseStatus;
   test_generateCallToMeetingLetter: ResponseStatus;
   test_generateComplaintGotCancelledLetter: ResponseStatus;
-  test_generateComplaintVerdictLetter: ResponseStatus;
+  test_generateComplaintVerdictLetter: Array<Scalars['String']['output']>;
   test_generateCouncilListLetter: ResponseStatus;
   test_generateDecree: Scalars['String']['output'];
   test_generatePassword: Scalars['String']['output'];
   test_generateProjectNotConstructiveLetter: ResponseStatus;
   test_generateReferToExpertLetter: ResponseStatus;
+  test_getCompanyInfo: ResponseBaseOfCompanyProfile;
+  test_getPublicContracts: ResponseStatus;
+  test_sendLetter: ResponseBaseOfString;
   test_sendVerificationCode: Scalars['String']['output'];
   test_testSMS: Scalars['String']['output'];
   test_testSabtAhval?: Maybe<PersonDataDto>;
@@ -2542,6 +3124,26 @@ export type MutationArbitrationTermsForm_UpdateArbitrationTermsFormArgs = {
 };
 
 
+export type MutationCompanyProfile_AddCompanyProfileArgs = {
+  userId: Scalars['String']['input'];
+};
+
+
+export type MutationCompanyProfile_AddCompanyProfileDataArgs = {
+  input: CompanyProfileInput;
+};
+
+
+export type MutationCompanyProfile_DeleteCompanyProfileArgs = {
+  entityId: Scalars['Int']['input'];
+};
+
+
+export type MutationCompanyProfile_UpdateCompanyProfileArgs = {
+  input: CompanyProfileInput;
+};
+
+
 export type MutationComplaintArgument_AddComplaintArgumentArgs = {
   input: ComplaintArgumentInput;
 };
@@ -2587,6 +3189,21 @@ export type MutationComplaintNote_UpdateComplaintNoteArgs = {
 };
 
 
+export type MutationComplaintState_AddComplaintStateArgs = {
+  input: ComplaintStateInput;
+};
+
+
+export type MutationComplaintState_DeleteComplaintStateArgs = {
+  entityId: Scalars['Int']['input'];
+};
+
+
+export type MutationComplaintState_UpdateComplaintStateArgs = {
+  input: ComplaintStateInput;
+};
+
+
 export type MutationComplaint_AddComplaintArgs = {
   input: ComplaintInput;
 };
@@ -2604,6 +3221,21 @@ export type MutationComplaint_SetInCouncilListArgs = {
 
 export type MutationComplaint_UpdateComplaintArgs = {
   input: ComplaintInput;
+};
+
+
+export type MutationComplaintnonfeasibleargument_AddComplaintNonFeasibleArgumentArgs = {
+  input: ComplaintNonFeasibleArgumentInput;
+};
+
+
+export type MutationComplaintnonfeasibleargument_DeleteComplaintNonFeasibleArgumentArgs = {
+  entityId: Scalars['Int']['input'];
+};
+
+
+export type MutationComplaintnonfeasibleargument_UpdateComplaintNonFeasibleArgumentArgs = {
+  input: ComplaintNonFeasibleArgumentInput;
 };
 
 
@@ -2722,7 +3354,22 @@ export type MutationMainSetting_UpdateMainSettingArgs = {
 };
 
 
+export type MutationSms_SendAccusedDidNotRespondSmsArgs = {
+  complaintId: Scalars['Int']['input'];
+};
+
+
 export type MutationSms_SendAccusedRespondedSmsArgs = {
+  complaintId: Scalars['Int']['input'];
+};
+
+
+export type MutationSms_SendArbitrationRejectionSmsArgs = {
+  complaintId: Scalars['Int']['input'];
+};
+
+
+export type MutationSms_SendAssignToExpertSmsArgs = {
   complaintId: Scalars['Int']['input'];
 };
 
@@ -2737,8 +3384,44 @@ export type MutationSms_SendComplaintCodeSmsArgs = {
 };
 
 
+export type MutationSms_SendComplaintCorrectionRequestSmsArgs = {
+  complaintId: Scalars['Int']['input'];
+  receiverId: Scalars['String']['input'];
+};
+
+
+export type MutationSms_SendComplaintGotCancelledSmsArgs = {
+  complaintId: Scalars['Int']['input'];
+};
+
+
+export type MutationSms_SendDidNotMakeFirstPaymentSmsArgs = {
+  complaintId: Scalars['Int']['input'];
+};
+
+
 export type MutationSms_SendInviteToMeetingSmsArgs = {
   input: SendInviteToMeetingSmsDtoInput;
+};
+
+
+export type MutationSms_SendLetterSentToMinistersCouncilSmsArgs = {
+  complaintId: Scalars['Int']['input'];
+};
+
+
+export type MutationSms_SendReceiveAnswerFromMinistersCouncilSmsArgs = {
+  complaintId: Scalars['Int']['input'];
+};
+
+
+export type MutationSms_SendSecondPaymentAnnouncementSmsArgs = {
+  complaintId: Scalars['Int']['input'];
+};
+
+
+export type MutationSms_SendViewVerdictSmsArgs = {
+  complaintId: Scalars['Int']['input'];
 };
 
 
@@ -2749,6 +3432,11 @@ export type MutationTest_ConvertNumToPersianWritingArgs = {
 
 export type MutationTest_ConvertToGregorianArgs = {
   input: Scalars['String']['input'];
+};
+
+
+export type MutationTest_DepositReceiptAnnouncementLetterArgs = {
+  input: DepositReceiptAnnouncementDtoInput;
 };
 
 
@@ -2764,6 +3452,16 @@ export type MutationTest_GenerateAccusedDocsRequestLetterArgs = {
 
 export type MutationTest_GenerateAccuserDidNotRespondLetterArgs = {
   input: AccuserDidNotRespondLetterDtoInput;
+};
+
+
+export type MutationTest_GenerateAccuserSalaryAnnouncementLetterArgs = {
+  input: AccuserSalaryAnnouncementDtoInput;
+};
+
+
+export type MutationTest_GenerateAccuserSalaryAnnouncementRequestLetterArgs = {
+  input: AccuserSalaryAnnouncementRequestDtoInput;
 };
 
 
@@ -2809,6 +3507,22 @@ export type MutationTest_GenerateProjectNotConstructiveLetterArgs = {
 
 export type MutationTest_GenerateReferToExpertLetterArgs = {
   input: ReferToExpertLetterDtoInput;
+};
+
+
+export type MutationTest_GetCompanyInfoArgs = {
+  nationalCode: Scalars['String']['input'];
+};
+
+
+export type MutationTest_GetPublicContractsArgs = {
+  endDate: Scalars['Date']['input'];
+  startDate: Scalars['Date']['input'];
+};
+
+
+export type MutationTest_SendLetterArgs = {
+  input: SendLetterDtoInput;
 };
 
 
@@ -2985,6 +3699,20 @@ export type NoteTypeOperationFilterInput = {
   nin?: InputMaybe<Array<NoteType>>;
 };
 
+export type NullableOfContractGeneralTypeOperationFilterInput = {
+  eq?: InputMaybe<ContractGeneralType>;
+  in?: InputMaybe<Array<InputMaybe<ContractGeneralType>>>;
+  neq?: InputMaybe<ContractGeneralType>;
+  nin?: InputMaybe<Array<InputMaybe<ContractGeneralType>>>;
+};
+
+export type NullableOfFinancialStatusOperationFilterInput = {
+  eq?: InputMaybe<FinancialStatus>;
+  in?: InputMaybe<Array<InputMaybe<FinancialStatus>>>;
+  neq?: InputMaybe<FinancialStatus>;
+  nin?: InputMaybe<Array<InputMaybe<FinancialStatus>>>;
+};
+
 export type NullableOfGenderTypeOperationFilterInput = {
   eq?: InputMaybe<GenderType>;
   in?: InputMaybe<Array<InputMaybe<GenderType>>>;
@@ -2992,11 +3720,25 @@ export type NullableOfGenderTypeOperationFilterInput = {
   nin?: InputMaybe<Array<InputMaybe<GenderType>>>;
 };
 
+export type NullableOfHandlingTypeOperationFilterInput = {
+  eq?: InputMaybe<HandlingType>;
+  in?: InputMaybe<Array<InputMaybe<HandlingType>>>;
+  neq?: InputMaybe<HandlingType>;
+  nin?: InputMaybe<Array<InputMaybe<HandlingType>>>;
+};
+
 export type NullableOfRegistrarTypeOperationFilterInput = {
   eq?: InputMaybe<RegistrarType>;
   in?: InputMaybe<Array<InputMaybe<RegistrarType>>>;
   neq?: InputMaybe<RegistrarType>;
   nin?: InputMaybe<Array<InputMaybe<RegistrarType>>>;
+};
+
+export type NullableOfResponsibleUserTypeOperationFilterInput = {
+  eq?: InputMaybe<ResponsibleUserType>;
+  in?: InputMaybe<Array<InputMaybe<ResponsibleUserType>>>;
+  neq?: InputMaybe<ResponsibleUserType>;
+  nin?: InputMaybe<Array<InputMaybe<ResponsibleUserType>>>;
 };
 
 export type NullableOfRoleTypeOperationFilterInput = {
@@ -3041,9 +3783,80 @@ export type PersonDataDto = {
 
 export type ProjectNotConstructiveLetterDtoInput = {
   complaintId: Scalars['Int']['input'];
-  letterDate: Scalars['String']['input'];
+  letterDate: Scalars['Date']['input'];
   letterNum: Scalars['String']['input'];
   userId: Scalars['String']['input'];
+};
+
+export type PublicContract = {
+  __typename?: 'PublicContract';
+  agreeAmountRial?: Maybe<Scalars['Long']['output']>;
+  agreeDate: Scalars['Date']['output'];
+  city?: Maybe<Scalars['String']['output']>;
+  contractCategoryTitle?: Maybe<Scalars['String']['output']>;
+  contractID?: Maybe<Scalars['String']['output']>;
+  contractSubject?: Maybe<Scalars['String']['output']>;
+  createdDate: Scalars['DateTime']['output'];
+  executiveTitle?: Maybe<Scalars['String']['output']>;
+  fullName?: Maybe<Scalars['String']['output']>;
+  generalConditionTitle?: Maybe<Scalars['String']['output']>;
+  guid?: Maybe<Scalars['UUID']['output']>;
+  id: Scalars['Int']['output'];
+  isDeleted: Scalars['Boolean']['output'];
+  jobReferenceTitle?: Maybe<Scalars['String']['output']>;
+  lastModifiedDate?: Maybe<Scalars['DateTime']['output']>;
+  nationalCode?: Maybe<Scalars['String']['output']>;
+  sourceOfFundingTitle?: Maybe<Scalars['String']['output']>;
+};
+
+export type PublicContractCollectionSegment = {
+  __typename?: 'PublicContractCollectionSegment';
+  items?: Maybe<Array<PublicContract>>;
+  /** Information to aid in pagination. */
+  pageInfo: CollectionSegmentInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type PublicContractFilterInput = {
+  agreeAmountRial?: InputMaybe<ComparableNullableOfInt64OperationFilterInput>;
+  agreeDate?: InputMaybe<ComparableDateOnlyOperationFilterInput>;
+  and?: InputMaybe<Array<PublicContractFilterInput>>;
+  city?: InputMaybe<StringOperationFilterInput>;
+  contractCategoryTitle?: InputMaybe<StringOperationFilterInput>;
+  contractID?: InputMaybe<StringOperationFilterInput>;
+  contractSubject?: InputMaybe<StringOperationFilterInput>;
+  createdDate?: InputMaybe<ComparableDateTimeOperationFilterInput>;
+  executiveTitle?: InputMaybe<StringOperationFilterInput>;
+  fullName?: InputMaybe<StringOperationFilterInput>;
+  generalConditionTitle?: InputMaybe<StringOperationFilterInput>;
+  guid?: InputMaybe<ComparableNullableOfGuidOperationFilterInput>;
+  id?: InputMaybe<ComparableInt32OperationFilterInput>;
+  isDeleted?: InputMaybe<BooleanOperationFilterInput>;
+  jobReferenceTitle?: InputMaybe<StringOperationFilterInput>;
+  lastModifiedDate?: InputMaybe<ComparableNullableOfDateTimeOperationFilterInput>;
+  nationalCode?: InputMaybe<StringOperationFilterInput>;
+  or?: InputMaybe<Array<PublicContractFilterInput>>;
+  sourceOfFundingTitle?: InputMaybe<StringOperationFilterInput>;
+};
+
+export type PublicContractSortInput = {
+  agreeAmountRial?: InputMaybe<SortEnumType>;
+  agreeDate?: InputMaybe<SortEnumType>;
+  city?: InputMaybe<SortEnumType>;
+  contractCategoryTitle?: InputMaybe<SortEnumType>;
+  contractID?: InputMaybe<SortEnumType>;
+  contractSubject?: InputMaybe<SortEnumType>;
+  createdDate?: InputMaybe<SortEnumType>;
+  executiveTitle?: InputMaybe<SortEnumType>;
+  fullName?: InputMaybe<SortEnumType>;
+  generalConditionTitle?: InputMaybe<SortEnumType>;
+  guid?: InputMaybe<SortEnumType>;
+  id?: InputMaybe<SortEnumType>;
+  isDeleted?: InputMaybe<SortEnumType>;
+  jobReferenceTitle?: InputMaybe<SortEnumType>;
+  lastModifiedDate?: InputMaybe<SortEnumType>;
+  nationalCode?: InputMaybe<SortEnumType>;
+  sourceOfFundingTitle?: InputMaybe<SortEnumType>;
 };
 
 export type Query = {
@@ -3056,14 +3869,21 @@ export type Query = {
   adjustmentStatement_getAdjustmentStatements: ListResponseBaseOfAdjustmentStatement;
   arbitrationTermsForm_getArbitrationTermsForm: ResponseBaseOfArbitrationTermsForm;
   arbitrationTermsForm_getArbitrationTermsForms: ListResponseBaseOfArbitrationTermsForm;
+  companyProfile_getCompanyProfile: ResponseBaseOfCompanyProfile;
+  companyProfile_getCompanyProfiles: ListResponseBaseOfCompanyProfile;
   complaintArgument_getComplaintArgument: ResponseBaseOfComplaintArgument;
   complaintArgument_getComplaintArguments: ListResponseBaseOfComplaintArgument;
   complaintFile_getComplaintFile: ResponseBaseOfComplaintFile;
   complaintFile_getComplaintFiles: ListResponseBaseOfComplaintFile;
+  complaintNonFeasibleArgument_getComplaintNonFeasibleArgument: ResponseBaseOfComplaintNonFeasibleArgument;
+  complaintNonFeasibleArgument_getComplaintNonFeasibleArguments: ListResponseBaseOfComplaintNonFeasibleArgument;
   complaintNote_getComplaintNote: ResponseBaseOfComplaintNote;
   complaintNote_getComplaintNotes: ListResponseBaseOfComplaintNote;
+  complaintState_getComplaintState: ResponseBaseOfComplaintState;
+  complaintState_getComplaintStates: ListResponseBaseOfComplaintState;
   complaint_getComplaint: ResponseBaseOfComplaint;
   complaint_getComplaints: ListResponseBaseOfComplaint;
+  complaint_getExpertComplaints: ListResponseBaseOfComplaint;
   contract_getContract: ResponseBaseOfContract;
   contract_getContracts: ListResponseBaseOfContract;
   correctionRequest_getCorrectionRequest: ResponseBaseOfCorrectionRequest;
@@ -3082,10 +3902,13 @@ export type Query = {
   letter_getLetters: ListResponseBaseOfLetter;
   mainSetting_getMainSetting: ResponseBaseOfMainSetting;
   mainSetting_getMainSettings: ListResponseBaseOfMainSetting;
+  publicContract_getPublicContract: ResponseBaseOfPublicContract;
+  publicContract_getPublicContracts: ListResponseBaseOfPublicContract;
   userPayment_getUserPayment: ResponseBaseOfUserPayment;
   userPayment_getUserPayments: ListResponseBaseOfUserPayment;
   userRole_getUserRole: ResponseBaseOfUserRole;
   userRole_getUserRoles: ListResponseBaseOfUserRole;
+  user_getChildrenOfParent: ResponseBaseOfListOfUser;
   user_getCurrentUser: ResponseBaseOfUser;
   user_getUser: ResponseBaseOfUser;
   user_getUserQueryable: ListResponseBaseOfUser;
@@ -3120,6 +3943,11 @@ export type QueryArbitrationTermsForm_GetArbitrationTermsFormArgs = {
 };
 
 
+export type QueryCompanyProfile_GetCompanyProfileArgs = {
+  entityId: Scalars['Int']['input'];
+};
+
+
 export type QueryComplaintArgument_GetComplaintArgumentArgs = {
   entityId: Scalars['Int']['input'];
 };
@@ -3130,13 +3958,28 @@ export type QueryComplaintFile_GetComplaintFileArgs = {
 };
 
 
+export type QueryComplaintNonFeasibleArgument_GetComplaintNonFeasibleArgumentArgs = {
+  entityId: Scalars['Int']['input'];
+};
+
+
 export type QueryComplaintNote_GetComplaintNoteArgs = {
+  entityId: Scalars['Int']['input'];
+};
+
+
+export type QueryComplaintState_GetComplaintStateArgs = {
   entityId: Scalars['Int']['input'];
 };
 
 
 export type QueryComplaint_GetComplaintArgs = {
   entityId: Scalars['Int']['input'];
+};
+
+
+export type QueryComplaint_GetExpertComplaintsArgs = {
+  userId: Scalars['String']['input'];
 };
 
 
@@ -3185,6 +4028,11 @@ export type QueryMainSetting_GetMainSettingArgs = {
 };
 
 
+export type QueryPublicContract_GetPublicContractArgs = {
+  entityId: Scalars['Int']['input'];
+};
+
+
 export type QueryUserPayment_GetUserPaymentArgs = {
   entityId: Scalars['Int']['input'];
 };
@@ -3197,6 +4045,11 @@ export type QueryUserRole_GetUserRoleArgs = {
 
 export type QueryUserRole_GetUserRolesArgs = {
   userId: Scalars['String']['input'];
+};
+
+
+export type QueryUser_GetChildrenOfParentArgs = {
+  parentType: HandlingType;
 };
 
 
@@ -3268,6 +4121,12 @@ export type ResponseBaseOfArbitrationTermsForm = {
   status: ResponseStatus;
 };
 
+export type ResponseBaseOfCompanyProfile = {
+  __typename?: 'ResponseBaseOfCompanyProfile';
+  result?: Maybe<CompanyProfile>;
+  status: ResponseStatus;
+};
+
 export type ResponseBaseOfComplaint = {
   __typename?: 'ResponseBaseOfComplaint';
   result?: Maybe<Complaint>;
@@ -3286,9 +4145,21 @@ export type ResponseBaseOfComplaintFile = {
   status: ResponseStatus;
 };
 
+export type ResponseBaseOfComplaintNonFeasibleArgument = {
+  __typename?: 'ResponseBaseOfComplaintNonFeasibleArgument';
+  result?: Maybe<ComplaintNonFeasibleArgument>;
+  status: ResponseStatus;
+};
+
 export type ResponseBaseOfComplaintNote = {
   __typename?: 'ResponseBaseOfComplaintNote';
   result?: Maybe<ComplaintNote>;
+  status: ResponseStatus;
+};
+
+export type ResponseBaseOfComplaintState = {
+  __typename?: 'ResponseBaseOfComplaintState';
+  result?: Maybe<ComplaintState>;
   status: ResponseStatus;
 };
 
@@ -3340,6 +4211,12 @@ export type ResponseBaseOfLetter = {
   status: ResponseStatus;
 };
 
+export type ResponseBaseOfListOfUser = {
+  __typename?: 'ResponseBaseOfListOfUser';
+  result?: Maybe<Array<Maybe<User>>>;
+  status: ResponseStatus;
+};
+
 export type ResponseBaseOfMainSetting = {
   __typename?: 'ResponseBaseOfMainSetting';
   result?: Maybe<MainSetting>;
@@ -3352,9 +4229,21 @@ export type ResponseBaseOfPersonDataDto = {
   status: ResponseStatus;
 };
 
+export type ResponseBaseOfPublicContract = {
+  __typename?: 'ResponseBaseOfPublicContract';
+  result?: Maybe<PublicContract>;
+  status: ResponseStatus;
+};
+
 export type ResponseBaseOfSetInCouncilListResponseDto = {
   __typename?: 'ResponseBaseOfSetInCouncilListResponseDto';
   result?: Maybe<SetInCouncilListResponseDto>;
+  status: ResponseStatus;
+};
+
+export type ResponseBaseOfString = {
+  __typename?: 'ResponseBaseOfString';
+  result?: Maybe<Scalars['String']['output']>;
   status: ResponseStatus;
 };
 
@@ -3406,6 +4295,15 @@ export type ResponseStatus = {
   value: Scalars['String']['output'];
 };
 
+export enum ResponsibleUserType {
+  Accused = 'ACCUSED',
+  Accuser = 'ACCUSER',
+  AccuserAndAccused = 'ACCUSER_AND_ACCUSED',
+  LegalExpert = 'LEGAL_EXPERT',
+  MailRoomChief = 'MAIL_ROOM_CHIEF',
+  MailRoomExpert = 'MAIL_ROOM_EXPERT'
+}
+
 export enum RoleType {
   Expert = 'EXPERT',
   SeniorUser = 'SENIOR_USER',
@@ -3426,6 +4324,14 @@ export type SendInviteToMeetingSmsDtoInput = {
   meetingTime: Scalars['TimeSpan']['input'];
 };
 
+export type SendLetterDtoInput = {
+  comment: Scalars['String']['input'];
+  filePath: Scalars['String']['input'];
+  receiverDepartmentId: Scalars['String']['input'];
+  receiverPersonId: Scalars['String']['input'];
+  summary: Scalars['String']['input'];
+};
+
 export type SetInCouncilListResponseDto = {
   __typename?: 'SetInCouncilListResponseDto';
   fileNames: Array<Scalars['String']['output']>;
@@ -3440,6 +4346,7 @@ export type SignUpDtoInput = {
   fax?: InputMaybe<Scalars['String']['input']>;
   fullName: Scalars['String']['input'];
   genderType?: InputMaybe<GenderType>;
+  isJury: Scalars['Boolean']['input'];
   landlinePhone?: InputMaybe<Scalars['String']['input']>;
   nationalCode?: InputMaybe<Scalars['String']['input']>;
   parentId?: InputMaybe<Scalars['String']['input']>;
@@ -3486,6 +4393,7 @@ export type User = {
   birthDate?: Maybe<Scalars['Date']['output']>;
   childUsers?: Maybe<Array<User>>;
   complaintArguments?: Maybe<Array<ComplaintArgument>>;
+  complaintNonFeasibleArguments?: Maybe<Array<ComplaintNonFeasibleArgument>>;
   complaints?: Maybe<Array<Complaint>>;
   concurrencyStamp?: Maybe<Scalars['String']['output']>;
   contracts?: Maybe<Array<Contract>>;
@@ -3501,6 +4409,7 @@ export type User = {
   installmentTables?: Maybe<Array<InstallmentTable>>;
   installments?: Maybe<Array<Installment>>;
   isDeleted: Scalars['Boolean']['output'];
+  isJury: Scalars['Boolean']['output'];
   landlinePhone?: Maybe<Scalars['String']['output']>;
   lastModifiedDate?: Maybe<Scalars['DateTime']['output']>;
   lockoutEnabled: Scalars['Boolean']['output'];
@@ -3542,6 +4451,7 @@ export type UserFilterInput = {
   birthDate?: InputMaybe<ComparableNullableOfDateOnlyOperationFilterInput>;
   childUsers?: InputMaybe<ListFilterInputTypeOfUserFilterInput>;
   complaintArguments?: InputMaybe<ListFilterInputTypeOfComplaintArgumentFilterInput>;
+  complaintNonFeasibleArguments?: InputMaybe<ListFilterInputTypeOfComplaintNonFeasibleArgumentFilterInput>;
   complaints?: InputMaybe<ListFilterInputTypeOfComplaintFilterInput>;
   concurrencyStamp?: InputMaybe<StringOperationFilterInput>;
   contracts?: InputMaybe<ListFilterInputTypeOfContractFilterInput>;
@@ -3557,6 +4467,7 @@ export type UserFilterInput = {
   installmentTables?: InputMaybe<ListFilterInputTypeOfInstallmentTableFilterInput>;
   installments?: InputMaybe<ListFilterInputTypeOfInstallmentFilterInput>;
   isDeleted?: InputMaybe<BooleanOperationFilterInput>;
+  isJury?: InputMaybe<BooleanOperationFilterInput>;
   landlinePhone?: InputMaybe<StringOperationFilterInput>;
   lastModifiedDate?: InputMaybe<ComparableNullableOfDateTimeOperationFilterInput>;
   lockoutEnabled?: InputMaybe<BooleanOperationFilterInput>;
@@ -3706,6 +4617,7 @@ export type UserSortInput = {
   genderType?: InputMaybe<SortEnumType>;
   id?: InputMaybe<SortEnumType>;
   isDeleted?: InputMaybe<SortEnumType>;
+  isJury?: InputMaybe<SortEnumType>;
   landlinePhone?: InputMaybe<SortEnumType>;
   lastModifiedDate?: InputMaybe<SortEnumType>;
   lockoutEnabled?: InputMaybe<SortEnumType>;
@@ -3755,22 +4667,23 @@ export type ValidatePhoneNumberDtoInput = {
 
 export type WorkConditionStatement = {
   __typename?: 'WorkConditionStatement';
-  amountApprovedByEmployer: Scalars['Decimal']['output'];
-  amountConfirmedByConsultant: Scalars['Decimal']['output'];
+  amountApprovedByEmployer?: Maybe<Scalars['Decimal']['output']>;
+  amountConfirmedByConsultant?: Maybe<Scalars['Decimal']['output']>;
   amountPaid: Scalars['Decimal']['output'];
-  amountProvidedByContractor: Scalars['Decimal']['output'];
+  amountProvidedByContractor?: Maybe<Scalars['Decimal']['output']>;
   createdDate: Scalars['DateTime']['output'];
-  dateApprovedByEmployer: Scalars['Date']['output'];
-  dateConfirmedByConsultant: Scalars['Date']['output'];
+  dateApprovedByEmployer?: Maybe<Scalars['Date']['output']>;
+  dateConfirmedByConsultant?: Maybe<Scalars['Date']['output']>;
   datePaid: Scalars['Date']['output'];
-  dateProvidedByContractor: Scalars['Date']['output'];
+  dateProvidedByContractor?: Maybe<Scalars['Date']['output']>;
   filledBy?: Maybe<RegistrarType>;
+  financialCoverFileName?: Maybe<Scalars['String']['output']>;
   id: Scalars['Int']['output'];
   isDeleted: Scalars['Boolean']['output'];
   lastModifiedDate?: Maybe<Scalars['DateTime']['output']>;
-  operationPeriodEndDate: Scalars['Date']['output'];
-  operationPeriodStartDate: Scalars['Date']['output'];
-  title: Scalars['String']['output'];
+  operationPeriodEndDate?: Maybe<Scalars['Date']['output']>;
+  operationPeriodStartDate?: Maybe<Scalars['Date']['output']>;
+  title?: Maybe<Scalars['String']['output']>;
   workConditionStatementParts?: Maybe<Array<WorkConditionStatementPart>>;
   workConditionStatementTable?: Maybe<WorkConditionStatementTable>;
   workConditionStatementTableId: Scalars['Int']['output'];
@@ -3785,22 +4698,23 @@ export type WorkConditionStatementCollectionSegment = {
 };
 
 export type WorkConditionStatementFilterInput = {
-  amountApprovedByEmployer?: InputMaybe<ComparableDecimalOperationFilterInput>;
-  amountConfirmedByConsultant?: InputMaybe<ComparableDecimalOperationFilterInput>;
+  amountApprovedByEmployer?: InputMaybe<ComparableNullableOfDecimalOperationFilterInput>;
+  amountConfirmedByConsultant?: InputMaybe<ComparableNullableOfDecimalOperationFilterInput>;
   amountPaid?: InputMaybe<ComparableDecimalOperationFilterInput>;
-  amountProvidedByContractor?: InputMaybe<ComparableDecimalOperationFilterInput>;
+  amountProvidedByContractor?: InputMaybe<ComparableNullableOfDecimalOperationFilterInput>;
   and?: InputMaybe<Array<WorkConditionStatementFilterInput>>;
   createdDate?: InputMaybe<ComparableDateTimeOperationFilterInput>;
-  dateApprovedByEmployer?: InputMaybe<ComparableDateOnlyOperationFilterInput>;
-  dateConfirmedByConsultant?: InputMaybe<ComparableDateOnlyOperationFilterInput>;
+  dateApprovedByEmployer?: InputMaybe<ComparableNullableOfDateOnlyOperationFilterInput>;
+  dateConfirmedByConsultant?: InputMaybe<ComparableNullableOfDateOnlyOperationFilterInput>;
   datePaid?: InputMaybe<ComparableDateOnlyOperationFilterInput>;
-  dateProvidedByContractor?: InputMaybe<ComparableDateOnlyOperationFilterInput>;
+  dateProvidedByContractor?: InputMaybe<ComparableNullableOfDateOnlyOperationFilterInput>;
   filledBy?: InputMaybe<NullableOfRegistrarTypeOperationFilterInput>;
+  financialCoverFileName?: InputMaybe<StringOperationFilterInput>;
   id?: InputMaybe<ComparableInt32OperationFilterInput>;
   isDeleted?: InputMaybe<BooleanOperationFilterInput>;
   lastModifiedDate?: InputMaybe<ComparableNullableOfDateTimeOperationFilterInput>;
-  operationPeriodEndDate?: InputMaybe<ComparableDateOnlyOperationFilterInput>;
-  operationPeriodStartDate?: InputMaybe<ComparableDateOnlyOperationFilterInput>;
+  operationPeriodEndDate?: InputMaybe<ComparableNullableOfDateOnlyOperationFilterInput>;
+  operationPeriodStartDate?: InputMaybe<ComparableNullableOfDateOnlyOperationFilterInput>;
   or?: InputMaybe<Array<WorkConditionStatementFilterInput>>;
   title?: InputMaybe<StringOperationFilterInput>;
   workConditionStatementParts?: InputMaybe<ListFilterInputTypeOfWorkConditionStatementPartFilterInput>;
@@ -3818,6 +4732,7 @@ export type WorkConditionStatementInput = {
   datePaid?: InputMaybe<Scalars['Date']['input']>;
   dateProvidedByContractor?: InputMaybe<Scalars['Date']['input']>;
   filledBy?: InputMaybe<RegistrarType>;
+  financialCoverFileName?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   operationPeriodEndDate?: InputMaybe<Scalars['Date']['input']>;
   operationPeriodStartDate?: InputMaybe<Scalars['Date']['input']>;
@@ -3827,15 +4742,17 @@ export type WorkConditionStatementInput = {
 
 export type WorkConditionStatementPart = {
   __typename?: 'WorkConditionStatementPart';
-  amountApprovedByEmployer: Scalars['Decimal']['output'];
-  amountConfirmedByConsultant: Scalars['Decimal']['output'];
+  amountApprovedByEmployer?: Maybe<Scalars['Decimal']['output']>;
+  amountConfirmedByConsultant?: Maybe<Scalars['Decimal']['output']>;
   amountPaid: Scalars['Decimal']['output'];
-  amountProvidedByContractor: Scalars['Decimal']['output'];
+  amountProvidedByContractor?: Maybe<Scalars['Decimal']['output']>;
+  circularDate?: Maybe<Scalars['String']['output']>;
+  circularNumber?: Maybe<Scalars['String']['output']>;
   createdDate: Scalars['DateTime']['output'];
-  dateApprovedByEmployer: Scalars['Date']['output'];
-  dateConfirmedByConsultant: Scalars['Date']['output'];
+  dateApprovedByEmployer?: Maybe<Scalars['Date']['output']>;
+  dateConfirmedByConsultant?: Maybe<Scalars['Date']['output']>;
   datePaid: Scalars['Date']['output'];
-  dateProvidedByContractor: Scalars['Date']['output'];
+  dateProvidedByContractor?: Maybe<Scalars['Date']['output']>;
   filledBy?: Maybe<RegistrarType>;
   id: Scalars['Int']['output'];
   isDeleted: Scalars['Boolean']['output'];
@@ -3855,16 +4772,18 @@ export type WorkConditionStatementPartCollectionSegment = {
 };
 
 export type WorkConditionStatementPartFilterInput = {
-  amountApprovedByEmployer?: InputMaybe<ComparableDecimalOperationFilterInput>;
-  amountConfirmedByConsultant?: InputMaybe<ComparableDecimalOperationFilterInput>;
+  amountApprovedByEmployer?: InputMaybe<ComparableNullableOfDecimalOperationFilterInput>;
+  amountConfirmedByConsultant?: InputMaybe<ComparableNullableOfDecimalOperationFilterInput>;
   amountPaid?: InputMaybe<ComparableDecimalOperationFilterInput>;
-  amountProvidedByContractor?: InputMaybe<ComparableDecimalOperationFilterInput>;
+  amountProvidedByContractor?: InputMaybe<ComparableNullableOfDecimalOperationFilterInput>;
   and?: InputMaybe<Array<WorkConditionStatementPartFilterInput>>;
+  circularDate?: InputMaybe<StringOperationFilterInput>;
+  circularNumber?: InputMaybe<StringOperationFilterInput>;
   createdDate?: InputMaybe<ComparableDateTimeOperationFilterInput>;
-  dateApprovedByEmployer?: InputMaybe<ComparableDateOnlyOperationFilterInput>;
-  dateConfirmedByConsultant?: InputMaybe<ComparableDateOnlyOperationFilterInput>;
+  dateApprovedByEmployer?: InputMaybe<ComparableNullableOfDateOnlyOperationFilterInput>;
+  dateConfirmedByConsultant?: InputMaybe<ComparableNullableOfDateOnlyOperationFilterInput>;
   datePaid?: InputMaybe<ComparableDateOnlyOperationFilterInput>;
-  dateProvidedByContractor?: InputMaybe<ComparableDateOnlyOperationFilterInput>;
+  dateProvidedByContractor?: InputMaybe<ComparableNullableOfDateOnlyOperationFilterInput>;
   filledBy?: InputMaybe<NullableOfRegistrarTypeOperationFilterInput>;
   id?: InputMaybe<ComparableInt32OperationFilterInput>;
   isDeleted?: InputMaybe<BooleanOperationFilterInput>;
@@ -3881,6 +4800,8 @@ export type WorkConditionStatementPartInput = {
   amountConfirmedByConsultant?: InputMaybe<Scalars['Decimal']['input']>;
   amountPaid?: InputMaybe<Scalars['Decimal']['input']>;
   amountProvidedByContractor?: InputMaybe<Scalars['Decimal']['input']>;
+  circularDate?: InputMaybe<Scalars['String']['input']>;
+  circularNumber?: InputMaybe<Scalars['String']['input']>;
   dateApprovedByEmployer?: InputMaybe<Scalars['Date']['input']>;
   dateConfirmedByConsultant?: InputMaybe<Scalars['Date']['input']>;
   datePaid?: InputMaybe<Scalars['Date']['input']>;
@@ -3897,6 +4818,8 @@ export type WorkConditionStatementPartSortInput = {
   amountConfirmedByConsultant?: InputMaybe<SortEnumType>;
   amountPaid?: InputMaybe<SortEnumType>;
   amountProvidedByContractor?: InputMaybe<SortEnumType>;
+  circularDate?: InputMaybe<SortEnumType>;
+  circularNumber?: InputMaybe<SortEnumType>;
   createdDate?: InputMaybe<SortEnumType>;
   dateApprovedByEmployer?: InputMaybe<SortEnumType>;
   dateConfirmedByConsultant?: InputMaybe<SortEnumType>;
@@ -3923,6 +4846,7 @@ export type WorkConditionStatementSortInput = {
   datePaid?: InputMaybe<SortEnumType>;
   dateProvidedByContractor?: InputMaybe<SortEnumType>;
   filledBy?: InputMaybe<SortEnumType>;
+  financialCoverFileName?: InputMaybe<SortEnumType>;
   id?: InputMaybe<SortEnumType>;
   isDeleted?: InputMaybe<SortEnumType>;
   lastModifiedDate?: InputMaybe<SortEnumType>;
@@ -3945,6 +4869,7 @@ export type WorkConditionStatementTable = {
   user?: Maybe<User>;
   userId: Scalars['String']['output'];
   workConditionStatements?: Maybe<Array<WorkConditionStatement>>;
+  workConditionType?: Maybe<Scalars['String']['output']>;
 };
 
 export type WorkConditionStatementTableCollectionSegment = {
@@ -3968,6 +4893,7 @@ export type WorkConditionStatementTableFilterInput = {
   user?: InputMaybe<UserFilterInput>;
   userId?: InputMaybe<StringOperationFilterInput>;
   workConditionStatements?: InputMaybe<ListFilterInputTypeOfWorkConditionStatementFilterInput>;
+  workConditionType?: InputMaybe<StringOperationFilterInput>;
 };
 
 export type WorkConditionStatementTableInput = {
@@ -3975,6 +4901,7 @@ export type WorkConditionStatementTableInput = {
   filledBy?: InputMaybe<RegistrarType>;
   id?: InputMaybe<Scalars['Int']['input']>;
   userId?: InputMaybe<Scalars['String']['input']>;
+  workConditionType?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type WorkConditionStatementTableSortInput = {
@@ -3987,34 +4914,82 @@ export type WorkConditionStatementTableSortInput = {
   lastModifiedDate?: InputMaybe<SortEnumType>;
   user?: InputMaybe<UserSortInput>;
   userId?: InputMaybe<SortEnumType>;
+  workConditionType?: InputMaybe<SortEnumType>;
 };
+
+export type AddNonFeasibleArgumentMutationVariables = Exact<{
+  input: ComplaintNonFeasibleArgumentInput;
+}>;
+
+
+export type AddNonFeasibleArgumentMutation = { __typename?: 'Mutation', complaintnonfeasibleargument_addComplaintNonFeasibleArgument: { __typename?: 'ResponseBaseOfComplaintNonFeasibleArgument', result?: { __typename?: 'ComplaintNonFeasibleArgument', userId: string, complaintId: number, summary?: string | null, description?: string | null, financialSituation?: string | null, id: number } | null, status: { __typename?: 'ResponseStatus', code: number, value: string } } };
+
+export type UpdateNonFeasibleArgumentMutationVariables = Exact<{
+  input: ComplaintNonFeasibleArgumentInput;
+}>;
+
+
+export type UpdateNonFeasibleArgumentMutation = { __typename?: 'Mutation', complaintnonfeasibleargument_updateComplaintNonFeasibleArgument: { __typename?: 'ResponseBaseOfComplaintNonFeasibleArgument', result?: { __typename?: 'ComplaintNonFeasibleArgument', userId: string, complaintId: number, summary?: string | null, description?: string | null, financialSituation?: string | null, id: number } | null, status: { __typename?: 'ResponseStatus', code: number, value: string } } };
+
+export type DeleteNonFeasibleArgumentMutationVariables = Exact<{
+  input: Scalars['Int']['input'];
+}>;
+
+
+export type DeleteNonFeasibleArgumentMutation = { __typename?: 'Mutation', complaintnonfeasibleargument_deleteComplaintNonFeasibleArgument: { __typename?: 'ResponseBaseOfComplaintNonFeasibleArgument', result?: { __typename?: 'ComplaintNonFeasibleArgument', userId: string, complaintId: number, summary?: string | null, description?: string | null, financialSituation?: string | null, id: number } | null, status: { __typename?: 'ResponseStatus', code: number, value: string } } };
+
+export type GetNonFeasibleArgumentsQueryVariables = Exact<{
+  filer?: InputMaybe<ComplaintNonFeasibleArgumentFilterInput>;
+  order?: InputMaybe<Array<ComplaintNonFeasibleArgumentSortInput> | ComplaintNonFeasibleArgumentSortInput>;
+}>;
+
+
+export type GetNonFeasibleArgumentsQuery = { __typename?: 'Query', complaintNonFeasibleArgument_getComplaintNonFeasibleArguments: { __typename?: 'ListResponseBaseOfComplaintNonFeasibleArgument', status?: any | null, result?: { __typename?: 'ComplaintNonFeasibleArgumentCollectionSegment', totalCount: number, items?: Array<{ __typename?: 'ComplaintNonFeasibleArgument', userId: string, complaintId: number, summary?: string | null, description?: string | null, financialSituation?: string | null, id: number, isDeleted: boolean, createdDate: any, financialStatusFileName?: string | null }> | null, pageInfo: { __typename?: 'CollectionSegmentInfo', hasNextPage: boolean, hasPreviousPage: boolean } } | null } };
+
+export type UpdateComplaintStateMutationVariables = Exact<{
+  input: ComplaintStateInput;
+}>;
+
+
+export type UpdateComplaintStateMutation = { __typename?: 'Mutation', complaintState_updateComplaintState: { __typename?: 'ResponseBaseOfComplaintState', result?: { __typename?: 'ComplaintState', id: number, englishName: string, persianName: string, state: ComplaintStateStatus, createdDate: any, isDeleted: boolean, priority: number } | null } };
+
+export type GetComplaintStatesQueryVariables = Exact<{
+  filter?: InputMaybe<ComplaintStateFilterInput>;
+  order?: InputMaybe<Array<ComplaintStateSortInput> | ComplaintStateSortInput>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type GetComplaintStatesQuery = { __typename?: 'Query', complaintState_getComplaintStates: { __typename?: 'ListResponseBaseOfComplaintState', result?: { __typename?: 'ComplaintStateCollectionSegment', items?: Array<{ __typename?: 'ComplaintState', id: number, englishName: string, persianName: string, state: ComplaintStateStatus, createdDate: any, isDeleted: boolean, priority: number }> | null } | null } };
 
 export type CreateComplaintMutationVariables = Exact<{
   contractId: Scalars['Int']['input'];
   userId: Scalars['String']['input'];
+  complaintStateId?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 
-export type CreateComplaintMutation = { __typename?: 'Mutation', complaint_addComplaint: { __typename?: 'ResponseBaseOfComplaint', result?: { __typename?: 'Complaint', id: number, assignedUserId?: string | null, complaintState: ComplaintState, arbitrationTermsForms?: Array<{ __typename?: 'ArbitrationTermsForm', userId: string, firstCondition: string, firstConditionFileName?: string | null, secondCondition: string, secondConditionFileName?: string | null, thirdCondition: string, thirdConditionFileName?: string | null, fourthCondition: string, fourthConditionFileName?: string | null }> | null } | null, status: { __typename?: 'ResponseStatus', code: number, value: string } } };
+export type CreateComplaintMutation = { __typename?: 'Mutation', complaint_addComplaint: { __typename?: 'ResponseBaseOfComplaint', result?: { __typename?: 'Complaint', id: number, assignedUserId?: string | null, complaintState?: { __typename?: 'ComplaintState', id: number, persianName: string } | null, arbitrationTermsForms?: Array<{ __typename?: 'ArbitrationTermsForm', userId: string, firstCondition: string, firstConditionFileName?: string | null, secondCondition: string, secondConditionFileName?: string | null, thirdCondition: string, thirdConditionFinalBillFileName?: string | null, thirdConditionNotificationLetterFileName?: string | null, thirdConditionContractorsObjectionDocumentsFileName?: string | null, fourthCondition: string, fourthConditionFileName?: string | null }> | null } | null, status: { __typename?: 'ResponseStatus', code: number, value: string } } };
 
 export type UpdateComplaintMutationVariables = Exact<{
   id: Scalars['Int']['input'];
   assignedUserId?: InputMaybe<Scalars['String']['input']>;
   contractId?: InputMaybe<Scalars['Int']['input']>;
   userId?: InputMaybe<Scalars['String']['input']>;
-  complaintState?: InputMaybe<ComplaintState>;
+  complaintStateId?: InputMaybe<Scalars['Int']['input']>;
   isApprovedByChief?: InputMaybe<Scalars['Boolean']['input']>;
 }>;
 
 
-export type UpdateComplaintMutation = { __typename?: 'Mutation', complaint_updateComplaint: { __typename: 'ResponseBaseOfComplaint', result?: { __typename: 'Complaint', id: number, assignedUserId?: string | null, complaintState: ComplaintState, arbitrationTermsForms?: Array<{ __typename: 'ArbitrationTermsForm', userId: string, firstCondition: string, firstConditionFileName?: string | null, secondCondition: string, secondConditionFileName?: string | null, thirdCondition: string, thirdConditionFileName?: string | null, fourthCondition: string, fourthConditionFileName?: string | null }> | null } | null, status: { __typename: 'ResponseStatus', code: number, value: string } } };
+export type UpdateComplaintMutation = { __typename?: 'Mutation', complaint_updateComplaint: { __typename: 'ResponseBaseOfComplaint', result?: { __typename: 'Complaint', id: number, assignedUserId?: string | null, complaintState?: { __typename?: 'ComplaintState', id: number, persianName: string } | null, arbitrationTermsForms?: Array<{ __typename: 'ArbitrationTermsForm', userId: string, firstCondition: string, firstConditionFileName?: string | null, secondCondition: string, secondConditionFileName?: string | null, thirdCondition: string, thirdConditionFinalBillFileName?: string | null, thirdConditionNotificationLetterFileName?: string | null, thirdConditionContractorsObjectionDocumentsFileName?: string | null, fourthCondition: string, fourthConditionFileName?: string | null }> | null } | null, status: { __typename: 'ResponseStatus', code: number, value: string } } };
 
 export type UpdateComplaintFullMutationVariables = Exact<{
   input: ComplaintInput;
 }>;
 
 
-export type UpdateComplaintFullMutation = { __typename?: 'Mutation', complaint_updateComplaint: { __typename: 'ResponseBaseOfComplaint', result?: { __typename: 'Complaint', id: number, assignedUserId?: string | null, complaintState: ComplaintState, arbitrationTermsForms?: Array<{ __typename: 'ArbitrationTermsForm', userId: string, firstCondition: string, firstConditionFileName?: string | null, secondCondition: string, secondConditionFileName?: string | null, thirdCondition: string, thirdConditionFileName?: string | null, fourthCondition: string, fourthConditionFileName?: string | null }> | null } | null, status: { __typename: 'ResponseStatus', code: number, value: string } } };
+export type UpdateComplaintFullMutation = { __typename?: 'Mutation', complaint_updateComplaint: { __typename: 'ResponseBaseOfComplaint', result?: { __typename: 'Complaint', id: number, assignedUserId?: string | null, complaintState?: { __typename?: 'ComplaintState', id: number, persianName: string } | null, arbitrationTermsForms?: Array<{ __typename: 'ArbitrationTermsForm', userId: string, firstCondition: string, firstConditionFileName?: string | null, secondCondition: string, secondConditionFileName?: string | null, thirdCondition: string, thirdConditionFinalBillFileName?: string | null, thirdConditionNotificationLetterFileName?: string | null, thirdConditionContractorsObjectionDocumentsFileName?: string | null, fourthCondition: string, fourthConditionFileName?: string | null }> | null } | null, status: { __typename: 'ResponseStatus', code: number, value: string } } };
 
 export type CreateArbitrationTermsFormMutationVariables = Exact<{
   complaintId: Scalars['Int']['input'];
@@ -4025,7 +5000,9 @@ export type CreateArbitrationTermsFormMutationVariables = Exact<{
   secondCondition: Scalars['String']['input'];
   secondConditionFileName?: InputMaybe<Scalars['String']['input']>;
   thirdCondition: Scalars['String']['input'];
-  thirdConditionFileName?: InputMaybe<Scalars['String']['input']>;
+  thirdConditionFinalBillFileName?: InputMaybe<Scalars['String']['input']>;
+  thirdConditionNotificationLetterFileName?: InputMaybe<Scalars['String']['input']>;
+  thirdConditionContractorsObjectionDocumentsFileName?: InputMaybe<Scalars['String']['input']>;
   fourthCondition: Scalars['String']['input'];
   fourthConditionFileName?: InputMaybe<Scalars['String']['input']>;
   projectName?: InputMaybe<Scalars['String']['input']>;
@@ -4034,30 +5011,14 @@ export type CreateArbitrationTermsFormMutationVariables = Exact<{
 }>;
 
 
-export type CreateArbitrationTermsFormMutation = { __typename?: 'Mutation', arbitrationTermsForm_addArbitrationTermsForm: { __typename?: 'ResponseBaseOfArbitrationTermsForm', result?: { __typename?: 'ArbitrationTermsForm', id: number, complaintId: number, userId: string, filledBy: RegistrarType, firstCondition: string, firstConditionFileName?: string | null, secondCondition: string, secondConditionFileName?: string | null, thirdCondition: string, thirdConditionFileName?: string | null, fourthCondition: string, fourthConditionFileName?: string | null, projectName?: string | null, projectNumber?: string | null, hasReadAgreement: boolean } | null, status: { __typename?: 'ResponseStatus', code: number, value: string } } };
+export type CreateArbitrationTermsFormMutation = { __typename?: 'Mutation', arbitrationTermsForm_addArbitrationTermsForm: { __typename?: 'ResponseBaseOfArbitrationTermsForm', result?: { __typename?: 'ArbitrationTermsForm', id: number, complaintId: number, userId: string, filledBy: RegistrarType, firstCondition: string, firstConditionFileName?: string | null, secondCondition: string, secondConditionFileName?: string | null, thirdCondition: string, thirdConditionFinalBillFileName?: string | null, thirdConditionNotificationLetterFileName?: string | null, thirdConditionContractorsObjectionDocumentsFileName?: string | null, fourthCondition: string, fourthConditionFileName?: string | null, projectName?: string | null, projectNumber?: string | null, hasReadAgreement: boolean } | null, status: { __typename?: 'ResponseStatus', code: number, value: string } } };
 
 export type AddArgumentToComplaintMutationVariables = Exact<{
-  accuserResponse?: InputMaybe<Scalars['String']['input']>;
-  accuserResponseFileName?: InputMaybe<Scalars['String']['input']>;
-  approvedAmount?: InputMaybe<Scalars['Decimal']['input']>;
-  complaintId?: InputMaybe<Scalars['Int']['input']>;
-  councilApprovedAmount?: InputMaybe<Scalars['Decimal']['input']>;
-  description?: InputMaybe<Scalars['String']['input']>;
-  expertId?: InputMaybe<Scalars['String']['input']>;
-  expertOpinion?: InputMaybe<Scalars['String']['input']>;
-  expertOpinionFileName?: InputMaybe<Scalars['String']['input']>;
-  expertVerdict?: InputMaybe<Scalars['String']['input']>;
-  fileName?: InputMaybe<Scalars['String']['input']>;
-  filledBy?: InputMaybe<RegistrarType>;
-  mailRoomChiefSuggestedAmount?: InputMaybe<Scalars['Decimal']['input']>;
-  mailRoomExpertApprovedAmount?: InputMaybe<Scalars['Decimal']['input']>;
-  suggestedAmount?: InputMaybe<Scalars['Decimal']['input']>;
-  summary?: InputMaybe<Scalars['String']['input']>;
-  userId: Scalars['String']['input'];
+  input: ComplaintArgumentInput;
 }>;
 
 
-export type AddArgumentToComplaintMutation = { __typename?: 'Mutation', complaintArgument_addComplaintArgument: { __typename: 'ResponseBaseOfComplaintArgument', result?: { __typename: 'ComplaintArgument', id: number, accusedResponse?: string | null, accusedResponseFileName?: string | null, approvedAmount?: any | null, complaintId: number, councilApprovedAmount?: any | null, description?: string | null, expertId?: string | null, expertOpinion?: string | null, expertOpinionFileName?: string | null, expertVerdict?: string | null, fileName?: string | null, filledBy: RegistrarType, mailRoomChiefSuggestedAmount?: any | null, mailRoomExpertApprovedAmount?: any | null, suggestedAmount: any, summary?: string | null, userId: string } | null, status: { __typename: 'ResponseStatus', code: number, value: string } } };
+export type AddArgumentToComplaintMutation = { __typename?: 'Mutation', complaintArgument_addComplaintArgument: { __typename: 'ResponseBaseOfComplaintArgument', result?: { __typename: 'ComplaintArgument', id: number, accusedResponse?: string | null, accusedResponseFileName?: string | null, netApprovedAmount?: any | null, grossApprovedAmount?: any | null, complaintId: number, netCouncilApprovedAmount?: any | null, grossCouncilApprovedAmount?: any | null, description?: string | null, expertId?: string | null, expertOpinion?: string | null, expertOpinionFileName?: string | null, expertVerdict?: string | null, fileName?: string | null, filledBy: RegistrarType, netMailRoomChiefSuggestedAmount?: any | null, grossMailRoomChiefSuggestedAmount?: any | null, netMailRoomExpertApprovedAmount?: any | null, grossMailRoomExpertApprovedAmount?: any | null, suggestedAmount: any, summary?: string | null, userId: string } | null, status: { __typename: 'ResponseStatus', code: number, value: string } } };
 
 export type UpdateArgumentMutationVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -4066,6 +5027,7 @@ export type UpdateArgumentMutationVariables = Exact<{
   approvedAmount?: InputMaybe<Scalars['Decimal']['input']>;
   complaintId?: InputMaybe<Scalars['Int']['input']>;
   councilApprovedAmount?: InputMaybe<Scalars['Decimal']['input']>;
+  councilOpinion?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   expertId?: InputMaybe<Scalars['String']['input']>;
   expertOpinion?: InputMaybe<Scalars['String']['input']>;
@@ -4082,14 +5044,14 @@ export type UpdateArgumentMutationVariables = Exact<{
 }>;
 
 
-export type UpdateArgumentMutation = { __typename?: 'Mutation', complaintArgument_updateComplaintArgument: { __typename?: 'ResponseBaseOfComplaintArgument', result?: { __typename?: 'ComplaintArgument', id: number, accusedResponse?: string | null, accusedResponseFileName?: string | null, approvedAmount?: any | null, complaintId: number, councilApprovedAmount?: any | null, description?: string | null, expertId?: string | null, expertOpinion?: string | null, expertOpinionFileName?: string | null, expertVerdict?: string | null, fileName?: string | null, filledBy: RegistrarType, mailRoomChiefSuggestedAmount?: any | null, mailRoomExpertApprovedAmount?: any | null, suggestedAmount: any, summary?: string | null, userId: string } | null, status: { __typename?: 'ResponseStatus', code: number, value: string } } };
+export type UpdateArgumentMutation = { __typename?: 'Mutation', complaintArgument_updateComplaintArgument: { __typename?: 'ResponseBaseOfComplaintArgument', result?: { __typename?: 'ComplaintArgument', id: number, accusedResponse?: string | null, accusedResponseFileName?: string | null, netApprovedAmount?: any | null, grossApprovedAmount?: any | null, complaintId: number, netCouncilApprovedAmount?: any | null, grossCouncilApprovedAmount?: any | null, justiceExpertOpinion?: string | null, netJusticeExpertApprovedAmount?: any | null, grossJusticeExpertApprovedAmount?: any | null, description?: string | null, expertId?: string | null, expertOpinion?: string | null, expertOpinionFileName?: string | null, expertVerdict?: string | null, fileName?: string | null, filledBy: RegistrarType, netMailRoomChiefSuggestedAmount?: any | null, grossMailRoomChiefSuggestedAmount?: any | null, netMailRoomExpertApprovedAmount?: any | null, grossMailRoomExpertApprovedAmount?: any | null, suggestedAmount: any, summary?: string | null, userId: string } | null, status: { __typename?: 'ResponseStatus', code: number, value: string } } };
 
 export type UpdateArgumentFullMutationVariables = Exact<{
   input: ComplaintArgumentInput;
 }>;
 
 
-export type UpdateArgumentFullMutation = { __typename?: 'Mutation', complaintArgument_updateComplaintArgument: { __typename?: 'ResponseBaseOfComplaintArgument', result?: { __typename?: 'ComplaintArgument', id: number, accusedResponse?: string | null, accusedResponseFileName?: string | null, approvedAmount?: any | null, complaintId: number, councilApprovedAmount?: any | null, justiceExpertOpinion?: string | null, justiceExpertApprovedAmount?: any | null, description?: string | null, expertId?: string | null, expertOpinion?: string | null, expertOpinionFileName?: string | null, expertVerdict?: string | null, fileName?: string | null, filledBy: RegistrarType, mailRoomChiefSuggestedAmount?: any | null, mailRoomExpertApprovedAmount?: any | null, suggestedAmount: any, summary?: string | null, userId: string } | null, status: { __typename?: 'ResponseStatus', code: number, value: string } } };
+export type UpdateArgumentFullMutation = { __typename?: 'Mutation', complaintArgument_updateComplaintArgument: { __typename?: 'ResponseBaseOfComplaintArgument', result?: { __typename?: 'ComplaintArgument', id: number, accusedResponse?: string | null, accusedResponseFileName?: string | null, netApprovedAmount?: any | null, grossApprovedAmount?: any | null, complaintId: number, netCouncilApprovedAmount?: any | null, grossCouncilApprovedAmount?: any | null, justiceExpertOpinion?: string | null, netJusticeExpertApprovedAmount?: any | null, grossJusticeExpertApprovedAmount?: any | null, description?: string | null, expertId?: string | null, expertOpinion?: string | null, expertOpinionFileName?: string | null, expertVerdict?: string | null, fileName?: string | null, filledBy: RegistrarType, netMailRoomChiefSuggestedAmount?: any | null, grossMailRoomChiefSuggestedAmount?: any | null, netMailRoomExpertApprovedAmount?: any | null, grossMailRoomExpertApprovedAmount?: any | null, suggestedAmount: any, summary?: string | null, userId: string } | null, status: { __typename?: 'ResponseStatus', code: number, value: string } } };
 
 export type DeleteArgumentMutationVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -4126,57 +5088,113 @@ export type AddComplaintFileMutationMutationVariables = Exact<{
 
 export type AddComplaintFileMutationMutation = { __typename?: 'Mutation', complaintFile_addComplaintFile: { __typename?: 'ResponseBaseOfComplaintFile', result?: { __typename?: 'ComplaintFile', complaintId: number, title: string, fileId: number, description?: string | null, id: number } | null, status: { __typename?: 'ResponseStatus', code: number, value: string } } };
 
+export type GenerateComplaintVerdictMutationVariables = Exact<{
+  input: ComplaintVerdictLetterDtoInput;
+}>;
+
+
+export type GenerateComplaintVerdictMutation = { __typename?: 'Mutation', test_generateComplaintVerdictLetter: Array<string> };
+
+export type GenerateComplaintDecreeMutationVariables = Exact<{
+  input: DecreeDtoInput;
+}>;
+
+
+export type GenerateComplaintDecreeMutation = { __typename?: 'Mutation', test_generateDecree: string };
+
+export type SmsComplaintAddedMutationVariables = Exact<{
+  id: Scalars['Int']['input'];
+}>;
+
+
+export type SmsComplaintAddedMutation = { __typename?: 'Mutation', sms_sendComplaintAddedSMS: { __typename?: 'ResponseStatus', code: number, value: string } };
+
+export type SmsAccusedRespondMutationVariables = Exact<{
+  id: Scalars['Int']['input'];
+}>;
+
+
+export type SmsAccusedRespondMutation = { __typename?: 'Mutation', sms_sendAccusedRespondedSMS: { __typename?: 'ResponseStatus', code: number, value: string } };
+
+export type SmsComplaintCodeMutationVariables = Exact<{
+  id: Scalars['Int']['input'];
+}>;
+
+
+export type SmsComplaintCodeMutation = { __typename?: 'Mutation', sms_sendComplaintCodeSMS: { __typename?: 'ResponseStatus', code: number, value: string } };
+
+export type AddCorrectionRequestsMutationVariables = Exact<{
+  input: CorrectionRequestInput;
+}>;
+
+
+export type AddCorrectionRequestsMutation = { __typename?: 'Mutation', correctionRequest_addCorrectionRequest: { __typename?: 'ResponseBaseOfCorrectionRequest', result?: { __typename?: 'CorrectionRequest', complaintId: number, createdDate: any, clause: string, reason: string, suggestion: string, id: number, complaint?: { __typename?: 'Complaint', id: number, contract?: { __typename?: 'Contract', accuserDepartmentUserId?: string | null, accusedDepartmentUserId?: string | null } | null } | null } | null } };
+
+export type UpdateCorrectionRequestsMutationVariables = Exact<{
+  input: CorrectionRequestInput;
+}>;
+
+
+export type UpdateCorrectionRequestsMutation = { __typename?: 'Mutation', correctionRequest_updateCorrectionRequest: { __typename?: 'ResponseBaseOfCorrectionRequest', result?: { __typename?: 'CorrectionRequest', complaintId: number, createdDate: any, clause: string, reason: string, suggestion: string, id: number, complaint?: { __typename?: 'Complaint', id: number, contract?: { __typename?: 'Contract', accuserDepartmentUserId?: string | null, accusedDepartmentUserId?: string | null } | null } | null } | null } };
+
+export type DeleteCorrectionRequestsMutationVariables = Exact<{
+  id: Scalars['Int']['input'];
+}>;
+
+
+export type DeleteCorrectionRequestsMutation = { __typename?: 'Mutation', correctionRequest_deleteCorrectionRequest: { __typename?: 'ResponseBaseOfCorrectionRequest', result?: { __typename?: 'CorrectionRequest', id: number } | null, status: { __typename?: 'ResponseStatus', code: number, value: string } } };
+
 export type Get_ComplaintsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type Get_ComplaintsQuery = { __typename?: 'Query', complaint_getComplaints: { __typename: 'ListResponseBaseOfComplaint', status?: any | null, result?: { __typename?: 'ComplaintCollectionSegment', items?: Array<{ __typename?: 'Complaint', userId: string, id: number, contractId: number, createdDate: any, isApprovedByChief: boolean, councilListStatus: CouncilListStatus, complaintState: ComplaintState, complaintCode?: string | null, arbitrationTermsForms?: Array<{ __typename?: 'ArbitrationTermsForm', firstCondition: string, firstConditionFileName?: string | null, secondCondition: string, secondConditionFileName?: string | null, thirdCondition: string, thirdConditionFileName?: string | null, fourthCondition: string, fourthConditionFileName?: string | null }> | null, assignedUser?: { __typename?: 'User', userName?: string | null, fullName: string, phoneNumber?: string | null } | null, contract?: { __typename?: 'Contract', contractNumberByAccuser?: string | null, contractDateByAccuser?: any | null, initialBudgetByAccuser?: any | null, accusedDepartmentUserId?: string | null, accuserDepartmentUserId?: string | null } | null }> | null } | null } };
+export type Get_ComplaintsQuery = { __typename?: 'Query', complaint_getComplaints: { __typename: 'ListResponseBaseOfComplaint', status?: any | null, result?: { __typename?: 'ComplaintCollectionSegment', items?: Array<{ __typename?: 'Complaint', userId: string, id: number, contractId: number, createdDate: any, isApprovedByChief: boolean, councilListStatus: CouncilListStatus, complaintCode?: string | null, arbitrationTermsForms?: Array<{ __typename?: 'ArbitrationTermsForm', firstCondition: string, firstConditionFileName?: string | null, secondCondition: string, secondConditionFileName?: string | null, thirdCondition: string, thirdConditionFinalBillFileName?: string | null, thirdConditionNotificationLetterFileName?: string | null, thirdConditionContractorsObjectionDocumentsFileName?: string | null, fourthCondition: string, fourthConditionFileName?: string | null }> | null, complaintState?: { __typename?: 'ComplaintState', id: number, persianName: string, responsibleRole?: ResponsibleUserType | null, priority: number, isDeleted: boolean, createdDate: any } | null, assignedUser?: { __typename?: 'User', userName?: string | null, fullName: string, phoneNumber?: string | null } | null, contract?: { __typename?: 'Contract', contractNumberByAccuser?: string | null, contractDateByAccuser?: any | null, initialBudgetByAccuser?: any | null, accusedDepartmentUserId?: string | null, accuserDepartmentUserId?: string | null } | null }> | null } | null } };
 
 export type GetComplaintQueryVariables = Exact<{
   id: Scalars['Int']['input'];
 }>;
 
 
-export type GetComplaintQuery = { __typename?: 'Query', complaint_getComplaint: { __typename?: 'ResponseBaseOfComplaint', result?: { __typename?: 'Complaint', userId: string, id: number, contractId: number, isApprovedByChief: boolean, councilListStatus: CouncilListStatus, complaintState: ComplaintState, complaintCode?: string | null, arbitrationTermsForms?: Array<{ __typename?: 'ArbitrationTermsForm', firstCondition: string, firstConditionFileName?: string | null, secondCondition: string, secondConditionFileName?: string | null, thirdCondition: string, thirdConditionFileName?: string | null, fourthCondition: string, fourthConditionFileName?: string | null }> | null, assignedUser?: { __typename?: 'User', userName?: string | null, fullName: string, phoneNumber?: string | null } | null, contract?: { __typename?: 'Contract', contractNumberByAccuser?: string | null, contractDateByAccuser?: any | null, initialBudgetByAccuser?: any | null, accuserDepartmentUserId?: string | null, accusedDepartmentUserId?: string | null, contractSubjectByAccused?: string | null, contractSubjectByAccuser?: string | null } | null } | null } };
+export type GetComplaintQuery = { __typename?: 'Query', complaint_getComplaint: { __typename?: 'ResponseBaseOfComplaint', result?: { __typename?: 'Complaint', userId: string, id: number, contractId: number, isApprovedByChief: boolean, councilListStatus: CouncilListStatus, complaintCode?: string | null, arbitrationTermsForms?: Array<{ __typename?: 'ArbitrationTermsForm', firstCondition: string, firstConditionFileName?: string | null, secondCondition: string, secondConditionFileName?: string | null, thirdCondition: string, thirdConditionFinalBillFileName?: string | null, thirdConditionNotificationLetterFileName?: string | null, thirdConditionContractorsObjectionDocumentsFileName?: string | null, fourthCondition: string, fourthConditionFileName?: string | null }> | null, complaintState?: { __typename?: 'ComplaintState', id: number, persianName: string, responsibleRole?: ResponsibleUserType | null, priority: number, englishName: string, isDeleted: boolean, createdDate: any } | null, assignedUser?: { __typename?: 'User', userName?: string | null, fullName: string, phoneNumber?: string | null } | null, contract?: { __typename?: 'Contract', contractNumberByAccuser?: string | null, contractDateByAccuser?: any | null, initialBudgetByAccuser?: any | null, accuserDepartmentUserId?: string | null, accusedDepartmentUserId?: string | null, contractSubjectByAccused?: string | null, contractSubjectByAccuser?: string | null } | null } | null } };
 
 export type Get_Accused_ComplaintsQueryVariables = Exact<{
   departmentId: Scalars['String']['input'];
 }>;
 
 
-export type Get_Accused_ComplaintsQuery = { __typename?: 'Query', complaint_getComplaints: { __typename?: 'ListResponseBaseOfComplaint', result?: { __typename?: 'ComplaintCollectionSegment', items?: Array<{ __typename?: 'Complaint', userId: string, id: number, contractId: number, createdDate: any, isApprovedByChief: boolean, councilListStatus: CouncilListStatus, complaintState: ComplaintState, complaintCode?: string | null, arbitrationTermsForms?: Array<{ __typename?: 'ArbitrationTermsForm', firstCondition: string, firstConditionFileName?: string | null, secondCondition: string, secondConditionFileName?: string | null, thirdCondition: string, thirdConditionFileName?: string | null, fourthCondition: string, fourthConditionFileName?: string | null }> | null, assignedUser?: { __typename?: 'User', userName?: string | null, fullName: string, phoneNumber?: string | null } | null, contract?: { __typename?: 'Contract', contractNumberByAccuser?: string | null, contractDateByAccuser?: any | null, initialBudgetByAccuser?: any | null, accusedDepartmentUserId?: string | null, accuserDepartmentUserId?: string | null } | null }> | null } | null } };
+export type Get_Accused_ComplaintsQuery = { __typename?: 'Query', complaint_getComplaints: { __typename?: 'ListResponseBaseOfComplaint', result?: { __typename?: 'ComplaintCollectionSegment', items?: Array<{ __typename?: 'Complaint', userId: string, id: number, contractId: number, createdDate: any, isApprovedByChief: boolean, councilListStatus: CouncilListStatus, complaintCode?: string | null, arbitrationTermsForms?: Array<{ __typename?: 'ArbitrationTermsForm', firstCondition: string, firstConditionFileName?: string | null, secondCondition: string, secondConditionFileName?: string | null, thirdCondition: string, thirdConditionFinalBillFileName?: string | null, thirdConditionNotificationLetterFileName?: string | null, thirdConditionContractorsObjectionDocumentsFileName?: string | null, fourthCondition: string, fourthConditionFileName?: string | null }> | null, complaintState?: { __typename?: 'ComplaintState', id: number, persianName: string, englishName: string, priority: number, state: ComplaintStateStatus, responsibleRole?: ResponsibleUserType | null, isDeleted: boolean, createdDate: any } | null, assignedUser?: { __typename?: 'User', userName?: string | null, fullName: string, phoneNumber?: string | null } | null, contract?: { __typename?: 'Contract', contractNumberByAccuser?: string | null, contractDateByAccuser?: any | null, initialBudgetByAccuser?: any | null, accusedDepartmentUserId?: string | null, accuserDepartmentUserId?: string | null } | null }> | null } | null } };
 
 export type Get_Accuser_ComplaintsQueryVariables = Exact<{
   departmentId: Scalars['String']['input'];
 }>;
 
 
-export type Get_Accuser_ComplaintsQuery = { __typename?: 'Query', complaint_getComplaints: { __typename?: 'ListResponseBaseOfComplaint', result?: { __typename?: 'ComplaintCollectionSegment', items?: Array<{ __typename?: 'Complaint', userId: string, id: number, contractId: number, createdDate: any, isApprovedByChief: boolean, councilListStatus: CouncilListStatus, complaintState: ComplaintState, complaintCode?: string | null, arbitrationTermsForms?: Array<{ __typename?: 'ArbitrationTermsForm', firstCondition: string, firstConditionFileName?: string | null, secondCondition: string, secondConditionFileName?: string | null, thirdCondition: string, thirdConditionFileName?: string | null, fourthCondition: string, fourthConditionFileName?: string | null }> | null, assignedUser?: { __typename?: 'User', userName?: string | null, fullName: string, phoneNumber?: string | null } | null, contract?: { __typename?: 'Contract', contractNumberByAccuser?: string | null, contractDateByAccuser?: any | null, initialBudgetByAccuser?: any | null, accusedDepartmentUserId?: string | null, accuserDepartmentUserId?: string | null } | null }> | null } | null } };
+export type Get_Accuser_ComplaintsQuery = { __typename?: 'Query', complaint_getComplaints: { __typename?: 'ListResponseBaseOfComplaint', result?: { __typename?: 'ComplaintCollectionSegment', items?: Array<{ __typename?: 'Complaint', userId: string, id: number, contractId: number, createdDate: any, isApprovedByChief: boolean, councilListStatus: CouncilListStatus, complaintCode?: string | null, arbitrationTermsForms?: Array<{ __typename?: 'ArbitrationTermsForm', firstCondition: string, firstConditionFileName?: string | null, secondCondition: string, secondConditionFileName?: string | null, thirdCondition: string, thirdConditionFinalBillFileName?: string | null, thirdConditionNotificationLetterFileName?: string | null, thirdConditionContractorsObjectionDocumentsFileName?: string | null, fourthCondition: string, fourthConditionFileName?: string | null }> | null, complaintState?: { __typename?: 'ComplaintState', id: number, persianName: string, englishName: string, priority: number, state: ComplaintStateStatus, responsibleRole?: ResponsibleUserType | null, isDeleted: boolean, createdDate: any } | null, assignedUser?: { __typename?: 'User', userName?: string | null, fullName: string, phoneNumber?: string | null } | null, contract?: { __typename?: 'Contract', contractNumberByAccuser?: string | null, contractDateByAccuser?: any | null, initialBudgetByAccuser?: any | null, accusedDepartmentUserId?: string | null, accuserDepartmentUserId?: string | null } | null }> | null } | null } };
 
 export type Get_Chief_ComplaintsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type Get_Chief_ComplaintsQuery = { __typename?: 'Query', complaint_getComplaints: { __typename?: 'ListResponseBaseOfComplaint', result?: { __typename?: 'ComplaintCollectionSegment', items?: Array<{ __typename?: 'Complaint', userId: string, id: number, contractId: number, createdDate: any, isApprovedByChief: boolean, councilListStatus: CouncilListStatus, complaintState: ComplaintState, complaintCode?: string | null, arbitrationTermsForms?: Array<{ __typename?: 'ArbitrationTermsForm', firstCondition: string, firstConditionFileName?: string | null, secondCondition: string, secondConditionFileName?: string | null, thirdCondition: string, thirdConditionFileName?: string | null, fourthCondition: string, fourthConditionFileName?: string | null }> | null, assignedUser?: { __typename?: 'User', userName?: string | null, fullName: string, phoneNumber?: string | null } | null, contract?: { __typename?: 'Contract', contractNumberByAccuser?: string | null, contractDateByAccuser?: any | null, initialBudgetByAccuser?: any | null, accusedDepartmentUserId?: string | null, accuserDepartmentUserId?: string | null } | null }> | null } | null } };
+export type Get_Chief_ComplaintsQuery = { __typename?: 'Query', complaint_getComplaints: { __typename?: 'ListResponseBaseOfComplaint', result?: { __typename?: 'ComplaintCollectionSegment', items?: Array<{ __typename?: 'Complaint', userId: string, id: number, contractId: number, createdDate: any, isApprovedByChief: boolean, councilListStatus: CouncilListStatus, complaintCode?: string | null, arbitrationTermsForms?: Array<{ __typename?: 'ArbitrationTermsForm', firstCondition: string, firstConditionFileName?: string | null, secondCondition: string, secondConditionFileName?: string | null, thirdCondition: string, thirdConditionFinalBillFileName?: string | null, thirdConditionNotificationLetterFileName?: string | null, thirdConditionContractorsObjectionDocumentsFileName?: string | null, fourthCondition: string, fourthConditionFileName?: string | null }> | null, complaintState?: { __typename?: 'ComplaintState', id: number, persianName: string, englishName: string, priority: number, state: ComplaintStateStatus, responsibleRole?: ResponsibleUserType | null, isDeleted: boolean, createdDate: any } | null, assignedUser?: { __typename?: 'User', userName?: string | null, fullName: string, phoneNumber?: string | null } | null, contract?: { __typename?: 'Contract', contractNumberByAccuser?: string | null, contractDateByAccuser?: any | null, initialBudgetByAccuser?: any | null, accusedDepartmentUserId?: string | null, accuserDepartmentUserId?: string | null } | null }> | null } | null } };
 
 export type GetComplaintArgumentsQueryVariables = Exact<{
   id: Scalars['Int']['input'];
 }>;
 
 
-export type GetComplaintArgumentsQuery = { __typename?: 'Query', complaintArgument_getComplaintArguments: { __typename?: 'ListResponseBaseOfComplaintArgument', status?: any | null, result?: { __typename?: 'ComplaintArgumentCollectionSegment', items?: Array<{ __typename?: 'ComplaintArgument', id: number, accusedResponse?: string | null, accusedResponseFileName?: string | null, approvedAmount?: any | null, complaintId: number, councilApprovedAmount?: any | null, description?: string | null, expertId?: string | null, expertOpinion?: string | null, expertOpinionFileName?: string | null, expertVerdict?: string | null, fileName?: string | null, filledBy: RegistrarType, mailRoomChiefSuggestedAmount?: any | null, mailRoomExpertApprovedAmount?: any | null, accuserAnswerToAccusedResponse?: string | null, suggestedAmount: any, summary?: string | null, userId: string }> | null } | null } };
+export type GetComplaintArgumentsQuery = { __typename?: 'Query', complaintArgument_getComplaintArguments: { __typename?: 'ListResponseBaseOfComplaintArgument', status?: any | null, result?: { __typename?: 'ComplaintArgumentCollectionSegment', items?: Array<{ __typename?: 'ComplaintArgument', id: number, accusedResponse?: string | null, accusedResponseFileName?: string | null, netApprovedAmount?: any | null, grossApprovedAmount?: any | null, complaintId: number, netCouncilApprovedAmount?: any | null, grossCouncilApprovedAmount?: any | null, description?: string | null, expertId?: string | null, expertOpinion?: string | null, expertOpinionFileName?: string | null, expertVerdict?: string | null, fileName?: string | null, filledBy: RegistrarType, netMailRoomChiefSuggestedAmount?: any | null, grossMailRoomChiefSuggestedAmount?: any | null, netMailRoomExpertApprovedAmount?: any | null, grossMailRoomExpertApprovedAmount?: any | null, accuserAnswerToAccusedResponse?: string | null, suggestedAmount: any, summary?: string | null, userId: string }> | null } | null } };
 
 export type Get_Complaint_AssignedQueryVariables = Exact<{
   id: Scalars['String']['input'];
 }>;
 
 
-export type Get_Complaint_AssignedQuery = { __typename?: 'Query', complaint_getComplaints: { __typename?: 'ListResponseBaseOfComplaint', result?: { __typename?: 'ComplaintCollectionSegment', items?: Array<{ __typename?: 'Complaint', userId: string, id: number, contractId: number, createdDate: any, isApprovedByChief: boolean, councilListStatus: CouncilListStatus, complaintState: ComplaintState, complaintCode?: string | null, arbitrationTermsForms?: Array<{ __typename?: 'ArbitrationTermsForm', firstCondition: string, firstConditionFileName?: string | null, secondCondition: string, secondConditionFileName?: string | null, thirdCondition: string, thirdConditionFileName?: string | null, fourthCondition: string, fourthConditionFileName?: string | null }> | null, assignedUser?: { __typename?: 'User', userName?: string | null, fullName: string, phoneNumber?: string | null } | null, contract?: { __typename?: 'Contract', contractNumberByAccuser?: string | null, contractDateByAccuser?: any | null, initialBudgetByAccuser?: any | null, accusedDepartmentUserId?: string | null, accuserDepartmentUserId?: string | null } | null }> | null } | null } };
+export type Get_Complaint_AssignedQuery = { __typename?: 'Query', complaint_getComplaints: { __typename?: 'ListResponseBaseOfComplaint', result?: { __typename?: 'ComplaintCollectionSegment', items?: Array<{ __typename?: 'Complaint', userId: string, id: number, contractId: number, createdDate: any, isApprovedByChief: boolean, councilListStatus: CouncilListStatus, complaintCode?: string | null, arbitrationTermsForms?: Array<{ __typename?: 'ArbitrationTermsForm', firstCondition: string, firstConditionFileName?: string | null, secondCondition: string, secondConditionFileName?: string | null, thirdCondition: string, thirdConditionFinalBillFileName?: string | null, thirdConditionNotificationLetterFileName?: string | null, thirdConditionContractorsObjectionDocumentsFileName?: string | null, fourthCondition: string, fourthConditionFileName?: string | null }> | null, complaintState?: { __typename?: 'ComplaintState', id: number, persianName: string, englishName: string, state: ComplaintStateStatus, priority: number, responsibleRole?: ResponsibleUserType | null, isDeleted: boolean, createdDate: any } | null, assignedUser?: { __typename?: 'User', userName?: string | null, fullName: string, phoneNumber?: string | null } | null, contract?: { __typename?: 'Contract', contractNumberByAccuser?: string | null, contractDateByAccuser?: any | null, initialBudgetByAccuser?: any | null, accusedDepartmentUserId?: string | null, accuserDepartmentUserId?: string | null } | null }> | null } | null } };
 
 export type Get_Arbitration_Terms_FormQueryVariables = Exact<{
   id: Scalars['Int']['input'];
 }>;
 
 
-export type Get_Arbitration_Terms_FormQuery = { __typename?: 'Query', arbitrationTermsForm_getArbitrationTermsForms: { __typename?: 'ListResponseBaseOfArbitrationTermsForm', result?: { __typename?: 'ArbitrationTermsFormCollectionSegment', items?: Array<{ __typename?: 'ArbitrationTermsForm', id: number, complaintId: number, firstCondition: string, firstConditionFileName?: string | null, secondCondition: string, secondConditionFileName?: string | null, thirdCondition: string, thirdConditionFileName?: string | null, fourthCondition: string, fourthConditionFileName?: string | null, filledBy: RegistrarType }> | null } | null } };
+export type Get_Arbitration_Terms_FormQuery = { __typename?: 'Query', arbitrationTermsForm_getArbitrationTermsForms: { __typename?: 'ListResponseBaseOfArbitrationTermsForm', result?: { __typename?: 'ArbitrationTermsFormCollectionSegment', items?: Array<{ __typename?: 'ArbitrationTermsForm', id: number, complaintId: number, firstCondition: string, firstConditionFileName?: string | null, secondCondition: string, secondConditionFileName?: string | null, thirdCondition: string, thirdConditionFinalBillFileName?: string | null, thirdConditionNotificationLetterFileName?: string | null, thirdConditionContractorsObjectionDocumentsFileName?: string | null, fourthCondition: string, fourthConditionFileName?: string | null, filledBy: RegistrarType }> | null } | null } };
 
 export type GetContractsFilesQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -4197,6 +5215,13 @@ export type GetComplaintsNotesQueryVariables = Exact<{
 
 export type GetComplaintsNotesQuery = { __typename?: 'Query', complaintNote_getComplaintNotes: { __typename?: 'ListResponseBaseOfComplaintNote', status?: any | null, result?: { __typename?: 'ComplaintNoteCollectionSegment', items?: Array<{ __typename?: 'ComplaintNote', id: number, complaintId: number, userId: string, content: string, createdDate: any }> | null } | null } };
 
+export type GetExpertComplaintsQueryVariables = Exact<{
+  userId: Scalars['String']['input'];
+}>;
+
+
+export type GetExpertComplaintsQuery = { __typename?: 'Query', complaint_getExpertComplaints: { __typename?: 'ListResponseBaseOfComplaint', result?: { __typename?: 'ComplaintCollectionSegment', items?: Array<{ __typename?: 'Complaint', userId: string, id: number, contractId: number, createdDate: any, isApprovedByChief: boolean, councilListStatus: CouncilListStatus, complaintCode?: string | null, councilExpertIds?: Array<string> | null, isFirstPaymentPaid: boolean, isSecondPaymentPaid: boolean, arbitrationTermsForms?: Array<{ __typename?: 'ArbitrationTermsForm', firstCondition: string, firstConditionFileName?: string | null, secondCondition: string, secondConditionFileName?: string | null, thirdCondition: string, thirdConditionFinalBillFileName?: string | null, thirdConditionNotificationLetterFileName?: string | null, thirdConditionContractorsObjectionDocumentsFileName?: string | null, fourthCondition: string, fourthConditionFileName?: string | null, filledBy: RegistrarType, projectNumber?: string | null, projectName?: string | null }> | null, complaintState?: { __typename?: 'ComplaintState', id: number, persianName: string, englishName: string, state: ComplaintStateStatus, priority: number, responsibleRole?: ResponsibleUserType | null, isDeleted: boolean, createdDate: any } | null, assignedUser?: { __typename?: 'User', userName?: string | null, fullName: string, phoneNumber?: string | null } | null, contract?: { __typename?: 'Contract', id: number, accuserDepartmentUserId?: string | null, accusedDepartmentUserId?: string | null, accuserNationality?: string | null, accusedNationality?: string | null, accuserRelatedPeopleByAccuser?: string | null, accuserRelatedPeopleByAccused?: string | null, accusedRelatedPeopleByAccuser?: string | null, accusedRelatedPeopleByAccused?: string | null, contractTypeByAccused?: Array<string> | null, contractTypeByAccuser?: Array<string> | null, otherContractTypeByAccused?: string | null, otherContractTypeByAccuser?: string | null, circularNumberByAccused?: string | null, circularNumberByAccuser?: string | null, circularDateByAccused?: any | null, circularDateByAccuser?: any | null, contractSubjectByAccused?: string | null, contractSubjectByAccuser?: string | null, contractNumberByAccused?: string | null, contractNumberByAccuser?: string | null, contractDateByAccused?: any | null, contractDateByAccuser?: any | null, initialBudgetByAccused?: any | null, initialBudgetByAccuser?: any | null, initialTimePeriodByAccused?: number | null, initialTimePeriodByAccuser?: number | null, priceListOfBasicUnitOfFieldByAccused?: string | null, priceListOfBasicUnitOfFieldByAccuser?: string | null, isSpecialPriceListAttachedToContractByAccused?: string | null, isSpecialPriceListAttachedToContractByAccuser?: string | null, recommendedCoefficientByAccused?: number | null, recommendedCoefficientByAccuser?: number | null, coefficientTypeByAccused?: string | null, coefficientTypeByAccuser?: string | null, assigningTypeByAccused?: string | null, assigningTypeByAccuser?: string | null, doesContainAdjustmentByAccused?: string | null, doesContainAdjustmentByAccuser?: string | null, baseIndexPeriodByAccused?: string | null, baseIndexPeriodByAccuser?: string | null, operationStartDateByAccused?: any | null, operationStartDateByAccuser?: any | null, physicalProgressInArbitrationDateByAccused?: number | null, physicalProgressInArbitrationDateByAccuser?: number | null, financialProgressInArbitrationDateByAccused?: number | null, financialProgressInArbitrationDateByAccuser?: number | null, contractStatusAndDateInArbitrationByAccused?: string | null, contractStatusAndDateInArbitrationByAccuser?: string | null, supervisionDepartmentByAccused?: string | null, supervisionDepartmentByAccuser?: string | null, authorizedDelaysByAccused?: number | null, authorizedDelaysByAccuser?: number | null, unauthorizedDelaysByAccused?: number | null, unauthorizedDelaysByAccuser?: number | null, isExecutiveByAccused?: boolean | null, isExecutiveByAccuser?: boolean | null, isExecutiveByExpert?: boolean | null, fileNamesByAccused?: Array<string> | null, fileNamesByAccuser?: Array<string> | null } | null }> | null } | null } };
+
 export type GetComplaintsWithFilterQueryVariables = Exact<{
   filter?: InputMaybe<ComplaintFilterInput>;
   take?: InputMaybe<Scalars['Int']['input']>;
@@ -4205,7 +5230,7 @@ export type GetComplaintsWithFilterQueryVariables = Exact<{
 }>;
 
 
-export type GetComplaintsWithFilterQuery = { __typename?: 'Query', complaint_getComplaints: { __typename?: 'ListResponseBaseOfComplaint', result?: { __typename?: 'ComplaintCollectionSegment', items?: Array<{ __typename?: 'Complaint', userId: string, id: number, contractId: number, createdDate: any, isApprovedByChief: boolean, councilListStatus: CouncilListStatus, complaintState: ComplaintState, complaintCode?: string | null, councilExpertId?: string | null, arbitrationTermsForms?: Array<{ __typename?: 'ArbitrationTermsForm', firstCondition: string, firstConditionFileName?: string | null, secondCondition: string, secondConditionFileName?: string | null, thirdCondition: string, thirdConditionFileName?: string | null, fourthCondition: string, fourthConditionFileName?: string | null }> | null, assignedUser?: { __typename?: 'User', userName?: string | null, fullName: string, phoneNumber?: string | null } | null, contract?: { __typename?: 'Contract', id: number, accuserDepartmentUserId?: string | null, accusedDepartmentUserId?: string | null, accuserNationality?: string | null, accusedNationality?: string | null, accuserRelatedPeopleByAccuser?: string | null, accuserRelatedPeopleByAccused?: string | null, accusedRelatedPeopleByAccuser?: string | null, accusedRelatedPeopleByAccused?: string | null, contractTypeByAccused?: Array<string> | null, contractTypeByAccuser?: Array<string> | null, otherContractTypeByAccused?: string | null, otherContractTypeByAccuser?: string | null, circularNumberByAccused?: string | null, circularNumberByAccuser?: string | null, circularDateByAccused?: any | null, circularDateByAccuser?: any | null, contractSubjectByAccused?: string | null, contractSubjectByAccuser?: string | null, contractNumberByAccused?: string | null, contractNumberByAccuser?: string | null, contractDateByAccused?: any | null, contractDateByAccuser?: any | null, initialBudgetByAccused?: any | null, initialBudgetByAccuser?: any | null, initialTimePeriodByAccused?: number | null, initialTimePeriodByAccuser?: number | null, priceListOfBasicUnitOfFieldByAccused?: string | null, priceListOfBasicUnitOfFieldByAccuser?: string | null, isSpecialPriceListAttachedToContractByAccused?: string | null, isSpecialPriceListAttachedToContractByAccuser?: string | null, recommendedCoefficientByAccused?: number | null, recommendedCoefficientByAccuser?: number | null, coefficientTypeByAccused?: string | null, coefficientTypeByAccuser?: string | null, assigningTypeByAccused?: string | null, assigningTypeByAccuser?: string | null, doesContainAdjustmentByAccused?: string | null, doesContainAdjustmentByAccuser?: string | null, baseIndexPeriodByAccused?: string | null, baseIndexPeriodByAccuser?: string | null, operationStartDateByAccused?: any | null, operationStartDateByAccuser?: any | null, physicalProgressInArbitrationDateByAccused?: number | null, physicalProgressInArbitrationDateByAccuser?: number | null, financialProgressInArbitrationDateByAccused?: number | null, financialProgressInArbitrationDateByAccuser?: number | null, contractStatusAndDateInArbitrationByAccused?: Array<string> | null, contractStatusAndDateInArbitrationByAccuser?: Array<string> | null, supervisionDepartmentByAccused?: string | null, supervisionDepartmentByAccuser?: string | null, authorizedDelaysByAccused?: number | null, authorizedDelaysByAccuser?: number | null, unauthorizedDelaysByAccused?: number | null, unauthorizedDelaysByAccuser?: number | null, isExecutive?: boolean | null, fileNamesByAccused?: Array<string> | null, fileNamesByAccuser?: Array<string> | null } | null }> | null } | null } };
+export type GetComplaintsWithFilterQuery = { __typename?: 'Query', complaint_getComplaints: { __typename?: 'ListResponseBaseOfComplaint', result?: { __typename?: 'ComplaintCollectionSegment', items?: Array<{ __typename?: 'Complaint', userId: string, id: number, contractId: number, createdDate: any, isApprovedByChief: boolean, councilListStatus: CouncilListStatus, complaintCode?: string | null, councilExpertIds?: Array<string> | null, isFirstPaymentPaid: boolean, isSecondPaymentPaid: boolean, arbitrationTermsForms?: Array<{ __typename?: 'ArbitrationTermsForm', firstCondition: string, firstConditionFileName?: string | null, secondCondition: string, secondConditionFileName?: string | null, thirdCondition: string, thirdConditionFinalBillFileName?: string | null, thirdConditionNotificationLetterFileName?: string | null, thirdConditionContractorsObjectionDocumentsFileName?: string | null, fourthCondition: string, fourthConditionFileName?: string | null, filledBy: RegistrarType, projectNumber?: string | null, projectName?: string | null }> | null, complaintState?: { __typename?: 'ComplaintState', id: number, persianName: string, englishName: string, state: ComplaintStateStatus, priority: number, responsibleRole?: ResponsibleUserType | null, isDeleted: boolean, createdDate: any } | null, assignedUser?: { __typename?: 'User', userName?: string | null, fullName: string, phoneNumber?: string | null } | null, contract?: { __typename?: 'Contract', id: number, accuserDepartmentUserId?: string | null, accusedDepartmentUserId?: string | null, accuserNationality?: string | null, accusedNationality?: string | null, accuserRelatedPeopleByAccuser?: string | null, accuserRelatedPeopleByAccused?: string | null, accusedRelatedPeopleByAccuser?: string | null, accusedRelatedPeopleByAccused?: string | null, contractTypeByAccused?: Array<string> | null, contractTypeByAccuser?: Array<string> | null, otherContractTypeByAccused?: string | null, otherContractTypeByAccuser?: string | null, circularNumberByAccused?: string | null, circularNumberByAccuser?: string | null, circularDateByAccused?: any | null, circularDateByAccuser?: any | null, contractSubjectByAccused?: string | null, contractSubjectByAccuser?: string | null, contractNumberByAccused?: string | null, contractNumberByAccuser?: string | null, contractDateByAccused?: any | null, contractDateByAccuser?: any | null, initialBudgetByAccused?: any | null, initialBudgetByAccuser?: any | null, initialTimePeriodByAccused?: number | null, initialTimePeriodByAccuser?: number | null, priceListOfBasicUnitOfFieldByAccused?: string | null, priceListOfBasicUnitOfFieldByAccuser?: string | null, isSpecialPriceListAttachedToContractByAccused?: string | null, isSpecialPriceListAttachedToContractByAccuser?: string | null, recommendedCoefficientByAccused?: number | null, recommendedCoefficientByAccuser?: number | null, coefficientTypeByAccused?: string | null, coefficientTypeByAccuser?: string | null, assigningTypeByAccused?: string | null, assigningTypeByAccuser?: string | null, doesContainAdjustmentByAccused?: string | null, doesContainAdjustmentByAccuser?: string | null, baseIndexPeriodByAccused?: string | null, baseIndexPeriodByAccuser?: string | null, operationStartDateByAccused?: any | null, operationStartDateByAccuser?: any | null, physicalProgressInArbitrationDateByAccused?: number | null, physicalProgressInArbitrationDateByAccuser?: number | null, financialProgressInArbitrationDateByAccused?: number | null, financialProgressInArbitrationDateByAccuser?: number | null, contractStatusAndDateInArbitrationByAccused?: string | null, contractStatusAndDateInArbitrationByAccuser?: string | null, supervisionDepartmentByAccused?: string | null, supervisionDepartmentByAccuser?: string | null, authorizedDelaysByAccused?: number | null, authorizedDelaysByAccuser?: number | null, unauthorizedDelaysByAccused?: number | null, unauthorizedDelaysByAccuser?: number | null, isExecutiveByAccused?: boolean | null, isExecutiveByAccuser?: boolean | null, isExecutiveByExpert?: boolean | null, fileNamesByAccused?: Array<string> | null, fileNamesByAccuser?: Array<string> | null } | null }> | null } | null } };
 
 export type GetArgumentsWithFilterQueryVariables = Exact<{
   filter?: InputMaybe<ComplaintArgumentFilterInput>;
@@ -4215,7 +5240,17 @@ export type GetArgumentsWithFilterQueryVariables = Exact<{
 }>;
 
 
-export type GetArgumentsWithFilterQuery = { __typename?: 'Query', complaintArgument_getComplaintArguments: { __typename?: 'ListResponseBaseOfComplaintArgument', status?: any | null, result?: { __typename?: 'ComplaintArgumentCollectionSegment', items?: Array<{ __typename?: 'ComplaintArgument', id: number, accusedResponse?: string | null, accusedResponseFileName?: string | null, approvedAmount?: any | null, complaintId: number, councilApprovedAmount?: any | null, councilOpinion?: any | null, justiceExpertOpinion?: string | null, justiceExpertApprovedAmount?: any | null, description?: string | null, expertId?: string | null, expertOpinion?: string | null, expertOpinionFileName?: string | null, expertVerdict?: string | null, fileName?: string | null, filledBy: RegistrarType, mailRoomChiefSuggestedAmount?: any | null, mailRoomExpertApprovedAmount?: any | null, mailRoomExpertOpinionOnExpertOpinion?: string | null, mailRoomChiefOpinionOnArgument?: string | null, mailRoomExpertOpinionOnArgument?: string | null, accuserAnswerToAccusedResponse?: string | null, suggestedAmount: any, summary?: string | null, userId: string, createdDate: any, isDeleted: boolean }> | null } | null } };
+export type GetArgumentsWithFilterQuery = { __typename?: 'Query', complaintArgument_getComplaintArguments: { __typename?: 'ListResponseBaseOfComplaintArgument', status?: any | null, result?: { __typename?: 'ComplaintArgumentCollectionSegment', items?: Array<{ __typename?: 'ComplaintArgument', id: number, accusedResponse?: string | null, accusedResponseFileName?: string | null, netApprovedAmount?: any | null, grossApprovedAmount?: any | null, complaintId: number, netCouncilApprovedAmount?: any | null, grossCouncilApprovedAmount?: any | null, councilOpinion?: string | null, justiceExpertOpinion?: string | null, netJusticeExpertApprovedAmount?: any | null, grossJusticeExpertApprovedAmount?: any | null, description?: string | null, expertId?: string | null, expertOpinion?: string | null, expertOpinionFileName?: string | null, expertVerdict?: string | null, fileName?: string | null, filledBy: RegistrarType, netMailRoomChiefSuggestedAmount?: any | null, grossMailRoomChiefSuggestedAmount?: any | null, netMailRoomExpertApprovedAmount?: any | null, grossMailRoomExpertApprovedAmount?: any | null, mailRoomExpertOpinionOnExpertOpinion?: string | null, mailRoomChiefOpinionOnArgument?: string | null, mailRoomExpertOpinionOnArgument?: string | null, accuserAnswerToAccusedResponse?: string | null, suggestedAmount: any, summary?: string | null, userId: string, createdDate: any, isDeleted: boolean, financialSituation?: string | null }> | null } | null } };
+
+export type GetCorrectionRequestsFullQueryQueryVariables = Exact<{
+  filter?: InputMaybe<CorrectionRequestFilterInput>;
+  orderBy?: InputMaybe<Array<CorrectionRequestSortInput> | CorrectionRequestSortInput>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type GetCorrectionRequestsFullQueryQuery = { __typename?: 'Query', correctionRequest_getCorrectionRequests: { __typename?: 'ListResponseBaseOfCorrectionRequest', result?: { __typename?: 'CorrectionRequestCollectionSegment', items?: Array<{ __typename?: 'CorrectionRequest', complaintId: number, createdDate: any, clause: string, reason: string, suggestion: string, id: number, complaint?: { __typename?: 'Complaint', id: number, contract?: { __typename?: 'Contract', accuserDepartmentUserId?: string | null, accusedDepartmentUserId?: string | null } | null } | null }> | null } | null } };
 
 export type Create_ContractMutationVariables = Exact<{
   AccuserRelatedPeople?: InputMaybe<Scalars['String']['input']>;
@@ -4228,7 +5263,7 @@ export type Create_ContractMutationVariables = Exact<{
   ContractNumber?: InputMaybe<Scalars['String']['input']>;
   ContractDate?: InputMaybe<Scalars['Date']['input']>;
   InitialBudget?: InputMaybe<Scalars['Decimal']['input']>;
-  InitialTimePeriod?: InputMaybe<Scalars['Int']['input']>;
+  InitialTimePeriod?: InputMaybe<Scalars['Float']['input']>;
   PriceListOfBasicUnitOfField?: InputMaybe<Scalars['String']['input']>;
   IsSpecialPriceListAttachedToContract?: InputMaybe<Scalars['String']['input']>;
   RecommendedCoefficient?: InputMaybe<Scalars['Float']['input']>;
@@ -4239,12 +5274,19 @@ export type Create_ContractMutationVariables = Exact<{
   OperationStartDateAccuser?: InputMaybe<Scalars['Date']['input']>;
   PhysicalProgressInArbitrationDateAccuser?: InputMaybe<Scalars['Int']['input']>;
   FinancialProgressInArbitrationDateAccuser?: InputMaybe<Scalars['Int']['input']>;
-  ContractStatusInArbitration?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+  ContractStatusInArbitration: Scalars['String']['input'];
   SupervisionDepartment?: InputMaybe<Scalars['String']['input']>;
   AuthorizedDelaysAccuser?: InputMaybe<Scalars['Int']['input']>;
   UnauthorizedDelaysAccuser?: InputMaybe<Scalars['Int']['input']>;
   AccusedDepartmentId?: InputMaybe<Scalars['String']['input']>;
   AccuserDepartmentId?: InputMaybe<Scalars['String']['input']>;
+  Currency?: InputMaybe<Scalars['String']['input']>;
+  fileNamesByAccuser?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+  generalConditionsFileName?: InputMaybe<Scalars['String']['input']>;
+  ContractGeneralType?: InputMaybe<ContractGeneralType>;
+  agreementFileName?: InputMaybe<Scalars['String']['input']>;
+  privateTermsFileName?: InputMaybe<Scalars['String']['input']>;
+  otherAttachmentFileName?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
 }>;
 
 
@@ -4261,7 +5303,7 @@ export type Update_Contract_By_AccusedMutationVariables = Exact<{
   ContractNumber?: InputMaybe<Scalars['String']['input']>;
   ContractDate?: InputMaybe<Scalars['Date']['input']>;
   InitialBudget?: InputMaybe<Scalars['Decimal']['input']>;
-  InitialTimePeriod?: InputMaybe<Scalars['Int']['input']>;
+  InitialTimePeriod?: InputMaybe<Scalars['Float']['input']>;
   PriceListOfBasicUnitOfField?: InputMaybe<Scalars['String']['input']>;
   IsSpecialPriceListAttachedToContract?: InputMaybe<Scalars['String']['input']>;
   RecommendedCoefficient?: InputMaybe<Scalars['Float']['input']>;
@@ -4272,11 +5314,18 @@ export type Update_Contract_By_AccusedMutationVariables = Exact<{
   OperationStartDateAccuser?: InputMaybe<Scalars['Date']['input']>;
   PhysicalProgressInArbitrationDateAccuser?: InputMaybe<Scalars['Int']['input']>;
   FinancialProgressInArbitrationDateAccuser?: InputMaybe<Scalars['Int']['input']>;
-  ContractStatusInArbitration?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+  ContractStatusInArbitration: Scalars['String']['input'];
   SupervisionDepartment?: InputMaybe<Scalars['String']['input']>;
   AuthorizedDelaysAccuser?: InputMaybe<Scalars['Int']['input']>;
   UnauthorizedDelaysAccuser?: InputMaybe<Scalars['Int']['input']>;
   id: Scalars['Int']['input'];
+  Currency?: InputMaybe<Scalars['String']['input']>;
+  fileNamesByAccused?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+  generalConditionsFileName?: InputMaybe<Scalars['String']['input']>;
+  ContractGeneralType?: InputMaybe<ContractGeneralType>;
+  agreementFileName?: InputMaybe<Scalars['String']['input']>;
+  privateTermsFileName?: InputMaybe<Scalars['String']['input']>;
+  otherAttachmentFileName?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
 }>;
 
 
@@ -4293,7 +5342,7 @@ export type Update_Contract_By_AccuserMutationVariables = Exact<{
   ContractNumber?: InputMaybe<Scalars['String']['input']>;
   ContractDate?: InputMaybe<Scalars['Date']['input']>;
   InitialBudget?: InputMaybe<Scalars['Decimal']['input']>;
-  InitialTimePeriod?: InputMaybe<Scalars['Int']['input']>;
+  InitialTimePeriod?: InputMaybe<Scalars['Float']['input']>;
   PriceListOfBasicUnitOfField?: InputMaybe<Scalars['String']['input']>;
   IsSpecialPriceListAttachedToContract?: InputMaybe<Scalars['String']['input']>;
   RecommendedCoefficient?: InputMaybe<Scalars['Float']['input']>;
@@ -4304,13 +5353,20 @@ export type Update_Contract_By_AccuserMutationVariables = Exact<{
   OperationStartDateAccuser?: InputMaybe<Scalars['Date']['input']>;
   PhysicalProgressInArbitrationDateAccuser?: InputMaybe<Scalars['Int']['input']>;
   FinancialProgressInArbitrationDateAccuser?: InputMaybe<Scalars['Int']['input']>;
-  ContractStatusInArbitration?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+  ContractStatusInArbitration: Scalars['String']['input'];
   SupervisionDepartment?: InputMaybe<Scalars['String']['input']>;
   AuthorizedDelaysAccuser?: InputMaybe<Scalars['Int']['input']>;
   UnauthorizedDelaysAccuser?: InputMaybe<Scalars['Int']['input']>;
   id: Scalars['Int']['input'];
   AccusedDepartmentId?: InputMaybe<Scalars['String']['input']>;
   AccuserDepartmentId?: InputMaybe<Scalars['String']['input']>;
+  Currency?: InputMaybe<Scalars['String']['input']>;
+  fileNamesByAccuser?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+  generalConditionsFileName?: InputMaybe<Scalars['String']['input']>;
+  ContractGeneralType?: InputMaybe<ContractGeneralType>;
+  agreementFileName?: InputMaybe<Scalars['String']['input']>;
+  privateTermsFileName?: InputMaybe<Scalars['String']['input']>;
+  otherAttachmentFileName?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
 }>;
 
 
@@ -4322,7 +5378,7 @@ export type Update_Contract_By_ExpertMutationVariables = Exact<{
 }>;
 
 
-export type Update_Contract_By_ExpertMutation = { __typename?: 'Mutation', contract_updateContract: { __typename?: 'ResponseBaseOfContract', result?: { __typename?: 'Contract', id: number, isExecutive?: boolean | null } | null, status: { __typename?: 'ResponseStatus', code: number, value: string } } };
+export type Update_Contract_By_ExpertMutation = { __typename?: 'Mutation', contract_updateContract: { __typename?: 'ResponseBaseOfContract', result?: { __typename?: 'Contract', id: number, isExecutiveByAccused?: boolean | null, isExecutiveByAccuser?: boolean | null, isExecutiveByExpert?: boolean | null } | null, status: { __typename?: 'ResponseStatus', code: number, value: string } } };
 
 export type DeleteContractMutationVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -4341,7 +5397,17 @@ export type GetContractQueryVariables = Exact<{
 }>;
 
 
-export type GetContractQuery = { __typename?: 'Query', contract_getContracts: { __typename?: 'ListResponseBaseOfContract', status?: any | null, result?: { __typename?: 'ContractCollectionSegment', items?: Array<{ __typename?: 'Contract', id: number, accuserDepartmentUserId?: string | null, accusedDepartmentUserId?: string | null, accuserNationality?: string | null, accusedNationality?: string | null, accuserRelatedPeopleByAccuser?: string | null, accuserRelatedPeopleByAccused?: string | null, accusedRelatedPeopleByAccuser?: string | null, accusedRelatedPeopleByAccused?: string | null, contractTypeByAccused?: Array<string> | null, contractTypeByAccuser?: Array<string> | null, otherContractTypeByAccused?: string | null, otherContractTypeByAccuser?: string | null, circularNumberByAccused?: string | null, circularNumberByAccuser?: string | null, circularDateByAccused?: any | null, circularDateByAccuser?: any | null, contractSubjectByAccused?: string | null, contractSubjectByAccuser?: string | null, contractNumberByAccused?: string | null, contractNumberByAccuser?: string | null, contractDateByAccused?: any | null, contractDateByAccuser?: any | null, initialBudgetByAccused?: any | null, initialBudgetByAccuser?: any | null, initialTimePeriodByAccused?: number | null, initialTimePeriodByAccuser?: number | null, priceListOfBasicUnitOfFieldByAccused?: string | null, priceListOfBasicUnitOfFieldByAccuser?: string | null, isSpecialPriceListAttachedToContractByAccused?: string | null, isSpecialPriceListAttachedToContractByAccuser?: string | null, recommendedCoefficientByAccused?: number | null, recommendedCoefficientByAccuser?: number | null, coefficientTypeByAccused?: string | null, coefficientTypeByAccuser?: string | null, assigningTypeByAccused?: string | null, assigningTypeByAccuser?: string | null, doesContainAdjustmentByAccused?: string | null, doesContainAdjustmentByAccuser?: string | null, baseIndexPeriodByAccused?: string | null, baseIndexPeriodByAccuser?: string | null, operationStartDateByAccused?: any | null, operationStartDateByAccuser?: any | null, physicalProgressInArbitrationDateByAccused?: number | null, physicalProgressInArbitrationDateByAccuser?: number | null, financialProgressInArbitrationDateByAccused?: number | null, financialProgressInArbitrationDateByAccuser?: number | null, contractStatusAndDateInArbitrationByAccused?: Array<string> | null, contractStatusAndDateInArbitrationByAccuser?: Array<string> | null, supervisionDepartmentByAccused?: string | null, supervisionDepartmentByAccuser?: string | null, authorizedDelaysByAccused?: number | null, authorizedDelaysByAccuser?: number | null, unauthorizedDelaysByAccused?: number | null, unauthorizedDelaysByAccuser?: number | null, isExecutive?: boolean | null, fileNamesByAccused?: Array<string> | null, fileNamesByAccuser?: Array<string> | null }> | null } | null } };
+export type GetContractQuery = { __typename?: 'Query', contract_getContracts: { __typename?: 'ListResponseBaseOfContract', status?: any | null, result?: { __typename?: 'ContractCollectionSegment', items?: Array<{ __typename?: 'Contract', id: number, accuserDepartmentUserId?: string | null, accusedDepartmentUserId?: string | null, accuserNationality?: string | null, accusedNationality?: string | null, accuserRelatedPeopleByAccuser?: string | null, accuserRelatedPeopleByAccused?: string | null, accusedRelatedPeopleByAccuser?: string | null, accusedRelatedPeopleByAccused?: string | null, contractTypeByAccused?: Array<string> | null, contractTypeByAccuser?: Array<string> | null, otherContractTypeByAccused?: string | null, otherContractTypeByAccuser?: string | null, circularNumberByAccused?: string | null, circularNumberByAccuser?: string | null, circularDateByAccused?: any | null, circularDateByAccuser?: any | null, contractSubjectByAccused?: string | null, contractSubjectByAccuser?: string | null, contractNumberByAccused?: string | null, contractNumberByAccuser?: string | null, contractDateByAccused?: any | null, contractDateByAccuser?: any | null, initialBudgetByAccused?: any | null, initialBudgetByAccuser?: any | null, initialTimePeriodByAccused?: number | null, initialTimePeriodByAccuser?: number | null, priceListOfBasicUnitOfFieldByAccused?: string | null, priceListOfBasicUnitOfFieldByAccuser?: string | null, isSpecialPriceListAttachedToContractByAccused?: string | null, isSpecialPriceListAttachedToContractByAccuser?: string | null, recommendedCoefficientByAccused?: number | null, recommendedCoefficientByAccuser?: number | null, coefficientTypeByAccused?: string | null, coefficientTypeByAccuser?: string | null, assigningTypeByAccused?: string | null, assigningTypeByAccuser?: string | null, doesContainAdjustmentByAccused?: string | null, doesContainAdjustmentByAccuser?: string | null, baseIndexPeriodByAccused?: string | null, baseIndexPeriodByAccuser?: string | null, operationStartDateByAccused?: any | null, operationStartDateByAccuser?: any | null, physicalProgressInArbitrationDateByAccused?: number | null, physicalProgressInArbitrationDateByAccuser?: number | null, financialProgressInArbitrationDateByAccused?: number | null, financialProgressInArbitrationDateByAccuser?: number | null, contractStatusAndDateInArbitrationByAccused?: string | null, contractStatusAndDateInArbitrationByAccuser?: string | null, supervisionDepartmentByAccused?: string | null, supervisionDepartmentByAccuser?: string | null, authorizedDelaysByAccused?: number | null, authorizedDelaysByAccuser?: number | null, unauthorizedDelaysByAccused?: number | null, unauthorizedDelaysByAccuser?: number | null, isExecutiveByAccused?: boolean | null, isExecutiveByAccuser?: boolean | null, isExecutiveByExpert?: boolean | null, fileNamesByAccused?: Array<string> | null, fileNamesByAccuser?: Array<string> | null, currencyByAccused?: string | null, currencyByAccuser?: string | null, generalConditionsFileNameByAccuser?: string | null, generalConditionsFileNameByAccused?: string | null, contractGeneralTypeByAccused?: ContractGeneralType | null, contractGeneralTypeByAccuser?: ContractGeneralType | null }> | null } | null } };
+
+export type GetPublicContractsQueryVariables = Exact<{
+  filter?: InputMaybe<PublicContractFilterInput>;
+  order?: InputMaybe<Array<PublicContractSortInput> | PublicContractSortInput>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type GetPublicContractsQuery = { __typename?: 'Query', publicContract_getPublicContracts: { __typename?: 'ListResponseBaseOfPublicContract', status?: any | null, result?: { __typename?: 'PublicContractCollectionSegment', items?: Array<{ __typename?: 'PublicContract', guid?: any | null, fullName?: string | null, executiveTitle?: string | null, nationalCode?: string | null, id: number, isDeleted: boolean, createdDate: any, lastModifiedDate?: any | null, contractID?: string | null, contractSubject?: string | null, generalConditionTitle?: string | null, sourceOfFundingTitle?: string | null, city?: string | null, agreeAmountRial?: any | null, agreeDate: any, jobReferenceTitle?: string | null, contractCategoryTitle?: string | null }> | null } | null } };
 
 export type SetCouncilListMutationMutationVariables = Exact<{
   ids: Array<Scalars['Int']['input']> | Scalars['Int']['input'];
@@ -4350,12 +5416,19 @@ export type SetCouncilListMutationMutationVariables = Exact<{
 
 export type SetCouncilListMutationMutation = { __typename?: 'Mutation', complaint_setInCouncilList: { __typename?: 'ResponseBaseOfSetInCouncilListResponseDto', result?: { __typename?: 'SetInCouncilListResponseDto', fileNames: Array<string>, result: Array<{ __typename?: 'KeyValuePairOfInt32AndBoolean', key: number, value: boolean }> } | null, status: { __typename?: 'ResponseStatus', code: number, value: string } } };
 
+export type GetChildrenOfParentQueryVariables = Exact<{
+  parentType: HandlingType;
+}>;
+
+
+export type GetChildrenOfParentQuery = { __typename?: 'Query', user_getChildrenOfParent: { __typename?: 'ResponseBaseOfListOfUser', result?: Array<{ __typename?: 'User', fullName: string, parentId?: string | null, id?: string | null } | null> | null, status: { __typename?: 'ResponseStatus', code: number, value: string } } };
+
 export type AddDocsRequestMutationMutationVariables = Exact<{
   input: DocumentRequestInput;
 }>;
 
 
-export type AddDocsRequestMutationMutation = { __typename?: 'Mutation', documentRequest_addDocumentRequest: { __typename?: 'ResponseBaseOfDocumentRequest', result?: { __typename?: 'DocumentRequest', userId: string, complaintId: number, requestedDocumentName: string, requestedDocumentFileName?: string | null, id: number } | null } };
+export type AddDocsRequestMutationMutation = { __typename?: 'Mutation', documentRequest_addDocumentRequest: { __typename?: 'ResponseBaseOfDocumentRequest', result?: { __typename?: 'DocumentRequest', userId: string, complaintId: number, requestedDocumentName: string, requestedDocumentFileNameAccuser?: string | null, requestedDocumentFileNameAccused?: string | null, id: number } | null } };
 
 export type DeleteRequestedDocMutationMutationVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -4372,14 +5445,14 @@ export type GetReqestedDocsQueryQueryVariables = Exact<{
 }>;
 
 
-export type GetReqestedDocsQueryQuery = { __typename?: 'Query', documentRequest_getDocumentRequests: { __typename?: 'ListResponseBaseOfDocumentRequest', result?: { __typename?: 'DocumentRequestCollectionSegment', items?: Array<{ __typename?: 'DocumentRequest', complaintId: number, requestedDocumentName: string, requestedDocumentFileName?: string | null, isDeleted: boolean, createdDate: any, id: number, userId: string, target?: TargetType | null }> | null } | null } };
+export type GetReqestedDocsQueryQuery = { __typename?: 'Query', documentRequest_getDocumentRequests: { __typename?: 'ListResponseBaseOfDocumentRequest', result?: { __typename?: 'DocumentRequestCollectionSegment', items?: Array<{ __typename?: 'DocumentRequest', complaintId: number, requestedDocumentName: string, requestedDocumentFileNameAccuser?: string | null, requestedDocumentFileNameAccused?: string | null, isDeleted: boolean, createdDate: any, id: number, userId: string, target?: TargetType | null }> | null } | null } };
 
 export type UpdateRequestedDocMutationVariables = Exact<{
   input: DocumentRequestInput;
 }>;
 
 
-export type UpdateRequestedDocMutation = { __typename?: 'Mutation', documentRequest_updateDocumentRequest: { __typename?: 'ResponseBaseOfDocumentRequest', result?: { __typename?: 'DocumentRequest', userId: string, requestedDocumentName: string, requestedDocumentFileName?: string | null, target?: TargetType | null, id: number, complaintId: number } | null, status: { __typename?: 'ResponseStatus', code: number, value: string } } };
+export type UpdateRequestedDocMutation = { __typename?: 'Mutation', documentRequest_updateDocumentRequest: { __typename?: 'ResponseBaseOfDocumentRequest', result?: { __typename?: 'DocumentRequest', userId: string, requestedDocumentName: string, requestedDocumentFileNameAccuser?: string | null, requestedDocumentFileNameAccused?: string | null, target?: TargetType | null, id: number, complaintId: number } | null, status: { __typename?: 'ResponseStatus', code: number, value: string } } };
 
 export type GetFileQueryQueryVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -4606,6 +5679,7 @@ export type Create_Work_Condition_Statement_TableMutationVariables = Exact<{
   contractId?: InputMaybe<Scalars['Int']['input']>;
   filledBy?: InputMaybe<RegistrarType>;
   userId?: InputMaybe<Scalars['String']['input']>;
+  workConditionType?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -4645,7 +5719,7 @@ export type Create_Work_Condition_StatementMutationVariables = Exact<{
 }>;
 
 
-export type Create_Work_Condition_StatementMutation = { __typename?: 'Mutation', workConditionStatement_addWorkConditionStatement: { __typename?: 'ResponseBaseOfWorkConditionStatement', result?: { __typename?: 'WorkConditionStatement', workConditionStatementTableId: number, amountApprovedByEmployer: any, amountConfirmedByConsultant: any, amountPaid: any, amountProvidedByContractor: any, dateApprovedByEmployer: any, dateConfirmedByConsultant: any, datePaid: any, dateProvidedByContractor: any, operationPeriodEndDate: any, operationPeriodStartDate: any, filledBy?: RegistrarType | null } | null, status: { __typename?: 'ResponseStatus', code: number, value: string } } };
+export type Create_Work_Condition_StatementMutation = { __typename?: 'Mutation', workConditionStatement_addWorkConditionStatement: { __typename?: 'ResponseBaseOfWorkConditionStatement', result?: { __typename?: 'WorkConditionStatement', workConditionStatementTableId: number, amountApprovedByEmployer?: any | null, amountConfirmedByConsultant?: any | null, amountPaid: any, amountProvidedByContractor?: any | null, dateApprovedByEmployer?: any | null, dateConfirmedByConsultant?: any | null, datePaid: any, dateProvidedByContractor?: any | null, operationPeriodEndDate?: any | null, operationPeriodStartDate?: any | null, filledBy?: RegistrarType | null } | null, status: { __typename?: 'ResponseStatus', code: number, value: string } } };
 
 export type Update_Work_Condition_StatementMutationVariables = Exact<{
   workConditionStatementTableId: Scalars['Int']['input'];
@@ -4664,7 +5738,7 @@ export type Update_Work_Condition_StatementMutationVariables = Exact<{
 }>;
 
 
-export type Update_Work_Condition_StatementMutation = { __typename?: 'Mutation', workConditionStatement_updateWorkConditionStatement: { __typename?: 'ResponseBaseOfWorkConditionStatement', result?: { __typename?: 'WorkConditionStatement', workConditionStatementTableId: number, amountApprovedByEmployer: any, amountConfirmedByConsultant: any, amountPaid: any, amountProvidedByContractor: any, dateApprovedByEmployer: any, dateConfirmedByConsultant: any, datePaid: any, dateProvidedByContractor: any, operationPeriodEndDate: any, operationPeriodStartDate: any, filledBy?: RegistrarType | null } | null, status: { __typename?: 'ResponseStatus', code: number, value: string } } };
+export type Update_Work_Condition_StatementMutation = { __typename?: 'Mutation', workConditionStatement_updateWorkConditionStatement: { __typename?: 'ResponseBaseOfWorkConditionStatement', result?: { __typename?: 'WorkConditionStatement', workConditionStatementTableId: number, amountApprovedByEmployer?: any | null, amountConfirmedByConsultant?: any | null, amountPaid: any, amountProvidedByContractor?: any | null, dateApprovedByEmployer?: any | null, dateConfirmedByConsultant?: any | null, datePaid: any, dateProvidedByContractor?: any | null, operationPeriodEndDate?: any | null, operationPeriodStartDate?: any | null, filledBy?: RegistrarType | null } | null, status: { __typename?: 'ResponseStatus', code: number, value: string } } };
 
 export type Delete_Work_Condition_StatementMutationVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -4689,7 +5763,7 @@ export type Create_Work_Condition_Statement_PartMutationVariables = Exact<{
 }>;
 
 
-export type Create_Work_Condition_Statement_PartMutation = { __typename?: 'Mutation', workConditionStatementPart_addWorkConditionStatementPart: { __typename?: 'ResponseBaseOfWorkConditionStatementPart', result?: { __typename?: 'WorkConditionStatementPart', id: number, workConditionStatementId: number, amountApprovedByEmployer: any, amountConfirmedByConsultant: any, amountPaid: any, amountProvidedByContractor: any, dateApprovedByEmployer: any, dateConfirmedByConsultant: any, datePaid: any, dateProvidedByContractor: any, operationPeriodEndDate?: any | null, operationPeriodStartDate?: any | null, filledBy?: RegistrarType | null } | null, status: { __typename?: 'ResponseStatus', code: number, value: string } } };
+export type Create_Work_Condition_Statement_PartMutation = { __typename?: 'Mutation', workConditionStatementPart_addWorkConditionStatementPart: { __typename?: 'ResponseBaseOfWorkConditionStatementPart', result?: { __typename?: 'WorkConditionStatementPart', id: number, workConditionStatementId: number, amountApprovedByEmployer?: any | null, amountConfirmedByConsultant?: any | null, amountPaid: any, amountProvidedByContractor?: any | null, dateApprovedByEmployer?: any | null, dateConfirmedByConsultant?: any | null, datePaid: any, dateProvidedByContractor?: any | null, operationPeriodEndDate?: any | null, operationPeriodStartDate?: any | null, filledBy?: RegistrarType | null } | null, status: { __typename?: 'ResponseStatus', code: number, value: string } } };
 
 export type Update_Work_Condition_Statement_PartMutationVariables = Exact<{
   workConditionStatementId: Scalars['Int']['input'];
@@ -4708,7 +5782,7 @@ export type Update_Work_Condition_Statement_PartMutationVariables = Exact<{
 }>;
 
 
-export type Update_Work_Condition_Statement_PartMutation = { __typename?: 'Mutation', workConditionStatementPart_updateWorkConditionStatementPart: { __typename?: 'ResponseBaseOfWorkConditionStatementPart', result?: { __typename?: 'WorkConditionStatementPart', id: number, workConditionStatementId: number, amountApprovedByEmployer: any, amountConfirmedByConsultant: any, amountPaid: any, amountProvidedByContractor: any, dateApprovedByEmployer: any, dateConfirmedByConsultant: any, datePaid: any, dateProvidedByContractor: any, operationPeriodEndDate?: any | null, operationPeriodStartDate?: any | null, filledBy?: RegistrarType | null } | null, status: { __typename?: 'ResponseStatus', code: number, value: string } } };
+export type Update_Work_Condition_Statement_PartMutation = { __typename?: 'Mutation', workConditionStatementPart_updateWorkConditionStatementPart: { __typename?: 'ResponseBaseOfWorkConditionStatementPart', result?: { __typename?: 'WorkConditionStatementPart', id: number, workConditionStatementId: number, amountApprovedByEmployer?: any | null, amountConfirmedByConsultant?: any | null, amountPaid: any, amountProvidedByContractor?: any | null, dateApprovedByEmployer?: any | null, dateConfirmedByConsultant?: any | null, datePaid: any, dateProvidedByContractor?: any | null, operationPeriodEndDate?: any | null, operationPeriodStartDate?: any | null, filledBy?: RegistrarType | null } | null, status: { __typename?: 'ResponseStatus', code: number, value: string } } };
 
 export type Delete_Work_Condition_Statement_PartMutationVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -4729,7 +5803,15 @@ export type GetInstallmentTablesQueryVariables = Exact<{
 }>;
 
 
-export type GetInstallmentTablesQuery = { __typename?: 'Query', installmentTable_getInstallmentTables: { __typename?: 'ListResponseBaseOfInstallmentTable', status?: any | null, result?: { __typename?: 'InstallmentTableCollectionSegment', items?: Array<{ __typename?: 'InstallmentTable', id: number, createdDate: any, lastModifiedDate?: any | null, contractId: number, paymentTotal: any, remainingPayment: any, filledBy?: RegistrarType | null, userId: string, contract?: { __typename?: 'Contract', accuserDepartmentUserId?: string | null, accusedDepartmentUserId?: string | null } | null, user?: { __typename?: 'User', parentId?: string | null, id?: string | null, userType: UserType } | null, installments?: Array<{ __typename?: 'Installment', installmentTableId: number, title: string, amount: any, date: any, filledBy?: RegistrarType | null, id: number, installmentParts?: Array<{ __typename?: 'InstallmentPart', amount: any, date: any, filledBy?: RegistrarType | null, id: number }> | null }> | null }> | null } | null } };
+export type GetInstallmentTablesQuery = { __typename?: 'Query', installmentTable_getInstallmentTables: { __typename?: 'ListResponseBaseOfInstallmentTable', status?: any | null, result?: { __typename?: 'InstallmentTableCollectionSegment', items?: Array<{ __typename?: 'InstallmentTable', id: number, createdDate: any, lastModifiedDate?: any | null, contractId: number, paymentTotal: any, remainingPayment: any, filledBy?: RegistrarType | null, userId: string, isDeleted: boolean, contract?: { __typename?: 'Contract', accuserDepartmentUserId?: string | null, accusedDepartmentUserId?: string | null } | null, user?: { __typename?: 'User', parentId?: string | null, id?: string | null, userType: UserType } | null, installments?: Array<{ __typename?: 'Installment', installmentTableId: number, title: string, amount: any, date: any, filledBy?: RegistrarType | null, id: number, createdDate: any, isDeleted: boolean, installmentParts?: Array<{ __typename?: 'InstallmentPart', amount: any, date: any, filledBy?: RegistrarType | null, id: number }> | null }> | null }> | null } | null } };
+
+export type GetInstallmentTablesFullQueryVariables = Exact<{
+  where?: InputMaybe<InstallmentTableFilterInput>;
+  order?: InputMaybe<Array<InstallmentTableSortInput> | InstallmentTableSortInput>;
+}>;
+
+
+export type GetInstallmentTablesFullQuery = { __typename?: 'Query', installmentTable_getInstallmentTables: { __typename?: 'ListResponseBaseOfInstallmentTable', status?: any | null, result?: { __typename?: 'InstallmentTableCollectionSegment', items?: Array<{ __typename?: 'InstallmentTable', id: number, createdDate: any, lastModifiedDate?: any | null, contractId: number, paymentTotal: any, remainingPayment: any, filledBy?: RegistrarType | null, userId: string, isDeleted: boolean, contract?: { __typename?: 'Contract', accuserDepartmentUserId?: string | null, accusedDepartmentUserId?: string | null } | null, user?: { __typename?: 'User', parentId?: string | null, id?: string | null, userType: UserType } | null, installments?: Array<{ __typename?: 'Installment', installmentTableId: number, title: string, amount: any, date: any, filledBy?: RegistrarType | null, id: number, installmentParts?: Array<{ __typename?: 'InstallmentPart', amount: any, date: any, filledBy?: RegistrarType | null, id: number }> | null }> | null }> | null } | null } };
 
 export type GetInstallmentQueryVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -4750,14 +5832,30 @@ export type GetAdjustmentStatementTableQueryVariables = Exact<{
 }>;
 
 
-export type GetAdjustmentStatementTableQuery = { __typename?: 'Query', adjustmentStatementTable_getAdjustmentStatementTable: { __typename?: 'ResponseBaseOfAdjustmentStatementTable', result?: { __typename?: 'AdjustmentStatementTable', id: number, createdDate: any, lastModifiedDate?: any | null, contractId: number, filledBy?: RegistrarType | null, userId: string, user?: { __typename?: 'User', parentId?: string | null, id?: string | null, userType: UserType } | null, adjustmentStatements?: Array<{ __typename?: 'AdjustmentStatement', id: number, adjustmentStatementTableId: number, amountApprovedByEmployer: any, amountConfirmedByConsultant: any, amountPaid: any, amountProvidedByContractor: any, dateApprovedByEmployer: any, dateConfirmedByConsultant: any, datePaid: any, dateProvidedByContractor: any, operationPeriodEndDate: any, operationPeriodStartDate: any, filledBy?: RegistrarType | null, title: string }> | null } | null, status: { __typename?: 'ResponseStatus', code: number, value: string } } };
+export type GetAdjustmentStatementTableQuery = { __typename?: 'Query', adjustmentStatementTable_getAdjustmentStatementTable: { __typename?: 'ResponseBaseOfAdjustmentStatementTable', result?: { __typename?: 'AdjustmentStatementTable', id: number, createdDate: any, lastModifiedDate?: any | null, contractId: number, filledBy?: RegistrarType | null, userId: string, user?: { __typename?: 'User', parentId?: string | null, id?: string | null, userType: UserType } | null, contract?: { __typename?: 'Contract', accuserDepartmentUserId?: string | null, accusedDepartmentUserId?: string | null } | null, adjustmentStatements?: Array<{ __typename?: 'AdjustmentStatement', id: number, adjustmentStatementTableId: number, amountApprovedByEmployer: any, amountConfirmedByConsultant: any, amountPaid: any, amountProvidedByContractor: any, dateApprovedByEmployer: any, dateConfirmedByConsultant: any, datePaid: any, dateProvidedByContractor: any, operationPeriodEndDate: any, operationPeriodStartDate: any, filledBy?: RegistrarType | null, title: string }> | null } | null, status: { __typename?: 'ResponseStatus', code: number, value: string } } };
 
 export type GetAdjustmentStatementTablesQueryVariables = Exact<{
   id: Scalars['Int']['input'];
 }>;
 
 
-export type GetAdjustmentStatementTablesQuery = { __typename?: 'Query', adjustmentStatementTable_getAdjustmentStatementTables: { __typename?: 'ListResponseBaseOfAdjustmentStatementTable', status?: any | null, result?: { __typename?: 'AdjustmentStatementTableCollectionSegment', items?: Array<{ __typename?: 'AdjustmentStatementTable', id: number, createdDate: any, lastModifiedDate?: any | null, contractId: number, filledBy?: RegistrarType | null, userId: string, user?: { __typename?: 'User', parentId?: string | null, id?: string | null, userType: UserType } | null, adjustmentStatements?: Array<{ __typename?: 'AdjustmentStatement', id: number, adjustmentStatementTableId: number, amountApprovedByEmployer: any, amountConfirmedByConsultant: any, amountPaid: any, amountProvidedByContractor: any, dateApprovedByEmployer: any, dateConfirmedByConsultant: any, datePaid: any, dateProvidedByContractor: any, operationPeriodEndDate: any, operationPeriodStartDate: any, filledBy?: RegistrarType | null, title: string }> | null }> | null } | null } };
+export type GetAdjustmentStatementTablesQuery = { __typename?: 'Query', adjustmentStatementTable_getAdjustmentStatementTables: { __typename?: 'ListResponseBaseOfAdjustmentStatementTable', status?: any | null, result?: { __typename?: 'AdjustmentStatementTableCollectionSegment', items?: Array<{ __typename?: 'AdjustmentStatementTable', id: number, createdDate: any, lastModifiedDate?: any | null, contractId: number, filledBy?: RegistrarType | null, userId: string, contract?: { __typename?: 'Contract', accuserDepartmentUserId?: string | null, accusedDepartmentUserId?: string | null } | null, user?: { __typename?: 'User', parentId?: string | null, id?: string | null, userType: UserType } | null, adjustmentStatements?: Array<{ __typename?: 'AdjustmentStatement', id: number, adjustmentStatementTableId: number, amountApprovedByEmployer: any, amountConfirmedByConsultant: any, amountPaid: any, amountProvidedByContractor: any, dateApprovedByEmployer: any, dateConfirmedByConsultant: any, datePaid: any, dateProvidedByContractor: any, operationPeriodEndDate: any, operationPeriodStartDate: any, filledBy?: RegistrarType | null, title: string }> | null }> | null } | null } };
+
+export type GetAdjustmentStatementTablesFullQueryVariables = Exact<{
+  where?: InputMaybe<AdjustmentStatementTableFilterInput>;
+  order?: InputMaybe<Array<AdjustmentStatementTableSortInput> | AdjustmentStatementTableSortInput>;
+}>;
+
+
+export type GetAdjustmentStatementTablesFullQuery = { __typename?: 'Query', adjustmentStatementTable_getAdjustmentStatementTables: { __typename?: 'ListResponseBaseOfAdjustmentStatementTable', status?: any | null, result?: { __typename?: 'AdjustmentStatementTableCollectionSegment', items?: Array<{ __typename?: 'AdjustmentStatementTable', id: number, createdDate: any, lastModifiedDate?: any | null, contractId: number, filledBy?: RegistrarType | null, userId: string, contract?: { __typename?: 'Contract', accuserDepartmentUserId?: string | null, accusedDepartmentUserId?: string | null } | null, user?: { __typename?: 'User', parentId?: string | null, id?: string | null, userType: UserType } | null, adjustmentStatements?: Array<{ __typename?: 'AdjustmentStatement', id: number, adjustmentStatementTableId: number, amountApprovedByEmployer: any, amountConfirmedByConsultant: any, amountPaid: any, amountProvidedByContractor: any, dateApprovedByEmployer: any, dateConfirmedByConsultant: any, datePaid: any, dateProvidedByContractor: any, operationPeriodEndDate: any, operationPeriodStartDate: any, filledBy?: RegistrarType | null, title: string }> | null }> | null } | null } };
+
+export type GetAdjustmentStatementsFullQueryVariables = Exact<{
+  filter?: InputMaybe<AdjustmentStatementFilterInput>;
+  orderBy?: InputMaybe<Array<AdjustmentStatementSortInput> | AdjustmentStatementSortInput>;
+}>;
+
+
+export type GetAdjustmentStatementsFullQuery = { __typename?: 'Query', adjustmentStatement_getAdjustmentStatements: { __typename?: 'ListResponseBaseOfAdjustmentStatement', status?: any | null, result?: { __typename?: 'AdjustmentStatementCollectionSegment', items?: Array<{ __typename?: 'AdjustmentStatement', id: number, createdDate: any, lastModifiedDate?: any | null, adjustmentStatementTableId: number, filledBy?: RegistrarType | null, amountApprovedByEmployer: any, amountConfirmedByConsultant: any, amountPaid: any, amountProvidedByContractor: any, dateApprovedByEmployer: any, dateConfirmedByConsultant: any, datePaid: any, dateProvidedByContractor: any, operationPeriodEndDate: any, operationPeriodStartDate: any, title: string, isDeleted: boolean, adjustmentStatementTable?: { __typename?: 'AdjustmentStatementTable', contractId: number, userId: string, contract?: { __typename?: 'Contract', accuserDepartmentUserId?: string | null, accusedDepartmentUserId?: string | null } | null, user?: { __typename?: 'User', parentId?: string | null, id?: string | null, userType: UserType } | null } | null }> | null } | null } };
 
 export type GetAdjustmentStatementQueryVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -4778,28 +5876,43 @@ export type GetWorkConditionStatementTableQueryVariables = Exact<{
 }>;
 
 
-export type GetWorkConditionStatementTableQuery = { __typename?: 'Query', workConditionStatementTable_getWorkConditionStatementTable: { __typename?: 'ResponseBaseOfWorkConditionStatementTable', result?: { __typename?: 'WorkConditionStatementTable', id: number, createdDate: any, lastModifiedDate?: any | null, contractId: number, filledBy?: RegistrarType | null, userId: string, user?: { __typename?: 'User', parentId?: string | null, id?: string | null, userType: UserType } | null, workConditionStatements?: Array<{ __typename?: 'WorkConditionStatement', id: number, workConditionStatementTableId: number, amountApprovedByEmployer: any, amountConfirmedByConsultant: any, amountPaid: any, amountProvidedByContractor: any, dateApprovedByEmployer: any, dateConfirmedByConsultant: any, datePaid: any, dateProvidedByContractor: any, operationPeriodEndDate: any, operationPeriodStartDate: any, filledBy?: RegistrarType | null, title: string }> | null } | null, status: { __typename?: 'ResponseStatus', code: number, value: string } } };
+export type GetWorkConditionStatementTableQuery = { __typename?: 'Query', workConditionStatementTable_getWorkConditionStatementTable: { __typename?: 'ResponseBaseOfWorkConditionStatementTable', result?: { __typename?: 'WorkConditionStatementTable', id: number, createdDate: any, lastModifiedDate?: any | null, contractId: number, filledBy?: RegistrarType | null, userId: string, user?: { __typename?: 'User', parentId?: string | null, id?: string | null, userType: UserType } | null, workConditionStatements?: Array<{ __typename?: 'WorkConditionStatement', id: number, workConditionStatementTableId: number, amountApprovedByEmployer?: any | null, amountConfirmedByConsultant?: any | null, amountPaid: any, amountProvidedByContractor?: any | null, dateApprovedByEmployer?: any | null, dateConfirmedByConsultant?: any | null, datePaid: any, dateProvidedByContractor?: any | null, operationPeriodEndDate?: any | null, operationPeriodStartDate?: any | null, filledBy?: RegistrarType | null, title?: string | null }> | null } | null, status: { __typename?: 'ResponseStatus', code: number, value: string } } };
 
 export type GetWorkConditionStatementTableByIdQueryVariables = Exact<{
   id: Scalars['Int']['input'];
 }>;
 
 
-export type GetWorkConditionStatementTableByIdQuery = { __typename?: 'Query', workConditionStatementTable_getWorkConditionStatementTables: { __typename?: 'ListResponseBaseOfWorkConditionStatementTable', status?: any | null, result?: { __typename?: 'WorkConditionStatementTableCollectionSegment', items?: Array<{ __typename?: 'WorkConditionStatementTable', id: number, createdDate: any, lastModifiedDate?: any | null, contractId: number, filledBy?: RegistrarType | null, userId: string, user?: { __typename?: 'User', parentId?: string | null, id?: string | null, userType: UserType } | null, workConditionStatements?: Array<{ __typename?: 'WorkConditionStatement', id: number, workConditionStatementTableId: number, amountApprovedByEmployer: any, amountConfirmedByConsultant: any, amountPaid: any, amountProvidedByContractor: any, dateApprovedByEmployer: any, dateConfirmedByConsultant: any, datePaid: any, dateProvidedByContractor: any, operationPeriodEndDate: any, operationPeriodStartDate: any, filledBy?: RegistrarType | null, title: string }> | null }> | null } | null } };
+export type GetWorkConditionStatementTableByIdQuery = { __typename?: 'Query', workConditionStatementTable_getWorkConditionStatementTables: { __typename?: 'ListResponseBaseOfWorkConditionStatementTable', status?: any | null, result?: { __typename?: 'WorkConditionStatementTableCollectionSegment', items?: Array<{ __typename?: 'WorkConditionStatementTable', id: number, createdDate: any, lastModifiedDate?: any | null, contractId: number, filledBy?: RegistrarType | null, userId: string, user?: { __typename?: 'User', parentId?: string | null, id?: string | null, userType: UserType } | null, contract?: { __typename?: 'Contract', accuserDepartmentUserId?: string | null, accusedDepartmentUserId?: string | null } | null, workConditionStatements?: Array<{ __typename?: 'WorkConditionStatement', id: number, workConditionStatementTableId: number, amountApprovedByEmployer?: any | null, amountConfirmedByConsultant?: any | null, amountPaid: any, amountProvidedByContractor?: any | null, dateApprovedByEmployer?: any | null, dateConfirmedByConsultant?: any | null, datePaid: any, dateProvidedByContractor?: any | null, operationPeriodEndDate?: any | null, operationPeriodStartDate?: any | null, filledBy?: RegistrarType | null, title?: string | null }> | null }> | null } | null } };
+
+export type GetWorkConditionStatementTablesFullQueryVariables = Exact<{
+  where?: InputMaybe<WorkConditionStatementTableFilterInput>;
+}>;
+
+
+export type GetWorkConditionStatementTablesFullQuery = { __typename?: 'Query', workConditionStatementTable_getWorkConditionStatementTables: { __typename?: 'ListResponseBaseOfWorkConditionStatementTable', status?: any | null, result?: { __typename?: 'WorkConditionStatementTableCollectionSegment', items?: Array<{ __typename?: 'WorkConditionStatementTable', id: number, createdDate: any, lastModifiedDate?: any | null, contractId: number, filledBy?: RegistrarType | null, userId: string, user?: { __typename?: 'User', parentId?: string | null, id?: string | null, userType: UserType } | null, contract?: { __typename?: 'Contract', accuserDepartmentUserId?: string | null, accusedDepartmentUserId?: string | null } | null, workConditionStatements?: Array<{ __typename?: 'WorkConditionStatement', id: number, workConditionStatementTableId: number, amountApprovedByEmployer?: any | null, amountConfirmedByConsultant?: any | null, amountPaid: any, amountProvidedByContractor?: any | null, dateApprovedByEmployer?: any | null, dateConfirmedByConsultant?: any | null, datePaid: any, dateProvidedByContractor?: any | null, operationPeriodEndDate?: any | null, operationPeriodStartDate?: any | null, filledBy?: RegistrarType | null, title?: string | null }> | null }> | null } | null } };
+
+export type GetWorkConditionStatementsFullQueryVariables = Exact<{
+  filter?: InputMaybe<WorkConditionStatementFilterInput>;
+  orderBy?: InputMaybe<Array<WorkConditionStatementSortInput> | WorkConditionStatementSortInput>;
+}>;
+
+
+export type GetWorkConditionStatementsFullQuery = { __typename?: 'Query', workConditionStatement_getWorkConditionStatements: { __typename?: 'ListResponseBaseOfWorkConditionStatement', status?: any | null, result?: { __typename?: 'WorkConditionStatementCollectionSegment', items?: Array<{ __typename?: 'WorkConditionStatement', id: number, createdDate: any, lastModifiedDate?: any | null, workConditionStatementTableId: number, filledBy?: RegistrarType | null, amountApprovedByEmployer?: any | null, amountConfirmedByConsultant?: any | null, amountPaid: any, amountProvidedByContractor?: any | null, dateApprovedByEmployer?: any | null, dateConfirmedByConsultant?: any | null, datePaid: any, dateProvidedByContractor?: any | null, operationPeriodEndDate?: any | null, operationPeriodStartDate?: any | null, title?: string | null, isDeleted: boolean, workConditionStatementTable?: { __typename?: 'WorkConditionStatementTable', contractId: number, userId: string, contract?: { __typename?: 'Contract', accuserDepartmentUserId?: string | null, accusedDepartmentUserId?: string | null } | null, user?: { __typename?: 'User', parentId?: string | null, id?: string | null, userType: UserType } | null } | null }> | null } | null } };
 
 export type GetWorkConditionStatementQueryVariables = Exact<{
   id: Scalars['Int']['input'];
 }>;
 
 
-export type GetWorkConditionStatementQuery = { __typename?: 'Query', workConditionStatement_getWorkConditionStatement: { __typename?: 'ResponseBaseOfWorkConditionStatement', result?: { __typename?: 'WorkConditionStatement', id: number, createdDate: any, lastModifiedDate?: any | null, workConditionStatementTableId: number, amountApprovedByEmployer: any, amountConfirmedByConsultant: any, amountPaid: any, amountProvidedByContractor: any, dateApprovedByEmployer: any, dateConfirmedByConsultant: any, datePaid: any, dateProvidedByContractor: any, operationPeriodEndDate: any, operationPeriodStartDate: any, filledBy?: RegistrarType | null, title: string, workConditionStatementParts?: Array<{ __typename?: 'WorkConditionStatementPart', id: number, createdDate: any, lastModifiedDate?: any | null, workConditionStatementId: number, amountApprovedByEmployer: any, amountConfirmedByConsultant: any, amountPaid: any, amountProvidedByContractor: any, dateApprovedByEmployer: any, dateConfirmedByConsultant: any, datePaid: any, dateProvidedByContractor: any, operationPeriodEndDate?: any | null, operationPeriodStartDate?: any | null, filledBy?: RegistrarType | null }> | null } | null, status: { __typename?: 'ResponseStatus', code: number, value: string } } };
+export type GetWorkConditionStatementQuery = { __typename?: 'Query', workConditionStatement_getWorkConditionStatement: { __typename?: 'ResponseBaseOfWorkConditionStatement', result?: { __typename?: 'WorkConditionStatement', id: number, createdDate: any, lastModifiedDate?: any | null, workConditionStatementTableId: number, amountApprovedByEmployer?: any | null, amountConfirmedByConsultant?: any | null, amountPaid: any, amountProvidedByContractor?: any | null, dateApprovedByEmployer?: any | null, dateConfirmedByConsultant?: any | null, datePaid: any, dateProvidedByContractor?: any | null, operationPeriodEndDate?: any | null, operationPeriodStartDate?: any | null, filledBy?: RegistrarType | null, title?: string | null, workConditionStatementParts?: Array<{ __typename?: 'WorkConditionStatementPart', id: number, createdDate: any, lastModifiedDate?: any | null, workConditionStatementId: number, amountApprovedByEmployer?: any | null, amountConfirmedByConsultant?: any | null, amountPaid: any, amountProvidedByContractor?: any | null, dateApprovedByEmployer?: any | null, dateConfirmedByConsultant?: any | null, datePaid: any, dateProvidedByContractor?: any | null, operationPeriodEndDate?: any | null, operationPeriodStartDate?: any | null, filledBy?: RegistrarType | null }> | null } | null, status: { __typename?: 'ResponseStatus', code: number, value: string } } };
 
 export type GetWorkConditionStatementPartQueryVariables = Exact<{
   id: Scalars['Int']['input'];
 }>;
 
 
-export type GetWorkConditionStatementPartQuery = { __typename?: 'Query', workConditionStatementPart_getWorkConditionStatementPart: { __typename?: 'ResponseBaseOfWorkConditionStatementPart', result?: { __typename?: 'WorkConditionStatementPart', id: number, amountApprovedByEmployer: any, amountConfirmedByConsultant: any, amountPaid: any, amountProvidedByContractor: any, dateApprovedByEmployer: any, dateConfirmedByConsultant: any, datePaid: any, dateProvidedByContractor: any, operationPeriodEndDate?: any | null, operationPeriodStartDate?: any | null, filledBy?: RegistrarType | null } | null, status: { __typename?: 'ResponseStatus', code: number, value: string } } };
+export type GetWorkConditionStatementPartQuery = { __typename?: 'Query', workConditionStatementPart_getWorkConditionStatementPart: { __typename?: 'ResponseBaseOfWorkConditionStatementPart', result?: { __typename?: 'WorkConditionStatementPart', id: number, amountApprovedByEmployer?: any | null, amountConfirmedByConsultant?: any | null, amountPaid: any, amountProvidedByContractor?: any | null, dateApprovedByEmployer?: any | null, dateConfirmedByConsultant?: any | null, datePaid: any, dateProvidedByContractor?: any | null, operationPeriodEndDate?: any | null, operationPeriodStartDate?: any | null, filledBy?: RegistrarType | null } | null, status: { __typename?: 'ResponseStatus', code: number, value: string } } };
 
 export type LoginUserMutationVariables = Exact<{
   userName: Scalars['String']['input'];
@@ -4807,7 +5920,7 @@ export type LoginUserMutationVariables = Exact<{
 }>;
 
 
-export type LoginUserMutation = { __typename?: 'Mutation', user_signIn: { __typename?: 'ResponseBaseOfUserTokenDto', result?: { __typename?: 'UserTokenDto', token?: string | null, expireDate?: any | null, user?: { __typename?: 'User', id?: string | null, userName?: string | null, email?: string | null, fullName: string, phoneNumber?: string | null, nationalCode?: string | null, parentId?: string | null, userType: UserType, userRoles?: Array<{ __typename?: 'UserRole', roleType: RoleType, id: number }> | null } | null } | null, status: { __typename?: 'ResponseStatus', code: number, value: string } } };
+export type LoginUserMutation = { __typename?: 'Mutation', user_signIn: { __typename?: 'ResponseBaseOfUserTokenDto', result?: { __typename?: 'UserTokenDto', token?: string | null, expireDate?: any | null, user?: { __typename?: 'User', id?: string | null, userName?: string | null, email?: string | null, fullName: string, phoneNumber?: string | null, nationalCode?: string | null, parentId?: string | null, userType: UserType, isJury: boolean, userRoles?: Array<{ __typename?: 'UserRole', roleType: RoleType, id: number }> | null } | null } | null, status: { __typename?: 'ResponseStatus', code: number, value: string } } };
 
 export type ForgetPasswordMutationMutationVariables = Exact<{
   input: ForgotPasswordDtoInput;
@@ -4821,7 +5934,7 @@ export type UserSignInOtpMutationMutationVariables = Exact<{
 }>;
 
 
-export type UserSignInOtpMutationMutation = { __typename?: 'Mutation', user_signInOTP: { __typename?: 'ResponseBaseOfUserTokenDto', result?: { __typename?: 'UserTokenDto', token?: string | null, expireDate?: any | null, user?: { __typename?: 'User', id?: string | null, userName?: string | null, email?: string | null, fullName: string, phoneNumber?: string | null, nationalCode?: string | null, parentId?: string | null, userType: UserType, userRoles?: Array<{ __typename?: 'UserRole', roleType: RoleType, id: number }> | null } | null } | null, status: { __typename?: 'ResponseStatus', code: number, value: string } } };
+export type UserSignInOtpMutationMutation = { __typename?: 'Mutation', user_signInOTP: { __typename?: 'ResponseBaseOfUserTokenDto', result?: { __typename?: 'UserTokenDto', token?: string | null, expireDate?: any | null, user?: { __typename?: 'User', id?: string | null, userName?: string | null, email?: string | null, fullName: string, phoneNumber?: string | null, nationalCode?: string | null, parentId?: string | null, isJury: boolean, userType: UserType, userRoles?: Array<{ __typename?: 'UserRole', roleType: RoleType, id: number }> | null } | null } | null, status: { __typename?: 'ResponseStatus', code: number, value: string } } };
 
 export type SentOtpMutationMutationVariables = Exact<{
   phoneNumber: Scalars['String']['input'];
@@ -4841,10 +5954,11 @@ export type UserSignUpMutationVariables = Exact<{
   birthDate?: InputMaybe<Scalars['Date']['input']>;
   userType: UserType;
   parentId?: InputMaybe<Scalars['String']['input']>;
+  isJury?: Scalars['Boolean']['input'];
 }>;
 
 
-export type UserSignUpMutation = { __typename?: 'Mutation', user_signUp: { __typename: 'ResponseBaseOfUser', result?: { __typename?: 'User', id?: string | null, userName?: string | null, email?: string | null, fullName: string, phoneNumber?: string | null, nationalCode?: string | null, parentId?: string | null, userType: UserType, userRoles?: Array<{ __typename?: 'UserRole', roleType: RoleType, id: number }> | null } | null, status: { __typename?: 'ResponseStatus', code: number, value: string } } };
+export type UserSignUpMutation = { __typename?: 'Mutation', user_signUp: { __typename: 'ResponseBaseOfUser', result?: { __typename?: 'User', id?: string | null, userName?: string | null, email?: string | null, fullName: string, phoneNumber?: string | null, nationalCode?: string | null, isJury: boolean, parentId?: string | null, userType: UserType, userRoles?: Array<{ __typename?: 'UserRole', roleType: RoleType, id: number }> | null } | null, status: { __typename?: 'ResponseStatus', code: number, value: string } } };
 
 export type SendCallToMeetingSmsMutationVariables = Exact<{
   input: SendInviteToMeetingSmsDtoInput;
@@ -4876,7 +5990,7 @@ export type UserUpdateMutationVariables = Exact<{
 }>;
 
 
-export type UserUpdateMutation = { __typename?: 'Mutation', user_updateProfile: { __typename?: 'ResponseBaseOfUser', result?: { __typename?: 'User', id?: string | null, userName?: string | null, email?: string | null, fullName: string, phoneNumber?: string | null, nationalCode?: string | null } | null, status: { __typename?: 'ResponseStatus', code: number, value: string } } };
+export type UserUpdateMutation = { __typename?: 'Mutation', user_updateProfile: { __typename?: 'ResponseBaseOfUser', result?: { __typename?: 'User', id?: string | null, userName?: string | null, email?: string | null, fullName: string, phoneNumber?: string | null, nationalCode?: string | null, isJury: boolean } | null, status: { __typename?: 'ResponseStatus', code: number, value: string } } };
 
 export type UserUpdatePasswordMutationVariables = Exact<{
   oldPassword: Scalars['String']['input'];
@@ -4954,18 +6068,299 @@ export type GetArgumentQueryVariables = Exact<{
 }>;
 
 
-export type GetArgumentQuery = { __typename?: 'Query', complaintArgument_getComplaintArgument: { __typename?: 'ResponseBaseOfComplaintArgument', result?: { __typename?: 'ComplaintArgument', id: number, summary?: string | null, description?: string | null, suggestedAmount: any, accusedResponse?: string | null, complaintId: number } | null } };
+export type GetArgumentQuery = { __typename?: 'Query', complaintArgument_getComplaintArgument: { __typename?: 'ResponseBaseOfComplaintArgument', result?: { __typename?: 'ComplaintArgument', id: number, summary?: string | null, description?: string | null, suggestedAmount: any, accusedResponse?: string | null, complaintId: number, councilOpinion?: string | null, netCouncilApprovedAmount?: any | null, grossCouncilApprovedAmount?: any | null, accuserAnswerToAccusedResponse?: string | null, accuserAnswerToAccusedResponseFileName?: string | null, expertOpinion?: string | null, expertOpinionFileName?: string | null, expertVerdict?: string | null, netApprovedAmount?: any | null, grossApprovedAmount?: any | null, financialSituation?: string | null } | null } };
 
 
+export const AddNonFeasibleArgumentDocument = gql`
+    mutation AddNonFeasibleArgument($input: ComplaintNonFeasibleArgumentInput!) {
+  complaintnonfeasibleargument_addComplaintNonFeasibleArgument(input: $input) {
+    result {
+      userId
+      complaintId
+      summary
+      description
+      financialSituation
+      id
+    }
+    status {
+      code
+      value
+    }
+  }
+}
+    `;
+export type AddNonFeasibleArgumentMutationFn = Apollo.MutationFunction<AddNonFeasibleArgumentMutation, AddNonFeasibleArgumentMutationVariables>;
+
+/**
+ * __useAddNonFeasibleArgumentMutation__
+ *
+ * To run a mutation, you first call `useAddNonFeasibleArgumentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddNonFeasibleArgumentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addNonFeasibleArgumentMutation, { data, loading, error }] = useAddNonFeasibleArgumentMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useAddNonFeasibleArgumentMutation(baseOptions?: Apollo.MutationHookOptions<AddNonFeasibleArgumentMutation, AddNonFeasibleArgumentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddNonFeasibleArgumentMutation, AddNonFeasibleArgumentMutationVariables>(AddNonFeasibleArgumentDocument, options);
+      }
+export type AddNonFeasibleArgumentMutationHookResult = ReturnType<typeof useAddNonFeasibleArgumentMutation>;
+export type AddNonFeasibleArgumentMutationResult = Apollo.MutationResult<AddNonFeasibleArgumentMutation>;
+export type AddNonFeasibleArgumentMutationOptions = Apollo.BaseMutationOptions<AddNonFeasibleArgumentMutation, AddNonFeasibleArgumentMutationVariables>;
+export const UpdateNonFeasibleArgumentDocument = gql`
+    mutation UpdateNonFeasibleArgument($input: ComplaintNonFeasibleArgumentInput!) {
+  complaintnonfeasibleargument_updateComplaintNonFeasibleArgument(input: $input) {
+    result {
+      userId
+      complaintId
+      summary
+      description
+      financialSituation
+      id
+    }
+    status {
+      code
+      value
+    }
+  }
+}
+    `;
+export type UpdateNonFeasibleArgumentMutationFn = Apollo.MutationFunction<UpdateNonFeasibleArgumentMutation, UpdateNonFeasibleArgumentMutationVariables>;
+
+/**
+ * __useUpdateNonFeasibleArgumentMutation__
+ *
+ * To run a mutation, you first call `useUpdateNonFeasibleArgumentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateNonFeasibleArgumentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateNonFeasibleArgumentMutation, { data, loading, error }] = useUpdateNonFeasibleArgumentMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateNonFeasibleArgumentMutation(baseOptions?: Apollo.MutationHookOptions<UpdateNonFeasibleArgumentMutation, UpdateNonFeasibleArgumentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateNonFeasibleArgumentMutation, UpdateNonFeasibleArgumentMutationVariables>(UpdateNonFeasibleArgumentDocument, options);
+      }
+export type UpdateNonFeasibleArgumentMutationHookResult = ReturnType<typeof useUpdateNonFeasibleArgumentMutation>;
+export type UpdateNonFeasibleArgumentMutationResult = Apollo.MutationResult<UpdateNonFeasibleArgumentMutation>;
+export type UpdateNonFeasibleArgumentMutationOptions = Apollo.BaseMutationOptions<UpdateNonFeasibleArgumentMutation, UpdateNonFeasibleArgumentMutationVariables>;
+export const DeleteNonFeasibleArgumentDocument = gql`
+    mutation DeleteNonFeasibleArgument($input: Int!) {
+  complaintnonfeasibleargument_deleteComplaintNonFeasibleArgument(
+    entityId: $input
+  ) {
+    result {
+      userId
+      complaintId
+      summary
+      description
+      financialSituation
+      id
+    }
+    status {
+      code
+      value
+    }
+  }
+}
+    `;
+export type DeleteNonFeasibleArgumentMutationFn = Apollo.MutationFunction<DeleteNonFeasibleArgumentMutation, DeleteNonFeasibleArgumentMutationVariables>;
+
+/**
+ * __useDeleteNonFeasibleArgumentMutation__
+ *
+ * To run a mutation, you first call `useDeleteNonFeasibleArgumentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteNonFeasibleArgumentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteNonFeasibleArgumentMutation, { data, loading, error }] = useDeleteNonFeasibleArgumentMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useDeleteNonFeasibleArgumentMutation(baseOptions?: Apollo.MutationHookOptions<DeleteNonFeasibleArgumentMutation, DeleteNonFeasibleArgumentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteNonFeasibleArgumentMutation, DeleteNonFeasibleArgumentMutationVariables>(DeleteNonFeasibleArgumentDocument, options);
+      }
+export type DeleteNonFeasibleArgumentMutationHookResult = ReturnType<typeof useDeleteNonFeasibleArgumentMutation>;
+export type DeleteNonFeasibleArgumentMutationResult = Apollo.MutationResult<DeleteNonFeasibleArgumentMutation>;
+export type DeleteNonFeasibleArgumentMutationOptions = Apollo.BaseMutationOptions<DeleteNonFeasibleArgumentMutation, DeleteNonFeasibleArgumentMutationVariables>;
+export const GetNonFeasibleArgumentsDocument = gql`
+    query GetNonFeasibleArguments($filer: ComplaintNonFeasibleArgumentFilterInput, $order: [ComplaintNonFeasibleArgumentSortInput!]) {
+  complaintNonFeasibleArgument_getComplaintNonFeasibleArguments {
+    result(where: $filer, order: $order) {
+      items {
+        userId
+        complaintId
+        summary
+        description
+        financialSituation
+        id
+        isDeleted
+        createdDate
+        userId
+        financialStatusFileName
+      }
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+      }
+      totalCount
+    }
+    status
+  }
+}
+    `;
+
+/**
+ * __useGetNonFeasibleArgumentsQuery__
+ *
+ * To run a query within a React component, call `useGetNonFeasibleArgumentsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetNonFeasibleArgumentsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetNonFeasibleArgumentsQuery({
+ *   variables: {
+ *      filer: // value for 'filer'
+ *      order: // value for 'order'
+ *   },
+ * });
+ */
+export function useGetNonFeasibleArgumentsQuery(baseOptions?: Apollo.QueryHookOptions<GetNonFeasibleArgumentsQuery, GetNonFeasibleArgumentsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetNonFeasibleArgumentsQuery, GetNonFeasibleArgumentsQueryVariables>(GetNonFeasibleArgumentsDocument, options);
+      }
+export function useGetNonFeasibleArgumentsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetNonFeasibleArgumentsQuery, GetNonFeasibleArgumentsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetNonFeasibleArgumentsQuery, GetNonFeasibleArgumentsQueryVariables>(GetNonFeasibleArgumentsDocument, options);
+        }
+export type GetNonFeasibleArgumentsQueryHookResult = ReturnType<typeof useGetNonFeasibleArgumentsQuery>;
+export type GetNonFeasibleArgumentsLazyQueryHookResult = ReturnType<typeof useGetNonFeasibleArgumentsLazyQuery>;
+export type GetNonFeasibleArgumentsQueryResult = Apollo.QueryResult<GetNonFeasibleArgumentsQuery, GetNonFeasibleArgumentsQueryVariables>;
+export const UpdateComplaintStateDocument = gql`
+    mutation updateComplaintState($input: ComplaintStateInput!) {
+  complaintState_updateComplaintState(input: $input) {
+    result {
+      id
+      englishName
+      persianName
+      state
+      createdDate
+      isDeleted
+      priority
+    }
+  }
+}
+    `;
+export type UpdateComplaintStateMutationFn = Apollo.MutationFunction<UpdateComplaintStateMutation, UpdateComplaintStateMutationVariables>;
+
+/**
+ * __useUpdateComplaintStateMutation__
+ *
+ * To run a mutation, you first call `useUpdateComplaintStateMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateComplaintStateMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateComplaintStateMutation, { data, loading, error }] = useUpdateComplaintStateMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateComplaintStateMutation(baseOptions?: Apollo.MutationHookOptions<UpdateComplaintStateMutation, UpdateComplaintStateMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateComplaintStateMutation, UpdateComplaintStateMutationVariables>(UpdateComplaintStateDocument, options);
+      }
+export type UpdateComplaintStateMutationHookResult = ReturnType<typeof useUpdateComplaintStateMutation>;
+export type UpdateComplaintStateMutationResult = Apollo.MutationResult<UpdateComplaintStateMutation>;
+export type UpdateComplaintStateMutationOptions = Apollo.BaseMutationOptions<UpdateComplaintStateMutation, UpdateComplaintStateMutationVariables>;
+export const GetComplaintStatesDocument = gql`
+    query getComplaintStates($filter: ComplaintStateFilterInput, $order: [ComplaintStateSortInput!], $take: Int, $skip: Int) {
+  complaintState_getComplaintStates {
+    result(where: $filter, order: $order, take: $take, skip: $skip) {
+      items {
+        id
+        englishName
+        persianName
+        state
+        createdDate
+        isDeleted
+        priority
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetComplaintStatesQuery__
+ *
+ * To run a query within a React component, call `useGetComplaintStatesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetComplaintStatesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetComplaintStatesQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *      order: // value for 'order'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *   },
+ * });
+ */
+export function useGetComplaintStatesQuery(baseOptions?: Apollo.QueryHookOptions<GetComplaintStatesQuery, GetComplaintStatesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetComplaintStatesQuery, GetComplaintStatesQueryVariables>(GetComplaintStatesDocument, options);
+      }
+export function useGetComplaintStatesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetComplaintStatesQuery, GetComplaintStatesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetComplaintStatesQuery, GetComplaintStatesQueryVariables>(GetComplaintStatesDocument, options);
+        }
+export type GetComplaintStatesQueryHookResult = ReturnType<typeof useGetComplaintStatesQuery>;
+export type GetComplaintStatesLazyQueryHookResult = ReturnType<typeof useGetComplaintStatesLazyQuery>;
+export type GetComplaintStatesQueryResult = Apollo.QueryResult<GetComplaintStatesQuery, GetComplaintStatesQueryVariables>;
 export const CreateComplaintDocument = gql`
-    mutation CreateComplaint($contractId: Int!, $userId: String!) {
+    mutation CreateComplaint($contractId: Int!, $userId: String!, $complaintStateId: Int) {
   complaint_addComplaint(
-    input: {contractId: $contractId, userId: $userId, complaintState: WAITING_FOR_ACCUSER_TO_REGISTER_ARBITRATION_TERMS}
+    input: {contractId: $contractId, userId: $userId, complaintStateId: $complaintStateId}
   ) {
     result {
       id
       assignedUserId
-      complaintState
+      complaintState {
+        id
+        persianName
+      }
       arbitrationTermsForms {
         userId
         firstCondition
@@ -4973,7 +6368,9 @@ export const CreateComplaintDocument = gql`
         secondCondition
         secondConditionFileName
         thirdCondition
-        thirdConditionFileName
+        thirdConditionFinalBillFileName
+        thirdConditionNotificationLetterFileName
+        thirdConditionContractorsObjectionDocumentsFileName
         fourthCondition
         fourthConditionFileName
       }
@@ -5002,6 +6399,7 @@ export type CreateComplaintMutationFn = Apollo.MutationFunction<CreateComplaintM
  *   variables: {
  *      contractId: // value for 'contractId'
  *      userId: // value for 'userId'
+ *      complaintStateId: // value for 'complaintStateId'
  *   },
  * });
  */
@@ -5013,14 +6411,17 @@ export type CreateComplaintMutationHookResult = ReturnType<typeof useCreateCompl
 export type CreateComplaintMutationResult = Apollo.MutationResult<CreateComplaintMutation>;
 export type CreateComplaintMutationOptions = Apollo.BaseMutationOptions<CreateComplaintMutation, CreateComplaintMutationVariables>;
 export const UpdateComplaintDocument = gql`
-    mutation UpdateComplaint($id: Int!, $assignedUserId: String, $contractId: Int, $userId: String, $complaintState: ComplaintState, $isApprovedByChief: Boolean) {
+    mutation UpdateComplaint($id: Int!, $assignedUserId: String, $contractId: Int, $userId: String, $complaintStateId: Int, $isApprovedByChief: Boolean) {
   complaint_updateComplaint(
-    input: {id: $id, assignedUserId: $assignedUserId, contractId: $contractId, userId: $userId, complaintState: $complaintState, isApprovedByChief: $isApprovedByChief}
+    input: {id: $id, assignedUserId: $assignedUserId, contractId: $contractId, userId: $userId, complaintStateId: $complaintStateId, isApprovedByChief: $isApprovedByChief}
   ) {
     result {
       id
       assignedUserId
-      complaintState
+      complaintState {
+        id
+        persianName
+      }
       arbitrationTermsForms {
         userId
         firstCondition
@@ -5028,7 +6429,9 @@ export const UpdateComplaintDocument = gql`
         secondCondition
         secondConditionFileName
         thirdCondition
-        thirdConditionFileName
+        thirdConditionFinalBillFileName
+        thirdConditionNotificationLetterFileName
+        thirdConditionContractorsObjectionDocumentsFileName
         fourthCondition
         fourthConditionFileName
         __typename
@@ -5063,7 +6466,7 @@ export type UpdateComplaintMutationFn = Apollo.MutationFunction<UpdateComplaintM
  *      assignedUserId: // value for 'assignedUserId'
  *      contractId: // value for 'contractId'
  *      userId: // value for 'userId'
- *      complaintState: // value for 'complaintState'
+ *      complaintStateId: // value for 'complaintStateId'
  *      isApprovedByChief: // value for 'isApprovedByChief'
  *   },
  * });
@@ -5081,7 +6484,10 @@ export const UpdateComplaintFullDocument = gql`
     result {
       id
       assignedUserId
-      complaintState
+      complaintState {
+        id
+        persianName
+      }
       arbitrationTermsForms {
         userId
         firstCondition
@@ -5089,7 +6495,9 @@ export const UpdateComplaintFullDocument = gql`
         secondCondition
         secondConditionFileName
         thirdCondition
-        thirdConditionFileName
+        thirdConditionFinalBillFileName
+        thirdConditionNotificationLetterFileName
+        thirdConditionContractorsObjectionDocumentsFileName
         fourthCondition
         fourthConditionFileName
         __typename
@@ -5132,9 +6540,9 @@ export type UpdateComplaintFullMutationHookResult = ReturnType<typeof useUpdateC
 export type UpdateComplaintFullMutationResult = Apollo.MutationResult<UpdateComplaintFullMutation>;
 export type UpdateComplaintFullMutationOptions = Apollo.BaseMutationOptions<UpdateComplaintFullMutation, UpdateComplaintFullMutationVariables>;
 export const CreateArbitrationTermsFormDocument = gql`
-    mutation CreateArbitrationTermsForm($complaintId: Int!, $userId: String!, $filledBy: RegistrarType!, $firstCondition: String!, $firstConditionFileName: String, $secondCondition: String!, $secondConditionFileName: String, $thirdCondition: String!, $thirdConditionFileName: String, $fourthCondition: String!, $fourthConditionFileName: String, $projectName: String, $projectNumber: String, $hasReadAgreement: Boolean!) {
+    mutation CreateArbitrationTermsForm($complaintId: Int!, $userId: String!, $filledBy: RegistrarType!, $firstCondition: String!, $firstConditionFileName: String, $secondCondition: String!, $secondConditionFileName: String, $thirdCondition: String!, $thirdConditionFinalBillFileName: String, $thirdConditionNotificationLetterFileName: String, $thirdConditionContractorsObjectionDocumentsFileName: String, $fourthCondition: String!, $fourthConditionFileName: String, $projectName: String, $projectNumber: String, $hasReadAgreement: Boolean!) {
   arbitrationTermsForm_addArbitrationTermsForm(
-    input: {complaintId: $complaintId, userId: $userId, filledBy: $filledBy, firstCondition: $firstCondition, firstConditionFileName: $firstConditionFileName, secondCondition: $secondCondition, secondConditionFileName: $secondConditionFileName, thirdCondition: $thirdCondition, thirdConditionFileName: $thirdConditionFileName, fourthCondition: $fourthCondition, fourthConditionFileName: $fourthConditionFileName, projectName: $projectName, projectNumber: $projectNumber, hasReadAgreement: $hasReadAgreement}
+    input: {complaintId: $complaintId, userId: $userId, filledBy: $filledBy, firstCondition: $firstCondition, firstConditionFileName: $firstConditionFileName, secondCondition: $secondCondition, secondConditionFileName: $secondConditionFileName, thirdCondition: $thirdCondition, thirdConditionFinalBillFileName: $thirdConditionFinalBillFileName, thirdConditionNotificationLetterFileName: $thirdConditionNotificationLetterFileName, thirdConditionContractorsObjectionDocumentsFileName: $thirdConditionContractorsObjectionDocumentsFileName, fourthCondition: $fourthCondition, fourthConditionFileName: $fourthConditionFileName, projectName: $projectName, projectNumber: $projectNumber, hasReadAgreement: $hasReadAgreement}
   ) {
     result {
       id
@@ -5146,7 +6554,9 @@ export const CreateArbitrationTermsFormDocument = gql`
       secondCondition
       secondConditionFileName
       thirdCondition
-      thirdConditionFileName
+      thirdConditionFinalBillFileName
+      thirdConditionNotificationLetterFileName
+      thirdConditionContractorsObjectionDocumentsFileName
       fourthCondition
       fourthConditionFileName
       projectName
@@ -5183,7 +6593,9 @@ export type CreateArbitrationTermsFormMutationFn = Apollo.MutationFunction<Creat
  *      secondCondition: // value for 'secondCondition'
  *      secondConditionFileName: // value for 'secondConditionFileName'
  *      thirdCondition: // value for 'thirdCondition'
- *      thirdConditionFileName: // value for 'thirdConditionFileName'
+ *      thirdConditionFinalBillFileName: // value for 'thirdConditionFinalBillFileName'
+ *      thirdConditionNotificationLetterFileName: // value for 'thirdConditionNotificationLetterFileName'
+ *      thirdConditionContractorsObjectionDocumentsFileName: // value for 'thirdConditionContractorsObjectionDocumentsFileName'
  *      fourthCondition: // value for 'fourthCondition'
  *      fourthConditionFileName: // value for 'fourthConditionFileName'
  *      projectName: // value for 'projectName'
@@ -5200,17 +6612,17 @@ export type CreateArbitrationTermsFormMutationHookResult = ReturnType<typeof use
 export type CreateArbitrationTermsFormMutationResult = Apollo.MutationResult<CreateArbitrationTermsFormMutation>;
 export type CreateArbitrationTermsFormMutationOptions = Apollo.BaseMutationOptions<CreateArbitrationTermsFormMutation, CreateArbitrationTermsFormMutationVariables>;
 export const AddArgumentToComplaintDocument = gql`
-    mutation AddArgumentToComplaint($accuserResponse: String, $accuserResponseFileName: String, $approvedAmount: Decimal, $complaintId: Int, $councilApprovedAmount: Decimal, $description: String, $expertId: String, $expertOpinion: String, $expertOpinionFileName: String, $expertVerdict: String, $fileName: String, $filledBy: RegistrarType, $mailRoomChiefSuggestedAmount: Decimal, $mailRoomExpertApprovedAmount: Decimal, $suggestedAmount: Decimal, $summary: String, $userId: String!) {
-  complaintArgument_addComplaintArgument(
-    input: {accusedResponse: $accuserResponse, accusedResponseFileName: $accuserResponseFileName, approvedAmount: $approvedAmount, complaintId: $complaintId, councilApprovedAmount: $councilApprovedAmount, description: $description, expertId: $expertId, expertOpinion: $expertOpinion, expertOpinionFileName: $expertOpinionFileName, expertVerdict: $expertVerdict, fileName: $fileName, filledBy: $filledBy, mailRoomChiefSuggestedAmount: $mailRoomChiefSuggestedAmount, mailRoomExpertApprovedAmount: $mailRoomExpertApprovedAmount, suggestedAmount: $suggestedAmount, summary: $summary, userId: $userId}
-  ) {
+    mutation AddArgumentToComplaint($input: ComplaintArgumentInput!) {
+  complaintArgument_addComplaintArgument(input: $input) {
     result {
       id
       accusedResponse
       accusedResponseFileName
-      approvedAmount
+      netApprovedAmount
+      grossApprovedAmount
       complaintId
-      councilApprovedAmount
+      netCouncilApprovedAmount
+      grossCouncilApprovedAmount
       description
       expertId
       expertOpinion
@@ -5218,8 +6630,10 @@ export const AddArgumentToComplaintDocument = gql`
       expertVerdict
       fileName
       filledBy
-      mailRoomChiefSuggestedAmount
-      mailRoomExpertApprovedAmount
+      netMailRoomChiefSuggestedAmount
+      grossMailRoomChiefSuggestedAmount
+      netMailRoomExpertApprovedAmount
+      grossMailRoomExpertApprovedAmount
       suggestedAmount
       summary
       userId
@@ -5249,23 +6663,7 @@ export type AddArgumentToComplaintMutationFn = Apollo.MutationFunction<AddArgume
  * @example
  * const [addArgumentToComplaintMutation, { data, loading, error }] = useAddArgumentToComplaintMutation({
  *   variables: {
- *      accuserResponse: // value for 'accuserResponse'
- *      accuserResponseFileName: // value for 'accuserResponseFileName'
- *      approvedAmount: // value for 'approvedAmount'
- *      complaintId: // value for 'complaintId'
- *      councilApprovedAmount: // value for 'councilApprovedAmount'
- *      description: // value for 'description'
- *      expertId: // value for 'expertId'
- *      expertOpinion: // value for 'expertOpinion'
- *      expertOpinionFileName: // value for 'expertOpinionFileName'
- *      expertVerdict: // value for 'expertVerdict'
- *      fileName: // value for 'fileName'
- *      filledBy: // value for 'filledBy'
- *      mailRoomChiefSuggestedAmount: // value for 'mailRoomChiefSuggestedAmount'
- *      mailRoomExpertApprovedAmount: // value for 'mailRoomExpertApprovedAmount'
- *      suggestedAmount: // value for 'suggestedAmount'
- *      summary: // value for 'summary'
- *      userId: // value for 'userId'
+ *      input: // value for 'input'
  *   },
  * });
  */
@@ -5277,17 +6675,22 @@ export type AddArgumentToComplaintMutationHookResult = ReturnType<typeof useAddA
 export type AddArgumentToComplaintMutationResult = Apollo.MutationResult<AddArgumentToComplaintMutation>;
 export type AddArgumentToComplaintMutationOptions = Apollo.BaseMutationOptions<AddArgumentToComplaintMutation, AddArgumentToComplaintMutationVariables>;
 export const UpdateArgumentDocument = gql`
-    mutation UpdateArgument($id: Int!, $accuserResponse: String, $accuserResponseFileName: String, $approvedAmount: Decimal, $complaintId: Int, $councilApprovedAmount: Decimal, $description: String, $expertId: String, $expertOpinion: String, $expertOpinionFileName: String, $expertVerdict: String, $fileName: String, $filledBy: RegistrarType, $mailRoomChiefSuggestedAmount: Decimal, $mailRoomExpertApprovedAmount: Decimal, $suggestedAmount: Decimal, $summary: String, $userId: String, $accuserAnswerToAccusedResponse: String) {
+    mutation UpdateArgument($id: Int!, $accuserResponse: String, $accuserResponseFileName: String, $approvedAmount: Decimal, $complaintId: Int, $councilApprovedAmount: Decimal, $councilOpinion: String, $description: String, $expertId: String, $expertOpinion: String, $expertOpinionFileName: String, $expertVerdict: String, $fileName: String, $filledBy: RegistrarType, $mailRoomChiefSuggestedAmount: Decimal, $mailRoomExpertApprovedAmount: Decimal, $suggestedAmount: Decimal, $summary: String, $userId: String, $accuserAnswerToAccusedResponse: String) {
   complaintArgument_updateComplaintArgument(
-    input: {accusedResponse: $accuserResponse, accusedResponseFileName: $accuserResponseFileName, approvedAmount: $approvedAmount, complaintId: $complaintId, councilApprovedAmount: $councilApprovedAmount, description: $description, expertId: $expertId, expertOpinion: $expertOpinion, expertOpinionFileName: $expertOpinionFileName, expertVerdict: $expertVerdict, fileName: $fileName, filledBy: $filledBy, mailRoomChiefSuggestedAmount: $mailRoomChiefSuggestedAmount, mailRoomExpertApprovedAmount: $mailRoomExpertApprovedAmount, suggestedAmount: $suggestedAmount, summary: $summary, userId: $userId, accuserAnswerToAccusedResponse: $accuserAnswerToAccusedResponse, id: $id}
+    input: {accusedResponse: $accuserResponse, accusedResponseFileName: $accuserResponseFileName, netApprovedAmount: $approvedAmount, complaintId: $complaintId, netCouncilApprovedAmount: $councilApprovedAmount, councilOpinion: $councilOpinion, description: $description, expertId: $expertId, expertOpinion: $expertOpinion, expertOpinionFileName: $expertOpinionFileName, expertVerdict: $expertVerdict, fileName: $fileName, filledBy: $filledBy, netMailRoomChiefSuggestedAmount: $mailRoomChiefSuggestedAmount, netMailRoomExpertApprovedAmount: $mailRoomExpertApprovedAmount, suggestedAmount: $suggestedAmount, summary: $summary, userId: $userId, accuserAnswerToAccusedResponse: $accuserAnswerToAccusedResponse, id: $id}
   ) {
     result {
       id
       accusedResponse
       accusedResponseFileName
-      approvedAmount
+      netApprovedAmount
+      grossApprovedAmount
       complaintId
-      councilApprovedAmount
+      netCouncilApprovedAmount
+      grossCouncilApprovedAmount
+      justiceExpertOpinion
+      netJusticeExpertApprovedAmount
+      grossJusticeExpertApprovedAmount
       description
       expertId
       expertOpinion
@@ -5295,8 +6698,10 @@ export const UpdateArgumentDocument = gql`
       expertVerdict
       fileName
       filledBy
-      mailRoomChiefSuggestedAmount
-      mailRoomExpertApprovedAmount
+      netMailRoomChiefSuggestedAmount
+      grossMailRoomChiefSuggestedAmount
+      netMailRoomExpertApprovedAmount
+      grossMailRoomExpertApprovedAmount
       suggestedAmount
       summary
       userId
@@ -5329,6 +6734,7 @@ export type UpdateArgumentMutationFn = Apollo.MutationFunction<UpdateArgumentMut
  *      approvedAmount: // value for 'approvedAmount'
  *      complaintId: // value for 'complaintId'
  *      councilApprovedAmount: // value for 'councilApprovedAmount'
+ *      councilOpinion: // value for 'councilOpinion'
  *      description: // value for 'description'
  *      expertId: // value for 'expertId'
  *      expertOpinion: // value for 'expertOpinion'
@@ -5359,11 +6765,14 @@ export const UpdateArgumentFullDocument = gql`
       id
       accusedResponse
       accusedResponseFileName
-      approvedAmount
+      netApprovedAmount
+      grossApprovedAmount
       complaintId
-      councilApprovedAmount
+      netCouncilApprovedAmount
+      grossCouncilApprovedAmount
       justiceExpertOpinion
-      justiceExpertApprovedAmount
+      netJusticeExpertApprovedAmount
+      grossJusticeExpertApprovedAmount
       description
       expertId
       expertOpinion
@@ -5371,8 +6780,10 @@ export const UpdateArgumentFullDocument = gql`
       expertVerdict
       fileName
       filledBy
-      mailRoomChiefSuggestedAmount
-      mailRoomExpertApprovedAmount
+      netMailRoomChiefSuggestedAmount
+      grossMailRoomChiefSuggestedAmount
+      netMailRoomExpertApprovedAmount
+      grossMailRoomExpertApprovedAmount
       suggestedAmount
       summary
       userId
@@ -5601,6 +7012,305 @@ export function useAddComplaintFileMutationMutation(baseOptions?: Apollo.Mutatio
 export type AddComplaintFileMutationMutationHookResult = ReturnType<typeof useAddComplaintFileMutationMutation>;
 export type AddComplaintFileMutationMutationResult = Apollo.MutationResult<AddComplaintFileMutationMutation>;
 export type AddComplaintFileMutationMutationOptions = Apollo.BaseMutationOptions<AddComplaintFileMutationMutation, AddComplaintFileMutationMutationVariables>;
+export const GenerateComplaintVerdictDocument = gql`
+    mutation GenerateComplaintVerdict($input: ComplaintVerdictLetterDtoInput!) {
+  test_generateComplaintVerdictLetter(input: $input)
+}
+    `;
+export type GenerateComplaintVerdictMutationFn = Apollo.MutationFunction<GenerateComplaintVerdictMutation, GenerateComplaintVerdictMutationVariables>;
+
+/**
+ * __useGenerateComplaintVerdictMutation__
+ *
+ * To run a mutation, you first call `useGenerateComplaintVerdictMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useGenerateComplaintVerdictMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [generateComplaintVerdictMutation, { data, loading, error }] = useGenerateComplaintVerdictMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useGenerateComplaintVerdictMutation(baseOptions?: Apollo.MutationHookOptions<GenerateComplaintVerdictMutation, GenerateComplaintVerdictMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<GenerateComplaintVerdictMutation, GenerateComplaintVerdictMutationVariables>(GenerateComplaintVerdictDocument, options);
+      }
+export type GenerateComplaintVerdictMutationHookResult = ReturnType<typeof useGenerateComplaintVerdictMutation>;
+export type GenerateComplaintVerdictMutationResult = Apollo.MutationResult<GenerateComplaintVerdictMutation>;
+export type GenerateComplaintVerdictMutationOptions = Apollo.BaseMutationOptions<GenerateComplaintVerdictMutation, GenerateComplaintVerdictMutationVariables>;
+export const GenerateComplaintDecreeDocument = gql`
+    mutation GenerateComplaintDecree($input: DecreeDtoInput!) {
+  test_generateDecree(input: $input)
+}
+    `;
+export type GenerateComplaintDecreeMutationFn = Apollo.MutationFunction<GenerateComplaintDecreeMutation, GenerateComplaintDecreeMutationVariables>;
+
+/**
+ * __useGenerateComplaintDecreeMutation__
+ *
+ * To run a mutation, you first call `useGenerateComplaintDecreeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useGenerateComplaintDecreeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [generateComplaintDecreeMutation, { data, loading, error }] = useGenerateComplaintDecreeMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useGenerateComplaintDecreeMutation(baseOptions?: Apollo.MutationHookOptions<GenerateComplaintDecreeMutation, GenerateComplaintDecreeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<GenerateComplaintDecreeMutation, GenerateComplaintDecreeMutationVariables>(GenerateComplaintDecreeDocument, options);
+      }
+export type GenerateComplaintDecreeMutationHookResult = ReturnType<typeof useGenerateComplaintDecreeMutation>;
+export type GenerateComplaintDecreeMutationResult = Apollo.MutationResult<GenerateComplaintDecreeMutation>;
+export type GenerateComplaintDecreeMutationOptions = Apollo.BaseMutationOptions<GenerateComplaintDecreeMutation, GenerateComplaintDecreeMutationVariables>;
+export const SmsComplaintAddedDocument = gql`
+    mutation SMSComplaintAdded($id: Int!) {
+  sms_sendComplaintAddedSMS(complaintId: $id) {
+    code
+    value
+  }
+}
+    `;
+export type SmsComplaintAddedMutationFn = Apollo.MutationFunction<SmsComplaintAddedMutation, SmsComplaintAddedMutationVariables>;
+
+/**
+ * __useSmsComplaintAddedMutation__
+ *
+ * To run a mutation, you first call `useSmsComplaintAddedMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSmsComplaintAddedMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [smsComplaintAddedMutation, { data, loading, error }] = useSmsComplaintAddedMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useSmsComplaintAddedMutation(baseOptions?: Apollo.MutationHookOptions<SmsComplaintAddedMutation, SmsComplaintAddedMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SmsComplaintAddedMutation, SmsComplaintAddedMutationVariables>(SmsComplaintAddedDocument, options);
+      }
+export type SmsComplaintAddedMutationHookResult = ReturnType<typeof useSmsComplaintAddedMutation>;
+export type SmsComplaintAddedMutationResult = Apollo.MutationResult<SmsComplaintAddedMutation>;
+export type SmsComplaintAddedMutationOptions = Apollo.BaseMutationOptions<SmsComplaintAddedMutation, SmsComplaintAddedMutationVariables>;
+export const SmsAccusedRespondDocument = gql`
+    mutation SMSAccusedRespond($id: Int!) {
+  sms_sendAccusedRespondedSMS(complaintId: $id) {
+    code
+    value
+  }
+}
+    `;
+export type SmsAccusedRespondMutationFn = Apollo.MutationFunction<SmsAccusedRespondMutation, SmsAccusedRespondMutationVariables>;
+
+/**
+ * __useSmsAccusedRespondMutation__
+ *
+ * To run a mutation, you first call `useSmsAccusedRespondMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSmsAccusedRespondMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [smsAccusedRespondMutation, { data, loading, error }] = useSmsAccusedRespondMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useSmsAccusedRespondMutation(baseOptions?: Apollo.MutationHookOptions<SmsAccusedRespondMutation, SmsAccusedRespondMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SmsAccusedRespondMutation, SmsAccusedRespondMutationVariables>(SmsAccusedRespondDocument, options);
+      }
+export type SmsAccusedRespondMutationHookResult = ReturnType<typeof useSmsAccusedRespondMutation>;
+export type SmsAccusedRespondMutationResult = Apollo.MutationResult<SmsAccusedRespondMutation>;
+export type SmsAccusedRespondMutationOptions = Apollo.BaseMutationOptions<SmsAccusedRespondMutation, SmsAccusedRespondMutationVariables>;
+export const SmsComplaintCodeDocument = gql`
+    mutation SMSComplaintCode($id: Int!) {
+  sms_sendComplaintCodeSMS(complaintId: $id) {
+    code
+    value
+  }
+}
+    `;
+export type SmsComplaintCodeMutationFn = Apollo.MutationFunction<SmsComplaintCodeMutation, SmsComplaintCodeMutationVariables>;
+
+/**
+ * __useSmsComplaintCodeMutation__
+ *
+ * To run a mutation, you first call `useSmsComplaintCodeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSmsComplaintCodeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [smsComplaintCodeMutation, { data, loading, error }] = useSmsComplaintCodeMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useSmsComplaintCodeMutation(baseOptions?: Apollo.MutationHookOptions<SmsComplaintCodeMutation, SmsComplaintCodeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SmsComplaintCodeMutation, SmsComplaintCodeMutationVariables>(SmsComplaintCodeDocument, options);
+      }
+export type SmsComplaintCodeMutationHookResult = ReturnType<typeof useSmsComplaintCodeMutation>;
+export type SmsComplaintCodeMutationResult = Apollo.MutationResult<SmsComplaintCodeMutation>;
+export type SmsComplaintCodeMutationOptions = Apollo.BaseMutationOptions<SmsComplaintCodeMutation, SmsComplaintCodeMutationVariables>;
+export const AddCorrectionRequestsDocument = gql`
+    mutation AddCorrectionRequests($input: CorrectionRequestInput!) {
+  correctionRequest_addCorrectionRequest(input: $input) {
+    result {
+      complaintId
+      createdDate
+      clause
+      reason
+      suggestion
+      id
+      complaintId
+      complaint {
+        id
+        contract {
+          accuserDepartmentUserId
+          accusedDepartmentUserId
+        }
+      }
+    }
+  }
+}
+    `;
+export type AddCorrectionRequestsMutationFn = Apollo.MutationFunction<AddCorrectionRequestsMutation, AddCorrectionRequestsMutationVariables>;
+
+/**
+ * __useAddCorrectionRequestsMutation__
+ *
+ * To run a mutation, you first call `useAddCorrectionRequestsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddCorrectionRequestsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addCorrectionRequestsMutation, { data, loading, error }] = useAddCorrectionRequestsMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useAddCorrectionRequestsMutation(baseOptions?: Apollo.MutationHookOptions<AddCorrectionRequestsMutation, AddCorrectionRequestsMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddCorrectionRequestsMutation, AddCorrectionRequestsMutationVariables>(AddCorrectionRequestsDocument, options);
+      }
+export type AddCorrectionRequestsMutationHookResult = ReturnType<typeof useAddCorrectionRequestsMutation>;
+export type AddCorrectionRequestsMutationResult = Apollo.MutationResult<AddCorrectionRequestsMutation>;
+export type AddCorrectionRequestsMutationOptions = Apollo.BaseMutationOptions<AddCorrectionRequestsMutation, AddCorrectionRequestsMutationVariables>;
+export const UpdateCorrectionRequestsDocument = gql`
+    mutation UpdateCorrectionRequests($input: CorrectionRequestInput!) {
+  correctionRequest_updateCorrectionRequest(input: $input) {
+    result {
+      complaintId
+      createdDate
+      clause
+      reason
+      suggestion
+      id
+      complaintId
+      complaint {
+        id
+        contract {
+          accuserDepartmentUserId
+          accusedDepartmentUserId
+        }
+      }
+    }
+  }
+}
+    `;
+export type UpdateCorrectionRequestsMutationFn = Apollo.MutationFunction<UpdateCorrectionRequestsMutation, UpdateCorrectionRequestsMutationVariables>;
+
+/**
+ * __useUpdateCorrectionRequestsMutation__
+ *
+ * To run a mutation, you first call `useUpdateCorrectionRequestsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateCorrectionRequestsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateCorrectionRequestsMutation, { data, loading, error }] = useUpdateCorrectionRequestsMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateCorrectionRequestsMutation(baseOptions?: Apollo.MutationHookOptions<UpdateCorrectionRequestsMutation, UpdateCorrectionRequestsMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateCorrectionRequestsMutation, UpdateCorrectionRequestsMutationVariables>(UpdateCorrectionRequestsDocument, options);
+      }
+export type UpdateCorrectionRequestsMutationHookResult = ReturnType<typeof useUpdateCorrectionRequestsMutation>;
+export type UpdateCorrectionRequestsMutationResult = Apollo.MutationResult<UpdateCorrectionRequestsMutation>;
+export type UpdateCorrectionRequestsMutationOptions = Apollo.BaseMutationOptions<UpdateCorrectionRequestsMutation, UpdateCorrectionRequestsMutationVariables>;
+export const DeleteCorrectionRequestsDocument = gql`
+    mutation DeleteCorrectionRequests($id: Int!) {
+  correctionRequest_deleteCorrectionRequest(entityId: $id) {
+    result {
+      id
+    }
+    status {
+      code
+      value
+    }
+  }
+}
+    `;
+export type DeleteCorrectionRequestsMutationFn = Apollo.MutationFunction<DeleteCorrectionRequestsMutation, DeleteCorrectionRequestsMutationVariables>;
+
+/**
+ * __useDeleteCorrectionRequestsMutation__
+ *
+ * To run a mutation, you first call `useDeleteCorrectionRequestsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteCorrectionRequestsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteCorrectionRequestsMutation, { data, loading, error }] = useDeleteCorrectionRequestsMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteCorrectionRequestsMutation(baseOptions?: Apollo.MutationHookOptions<DeleteCorrectionRequestsMutation, DeleteCorrectionRequestsMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteCorrectionRequestsMutation, DeleteCorrectionRequestsMutationVariables>(DeleteCorrectionRequestsDocument, options);
+      }
+export type DeleteCorrectionRequestsMutationHookResult = ReturnType<typeof useDeleteCorrectionRequestsMutation>;
+export type DeleteCorrectionRequestsMutationResult = Apollo.MutationResult<DeleteCorrectionRequestsMutation>;
+export type DeleteCorrectionRequestsMutationOptions = Apollo.BaseMutationOptions<DeleteCorrectionRequestsMutation, DeleteCorrectionRequestsMutationVariables>;
 export const Get_ComplaintsDocument = gql`
     query GET_COMPLAINTS {
   complaint_getComplaints {
@@ -5618,11 +7328,20 @@ export const Get_ComplaintsDocument = gql`
           secondCondition
           secondConditionFileName
           thirdCondition
-          thirdConditionFileName
+          thirdConditionFinalBillFileName
+          thirdConditionNotificationLetterFileName
+          thirdConditionContractorsObjectionDocumentsFileName
           fourthCondition
           fourthConditionFileName
         }
-        complaintState
+        complaintState {
+          id
+          persianName
+          responsibleRole
+          priority
+          isDeleted
+          createdDate
+        }
         complaintCode
         assignedUser {
           userName
@@ -5685,11 +7404,21 @@ export const GetComplaintDocument = gql`
         secondCondition
         secondConditionFileName
         thirdCondition
-        thirdConditionFileName
+        thirdConditionFinalBillFileName
+        thirdConditionNotificationLetterFileName
+        thirdConditionContractorsObjectionDocumentsFileName
         fourthCondition
         fourthConditionFileName
       }
-      complaintState
+      complaintState {
+        id
+        persianName
+        responsibleRole
+        priority
+        englishName
+        isDeleted
+        createdDate
+      }
       complaintCode
       assignedUser {
         userName
@@ -5757,11 +7486,22 @@ export const Get_Accused_ComplaintsDocument = gql`
           secondCondition
           secondConditionFileName
           thirdCondition
-          thirdConditionFileName
+          thirdConditionFinalBillFileName
+          thirdConditionNotificationLetterFileName
+          thirdConditionContractorsObjectionDocumentsFileName
           fourthCondition
           fourthConditionFileName
         }
-        complaintState
+        complaintState {
+          id
+          persianName
+          englishName
+          priority
+          state
+          responsibleRole
+          isDeleted
+          createdDate
+        }
         complaintCode
         assignedUser {
           userName
@@ -5828,11 +7568,22 @@ export const Get_Accuser_ComplaintsDocument = gql`
           secondCondition
           secondConditionFileName
           thirdCondition
-          thirdConditionFileName
+          thirdConditionFinalBillFileName
+          thirdConditionNotificationLetterFileName
+          thirdConditionContractorsObjectionDocumentsFileName
           fourthCondition
           fourthConditionFileName
         }
-        complaintState
+        complaintState {
+          id
+          persianName
+          englishName
+          priority
+          state
+          responsibleRole
+          isDeleted
+          createdDate
+        }
         complaintCode
         assignedUser {
           userName
@@ -5883,7 +7634,7 @@ export const Get_Chief_ComplaintsDocument = gql`
     query GET_CHIEF_COMPLAINTS {
   complaint_getComplaints {
     result(
-      where: {or: [{complaintState: {eq: WAITING_FOR_CHIEF_TO_ASSIGN}}, {complaintState: {eq: WAITING_FOR_CHIEF_TO_APPROVE_EXPERTS_ANSWERS_TO_ARGUMENTS}}]}
+      where: {or: [{complaintState: {state: {eq: WAITING_FOR_CHIEF_TO_ASSIGN}}}, {complaintState: {state: {eq: WAITING_FOR_CHIEF_TO_APPROVE_EXPERTS_ANSWERS_TO_ARGUMENTS}}}, {complaintState: {state: {eq: WAITING_FOR_CHIEF_TO_APPROVE_EXPERTS_ANSWERS_TO_ARGUMENTS}}}, {complaintState: {state: {eq: MAIL_ROOM_CHIEF_REVIEWING_THE_FINAL_REPORT}}}]}
       order: {createdDate: DESC}
     ) {
       items {
@@ -5899,11 +7650,22 @@ export const Get_Chief_ComplaintsDocument = gql`
           secondCondition
           secondConditionFileName
           thirdCondition
-          thirdConditionFileName
+          thirdConditionFinalBillFileName
+          thirdConditionNotificationLetterFileName
+          thirdConditionContractorsObjectionDocumentsFileName
           fourthCondition
           fourthConditionFileName
         }
-        complaintState
+        complaintState {
+          id
+          persianName
+          englishName
+          priority
+          state
+          responsibleRole
+          isDeleted
+          createdDate
+        }
         complaintCode
         assignedUser {
           userName
@@ -5957,9 +7719,11 @@ export const GetComplaintArgumentsDocument = gql`
         id
         accusedResponse
         accusedResponseFileName
-        approvedAmount
+        netApprovedAmount
+        grossApprovedAmount
         complaintId
-        councilApprovedAmount
+        netCouncilApprovedAmount
+        grossCouncilApprovedAmount
         description
         expertId
         expertOpinion
@@ -5967,8 +7731,10 @@ export const GetComplaintArgumentsDocument = gql`
         expertVerdict
         fileName
         filledBy
-        mailRoomChiefSuggestedAmount
-        mailRoomExpertApprovedAmount
+        netMailRoomChiefSuggestedAmount
+        grossMailRoomChiefSuggestedAmount
+        netMailRoomExpertApprovedAmount
+        grossMailRoomExpertApprovedAmount
         accuserAnswerToAccusedResponse
         suggestedAmount
         summary
@@ -6024,11 +7790,22 @@ export const Get_Complaint_AssignedDocument = gql`
           secondCondition
           secondConditionFileName
           thirdCondition
-          thirdConditionFileName
+          thirdConditionFinalBillFileName
+          thirdConditionNotificationLetterFileName
+          thirdConditionContractorsObjectionDocumentsFileName
           fourthCondition
           fourthConditionFileName
         }
-        complaintState
+        complaintState {
+          id
+          persianName
+          englishName
+          state
+          priority
+          responsibleRole
+          isDeleted
+          createdDate
+        }
         complaintCode
         assignedUser {
           userName
@@ -6087,7 +7864,9 @@ export const Get_Arbitration_Terms_FormDocument = gql`
         secondCondition
         secondConditionFileName
         thirdCondition
-        thirdConditionFileName
+        thirdConditionFinalBillFileName
+        thirdConditionNotificationLetterFileName
+        thirdConditionContractorsObjectionDocumentsFileName
         fourthCondition
         fourthConditionFileName
         filledBy
@@ -6257,10 +8036,10 @@ export function useGetComplaintsNotesLazyQuery(baseOptions?: Apollo.LazyQueryHoo
 export type GetComplaintsNotesQueryHookResult = ReturnType<typeof useGetComplaintsNotesQuery>;
 export type GetComplaintsNotesLazyQueryHookResult = ReturnType<typeof useGetComplaintsNotesLazyQuery>;
 export type GetComplaintsNotesQueryResult = Apollo.QueryResult<GetComplaintsNotesQuery, GetComplaintsNotesQueryVariables>;
-export const GetComplaintsWithFilterDocument = gql`
-    query GetComplaintsWithFilter($filter: ComplaintFilterInput, $take: Int, $skip: Int, $order: [ComplaintSortInput!] = [{createdDate: DESC}]) {
-  complaint_getComplaints {
-    result(where: $filter, order: $order, take: $take, skip: $skip) {
+export const GetExpertComplaintsDocument = gql`
+    query GetExpertComplaints($userId: String!) {
+  complaint_getExpertComplaints(userId: $userId) {
+    result {
       items {
         userId
         id
@@ -6274,18 +8053,34 @@ export const GetComplaintsWithFilterDocument = gql`
           secondCondition
           secondConditionFileName
           thirdCondition
-          thirdConditionFileName
+          thirdConditionFinalBillFileName
+          thirdConditionNotificationLetterFileName
+          thirdConditionContractorsObjectionDocumentsFileName
           fourthCondition
           fourthConditionFileName
+          filledBy
+          projectNumber
+          projectName
         }
-        complaintState
+        complaintState {
+          id
+          persianName
+          englishName
+          state
+          priority
+          responsibleRole
+          isDeleted
+          createdDate
+        }
         complaintCode
-        councilExpertId
+        councilExpertIds
         assignedUser {
           userName
           fullName
           phoneNumber
         }
+        isFirstPaymentPaid
+        isSecondPaymentPaid
         contract {
           id
           accuserDepartmentUserId
@@ -6342,7 +8137,149 @@ export const GetComplaintsWithFilterDocument = gql`
           authorizedDelaysByAccuser
           unauthorizedDelaysByAccused
           unauthorizedDelaysByAccuser
-          isExecutive
+          isExecutiveByAccused
+          isExecutiveByAccuser
+          isExecutiveByExpert
+          fileNamesByAccused
+          fileNamesByAccuser
+        }
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetExpertComplaintsQuery__
+ *
+ * To run a query within a React component, call `useGetExpertComplaintsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetExpertComplaintsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetExpertComplaintsQuery({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useGetExpertComplaintsQuery(baseOptions: Apollo.QueryHookOptions<GetExpertComplaintsQuery, GetExpertComplaintsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetExpertComplaintsQuery, GetExpertComplaintsQueryVariables>(GetExpertComplaintsDocument, options);
+      }
+export function useGetExpertComplaintsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetExpertComplaintsQuery, GetExpertComplaintsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetExpertComplaintsQuery, GetExpertComplaintsQueryVariables>(GetExpertComplaintsDocument, options);
+        }
+export type GetExpertComplaintsQueryHookResult = ReturnType<typeof useGetExpertComplaintsQuery>;
+export type GetExpertComplaintsLazyQueryHookResult = ReturnType<typeof useGetExpertComplaintsLazyQuery>;
+export type GetExpertComplaintsQueryResult = Apollo.QueryResult<GetExpertComplaintsQuery, GetExpertComplaintsQueryVariables>;
+export const GetComplaintsWithFilterDocument = gql`
+    query GetComplaintsWithFilter($filter: ComplaintFilterInput, $take: Int, $skip: Int, $order: [ComplaintSortInput!] = [{createdDate: DESC}]) {
+  complaint_getComplaints {
+    result(where: $filter, order: $order, take: $take, skip: $skip) {
+      items {
+        userId
+        id
+        contractId
+        createdDate
+        isApprovedByChief
+        councilListStatus
+        arbitrationTermsForms {
+          firstCondition
+          firstConditionFileName
+          secondCondition
+          secondConditionFileName
+          thirdCondition
+          thirdConditionFinalBillFileName
+          thirdConditionNotificationLetterFileName
+          thirdConditionContractorsObjectionDocumentsFileName
+          fourthCondition
+          fourthConditionFileName
+          filledBy
+          projectNumber
+          projectName
+        }
+        complaintState {
+          id
+          persianName
+          englishName
+          state
+          priority
+          responsibleRole
+          isDeleted
+          createdDate
+        }
+        complaintCode
+        councilExpertIds
+        assignedUser {
+          userName
+          fullName
+          phoneNumber
+        }
+        isFirstPaymentPaid
+        isSecondPaymentPaid
+        contract {
+          id
+          accuserDepartmentUserId
+          accusedDepartmentUserId
+          accuserNationality
+          accusedNationality
+          accuserRelatedPeopleByAccuser
+          accuserRelatedPeopleByAccused
+          accusedRelatedPeopleByAccuser
+          accusedRelatedPeopleByAccused
+          contractTypeByAccused
+          contractTypeByAccuser
+          otherContractTypeByAccused
+          otherContractTypeByAccuser
+          circularNumberByAccused
+          circularNumberByAccuser
+          circularDateByAccused
+          circularDateByAccuser
+          contractSubjectByAccused
+          contractSubjectByAccuser
+          contractNumberByAccused
+          contractNumberByAccuser
+          contractDateByAccused
+          contractDateByAccuser
+          initialBudgetByAccused
+          initialBudgetByAccuser
+          initialTimePeriodByAccused
+          initialTimePeriodByAccuser
+          priceListOfBasicUnitOfFieldByAccused
+          priceListOfBasicUnitOfFieldByAccuser
+          isSpecialPriceListAttachedToContractByAccused
+          isSpecialPriceListAttachedToContractByAccuser
+          recommendedCoefficientByAccused
+          recommendedCoefficientByAccuser
+          coefficientTypeByAccused
+          coefficientTypeByAccuser
+          assigningTypeByAccused
+          assigningTypeByAccuser
+          doesContainAdjustmentByAccused
+          doesContainAdjustmentByAccuser
+          baseIndexPeriodByAccused
+          baseIndexPeriodByAccuser
+          operationStartDateByAccused
+          operationStartDateByAccuser
+          physicalProgressInArbitrationDateByAccused
+          physicalProgressInArbitrationDateByAccuser
+          financialProgressInArbitrationDateByAccused
+          financialProgressInArbitrationDateByAccuser
+          contractStatusAndDateInArbitrationByAccused
+          contractStatusAndDateInArbitrationByAccuser
+          supervisionDepartmentByAccused
+          supervisionDepartmentByAccuser
+          authorizedDelaysByAccused
+          authorizedDelaysByAccuser
+          unauthorizedDelaysByAccused
+          unauthorizedDelaysByAccuser
+          isExecutiveByAccused
+          isExecutiveByAccuser
+          isExecutiveByExpert
           fileNamesByAccused
           fileNamesByAccuser
         }
@@ -6390,12 +8327,15 @@ export const GetArgumentsWithFilterDocument = gql`
         id
         accusedResponse
         accusedResponseFileName
-        approvedAmount
+        netApprovedAmount
+        grossApprovedAmount
         complaintId
-        councilApprovedAmount
+        netCouncilApprovedAmount
+        grossCouncilApprovedAmount
         councilOpinion
         justiceExpertOpinion
-        justiceExpertApprovedAmount
+        netJusticeExpertApprovedAmount
+        grossJusticeExpertApprovedAmount
         description
         expertId
         expertOpinion
@@ -6403,8 +8343,10 @@ export const GetArgumentsWithFilterDocument = gql`
         expertVerdict
         fileName
         filledBy
-        mailRoomChiefSuggestedAmount
-        mailRoomExpertApprovedAmount
+        netMailRoomChiefSuggestedAmount
+        grossMailRoomChiefSuggestedAmount
+        netMailRoomExpertApprovedAmount
+        grossMailRoomExpertApprovedAmount
         mailRoomExpertOpinionOnExpertOpinion
         mailRoomChiefOpinionOnArgument
         mailRoomExpertOpinionOnArgument
@@ -6414,6 +8356,8 @@ export const GetArgumentsWithFilterDocument = gql`
         userId
         createdDate
         isDeleted
+        financialSituation
+        filledBy
       }
     }
     status
@@ -6451,10 +8395,65 @@ export function useGetArgumentsWithFilterLazyQuery(baseOptions?: Apollo.LazyQuer
 export type GetArgumentsWithFilterQueryHookResult = ReturnType<typeof useGetArgumentsWithFilterQuery>;
 export type GetArgumentsWithFilterLazyQueryHookResult = ReturnType<typeof useGetArgumentsWithFilterLazyQuery>;
 export type GetArgumentsWithFilterQueryResult = Apollo.QueryResult<GetArgumentsWithFilterQuery, GetArgumentsWithFilterQueryVariables>;
+export const GetCorrectionRequestsFullQueryDocument = gql`
+    query getCorrectionRequestsFullQuery($filter: CorrectionRequestFilterInput, $orderBy: [CorrectionRequestSortInput!], $skip: Int, $take: Int) {
+  correctionRequest_getCorrectionRequests {
+    result(where: $filter, order: $orderBy, skip: $skip, take: $take) {
+      items {
+        complaintId
+        createdDate
+        clause
+        reason
+        suggestion
+        id
+        complaintId
+        complaint {
+          id
+          contract {
+            accuserDepartmentUserId
+            accusedDepartmentUserId
+          }
+        }
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetCorrectionRequestsFullQueryQuery__
+ *
+ * To run a query within a React component, call `useGetCorrectionRequestsFullQueryQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCorrectionRequestsFullQueryQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCorrectionRequestsFullQueryQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *      orderBy: // value for 'orderBy'
+ *      skip: // value for 'skip'
+ *      take: // value for 'take'
+ *   },
+ * });
+ */
+export function useGetCorrectionRequestsFullQueryQuery(baseOptions?: Apollo.QueryHookOptions<GetCorrectionRequestsFullQueryQuery, GetCorrectionRequestsFullQueryQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCorrectionRequestsFullQueryQuery, GetCorrectionRequestsFullQueryQueryVariables>(GetCorrectionRequestsFullQueryDocument, options);
+      }
+export function useGetCorrectionRequestsFullQueryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCorrectionRequestsFullQueryQuery, GetCorrectionRequestsFullQueryQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCorrectionRequestsFullQueryQuery, GetCorrectionRequestsFullQueryQueryVariables>(GetCorrectionRequestsFullQueryDocument, options);
+        }
+export type GetCorrectionRequestsFullQueryQueryHookResult = ReturnType<typeof useGetCorrectionRequestsFullQueryQuery>;
+export type GetCorrectionRequestsFullQueryLazyQueryHookResult = ReturnType<typeof useGetCorrectionRequestsFullQueryLazyQuery>;
+export type GetCorrectionRequestsFullQueryQueryResult = Apollo.QueryResult<GetCorrectionRequestsFullQueryQuery, GetCorrectionRequestsFullQueryQueryVariables>;
 export const Create_ContractDocument = gql`
-    mutation CREATE_CONTRACT($AccuserRelatedPeople: String, $AccusedRelatedPeople: String, $AccuserNationality: String, $ContractType: [String!], $CircularNumber: String, $CircularDate: Date, $ContractSubject: String, $ContractNumber: String, $ContractDate: Date, $InitialBudget: Decimal, $InitialTimePeriod: Int, $PriceListOfBasicUnitOfField: String, $IsSpecialPriceListAttachedToContract: String, $RecommendedCoefficient: Float, $CoefficientType: String, $AssigningType: String, $DoesContainAdjustment: String, $BaseIndexPeriod: String, $OperationStartDateAccuser: Date, $PhysicalProgressInArbitrationDateAccuser: Int, $FinancialProgressInArbitrationDateAccuser: Int, $ContractStatusInArbitration: [String!], $SupervisionDepartment: String, $AuthorizedDelaysAccuser: Int, $UnauthorizedDelaysAccuser: Int, $AccusedDepartmentId: String, $AccuserDepartmentId: String) {
+    mutation CREATE_CONTRACT($AccuserRelatedPeople: String, $AccusedRelatedPeople: String, $AccuserNationality: String, $ContractType: [String!], $CircularNumber: String, $CircularDate: Date, $ContractSubject: String, $ContractNumber: String, $ContractDate: Date, $InitialBudget: Decimal, $InitialTimePeriod: Float, $PriceListOfBasicUnitOfField: String, $IsSpecialPriceListAttachedToContract: String, $RecommendedCoefficient: Float, $CoefficientType: String, $AssigningType: String, $DoesContainAdjustment: String, $BaseIndexPeriod: String, $OperationStartDateAccuser: Date, $PhysicalProgressInArbitrationDateAccuser: Int, $FinancialProgressInArbitrationDateAccuser: Int, $ContractStatusInArbitration: String!, $SupervisionDepartment: String, $AuthorizedDelaysAccuser: Int, $UnauthorizedDelaysAccuser: Int, $AccusedDepartmentId: String, $AccuserDepartmentId: String, $Currency: String, $fileNamesByAccuser: [String!], $generalConditionsFileName: String, $ContractGeneralType: ContractGeneralType, $agreementFileName: String, $privateTermsFileName: String, $otherAttachmentFileName: [String!]) {
   contract_addContract(
-    input: {accuserRelatedPeopleByAccuser: $AccuserRelatedPeople, accusedRelatedPeopleByAccuser: $AccusedRelatedPeople, accuserNationality: $AccuserNationality, contractTypeByAccuser: $ContractType, circularNumberByAccuser: $CircularNumber, circularDateByAccuser: $CircularDate, contractSubjectByAccuser: $ContractSubject, contractNumberByAccuser: $ContractNumber, contractDateByAccuser: $ContractDate, initialBudgetByAccuser: $InitialBudget, initialTimePeriodByAccuser: $InitialTimePeriod, priceListOfBasicUnitOfFieldByAccuser: $PriceListOfBasicUnitOfField, isSpecialPriceListAttachedToContractByAccuser: $IsSpecialPriceListAttachedToContract, recommendedCoefficientByAccuser: $RecommendedCoefficient, coefficientTypeByAccuser: $CoefficientType, assigningTypeByAccuser: $AssigningType, doesContainAdjustmentByAccuser: $DoesContainAdjustment, baseIndexPeriodByAccuser: $BaseIndexPeriod, operationStartDateByAccuser: $OperationStartDateAccuser, physicalProgressInArbitrationDateByAccuser: $PhysicalProgressInArbitrationDateAccuser, financialProgressInArbitrationDateByAccuser: $FinancialProgressInArbitrationDateAccuser, contractStatusAndDateInArbitrationByAccuser: $ContractStatusInArbitration, supervisionDepartmentByAccuser: $SupervisionDepartment, authorizedDelaysByAccuser: $AuthorizedDelaysAccuser, unauthorizedDelaysByAccuser: $UnauthorizedDelaysAccuser, accusedDepartmentUserId: $AccusedDepartmentId, accuserDepartmentUserId: $AccuserDepartmentId}
+    input: {accuserRelatedPeopleByAccuser: $AccuserRelatedPeople, accusedRelatedPeopleByAccuser: $AccusedRelatedPeople, accuserNationality: $AccuserNationality, contractTypeByAccuser: $ContractType, circularNumberByAccuser: $CircularNumber, circularDateByAccuser: $CircularDate, contractSubjectByAccuser: $ContractSubject, contractNumberByAccuser: $ContractNumber, contractDateByAccuser: $ContractDate, initialBudgetByAccuser: $InitialBudget, initialTimePeriodByAccuser: $InitialTimePeriod, priceListOfBasicUnitOfFieldByAccuser: $PriceListOfBasicUnitOfField, isSpecialPriceListAttachedToContractByAccuser: $IsSpecialPriceListAttachedToContract, recommendedCoefficientByAccuser: $RecommendedCoefficient, coefficientTypeByAccuser: $CoefficientType, assigningTypeByAccuser: $AssigningType, doesContainAdjustmentByAccuser: $DoesContainAdjustment, baseIndexPeriodByAccuser: $BaseIndexPeriod, operationStartDateByAccuser: $OperationStartDateAccuser, physicalProgressInArbitrationDateByAccuser: $PhysicalProgressInArbitrationDateAccuser, financialProgressInArbitrationDateByAccuser: $FinancialProgressInArbitrationDateAccuser, contractStatusAndDateInArbitrationByAccuser: $ContractStatusInArbitration, supervisionDepartmentByAccuser: $SupervisionDepartment, authorizedDelaysByAccuser: $AuthorizedDelaysAccuser, unauthorizedDelaysByAccuser: $UnauthorizedDelaysAccuser, accusedDepartmentUserId: $AccusedDepartmentId, accuserDepartmentUserId: $AccuserDepartmentId, currencyByAccuser: $Currency, fileNamesByAccuser: $fileNamesByAccuser, generalConditionsFileNameByAccuser: $generalConditionsFileName, contractGeneralTypeByAccuser: $ContractGeneralType, agreementFileNameByAccuser: $agreementFileName, privateTermsFileNameByAccuser: $privateTermsFileName, otherAttachmentFileNamesByAccuser: $otherAttachmentFileName}
   ) {
     result {
       id
@@ -6508,6 +8507,13 @@ export type Create_ContractMutationFn = Apollo.MutationFunction<Create_ContractM
  *      UnauthorizedDelaysAccuser: // value for 'UnauthorizedDelaysAccuser'
  *      AccusedDepartmentId: // value for 'AccusedDepartmentId'
  *      AccuserDepartmentId: // value for 'AccuserDepartmentId'
+ *      Currency: // value for 'Currency'
+ *      fileNamesByAccuser: // value for 'fileNamesByAccuser'
+ *      generalConditionsFileName: // value for 'generalConditionsFileName'
+ *      ContractGeneralType: // value for 'ContractGeneralType'
+ *      agreementFileName: // value for 'agreementFileName'
+ *      privateTermsFileName: // value for 'privateTermsFileName'
+ *      otherAttachmentFileName: // value for 'otherAttachmentFileName'
  *   },
  * });
  */
@@ -6519,9 +8525,9 @@ export type Create_ContractMutationHookResult = ReturnType<typeof useCreate_Cont
 export type Create_ContractMutationResult = Apollo.MutationResult<Create_ContractMutation>;
 export type Create_ContractMutationOptions = Apollo.BaseMutationOptions<Create_ContractMutation, Create_ContractMutationVariables>;
 export const Update_Contract_By_AccusedDocument = gql`
-    mutation UPDATE_CONTRACT_BY_ACCUSED($AccuserRelatedPeople: String, $AccusedRelatedPeople: String, $AccuserNationality: String, $ContractType: [String!], $CircularNumber: String, $CircularDate: Date, $ContractSubject: String, $ContractNumber: String, $ContractDate: Date, $InitialBudget: Decimal, $InitialTimePeriod: Int, $PriceListOfBasicUnitOfField: String, $IsSpecialPriceListAttachedToContract: String, $RecommendedCoefficient: Float, $CoefficientType: String, $AssigningType: String, $DoesContainAdjustment: String, $BaseIndexPeriod: String, $OperationStartDateAccuser: Date, $PhysicalProgressInArbitrationDateAccuser: Int, $FinancialProgressInArbitrationDateAccuser: Int, $ContractStatusInArbitration: [String!], $SupervisionDepartment: String, $AuthorizedDelaysAccuser: Int, $UnauthorizedDelaysAccuser: Int, $id: Int!) {
+    mutation UPDATE_CONTRACT_BY_ACCUSED($AccuserRelatedPeople: String, $AccusedRelatedPeople: String, $AccuserNationality: String, $ContractType: [String!], $CircularNumber: String, $CircularDate: Date, $ContractSubject: String, $ContractNumber: String, $ContractDate: Date, $InitialBudget: Decimal, $InitialTimePeriod: Float, $PriceListOfBasicUnitOfField: String, $IsSpecialPriceListAttachedToContract: String, $RecommendedCoefficient: Float, $CoefficientType: String, $AssigningType: String, $DoesContainAdjustment: String, $BaseIndexPeriod: String, $OperationStartDateAccuser: Date, $PhysicalProgressInArbitrationDateAccuser: Int, $FinancialProgressInArbitrationDateAccuser: Int, $ContractStatusInArbitration: String!, $SupervisionDepartment: String, $AuthorizedDelaysAccuser: Int, $UnauthorizedDelaysAccuser: Int, $id: Int!, $Currency: String, $fileNamesByAccused: [String!], $generalConditionsFileName: String, $ContractGeneralType: ContractGeneralType, $agreementFileName: String, $privateTermsFileName: String, $otherAttachmentFileName: [String!]) {
   contract_updateContract(
-    input: {id: $id, accuserRelatedPeopleByAccused: $AccuserRelatedPeople, accusedRelatedPeopleByAccused: $AccusedRelatedPeople, accusedNationality: $AccuserNationality, contractTypeByAccused: $ContractType, circularNumberByAccused: $CircularNumber, circularDateByAccused: $CircularDate, contractSubjectByAccused: $ContractSubject, contractNumberByAccused: $ContractNumber, contractDateByAccused: $ContractDate, initialBudgetByAccused: $InitialBudget, initialTimePeriodByAccused: $InitialTimePeriod, priceListOfBasicUnitOfFieldByAccused: $PriceListOfBasicUnitOfField, isSpecialPriceListAttachedToContractByAccused: $IsSpecialPriceListAttachedToContract, recommendedCoefficientByAccused: $RecommendedCoefficient, coefficientTypeByAccused: $CoefficientType, assigningTypeByAccused: $AssigningType, doesContainAdjustmentByAccused: $DoesContainAdjustment, baseIndexPeriodByAccused: $BaseIndexPeriod, operationStartDateByAccused: $OperationStartDateAccuser, physicalProgressInArbitrationDateByAccused: $PhysicalProgressInArbitrationDateAccuser, financialProgressInArbitrationDateByAccused: $FinancialProgressInArbitrationDateAccuser, contractStatusAndDateInArbitrationByAccused: $ContractStatusInArbitration, supervisionDepartmentByAccused: $SupervisionDepartment, authorizedDelaysByAccused: $AuthorizedDelaysAccuser, unauthorizedDelaysByAccused: $UnauthorizedDelaysAccuser}
+    input: {id: $id, accuserRelatedPeopleByAccused: $AccuserRelatedPeople, accusedRelatedPeopleByAccused: $AccusedRelatedPeople, accusedNationality: $AccuserNationality, contractTypeByAccused: $ContractType, circularNumberByAccused: $CircularNumber, circularDateByAccused: $CircularDate, contractSubjectByAccused: $ContractSubject, contractNumberByAccused: $ContractNumber, contractDateByAccused: $ContractDate, initialBudgetByAccused: $InitialBudget, initialTimePeriodByAccused: $InitialTimePeriod, priceListOfBasicUnitOfFieldByAccused: $PriceListOfBasicUnitOfField, isSpecialPriceListAttachedToContractByAccused: $IsSpecialPriceListAttachedToContract, recommendedCoefficientByAccused: $RecommendedCoefficient, coefficientTypeByAccused: $CoefficientType, assigningTypeByAccused: $AssigningType, doesContainAdjustmentByAccused: $DoesContainAdjustment, baseIndexPeriodByAccused: $BaseIndexPeriod, operationStartDateByAccused: $OperationStartDateAccuser, physicalProgressInArbitrationDateByAccused: $PhysicalProgressInArbitrationDateAccuser, financialProgressInArbitrationDateByAccused: $FinancialProgressInArbitrationDateAccuser, contractStatusAndDateInArbitrationByAccused: $ContractStatusInArbitration, supervisionDepartmentByAccused: $SupervisionDepartment, authorizedDelaysByAccused: $AuthorizedDelaysAccuser, unauthorizedDelaysByAccused: $UnauthorizedDelaysAccuser, currencyByAccused: $Currency, fileNamesByAccused: $fileNamesByAccused, generalConditionsFileNameByAccused: $generalConditionsFileName, contractGeneralTypeByAccused: $ContractGeneralType, agreementFileNameByAccused: $agreementFileName, privateTermsFileNameByAccused: $privateTermsFileName, otherAttachmentFileNamesByAccused: $otherAttachmentFileName}
   ) {
     result {
       id
@@ -6574,6 +8580,13 @@ export type Update_Contract_By_AccusedMutationFn = Apollo.MutationFunction<Updat
  *      AuthorizedDelaysAccuser: // value for 'AuthorizedDelaysAccuser'
  *      UnauthorizedDelaysAccuser: // value for 'UnauthorizedDelaysAccuser'
  *      id: // value for 'id'
+ *      Currency: // value for 'Currency'
+ *      fileNamesByAccused: // value for 'fileNamesByAccused'
+ *      generalConditionsFileName: // value for 'generalConditionsFileName'
+ *      ContractGeneralType: // value for 'ContractGeneralType'
+ *      agreementFileName: // value for 'agreementFileName'
+ *      privateTermsFileName: // value for 'privateTermsFileName'
+ *      otherAttachmentFileName: // value for 'otherAttachmentFileName'
  *   },
  * });
  */
@@ -6585,9 +8598,9 @@ export type Update_Contract_By_AccusedMutationHookResult = ReturnType<typeof use
 export type Update_Contract_By_AccusedMutationResult = Apollo.MutationResult<Update_Contract_By_AccusedMutation>;
 export type Update_Contract_By_AccusedMutationOptions = Apollo.BaseMutationOptions<Update_Contract_By_AccusedMutation, Update_Contract_By_AccusedMutationVariables>;
 export const Update_Contract_By_AccuserDocument = gql`
-    mutation UPDATE_CONTRACT_BY_ACCUSER($AccuserRelatedPeople: String, $AccusedRelatedPeople: String, $AccuserNationality: String, $ContractType: [String!], $CircularNumber: String, $CircularDate: Date, $ContractSubject: String, $ContractNumber: String, $ContractDate: Date, $InitialBudget: Decimal, $InitialTimePeriod: Int, $PriceListOfBasicUnitOfField: String, $IsSpecialPriceListAttachedToContract: String, $RecommendedCoefficient: Float, $CoefficientType: String, $AssigningType: String, $DoesContainAdjustment: String, $BaseIndexPeriod: String, $OperationStartDateAccuser: Date, $PhysicalProgressInArbitrationDateAccuser: Int, $FinancialProgressInArbitrationDateAccuser: Int, $ContractStatusInArbitration: [String!], $SupervisionDepartment: String, $AuthorizedDelaysAccuser: Int, $UnauthorizedDelaysAccuser: Int, $id: Int!, $AccusedDepartmentId: String, $AccuserDepartmentId: String) {
+    mutation UPDATE_CONTRACT_BY_ACCUSER($AccuserRelatedPeople: String, $AccusedRelatedPeople: String, $AccuserNationality: String, $ContractType: [String!], $CircularNumber: String, $CircularDate: Date, $ContractSubject: String, $ContractNumber: String, $ContractDate: Date, $InitialBudget: Decimal, $InitialTimePeriod: Float, $PriceListOfBasicUnitOfField: String, $IsSpecialPriceListAttachedToContract: String, $RecommendedCoefficient: Float, $CoefficientType: String, $AssigningType: String, $DoesContainAdjustment: String, $BaseIndexPeriod: String, $OperationStartDateAccuser: Date, $PhysicalProgressInArbitrationDateAccuser: Int, $FinancialProgressInArbitrationDateAccuser: Int, $ContractStatusInArbitration: String!, $SupervisionDepartment: String, $AuthorizedDelaysAccuser: Int, $UnauthorizedDelaysAccuser: Int, $id: Int!, $AccusedDepartmentId: String, $AccuserDepartmentId: String, $Currency: String, $fileNamesByAccuser: [String!], $generalConditionsFileName: String, $ContractGeneralType: ContractGeneralType, $agreementFileName: String, $privateTermsFileName: String, $otherAttachmentFileName: [String!]) {
   contract_updateContract(
-    input: {id: $id, accuserRelatedPeopleByAccuser: $AccuserRelatedPeople, accusedRelatedPeopleByAccuser: $AccusedRelatedPeople, accuserNationality: $AccuserNationality, contractTypeByAccuser: $ContractType, circularNumberByAccuser: $CircularNumber, circularDateByAccuser: $CircularDate, contractSubjectByAccuser: $ContractSubject, contractNumberByAccuser: $ContractNumber, contractDateByAccuser: $ContractDate, initialBudgetByAccuser: $InitialBudget, initialTimePeriodByAccuser: $InitialTimePeriod, priceListOfBasicUnitOfFieldByAccuser: $PriceListOfBasicUnitOfField, isSpecialPriceListAttachedToContractByAccuser: $IsSpecialPriceListAttachedToContract, recommendedCoefficientByAccuser: $RecommendedCoefficient, coefficientTypeByAccuser: $CoefficientType, assigningTypeByAccuser: $AssigningType, doesContainAdjustmentByAccuser: $DoesContainAdjustment, baseIndexPeriodByAccuser: $BaseIndexPeriod, operationStartDateByAccuser: $OperationStartDateAccuser, physicalProgressInArbitrationDateByAccuser: $PhysicalProgressInArbitrationDateAccuser, financialProgressInArbitrationDateByAccuser: $FinancialProgressInArbitrationDateAccuser, contractStatusAndDateInArbitrationByAccuser: $ContractStatusInArbitration, supervisionDepartmentByAccuser: $SupervisionDepartment, authorizedDelaysByAccuser: $AuthorizedDelaysAccuser, unauthorizedDelaysByAccuser: $UnauthorizedDelaysAccuser, accusedDepartmentUserId: $AccusedDepartmentId, accuserDepartmentUserId: $AccuserDepartmentId}
+    input: {id: $id, accuserRelatedPeopleByAccuser: $AccuserRelatedPeople, accusedRelatedPeopleByAccuser: $AccusedRelatedPeople, accuserNationality: $AccuserNationality, contractTypeByAccuser: $ContractType, circularNumberByAccuser: $CircularNumber, circularDateByAccuser: $CircularDate, contractSubjectByAccuser: $ContractSubject, contractNumberByAccuser: $ContractNumber, contractDateByAccuser: $ContractDate, initialBudgetByAccuser: $InitialBudget, initialTimePeriodByAccuser: $InitialTimePeriod, priceListOfBasicUnitOfFieldByAccuser: $PriceListOfBasicUnitOfField, isSpecialPriceListAttachedToContractByAccuser: $IsSpecialPriceListAttachedToContract, recommendedCoefficientByAccuser: $RecommendedCoefficient, coefficientTypeByAccuser: $CoefficientType, assigningTypeByAccuser: $AssigningType, doesContainAdjustmentByAccuser: $DoesContainAdjustment, baseIndexPeriodByAccuser: $BaseIndexPeriod, operationStartDateByAccuser: $OperationStartDateAccuser, physicalProgressInArbitrationDateByAccuser: $PhysicalProgressInArbitrationDateAccuser, financialProgressInArbitrationDateByAccuser: $FinancialProgressInArbitrationDateAccuser, contractStatusAndDateInArbitrationByAccuser: $ContractStatusInArbitration, supervisionDepartmentByAccuser: $SupervisionDepartment, authorizedDelaysByAccuser: $AuthorizedDelaysAccuser, unauthorizedDelaysByAccuser: $UnauthorizedDelaysAccuser, accusedDepartmentUserId: $AccusedDepartmentId, accuserDepartmentUserId: $AccuserDepartmentId, currencyByAccuser: $Currency, fileNamesByAccuser: $fileNamesByAccuser, generalConditionsFileNameByAccuser: $generalConditionsFileName, contractGeneralTypeByAccuser: $ContractGeneralType, agreementFileNameByAccuser: $agreementFileName, privateTermsFileNameByAccuser: $privateTermsFileName, otherAttachmentFileNamesByAccuser: $otherAttachmentFileName}
   ) {
     result {
       id
@@ -6642,6 +8655,13 @@ export type Update_Contract_By_AccuserMutationFn = Apollo.MutationFunction<Updat
  *      id: // value for 'id'
  *      AccusedDepartmentId: // value for 'AccusedDepartmentId'
  *      AccuserDepartmentId: // value for 'AccuserDepartmentId'
+ *      Currency: // value for 'Currency'
+ *      fileNamesByAccuser: // value for 'fileNamesByAccuser'
+ *      generalConditionsFileName: // value for 'generalConditionsFileName'
+ *      ContractGeneralType: // value for 'ContractGeneralType'
+ *      agreementFileName: // value for 'agreementFileName'
+ *      privateTermsFileName: // value for 'privateTermsFileName'
+ *      otherAttachmentFileName: // value for 'otherAttachmentFileName'
  *   },
  * });
  */
@@ -6654,10 +8674,12 @@ export type Update_Contract_By_AccuserMutationResult = Apollo.MutationResult<Upd
 export type Update_Contract_By_AccuserMutationOptions = Apollo.BaseMutationOptions<Update_Contract_By_AccuserMutation, Update_Contract_By_AccuserMutationVariables>;
 export const Update_Contract_By_ExpertDocument = gql`
     mutation UPDATE_CONTRACT_BY_EXPERT($isExecutive: Boolean!, $id: Int!) {
-  contract_updateContract(input: {id: $id, isExecutive: $isExecutive}) {
+  contract_updateContract(input: {id: $id, isExecutiveByExpert: $isExecutive}) {
     result {
       id
-      isExecutive
+      isExecutiveByAccused
+      isExecutiveByAccuser
+      isExecutiveByExpert
     }
     status {
       code
@@ -6832,9 +8854,17 @@ export const GetContractDocument = gql`
         authorizedDelaysByAccuser
         unauthorizedDelaysByAccused
         unauthorizedDelaysByAccuser
-        isExecutive
+        isExecutiveByAccused
+        isExecutiveByAccuser
+        isExecutiveByExpert
         fileNamesByAccused
         fileNamesByAccuser
+        currencyByAccused
+        currencyByAccuser
+        generalConditionsFileNameByAccuser
+        generalConditionsFileNameByAccused
+        contractGeneralTypeByAccused
+        contractGeneralTypeByAccuser
       }
     }
     status
@@ -6869,6 +8899,65 @@ export function useGetContractLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type GetContractQueryHookResult = ReturnType<typeof useGetContractQuery>;
 export type GetContractLazyQueryHookResult = ReturnType<typeof useGetContractLazyQuery>;
 export type GetContractQueryResult = Apollo.QueryResult<GetContractQuery, GetContractQueryVariables>;
+export const GetPublicContractsDocument = gql`
+    query GetPublicContracts($filter: PublicContractFilterInput, $order: [PublicContractSortInput!], $skip: Int, $take: Int) {
+  publicContract_getPublicContracts {
+    result(where: $filter, order: $order, skip: $skip, take: $take) {
+      items {
+        guid
+        fullName
+        executiveTitle
+        nationalCode
+        id
+        isDeleted
+        createdDate
+        lastModifiedDate
+        contractID
+        contractSubject
+        generalConditionTitle
+        sourceOfFundingTitle
+        city
+        agreeAmountRial
+        agreeDate
+        jobReferenceTitle
+        contractCategoryTitle
+      }
+    }
+    status
+  }
+}
+    `;
+
+/**
+ * __useGetPublicContractsQuery__
+ *
+ * To run a query within a React component, call `useGetPublicContractsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPublicContractsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPublicContractsQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *      order: // value for 'order'
+ *      skip: // value for 'skip'
+ *      take: // value for 'take'
+ *   },
+ * });
+ */
+export function useGetPublicContractsQuery(baseOptions?: Apollo.QueryHookOptions<GetPublicContractsQuery, GetPublicContractsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetPublicContractsQuery, GetPublicContractsQueryVariables>(GetPublicContractsDocument, options);
+      }
+export function useGetPublicContractsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPublicContractsQuery, GetPublicContractsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetPublicContractsQuery, GetPublicContractsQueryVariables>(GetPublicContractsDocument, options);
+        }
+export type GetPublicContractsQueryHookResult = ReturnType<typeof useGetPublicContractsQuery>;
+export type GetPublicContractsLazyQueryHookResult = ReturnType<typeof useGetPublicContractsLazyQuery>;
+export type GetPublicContractsQueryResult = Apollo.QueryResult<GetPublicContractsQuery, GetPublicContractsQueryVariables>;
 export const SetCouncilListMutationDocument = gql`
     mutation setCouncilListMutation($ids: [Int!]!) {
   complaint_setInCouncilList(entityIds: $ids) {
@@ -6912,6 +9001,49 @@ export function useSetCouncilListMutationMutation(baseOptions?: Apollo.MutationH
 export type SetCouncilListMutationMutationHookResult = ReturnType<typeof useSetCouncilListMutationMutation>;
 export type SetCouncilListMutationMutationResult = Apollo.MutationResult<SetCouncilListMutationMutation>;
 export type SetCouncilListMutationMutationOptions = Apollo.BaseMutationOptions<SetCouncilListMutationMutation, SetCouncilListMutationMutationVariables>;
+export const GetChildrenOfParentDocument = gql`
+    query GetChildrenOfParent($parentType: HandlingType!) {
+  user_getChildrenOfParent(parentType: $parentType) {
+    result {
+      fullName
+      parentId
+      id
+    }
+    status {
+      code
+      value
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetChildrenOfParentQuery__
+ *
+ * To run a query within a React component, call `useGetChildrenOfParentQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetChildrenOfParentQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetChildrenOfParentQuery({
+ *   variables: {
+ *      parentType: // value for 'parentType'
+ *   },
+ * });
+ */
+export function useGetChildrenOfParentQuery(baseOptions: Apollo.QueryHookOptions<GetChildrenOfParentQuery, GetChildrenOfParentQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetChildrenOfParentQuery, GetChildrenOfParentQueryVariables>(GetChildrenOfParentDocument, options);
+      }
+export function useGetChildrenOfParentLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetChildrenOfParentQuery, GetChildrenOfParentQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetChildrenOfParentQuery, GetChildrenOfParentQueryVariables>(GetChildrenOfParentDocument, options);
+        }
+export type GetChildrenOfParentQueryHookResult = ReturnType<typeof useGetChildrenOfParentQuery>;
+export type GetChildrenOfParentLazyQueryHookResult = ReturnType<typeof useGetChildrenOfParentLazyQuery>;
+export type GetChildrenOfParentQueryResult = Apollo.QueryResult<GetChildrenOfParentQuery, GetChildrenOfParentQueryVariables>;
 export const AddDocsRequestMutationDocument = gql`
     mutation AddDocsRequestMutation($input: DocumentRequestInput!) {
   documentRequest_addDocumentRequest(input: $input) {
@@ -6919,7 +9051,8 @@ export const AddDocsRequestMutationDocument = gql`
       userId
       complaintId
       requestedDocumentName
-      requestedDocumentFileName
+      requestedDocumentFileNameAccuser
+      requestedDocumentFileNameAccused
       id
     }
   }
@@ -6997,7 +9130,8 @@ export const GetReqestedDocsQueryDocument = gql`
       items {
         complaintId
         requestedDocumentName
-        requestedDocumentFileName
+        requestedDocumentFileNameAccuser
+        requestedDocumentFileNameAccused
         isDeleted
         createdDate
         id
@@ -7045,7 +9179,8 @@ export const UpdateRequestedDocDocument = gql`
     result {
       userId
       requestedDocumentName
-      requestedDocumentFileName
+      requestedDocumentFileNameAccuser
+      requestedDocumentFileNameAccused
       target
       id
       complaintId
@@ -7188,7 +9323,7 @@ export type GetFileFullQueryResult = Apollo.QueryResult<GetFileFullQuery, GetFil
 export const Create_Installment_TableDocument = gql`
     mutation CREATE_INSTALLMENT_TABLE($contractId: Int, $paymentTotal: Decimal, $registrarType: RegistrarType, $remainingPayment: Decimal, $userId: String) {
   installmentTable_addInstallmentTable(
-    input: {contractId: $contractId, paymentTotal: $paymentTotal, registrarType: $registrarType, remainingPayment: $remainingPayment, userId: $userId}
+    input: {contractId: $contractId, paymentTotal: $paymentTotal, filledBy: $registrarType, remainingPayment: $remainingPayment, userId: $userId}
   ) {
     result {
       id
@@ -7236,7 +9371,7 @@ export type Create_Installment_TableMutationOptions = Apollo.BaseMutationOptions
 export const Update_Installment_TableDocument = gql`
     mutation UPDATE_INSTALLMENT_TABLE($contractId: Int, $paymentTotal: Decimal, $registrarType: RegistrarType, $remainingPayment: Decimal!, $userId: String, $id: Int!) {
   installmentTable_updateInstallmentTable(
-    input: {contractId: $contractId, paymentTotal: $paymentTotal, registrarType: $registrarType, remainingPayment: $remainingPayment, userId: $userId, id: $id}
+    input: {contractId: $contractId, paymentTotal: $paymentTotal, filledBy: $registrarType, remainingPayment: $remainingPayment, userId: $userId, id: $id}
   ) {
     result {
       userId
@@ -8063,9 +10198,9 @@ export type Delete_Adjustment_Statement_PartMutationHookResult = ReturnType<type
 export type Delete_Adjustment_Statement_PartMutationResult = Apollo.MutationResult<Delete_Adjustment_Statement_PartMutation>;
 export type Delete_Adjustment_Statement_PartMutationOptions = Apollo.BaseMutationOptions<Delete_Adjustment_Statement_PartMutation, Delete_Adjustment_Statement_PartMutationVariables>;
 export const Create_Work_Condition_Statement_TableDocument = gql`
-    mutation CREATE_WORK_CONDITION_STATEMENT_TABLE($contractId: Int, $filledBy: RegistrarType, $userId: String) {
+    mutation CREATE_WORK_CONDITION_STATEMENT_TABLE($contractId: Int, $filledBy: RegistrarType, $userId: String, $workConditionType: String) {
   workConditionStatementTable_addWorkConditionStatementTable(
-    input: {contractId: $contractId, filledBy: $filledBy, userId: $userId}
+    input: {contractId: $contractId, filledBy: $filledBy, userId: $userId, workConditionType: $workConditionType}
   ) {
     result {
       id
@@ -8097,6 +10232,7 @@ export type Create_Work_Condition_Statement_TableMutationFn = Apollo.MutationFun
  *      contractId: // value for 'contractId'
  *      filledBy: // value for 'filledBy'
  *      userId: // value for 'userId'
+ *      workConditionType: // value for 'workConditionType'
  *   },
  * });
  */
@@ -8623,6 +10759,8 @@ export const GetInstallmentTablesDocument = gql`
           date
           filledBy
           id
+          createdDate
+          isDeleted
           installmentParts {
             amount
             date
@@ -8630,6 +10768,8 @@ export const GetInstallmentTablesDocument = gql`
             id
           }
         }
+        createdDate
+        isDeleted
       }
     }
     status
@@ -8664,6 +10804,79 @@ export function useGetInstallmentTablesLazyQuery(baseOptions?: Apollo.LazyQueryH
 export type GetInstallmentTablesQueryHookResult = ReturnType<typeof useGetInstallmentTablesQuery>;
 export type GetInstallmentTablesLazyQueryHookResult = ReturnType<typeof useGetInstallmentTablesLazyQuery>;
 export type GetInstallmentTablesQueryResult = Apollo.QueryResult<GetInstallmentTablesQuery, GetInstallmentTablesQueryVariables>;
+export const GetInstallmentTablesFullDocument = gql`
+    query GetInstallmentTablesFull($where: InstallmentTableFilterInput, $order: [InstallmentTableSortInput!]) {
+  installmentTable_getInstallmentTables {
+    result(where: $where, order: $order, take: 20000) {
+      items {
+        id
+        createdDate
+        lastModifiedDate
+        contractId
+        paymentTotal
+        remainingPayment
+        filledBy
+        contract {
+          accuserDepartmentUserId
+          accusedDepartmentUserId
+        }
+        user {
+          parentId
+          id
+          userType
+        }
+        userId
+        installments {
+          installmentTableId
+          title
+          amount
+          date
+          filledBy
+          id
+          installmentParts {
+            amount
+            date
+            filledBy
+            id
+          }
+        }
+        createdDate
+        isDeleted
+      }
+    }
+    status
+  }
+}
+    `;
+
+/**
+ * __useGetInstallmentTablesFullQuery__
+ *
+ * To run a query within a React component, call `useGetInstallmentTablesFullQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetInstallmentTablesFullQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetInstallmentTablesFullQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *      order: // value for 'order'
+ *   },
+ * });
+ */
+export function useGetInstallmentTablesFullQuery(baseOptions?: Apollo.QueryHookOptions<GetInstallmentTablesFullQuery, GetInstallmentTablesFullQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetInstallmentTablesFullQuery, GetInstallmentTablesFullQueryVariables>(GetInstallmentTablesFullDocument, options);
+      }
+export function useGetInstallmentTablesFullLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetInstallmentTablesFullQuery, GetInstallmentTablesFullQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetInstallmentTablesFullQuery, GetInstallmentTablesFullQueryVariables>(GetInstallmentTablesFullDocument, options);
+        }
+export type GetInstallmentTablesFullQueryHookResult = ReturnType<typeof useGetInstallmentTablesFullQuery>;
+export type GetInstallmentTablesFullLazyQueryHookResult = ReturnType<typeof useGetInstallmentTablesFullLazyQuery>;
+export type GetInstallmentTablesFullQueryResult = Apollo.QueryResult<GetInstallmentTablesFullQuery, GetInstallmentTablesFullQueryVariables>;
 export const GetInstallmentDocument = gql`
     query GetInstallment($id: Int!) {
   installment_getInstallment(entityId: $id) {
@@ -8779,6 +10992,10 @@ export const GetAdjustmentStatementTableDocument = gql`
         id
         userType
       }
+      contract {
+        accuserDepartmentUserId
+        accusedDepartmentUserId
+      }
       userId
       adjustmentStatements {
         id
@@ -8842,6 +11059,10 @@ export const GetAdjustmentStatementTablesDocument = gql`
         lastModifiedDate
         contractId
         filledBy
+        contract {
+          accuserDepartmentUserId
+          accusedDepartmentUserId
+        }
         user {
           parentId
           id
@@ -8898,6 +11119,152 @@ export function useGetAdjustmentStatementTablesLazyQuery(baseOptions?: Apollo.La
 export type GetAdjustmentStatementTablesQueryHookResult = ReturnType<typeof useGetAdjustmentStatementTablesQuery>;
 export type GetAdjustmentStatementTablesLazyQueryHookResult = ReturnType<typeof useGetAdjustmentStatementTablesLazyQuery>;
 export type GetAdjustmentStatementTablesQueryResult = Apollo.QueryResult<GetAdjustmentStatementTablesQuery, GetAdjustmentStatementTablesQueryVariables>;
+export const GetAdjustmentStatementTablesFullDocument = gql`
+    query GetAdjustmentStatementTablesFull($where: AdjustmentStatementTableFilterInput, $order: [AdjustmentStatementTableSortInput!]) {
+  adjustmentStatementTable_getAdjustmentStatementTables {
+    result(where: $where, order: $order, take: 20000) {
+      items {
+        id
+        createdDate
+        lastModifiedDate
+        contractId
+        filledBy
+        contract {
+          accuserDepartmentUserId
+          accusedDepartmentUserId
+        }
+        user {
+          parentId
+          id
+          userType
+        }
+        userId
+        adjustmentStatements {
+          id
+          adjustmentStatementTableId
+          amountApprovedByEmployer
+          amountConfirmedByConsultant
+          amountPaid
+          amountProvidedByContractor
+          dateApprovedByEmployer
+          dateConfirmedByConsultant
+          datePaid
+          dateProvidedByContractor
+          operationPeriodEndDate
+          operationPeriodStartDate
+          filledBy
+          title
+        }
+      }
+    }
+    status
+  }
+}
+    `;
+
+/**
+ * __useGetAdjustmentStatementTablesFullQuery__
+ *
+ * To run a query within a React component, call `useGetAdjustmentStatementTablesFullQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAdjustmentStatementTablesFullQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAdjustmentStatementTablesFullQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *      order: // value for 'order'
+ *   },
+ * });
+ */
+export function useGetAdjustmentStatementTablesFullQuery(baseOptions?: Apollo.QueryHookOptions<GetAdjustmentStatementTablesFullQuery, GetAdjustmentStatementTablesFullQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAdjustmentStatementTablesFullQuery, GetAdjustmentStatementTablesFullQueryVariables>(GetAdjustmentStatementTablesFullDocument, options);
+      }
+export function useGetAdjustmentStatementTablesFullLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAdjustmentStatementTablesFullQuery, GetAdjustmentStatementTablesFullQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAdjustmentStatementTablesFullQuery, GetAdjustmentStatementTablesFullQueryVariables>(GetAdjustmentStatementTablesFullDocument, options);
+        }
+export type GetAdjustmentStatementTablesFullQueryHookResult = ReturnType<typeof useGetAdjustmentStatementTablesFullQuery>;
+export type GetAdjustmentStatementTablesFullLazyQueryHookResult = ReturnType<typeof useGetAdjustmentStatementTablesFullLazyQuery>;
+export type GetAdjustmentStatementTablesFullQueryResult = Apollo.QueryResult<GetAdjustmentStatementTablesFullQuery, GetAdjustmentStatementTablesFullQueryVariables>;
+export const GetAdjustmentStatementsFullDocument = gql`
+    query GetAdjustmentStatementsFull($filter: AdjustmentStatementFilterInput, $orderBy: [AdjustmentStatementSortInput!]) {
+  adjustmentStatement_getAdjustmentStatements {
+    result(where: $filter, order: $orderBy, take: 20000) {
+      items {
+        id
+        createdDate
+        lastModifiedDate
+        adjustmentStatementTableId
+        adjustmentStatementTable {
+          contractId
+          contract {
+            accuserDepartmentUserId
+            accusedDepartmentUserId
+          }
+          user {
+            parentId
+            id
+            userType
+          }
+          userId
+        }
+        filledBy
+        id
+        adjustmentStatementTableId
+        amountApprovedByEmployer
+        amountConfirmedByConsultant
+        amountPaid
+        amountProvidedByContractor
+        dateApprovedByEmployer
+        dateConfirmedByConsultant
+        datePaid
+        dateProvidedByContractor
+        operationPeriodEndDate
+        operationPeriodStartDate
+        filledBy
+        title
+        isDeleted
+        createdDate
+        lastModifiedDate
+      }
+    }
+    status
+  }
+}
+    `;
+
+/**
+ * __useGetAdjustmentStatementsFullQuery__
+ *
+ * To run a query within a React component, call `useGetAdjustmentStatementsFullQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAdjustmentStatementsFullQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAdjustmentStatementsFullQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *      orderBy: // value for 'orderBy'
+ *   },
+ * });
+ */
+export function useGetAdjustmentStatementsFullQuery(baseOptions?: Apollo.QueryHookOptions<GetAdjustmentStatementsFullQuery, GetAdjustmentStatementsFullQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAdjustmentStatementsFullQuery, GetAdjustmentStatementsFullQueryVariables>(GetAdjustmentStatementsFullDocument, options);
+      }
+export function useGetAdjustmentStatementsFullLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAdjustmentStatementsFullQuery, GetAdjustmentStatementsFullQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAdjustmentStatementsFullQuery, GetAdjustmentStatementsFullQueryVariables>(GetAdjustmentStatementsFullDocument, options);
+        }
+export type GetAdjustmentStatementsFullQueryHookResult = ReturnType<typeof useGetAdjustmentStatementsFullQuery>;
+export type GetAdjustmentStatementsFullLazyQueryHookResult = ReturnType<typeof useGetAdjustmentStatementsFullLazyQuery>;
+export type GetAdjustmentStatementsFullQueryResult = Apollo.QueryResult<GetAdjustmentStatementsFullQuery, GetAdjustmentStatementsFullQueryVariables>;
 export const GetAdjustmentStatementDocument = gql`
     query GetAdjustmentStatement($id: Int!) {
   adjustmentStatement_getAdjustmentStatement(entityId: $id) {
@@ -9104,6 +11471,10 @@ export const GetWorkConditionStatementTableByIdDocument = gql`
           id
           userType
         }
+        contract {
+          accuserDepartmentUserId
+          accusedDepartmentUserId
+        }
         userId
         workConditionStatements {
           id
@@ -9155,6 +11526,150 @@ export function useGetWorkConditionStatementTableByIdLazyQuery(baseOptions?: Apo
 export type GetWorkConditionStatementTableByIdQueryHookResult = ReturnType<typeof useGetWorkConditionStatementTableByIdQuery>;
 export type GetWorkConditionStatementTableByIdLazyQueryHookResult = ReturnType<typeof useGetWorkConditionStatementTableByIdLazyQuery>;
 export type GetWorkConditionStatementTableByIdQueryResult = Apollo.QueryResult<GetWorkConditionStatementTableByIdQuery, GetWorkConditionStatementTableByIdQueryVariables>;
+export const GetWorkConditionStatementTablesFullDocument = gql`
+    query GetWorkConditionStatementTablesFull($where: WorkConditionStatementTableFilterInput) {
+  workConditionStatementTable_getWorkConditionStatementTables {
+    result(where: $where, take: 20000) {
+      items {
+        id
+        createdDate
+        lastModifiedDate
+        contractId
+        filledBy
+        user {
+          parentId
+          id
+          userType
+        }
+        contract {
+          accuserDepartmentUserId
+          accusedDepartmentUserId
+        }
+        userId
+        workConditionStatements {
+          id
+          workConditionStatementTableId
+          amountApprovedByEmployer
+          amountConfirmedByConsultant
+          amountPaid
+          amountProvidedByContractor
+          dateApprovedByEmployer
+          dateConfirmedByConsultant
+          datePaid
+          dateProvidedByContractor
+          operationPeriodEndDate
+          operationPeriodStartDate
+          filledBy
+          title
+        }
+      }
+    }
+    status
+  }
+}
+    `;
+
+/**
+ * __useGetWorkConditionStatementTablesFullQuery__
+ *
+ * To run a query within a React component, call `useGetWorkConditionStatementTablesFullQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetWorkConditionStatementTablesFullQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetWorkConditionStatementTablesFullQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useGetWorkConditionStatementTablesFullQuery(baseOptions?: Apollo.QueryHookOptions<GetWorkConditionStatementTablesFullQuery, GetWorkConditionStatementTablesFullQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetWorkConditionStatementTablesFullQuery, GetWorkConditionStatementTablesFullQueryVariables>(GetWorkConditionStatementTablesFullDocument, options);
+      }
+export function useGetWorkConditionStatementTablesFullLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetWorkConditionStatementTablesFullQuery, GetWorkConditionStatementTablesFullQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetWorkConditionStatementTablesFullQuery, GetWorkConditionStatementTablesFullQueryVariables>(GetWorkConditionStatementTablesFullDocument, options);
+        }
+export type GetWorkConditionStatementTablesFullQueryHookResult = ReturnType<typeof useGetWorkConditionStatementTablesFullQuery>;
+export type GetWorkConditionStatementTablesFullLazyQueryHookResult = ReturnType<typeof useGetWorkConditionStatementTablesFullLazyQuery>;
+export type GetWorkConditionStatementTablesFullQueryResult = Apollo.QueryResult<GetWorkConditionStatementTablesFullQuery, GetWorkConditionStatementTablesFullQueryVariables>;
+export const GetWorkConditionStatementsFullDocument = gql`
+    query GetWorkConditionStatementsFull($filter: WorkConditionStatementFilterInput, $orderBy: [WorkConditionStatementSortInput!]) {
+  workConditionStatement_getWorkConditionStatements {
+    result(where: $filter, order: $orderBy, take: 20000) {
+      items {
+        id
+        createdDate
+        lastModifiedDate
+        workConditionStatementTableId
+        workConditionStatementTable {
+          contractId
+          contract {
+            accuserDepartmentUserId
+            accusedDepartmentUserId
+          }
+          user {
+            parentId
+            id
+            userType
+          }
+          userId
+        }
+        filledBy
+        id
+        amountApprovedByEmployer
+        amountConfirmedByConsultant
+        amountPaid
+        amountProvidedByContractor
+        dateApprovedByEmployer
+        dateConfirmedByConsultant
+        datePaid
+        dateProvidedByContractor
+        operationPeriodEndDate
+        operationPeriodStartDate
+        filledBy
+        title
+        isDeleted
+        createdDate
+        lastModifiedDate
+      }
+    }
+    status
+  }
+}
+    `;
+
+/**
+ * __useGetWorkConditionStatementsFullQuery__
+ *
+ * To run a query within a React component, call `useGetWorkConditionStatementsFullQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetWorkConditionStatementsFullQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetWorkConditionStatementsFullQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *      orderBy: // value for 'orderBy'
+ *   },
+ * });
+ */
+export function useGetWorkConditionStatementsFullQuery(baseOptions?: Apollo.QueryHookOptions<GetWorkConditionStatementsFullQuery, GetWorkConditionStatementsFullQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetWorkConditionStatementsFullQuery, GetWorkConditionStatementsFullQueryVariables>(GetWorkConditionStatementsFullDocument, options);
+      }
+export function useGetWorkConditionStatementsFullLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetWorkConditionStatementsFullQuery, GetWorkConditionStatementsFullQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetWorkConditionStatementsFullQuery, GetWorkConditionStatementsFullQueryVariables>(GetWorkConditionStatementsFullDocument, options);
+        }
+export type GetWorkConditionStatementsFullQueryHookResult = ReturnType<typeof useGetWorkConditionStatementsFullQuery>;
+export type GetWorkConditionStatementsFullLazyQueryHookResult = ReturnType<typeof useGetWorkConditionStatementsFullLazyQuery>;
+export type GetWorkConditionStatementsFullQueryResult = Apollo.QueryResult<GetWorkConditionStatementsFullQuery, GetWorkConditionStatementsFullQueryVariables>;
 export const GetWorkConditionStatementDocument = gql`
     query GetWorkConditionStatement($id: Int!) {
   workConditionStatement_getWorkConditionStatement(entityId: $id) {
@@ -9297,6 +11812,7 @@ export const LoginUserDocument = gql`
           id
         }
         userType
+        isJury
       }
       token
       expireDate
@@ -9385,6 +11901,7 @@ export const UserSignInOtpMutationDocument = gql`
           roleType
           id
         }
+        isJury
         userType
       }
       token
@@ -9458,9 +11975,9 @@ export type SentOtpMutationMutationHookResult = ReturnType<typeof useSentOtpMuta
 export type SentOtpMutationMutationResult = Apollo.MutationResult<SentOtpMutationMutation>;
 export type SentOtpMutationMutationOptions = Apollo.BaseMutationOptions<SentOtpMutationMutation, SentOtpMutationMutationVariables>;
 export const UserSignUpDocument = gql`
-    mutation UserSignUp($confirmPassword: String!, $email: String, $fullName: String!, $nationalCode: String, $password: String!, $phoneNumber: String, $userName: String!, $birthDate: Date, $userType: UserType!, $parentId: String) {
+    mutation UserSignUp($confirmPassword: String!, $email: String, $fullName: String!, $nationalCode: String, $password: String!, $phoneNumber: String, $userName: String!, $birthDate: Date, $userType: UserType!, $parentId: String, $isJury: Boolean! = false) {
   user_signUp(
-    input: {userType: $userType, birthDate: $birthDate, confirmPassword: $confirmPassword, email: $email, fullName: $fullName, nationalCode: $nationalCode, password: $password, phoneNumber: $phoneNumber, userName: $userName, parentId: $parentId}
+    input: {userType: $userType, birthDate: $birthDate, confirmPassword: $confirmPassword, email: $email, fullName: $fullName, nationalCode: $nationalCode, password: $password, phoneNumber: $phoneNumber, userName: $userName, parentId: $parentId, isJury: $isJury}
   ) {
     result {
       id
@@ -9469,6 +11986,7 @@ export const UserSignUpDocument = gql`
       fullName
       phoneNumber
       nationalCode
+      isJury
       parentId
       userRoles {
         roleType
@@ -9509,6 +12027,7 @@ export type UserSignUpMutationFn = Apollo.MutationFunction<UserSignUpMutation, U
  *      birthDate: // value for 'birthDate'
  *      userType: // value for 'userType'
  *      parentId: // value for 'parentId'
+ *      isJury: // value for 'isJury'
  *   },
  * });
  */
@@ -9630,6 +12149,7 @@ export const UserUpdateDocument = gql`
       fullName
       phoneNumber
       nationalCode
+      isJury
     }
     status {
       code
@@ -10229,6 +12749,17 @@ export const GetArgumentDocument = gql`
       suggestedAmount
       accusedResponse
       complaintId
+      councilOpinion
+      netCouncilApprovedAmount
+      grossCouncilApprovedAmount
+      accuserAnswerToAccusedResponse
+      accuserAnswerToAccusedResponseFileName
+      expertOpinion
+      expertOpinionFileName
+      expertVerdict
+      netApprovedAmount
+      grossApprovedAmount
+      financialSituation
     }
   }
 }

@@ -7,10 +7,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
-import { Add } from "@mui/icons-material";
+import { Add, CancelRounded } from "@mui/icons-material";
 import {
   Alert,
-  Autocomplete,
   Box,
   Button,
   Checkbox,
@@ -22,44 +21,38 @@ import {
   IconButton,
   List,
   MenuItem,
-  Modal,
   Radio,
   RadioGroup,
   TextField,
   Typography,
-  colors,
+  colors
 } from "@mui/material";
+import { DatePicker } from "@mui/x-date-pickers";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useGetPublicContractsLazyQuery } from "../../../../generated-types";
 import { useUserStore } from "../../../Context/UserStore";
 import { CREATE_COMPLAINT } from "../../../GraphQL/Complaints/Mutations";
-import { CREATE_CONTRACT } from "../../../GraphQL/Contracts/Mutations";
+import {
+  GET_ALL_ORGANIZATION_USERS,
+  GET_USER_QUERIABLE
+} from "../../../GraphQL/Users/Queries";
 import BackButton from "../../../components/BackButton";
+import DateButton from "../../../components/DateButton";
 import FaTextField from "../../../components/FaComponents/FaTextField";
 import FaTypography from "../../../components/FaComponents/FaTypography";
 import FileBox from "../../../components/FileBox";
+import TimeLine from "../../../components/TimeLine";
+import TreeChart from "../../../components/TreeChart";
+import { Create_ContractDocument } from "../../../gql/graphql";
 import countries from "../../../static/Countries";
+import fehrestbaha from "../../../static/fehrestbaha.json";
 import {
-  Green,
   GreenLight,
-  background,
   primary,
   secondary,
-  secondaryDark,
+  secondaryDark
 } from "../../../theme/color";
-import {
-  GET_ALL_ORGANIZATION_USERS,
-  GET_USER,
-  GET_USER_QUERIABLE,
-} from "../../../GraphQL/Users/Queries";
-import TreeChart from "../../../components/TreeChart";
-import { Calendar, CalendarProvider } from "zaman";
-import DateButton from "../../../components/DateButton";
-import fehrestbaha from "../../../static/fehrestbaha.json";
-import TimeLine from "../../../components/TimeLine";
-import InstallmentTable from "../../../components/Tables/Installment/InstallmentTable";
-import { convertToPersianDigits } from "../../../functions/Functions";
-import { title } from "process";
 
 const CreateContractPage = () => {
   const user = useUserStore((state) => state.user);
@@ -70,21 +63,27 @@ const CreateContractPage = () => {
   const [finalAmount, setFinalAmount] = useState<number>();
   const [hasBeenDirected, setHasBeenDirected] = useState(false);
   const [newEmployer, setNewEmployer] = useState<string>();
+  const [Currency, setCurrency] = useState<string>("ریال");
+
+  const [tempPeopleFromAccuser, SetTempPeopleFromAccuser] = useState<{
+    name?: string;
+    phoneNumber?: string;
+    position?: string;
+  }>();
+  const [tempPeopleFromAccused, SetTempPeopleFromAccused] = useState<{
+    name?: string;
+    phoneNumber?: string;
+    position?: string;
+  }>();
 
   const [RelatedPeopleByAccusser, setRelatedPeopleByAccusser] =
     React.useState<
-      [
-        {
-          name: string;
-          phone: string;
-        }
-      ]
-    >([
       {
-        name: "",
-        phone: "",
-      },
-    ]);
+        name?: string;
+        phone?: string;
+        position?: string;
+      }[]
+    >([]);
   const [
     RelatedPeopleByAccusserError,
     setRelatedPeopleByAccusserError,
@@ -96,18 +95,12 @@ const CreateContractPage = () => {
   const [Employee, setEmployee] = React.useState<string>();
   const [RelatedPeopleByAccussed, setRelatedPeopleByAccussed] =
     React.useState<
-      [
-        {
-          name: string;
-          phone: string;
-        }
-      ]
-    >([
       {
-        name: "",
-        phone: "",
-      },
-    ]);
+        name?: string;
+        phone?: string;
+        position?: string;
+      }[]
+    >([]);
   const [
     RelatedPeopleByAccussedError,
     setRelatedPeopleByAccussedError,
@@ -264,7 +257,15 @@ const CreateContractPage = () => {
   const [
     ContractStatusInArbitration,
     setContractStatusInArbitration,
-  ] = React.useState<string>();
+  ] = React.useState<{
+    title: string;
+    temp: Date | null;
+    final: Date | null;
+  }>({
+    title: "",
+    temp: null,
+    final: null,
+  });
 
   const [TemporaryDelivery, setTemporaryDelivery] = useState<{
     checked: boolean;
@@ -278,10 +279,10 @@ const CreateContractPage = () => {
     ContractStatusInArbitrationError,
     setContractStatusInArbitrationError,
   ] = React.useState<[{ error: boolean; text: string }]>();
-  const [
-    ContractStatusInArbitrationDate,
-    setContractStatusInArbitrationDate,
-  ] = React.useState<string>();
+  // const [
+  //   ContractStatusInArbitrationDate,
+  //   setContractStatusInArbitrationDate,
+  // ] = React.useState<string>();
   const [
     ContractStatusInArbitrationDateError,
     setContractStatusInArbitrationDateError,
@@ -544,27 +545,27 @@ const CreateContractPage = () => {
       });
     }
 
-    if (
-      ContractStatusInArbitration &&
-      ContractStatusInArbitration.length <= 0
-    ) {
-      setContractStatusInArbitrationError([
-        {
-          error: true,
-          text: "مقدار فیلد نباید خالی باشد",
-        },
-      ]);
-    }
+    // if (
+    //   ContractStatusInArbitration &&
+    //   ContractStatusInArbitration.length <= 0
+    // ) {
+    //   setContractStatusInArbitrationError([
+    //     {
+    //       error: true,
+    //       text: "مقدار فیلد نباید خالی باشد",
+    //     },
+    //   ]);
+    // }
 
-    if (
-      ContractStatusInArbitrationDate &&
-      ContractStatusInArbitrationDate.length <= 0
-    ) {
-      setContractStatusInArbitrationDateError({
-        error: true,
-        text: "مقدار فیلد نباید خالی باشد",
-      });
-    }
+    // if (
+    //   ContractStatusInArbitrationDate &&
+    //   ContractStatusInArbitrationDate.length <= 0
+    // ) {
+    //   setContractStatusInArbitrationDateError({
+    //     error: true,
+    //     text: "مقدار فیلد نباید خالی باشد",
+    //   });
+    // }
 
     if (SupervisionDepartment && SupervisionDepartment.length <= 0) {
       setSupervisionDepartmentError({
@@ -643,7 +644,7 @@ const CreateContractPage = () => {
   //
 
   const [createContractMutation, { data, loading }] = useMutation(
-    CREATE_CONTRACT,
+    Create_ContractDocument,
     {
       variables: {
         AccuserRelatedPeople: JSON.stringify(RelatedPeopleByAccusser),
@@ -677,14 +678,9 @@ const CreateContractPage = () => {
           PhysicalProgressInArbitrationDate,
         FinancialProgressInArbitrationDateAccuser:
           FinancialProgressInArbitrationDateAccuser,
-        ContractStatusInArbitration: [
-          JSON.stringify([
-            ContractStatusInArbitration,
-            ContractStatusInArbitrationDate,
-          ]),
-          JSON.stringify({ "تحویل موقت": TemporaryDelivery }),
-          JSON.stringify({ "تحویل قطعی": FinalDelivery }),
-        ],
+        ContractStatusInArbitration: JSON.stringify(
+          ContractStatusInArbitration
+        ),
         SupervisionDepartment: SupervisionDepartment,
         AuthorizedDelaysAccuser: AuthorizedDelays,
         UnauthorizedDelaysAccuser: UnauthorizedDelays,
@@ -693,6 +689,7 @@ const CreateContractPage = () => {
           user.userType == "CONTRACTOR_OR_CONSULTANT"
             ? user.id
             : user.parentId,
+        Currency: Currency,
       },
     }
   );
@@ -704,17 +701,6 @@ const CreateContractPage = () => {
   //
   //
   //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-
   const contract_details_items = [
     {
       id: 1,
@@ -724,17 +710,17 @@ const CreateContractPage = () => {
         {
           id: 2,
           title:
-            "انعقاد پیمان اجرای کارهای ساختمانی به صورت سرجمع- بخشنامه شماره ۹۶/۱۲۹۹۱۸۸ مورخ ۱۳۹۶/۰۵/۰۴",
+            "انعقاد قرارداد اجرای کارهای ساختمانی به صورت سرجمع- بخشنامه شماره ۹۶/۱۲۹۹۱۸۸ مورخ ۱۳۹۶/۰۵/۰۴",
         },
         {
           id: 3,
           title:
-            "انعقاد پیمان اجرای کارهای ساختمانی به صورت سرجمع- بخشنامه شماره ۱۰۰/۶۴۰۵ مورخ ۱۳۸۹/۰۲/۰۴",
+            "انعقاد قرارداد اجرای کارهای ساختمانی به صورت سرجمع- بخشنامه شماره ۱۰۰/۶۴۰۵ مورخ ۱۳۸۹/۰۲/۰۴",
         },
         {
           id: 4,
           title:
-            "انعقاد پیمان بر اساس فهرست بهای تجمیع شده راه، باند فرودگاه و زیرسازی راه آهن – شماره ۶۵۶۳۷/۱۰۰ مورخ ۱۳۹۱/۰۸/۱۴",
+            "انعقاد قرارداد بر اساس فهرست بهای تجمیع شده راه، باند فرودگاه و زیرسازی راه آهن – شماره ۶۵۶۳۷/۱۰۰ مورخ ۱۳۹۱/۰۸/۱۴",
         },
         {
           id: 0,
@@ -781,27 +767,59 @@ const CreateContractPage = () => {
 
   const [createComplaint] = useMutation(CREATE_COMPLAINT, {
     variables: {
-      contractId: data?.contract_addContract?.result.id,
+      contractId: data?.contract_addContract?.result?.id,
       userId: user.id,
     },
   });
   //
   //
   //
-  //
-  //
-  //
-  //
+
+  const [
+    getPublicContract,
+    { data: contract, loading: contractLoading },
+  ] = useGetPublicContractsLazyQuery({
+    variables: {
+      take: 1,
+    },
+  });
 
   useEffect(() => {
     if (contractId) {
-      // get contract data
+      void getPublicContract({
+        variables: {
+          filter: {
+            id: {
+              eq: parseInt(contractId),
+            },
+          },
+        },
+        onCompleted(data) {
+          setContractNumber(
+            String(
+              data?.publicContract_getPublicContracts?.result
+                ?.items?.[0]?.contractID
+            )
+          );
+          setContractSubject(
+            data?.publicContract_getPublicContracts?.result
+              ?.items?.[0]?.fullName || ""
+          );
+          setContractDate(
+            new Date(
+              data?.publicContract_getPublicContracts?.result
+                ?.items?.[0]?.agreeDate || ""
+            )
+          );
+          setInitialBudget(
+            data.publicContract_getPublicContracts.result?.items?.[0]
+              ?.agreeAmountRial
+          );
+        },
+      });
     }
-  }, [contractId]);
+  }, [contractId, getPublicContract]);
 
-  //
-  //
-  //
   //
   //
   //
@@ -863,6 +881,7 @@ const CreateContractPage = () => {
               mt: "50px",
             }}
             value={ContractSubject}
+            focused={ContractSubject ? true : false}
             onChange={(e) => {
               setContractSubject(e.target.value);
             }}
@@ -875,13 +894,14 @@ const CreateContractPage = () => {
             }}
           />
           <TextField
-            label="شماره قرارداد: "
+            label="شناسه قرارداد : "
             variant="outlined"
             sx={{
               gridColumn: "span 3",
             }}
             value={ContractNumber}
-            type="number"
+            type="text"
+            focused={ContractDate ? true : false}
             onChange={(e) => {
               setContractNumber(String(e.target.value));
             }}
@@ -1065,19 +1085,39 @@ const CreateContractPage = () => {
             }}
           />
           <FaTextField
+            label="نوع ارز قرارداد"
+            variant="outlined"
+            // type="number"
+            sx={{
+              gridColumn: "span 1",
+            }}
+            value={Currency}
+            onChange={(e) => {
+              setCurrency(e.target.value);
+            }}
+            focused={Currency ? true : false}
+            // defaultValue={"ریال"}
+            select
+          >
+            <MenuItem value={"ریال"}>ریال</MenuItem>
+            <MenuItem value={"دلار"}>دلار</MenuItem>
+            <MenuItem value={"یورو"}>یورو</MenuItem>
+          </FaTextField>
+          <FaTextField
             label="مبلغ اوليه/ حق‌الزحمه قرارداد: "
             variant="outlined"
             type="number"
             InputProps={{
-              endAdornment: "ریال",
+              endAdornment: String(Currency),
             }}
             sx={{
-              gridColumn: "span 3",
+              gridColumn: "span 2",
             }}
             value={InitialBudget}
             onChange={(e) => {
               setInitialBudget(parseInt(e.target.value));
             }}
+            focused={InitialBudget ? true : false}
             error={InitialBudgetError.error}
             helperText={InitialBudgetError.text}
           />
@@ -1122,7 +1162,7 @@ const CreateContractPage = () => {
             variant="outlined"
             type="number"
             InputProps={{
-              endAdornment: "ریال",
+              endAdornment: Currency,
             }}
             sx={{
               gridColumn: "span 3",
@@ -1392,94 +1432,9 @@ const CreateContractPage = () => {
             focused
             //   disabled
           />
-          {/* <Autocomplete
-          disablePortal
-          options={departments.filter(
-            (item: { id: string }) =>
-              item.id !== "e7a85297-91d4-4f27-a4b2-ff394fe71dd3"
-          )}
-          sx={{
-            width: "100%",
-            gridColumn: "span 3",
-          }}
-          renderInput={(params) => (
-            <FaTextField
-              {...params}
-              label="نام  خوانده"
-              error={
-                AccusedDepartmentIdError &&
-                AccusedDepartmentIdError.error
-              }
-              helperText={
-                AccusedDepartmentIdError &&
-                AccusedDepartmentIdError.text
-              }
-              value={
-                departments.find(
-                  (item) =>
-                    AccusedDepartmentId && item.id === AccusedDepartmentId
-                )?.label
-              }
-              placeholder={
-                departments.find(
-                  (item) =>
-                    AccusedDepartmentId && item.id === AccusedDepartmentId
-                )?.label
-              }
-            />
-          )}
-          onChange={(_e, value) => {
-            if (value) {
-              console.log(value);
-              setAccusedDepartmentId(value.id.toString());
-              void getUser({
-                variables: {
-                  id: value.id.toString(),
-                },
-                onCompleted(data) {
-                  console.log(data);
-                  if (
-                    data?.user_getUserQueryable?.result?.items[0]
-                      ?.parent
-                  ) {
-                    handleParent(
-                      data?.user_getUserQueryable?.result?.items[0]
-                        ?.parent,
-                      {
-                        fullName:
-                          data?.user_getUserQueryable?.result
-                            ?.items[0]?.fullName,
-                        id: data?.user_getUserQueryable?.result
-                          .items[0]?.id,
-                      }
-                    );
-                  } else {
-                    setTreeViewObject({
-                      fullName:
-                        data?.user_getUserQueryable?.result?.items[0]
-                          ?.fullName,
-                      id: data?.user_getUserQueryable?.result.items[0]
-                        ?.id,
-                    });
-                  }
-                },
-              });
-            }
-          }}
-          value={departments.find(
-            (item) =>
-              AccusedDepartmentId && item.id === AccusedDepartmentId
-          )}
-        /> */}
+
           {/* {AccusedDepartmentId} */}
           <TreeChart gridColumn={"span 12"} object={treeViewObject} />
-
-          {/* <Divider
-          orientation="horizontal"
-          sx={{
-            gridColumn: "span 12",
-          }}
-        /> */}
 
           <div
             style={{
@@ -1573,95 +1528,98 @@ const CreateContractPage = () => {
               اسامی و تلفن (ثابت و همراه) افراد مطلع و مرتبط با پروژه
               از طرف خواهان:
             </FaTypography>
-            {RelatedPeopleByAccusser &&
-              RelatedPeopleByAccusser.map((item, index) => (
-                <Box
-                  key={index}
-                  display={"grid"}
-                  gridTemplateColumns={"repeat(12,1fr)"}
-                >
-                  <Box
-                    gridColumn={"span 12"}
-                    display={"grid"}
-                    gridTemplateColumns={"repeat(2,1fr)"}
-                    columnGap={"2rem"}
-                    padding={"0rem 0rem"}
-                  >
-                    <FaTextField
-                      label="نام و نام خانوادگی"
-                      variant="outlined"
-                      autoComplete="name"
-                      type="text"
-                      sx={{
-                        gridColumn: "span 1",
-                      }}
-                      value={item.name}
-                      onChange={(e) => {
-                        const newPeoples = [
-                          ...RelatedPeopleByAccusser,
-                        ] as [
-                          {
-                            name: string;
-                            phone: string;
-                          }
-                        ];
-                        newPeoples[index].name = e.target.value;
-                        setRelatedPeopleByAccusser(newPeoples);
-                        console.log(RelatedPeopleByAccusser);
-                      }}
-                    ></FaTextField>
-                    <FaTextField
-                      label="تلفن"
-                      variant="outlined"
-                      type="number"
-                      autoComplete="phone"
-                      sx={{
-                        gridColumn: "span 1",
-                      }}
-                      value={item.phone}
-                      onChange={(e) => {
-                        const newPeoples = [
-                          ...RelatedPeopleByAccusser,
-                        ] as [
-                          {
-                            name: string;
-                            phone: string;
-                          }
-                        ];
-                        newPeoples[index].phone = e.target.value;
-                        setRelatedPeopleByAccusser(newPeoples);
-                        console.log(RelatedPeopleByAccusser);
-                      }}
-                    ></FaTextField>
-                  </Box>
-                </Box>
-              ))}
-            <IconButton
-              sx={{
-                gridColumn: "span 12",
-                justifySelf: "start",
-                backgroundColor: primary,
-                color: "white",
-                "&:hover": {
-                  backgroundColor: GreenLight,
-                  color: secondaryDark,
-                },
-                margin: "0rem 2rem",
-              }}
-              onClick={() => {
-                // @ts-ignore
-                setRelatedPeopleByAccusser([
-                  // @ts-ignore
-                  ...RelatedPeopleByAccusser,
-                  {
-                    name: "",
-                    phone: "",
-                  },
-                ]);
-              }}
+            <Box
+              display={"grid"}
+              gridTemplateColumns={"1fr 1fr 1fr 50px"}
+              gap={2}
+              justifyContent={"center"}
+              alignItems={"center"}
             >
-              <Add />
-            </IconButton>
+              <FaTextField
+                label="نام"
+                variant="outlined"
+                sx={{
+                  gridColumn: "span 1",
+                }}
+                value={tempPeopleFromAccuser?.name}
+                onChange={(e) => {
+                  SetTempPeopleFromAccuser({
+                    ...tempPeopleFromAccuser,
+                    name: e.target.value,
+                  });
+                }}
+              />
+              <FaTextField
+                label="تلفن"
+                variant="outlined"
+                sx={{
+                  gridColumn: "span 1",
+                }}
+                value={tempPeopleFromAccuser?.phoneNumber}
+                onChange={(e) => {
+                  SetTempPeopleFromAccuser({
+                    ...tempPeopleFromAccuser,
+                    phoneNumber: e.target.value,
+                  });
+                }}
+              />
+              <FaTextField
+                label="سمت"
+                variant="outlined"
+                sx={{
+                  gridColumn: "span 1",
+                }}
+                value={tempPeopleFromAccuser?.position}
+                onChange={(e) => {
+                  SetTempPeopleFromAccuser({
+                    ...tempPeopleFromAccuser,
+                    position: e.target.value,
+                  });
+                }}
+              />
+              <IconButton
+                sx={{
+                  alignSelf: "center",
+                  aspectRatio: "1/1",
+                }}
+                onClick={() => {
+                  setRelatedPeopleByAccusser([
+                    ...RelatedPeopleByAccusser,
+                    {
+                      name: tempPeopleFromAccuser?.name,
+                      phone: tempPeopleFromAccuser?.phoneNumber,
+                      position: tempPeopleFromAccuser?.position,
+                    },
+                  ]);
+                  SetTempPeopleFromAccuser({});
+                }}
+              >
+                <Add />
+              </IconButton>
+              {RelatedPeopleByAccusser.map((person) => (
+                <>
+                  <Typography>{person.name}</Typography>
+                  <Typography>{person.phone}</Typography>
+                  <Typography>{person.position}</Typography>
+                  <IconButton
+                    sx={{
+                      alignSelf: "center",
+                      aspectRatio: "1/1",
+                    }}
+                    onClick={() => {
+                      setRelatedPeopleByAccusser(
+                        RelatedPeopleByAccusser.filter(
+                          (item) => item.name !== person.name
+                        )
+                      );
+                      SetTempPeopleFromAccuser({});
+                    }}
+                  >
+                    <CancelRounded />
+                  </IconButton>
+                </>
+              ))}
+            </Box>
           </Box>
           <Box
             gridColumn={"span 6"}
@@ -1675,98 +1633,98 @@ const CreateContractPage = () => {
               اسامی و تلفن (ثابت و همراه) افراد مطلع و مرتبط با پروژه
               از طرف خوانده:
             </FaTypography>
-            {RelatedPeopleByAccussed &&
-              RelatedPeopleByAccussed.map((item, index) => (
-                <Box
-                  key={index}
-                  display={"grid"}
-                  gridTemplateColumns={"repeat(12,1fr)"}
-                >
-                  <Box
-                    gridColumn={{
-                      xs: "span 12",
-                      lg: "span 12",
-                    }}
-                    display={"grid"}
-                    gridTemplateColumns={"repeat(2,1fr)"}
-                    columnGap={"2rem"}
-                    padding={"0rem 0rem"}
-                  >
-                    <FaTextField
-                      label="نام و نام خانوادگی"
-                      variant="outlined"
-                      autoComplete="name"
-                      type="text"
-                      sx={{
-                        gridColumn: "span 1",
-                      }}
-                      value={item.name}
-                      onChange={(e) => {
-                        const newPeoples = [
-                          ...RelatedPeopleByAccussed,
-                        ] as [
-                          {
-                            name: string;
-                            phone: string;
-                          }
-                        ];
-                        newPeoples[index].name = e.target.value;
-                        setRelatedPeopleByAccussed(newPeoples);
-                        console.log(RelatedPeopleByAccussed);
-                      }}
-                    ></FaTextField>
-                    <FaTextField
-                      label="تلفن"
-                      variant="outlined"
-                      type="number"
-                      autoComplete="phone"
-                      sx={{
-                        gridColumn: "span 1",
-                      }}
-                      value={item.phone}
-                      onChange={(e) => {
-                        const newPeoples = [
-                          ...RelatedPeopleByAccussed,
-                        ] as [
-                          {
-                            name: string;
-                            phone: string;
-                          }
-                        ];
-                        newPeoples[index].phone = e.target.value;
-                        setRelatedPeopleByAccussed(newPeoples);
-                        console.log(RelatedPeopleByAccussed);
-                      }}
-                    ></FaTextField>
-                  </Box>
-                </Box>
-              ))}
-            <IconButton
-              sx={{
-                gridColumn: "span 12",
-                justifySelf: "center",
-                backgroundColor: primary,
-                color: "white",
-                "&:hover": {
-                  backgroundColor: GreenLight,
-                  color: secondaryDark,
-                },
-                margin: "0rem 2rem",
-              }}
-              onClick={() => {
-                // @ts-ignore
-                setRelatedPeopleByAccussed([
-                  // @ts-ignore
-                  ...RelatedPeopleByAccussed,
-                  {
-                    name: "",
-                    phone: "",
-                  },
-                ]);
-              }}
+            <Box
+              display={"grid"}
+              gridTemplateColumns={"1fr 1fr 1fr 50px"}
+              gap={2}
+              justifyContent={"center"}
+              alignItems={"center"}
             >
-              <Add />
-            </IconButton>
+              <FaTextField
+                label="نام"
+                variant="outlined"
+                sx={{
+                  gridColumn: "span 1",
+                }}
+                value={tempPeopleFromAccused?.name}
+                onChange={(e) => {
+                  SetTempPeopleFromAccused({
+                    ...tempPeopleFromAccused,
+                    name: e.target.value,
+                  });
+                }}
+              />
+              <FaTextField
+                label="تلفن"
+                variant="outlined"
+                sx={{
+                  gridColumn: "span 1",
+                }}
+                value={tempPeopleFromAccused?.phoneNumber}
+                onChange={(e) => {
+                  SetTempPeopleFromAccused({
+                    ...tempPeopleFromAccused,
+                    phoneNumber: e.target.value,
+                  });
+                }}
+              />
+              <FaTextField
+                label="سمت"
+                variant="outlined"
+                sx={{
+                  gridColumn: "span 1",
+                }}
+                value={tempPeopleFromAccused?.position}
+                onChange={(e) => {
+                  SetTempPeopleFromAccused({
+                    ...tempPeopleFromAccused,
+                    position: e.target.value,
+                  });
+                }}
+              />
+              <IconButton
+                sx={{
+                  alignSelf: "center",
+                  aspectRatio: "1/1",
+                }}
+                onClick={() => {
+                  setRelatedPeopleByAccussed([
+                    ...RelatedPeopleByAccussed,
+                    {
+                      name: tempPeopleFromAccused?.name,
+                      phone: tempPeopleFromAccused?.phoneNumber,
+                      position: tempPeopleFromAccused?.position,
+                    },
+                  ]);
+                  SetTempPeopleFromAccused({});
+                }}
+              >
+                <Add />
+              </IconButton>
+              {RelatedPeopleByAccussed.map((person) => (
+                <>
+                  <Typography>{person.name}</Typography>
+                  <Typography>{person.phone}</Typography>
+                  <Typography>{person.position}</Typography>
+                  <IconButton
+                    sx={{
+                      alignSelf: "center",
+                      aspectRatio: "1/1",
+                    }}
+                    onClick={() => {
+                      setRelatedPeopleByAccussed(
+                        RelatedPeopleByAccussed.filter(
+                          (item) => item.name !== person.name
+                        )
+                      );
+                      SetTempPeopleFromAccuser({});
+                    }}
+                  >
+                    <CancelRounded />
+                  </IconButton>
+                </>
+              ))}
+            </Box>
           </Box>
           {/* 
         <div
@@ -1965,104 +1923,6 @@ const CreateContractPage = () => {
 
     
     */}
-          {/* <FaTypography variant="h5" gridColumn={"span 1"}>
-          4-1-
-        </FaTypography>
-
-        <div
-          style={{
-            gridColumn: "span 12",
-          }}
-        />
-        <Divider
-          sx={{
-            gridColumn: "span 6",
-          }}
-        />
-        <div
-          style={{
-            gridColumn: "span 12",
-          }}
-        /> */}
-
-          {/* 
-
-
-      4-2
-
-    
-    */}
-          {/* <FaTypography variant="h6" gridColumn={"span 12"}>
-          4-2- قرارداد شماره و تاريخ:
-        </FaTypography>
-        <div
-          style={{
-            gridColumn: "span 12",
-          }}
-        />
-        <Divider
-          sx={{
-            gridColumn: "span 6",
-          }}
-        />
-        <div
-          style={{
-            gridColumn: "span 12",
-          }}
-        /> */}
-          {/* 
-
-
-      4-3
-
-    
-    */}
-          {/* <FaTypography variant="h6" gridColumn={"span 1"}>
-          4-3-
-        </FaTypography>
-
-        <div
-          style={{
-            gridColumn: "span 12",
-          }}
-        />
-        <Divider
-          sx={{
-            gridColumn: "span 6",
-          }}
-        />
-        <div
-          style={{
-            gridColumn: "span 12",
-          }}
-        /> */}
-
-          {/* 
-
-
-      4-4
-
-    
-    */}
-          {/* <FaTypography variant="h6" gridColumn={"span 1"}>
-          4-4-
-        </FaTypography>
-
-        <div
-          style={{
-            gridColumn: "span 12",
-          }}
-        />
-        <Divider
-          sx={{
-            gridColumn: "span 6",
-          }}
-        />
-        <div
-          style={{
-            gridColumn: "span 12",
-          }}
-        /> */}
 
           {/* 
 
@@ -2148,46 +2008,7 @@ const CreateContractPage = () => {
                         },
                       },
                     }}
-                  >
-                    {/* {[
-                      "1370",
-                      "1371",
-                      "1372",
-                      "1373",
-                      "1374",
-                      "1375",
-                      "1376",
-                      "1377",
-                      "1378",
-                      "1379",
-                      "1380",
-                      "1381",
-                      "1382",
-                      "1383",
-                      "1384",
-                      "1385",
-                      "1386",
-                      "1387",
-                      "1388",
-                      "1389",
-                      "1390",
-                      "1391",
-                      "1392",
-                      "1393",
-                      "1394",
-                      "1395",
-                      "1396",
-                      "1397",
-                      "1398",
-                      "1399",
-                      "1400",
-                      "1401",
-                      "1402",
-                      "1403",
-                    ].map((y) => (
-                      <MenuItem value={y}>{y}</MenuItem>
-                    ))} */}
-                  </FaTextField>
+                  ></FaTextField>
                   <TextField
                     label="فهرست بهاي واحد پايه رشته"
                     variant="outlined"
@@ -2260,11 +2081,6 @@ const CreateContractPage = () => {
               gridColumn: "span 12",
             }}
           />
-          {/* <div
-          style={{
-            gridColumn: "span 12",
-          }}
-        /> */}
 
           {/* 
 
@@ -3002,7 +2818,7 @@ const CreateContractPage = () => {
             gridColumn={"span 6"}
             textAlign={"center"}
           >
-            پيشرفت ریالی كار در تاريخ درخواست داوري:
+            پيشرفت مالی كار در تاريخ درخواست داوري:
           </FaTypography>
 
           {/* <div
@@ -3072,53 +2888,50 @@ const CreateContractPage = () => {
                 control={<Radio />}
                 label="ابلاغ خاتمه"
                 checked={
-                  ContractStatusInArbitration === "ابلاغ خاتمه"
+                  ContractStatusInArbitration?.title === "ابلاغ خاتمه"
                 }
                 onChange={(e) => {
-                  // @ts-ignore
-                  setContractStatusInArbitration(e.target.value);
+                  setContractStatusInArbitration({
+                    ...ContractStatusInArbitration,
+                    title: "ابلاغ خاتمه",
+                  });
                 }}
               />
               <FormControlLabel
                 value="ابلاغ فسخ"
                 control={<Radio />}
                 label="ابلاغ فسخ"
-                checked={ContractStatusInArbitration === "ابلاغ فسخ"}
+                checked={
+                  ContractStatusInArbitration.title === "ابلاغ فسخ"
+                }
                 onChange={(e) => {
-                  // @ts-ignore
-                  setContractStatusInArbitration(e.target.value);
+                  setContractStatusInArbitration({
+                    ...ContractStatusInArbitration,
+                    title: "ابلاغ فسخ",
+                  });
                 }}
               />
               <FormControlLabel
                 value="جاری"
                 control={<Radio />}
                 label="جاری"
-                checked={ContractStatusInArbitration === "جاری"}
+                checked={ContractStatusInArbitration.title === "جاری"}
                 onChange={(e) => {
-                  // @ts-ignore
-                  setContractStatusInArbitration(e.target.value);
+                  setContractStatusInArbitration({
+                    ...ContractStatusInArbitration,
+                    title: "جاری",
+                  });
                 }}
               />
-
-              {/* <FormControlLabel
-            control={
-              <FaTextField label={"تاریخ"} type="date" focused />
-            }
-            label=""
-            value={ContractStatusInArbitrationDate}
-            onChange={(e) => {
-              // @ts-ignore
-              setContractStatusInArbitrationDate(e.target.value);
-            }}
-          /> */}
             </RadioGroup>
           </FormControl>
+          {/* {JSON.stringify(ContractStatusInArbitration)} */}
 
           <FormGroup
             sx={{
               display:
-                ContractStatusInArbitration === "ابلاغ فسخ" ||
-                ContractStatusInArbitration === "ابلاغ خاتمه"
+                ContractStatusInArbitration.title === "ابلاغ فسخ" ||
+                ContractStatusInArbitration.title === "ابلاغ خاتمه"
                   ? undefined
                   : "none",
               gridColumn: "span 12",
@@ -3154,14 +2967,16 @@ const CreateContractPage = () => {
             />
           </FormGroup>
 
-          <DateButton
+          {/* <DateButton
             date={TemporaryDelivery && TemporaryDelivery.date}
             setDate={(date) => {
-              setTemporaryDelivery({
-                ...TemporaryDelivery,
-                // @ts-ignore
-                date: date,
-              });
+              if (date) {
+                setContractStatusInArbitration({
+                  ...ContractStatusInArbitration,
+                  // @ts-ignore
+                  temp: date,
+                });
+              }
             }}
             sx={{
               gridColumn: "span 6",
@@ -3173,10 +2988,10 @@ const CreateContractPage = () => {
           <DateButton
             date={FinalDelivery && FinalDelivery.date}
             setDate={(date) => {
-              setFinalDelivery({
-                ...FinalDelivery,
+              setContractStatusInArbitration({
+                ...ContractStatusInArbitration,
                 // @ts-ignore
-                date: date,
+                final: date,
               });
             }}
             sx={{
@@ -3184,6 +2999,35 @@ const CreateContractPage = () => {
               display: FinalDelivery?.checked ? "block" : "none",
             }}
             label="تاریخ تحویل قطعی"
+          /> */}
+
+          <DatePicker
+            value={ContractStatusInArbitration?.temp}
+            onChange={(date) => {
+              setContractStatusInArbitration({
+                ...ContractStatusInArbitration,
+                temp: date,
+              });
+            }}
+            label="تاریخ تحویل موقت"
+            sx={{
+              gridColumn: "span 6",
+              display: TemporaryDelivery?.checked ? "block" : "none",
+            }}
+          />
+          <DatePicker
+            value={ContractStatusInArbitration?.final}
+            onChange={(date) => {
+              setContractStatusInArbitration({
+                ...ContractStatusInArbitration,
+                final: date,
+              });
+            }}
+            label="تاریخ تحویل قطعی"
+            sx={{
+              gridColumn: "span 6",
+              display: FinalDelivery?.checked ? "block" : "none",
+            }}
           />
 
           <Divider
@@ -3390,7 +3234,9 @@ const CreateContractPage = () => {
                 boxShadow: "none",
               },
             }}
-            disabled={data?.contract_addContract?.result}
+            disabled={
+              data?.contract_addContract?.result ? true : false
+            }
             onClick={() => {
               if (handleErrors()) {
                 void createContractMutation({
@@ -3437,7 +3283,7 @@ const CreateContractPage = () => {
                       console.log("data", d);
                       console.log("clientOptions", clientOptions);
                       navigate(
-                        `/complaints/${data?.contract_addContract?.result.id}/${d?.complaint_addComplaint?.result?.id}/tablesPage`
+                        `/complaints/${data?.contract_addContract?.result?.id}/${d?.complaint_addComplaint?.result?.id}/tablesPage`
                         // `/complaints/${data?.contract_addContract?.result.id}/${d?.complaint_addComplaint?.result?.id}/addComplaint`
                       );
                     },

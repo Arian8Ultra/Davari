@@ -21,9 +21,7 @@ import {
   Modal,
   TextField,
 } from "@mui/material";
-import MuiAppBar, {
-  AppBarProps as MuiAppBarProps,
-} from "@mui/material/AppBar";
+import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import MuiDrawer from "@mui/material/Drawer";
@@ -32,12 +30,7 @@ import List from "@mui/material/List";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { red } from "@mui/material/colors";
-import {
-  CSSObject,
-  Theme,
-  styled,
-  useTheme,
-} from "@mui/material/styles";
+import { CSSObject, Theme, styled, useTheme } from "@mui/material/styles";
 import React, { useEffect, useRef, useState } from "react";
 import { BsEye, BsEyeSlash } from "react-icons/bs";
 import { VscAccount } from "react-icons/vsc";
@@ -49,10 +42,7 @@ import {
 } from "react-router-dom";
 import useLayoutStore from "../Context/LayoutStore";
 import { useUserStore } from "../Context/UserStore";
-import {
-  UserLogin,
-  UserUpdatePassword,
-} from "../GraphQL/Users/Mutations";
+import { UserLogin, UserUpdatePassword } from "../GraphQL/Users/Mutations";
 // @ts-ignore
 import pboLogo from "../assets/PboLogo.png";
 // @ts-ignore
@@ -80,7 +70,11 @@ import {
   secondaryDark,
 } from "../theme/color";
 import { MutationWrapper } from "../GraphQL/MutationWrapper";
-import { TokenCheckDocument } from "../gql/graphql";
+import { SortEnumType, TokenCheckDocument } from "../gql/graphql";
+import { useGetComplaintStatesQuery } from "../../generated-types";
+import { Edit, ExitToApp, People, Person2Rounded, PersonRounded } from "@mui/icons-material";
+import { AiTwotoneProfile } from "react-icons/ai";
+import router from "../Routes/Router";
 
 const drawerWidth = 230;
 
@@ -164,7 +158,7 @@ export default function MainLayout() {
   const setUser = useUserStore((state) => state.setUser);
   const setIsMailRoom = useUserStore((state) => state.setIsMailRoom);
   const isMailRoom = useUserStore((state) => state.isMailRoom);
-  const isJury = useUserStore((state) => state.isJury);
+  const isJury = useUserStore((state) => state.user.isJury);
   const setAccesses = useUserStore((state) => state.setAccesses);
   const token = useUserStore((state) => state.token);
   const clearToken = useUserStore((state) => state.clearToken);
@@ -221,7 +215,7 @@ export default function MainLayout() {
     },
     // fetchPolicy: "network-only",
     nextFetchPolicy: "network-only",
-    pollInterval: 1000,
+    pollInterval: 10000,
   });
 
   useEffect(() => {
@@ -258,30 +252,18 @@ export default function MainLayout() {
     const handler = (e: MediaQueryListEvent) => {
       setIsSmallScreen(e.matches);
     };
-    matchMedia("(max-width: 600px)").addEventListener(
-      "change",
-      handler
-    );
+    matchMedia("(max-width: 600px)").addEventListener("change", handler);
     return () =>
-      matchMedia("(max-width: 600px)").removeEventListener(
-        "change",
-        handler
-      );
+      matchMedia("(max-width: 600px)").removeEventListener("change", handler);
   }, []);
 
   React.useEffect(() => {
     const handler = (e: MediaQueryListEvent) => {
       setIsMediumScreen(e.matches);
     };
-    matchMedia("(max-width: 960px)").addEventListener(
-      "change",
-      handler
-    );
+    matchMedia("(max-width: 960px)").addEventListener("change", handler);
     return () =>
-      matchMedia("(max-width: 960px)").removeEventListener(
-        "change",
-        handler
-      );
+      matchMedia("(max-width: 960px)").removeEventListener("change", handler);
   }, []);
 
   const handleDrawerOpen = () => {
@@ -298,6 +280,28 @@ export default function MainLayout() {
     error,
   } = MutationWrapper(UserLogin, "user_signIn");
 
+  const { data: statusDatas } = useGetComplaintStatesQuery({
+    fetchPolicy: "cache-first",
+    nextFetchPolicy: "cache-first",
+    returnPartialData: true,
+    partialRefetch: true,
+    notifyOnNetworkStatusChange: true,
+    variables: {
+      order: {
+        priority: SortEnumType.Asc,
+      },
+      take: 100,
+    },
+    refetchWritePolicy: "merge",
+    onCompleted(data) {
+      console.log("🚀 ~ onCompleted ~ statusDatas:", data)
+      localStorage.setItem(
+        "complaintStates",
+        JSON.stringify(data.complaintState_getComplaintStates?.result?.items)
+      );
+    },
+  });
+
   const [userLogin, { loading }] = useMutation(UserLogin, {
     variables: {
       userName: signInModal.userName,
@@ -306,9 +310,7 @@ export default function MainLayout() {
     onCompleted(data) {
       console.log(data);
       if (data.user_signIn.status.code === 1) {
-        const expireDate = new Date(
-          data.user_signIn.result.expireDate
-        );
+        const expireDate = new Date(data.user_signIn.result.expireDate);
         const now = new Date();
         const diff = expireDate.getTime() - now.getTime();
         const expiresIn = diff / 1000;
@@ -322,10 +324,7 @@ export default function MainLayout() {
             data.user_signIn.result.token,
             expireDate
           );
-          localStorage.setItem(
-            "token",
-            data.user_signIn.result.token
-          );
+          localStorage.setItem("token", data.user_signIn.result.token);
           setIsMailRoom(
             data.user_signIn.result.user.parentId ===
               "e7a85297-91d4-4f27-a4b2-ff394fe71dd3"
@@ -365,10 +364,7 @@ export default function MainLayout() {
     {
       label: string;
       id: string;
-      type:
-        | "INDIVIDUAL"
-        | "ORGANIZATION"
-        | "CONTRACTOR_OR_CONSULTANT";
+      type: "INDIVIDUAL" | "ORGANIZATION" | "CONTRACTOR_OR_CONSULTANT";
     }[]
   >([]);
   useQuery(GET_ALL_ORGANIZATION_USERS, {
@@ -409,7 +405,7 @@ export default function MainLayout() {
             backgroundColor: background,
             justifyContent: "center",
             alignItems: "space-between",
-            boxShadow: "none",
+            boxShadow: "0px 5px 20px rgba(0,0,0,0.1)",
             // borderBottom: `1px solid ${secondary}`,
           }}
         >
@@ -500,18 +496,15 @@ export default function MainLayout() {
                     user.userRoles.map((role, index) => (
                       <span key={role.id}>
                         {convertRoleToPersian(role.roleType)}
-                        {user.userRoles &&
-                        index !== user.userRoles.length - 1
+                        {user.userRoles && index !== user.userRoles.length - 1
                           ? " - "
                           : ""}
                       </span>
                     ))}
-                  {" " + user.userType !=
-                    "CONTRACTOR_OR_CONSULTANT" &&
+                  {" " + user.userType != "CONTRACTOR_OR_CONSULTANT" &&
                     " " +
-                      departments.find(
-                        (item) => item.id === user.parentId
-                      )?.label}
+                      departments.find((item) => item.id === user.parentId)
+                        ?.label}
                 </Typography>
                 <Typography
                   variant="subtitle1"
@@ -555,18 +548,44 @@ export default function MainLayout() {
             <MenuItem>
               <Button
                 onClick={() => {
+                  navigate("/profile");
+                }}
+                variant="text"
+                color="warning"
+                sx={{
+                  // color: primary,
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  width: "100%",
+                  display: "flex",
+                  gap: 3,
+                }}
+              >
+                <PersonRounded/>
+                پروفایل
+              </Button>
+            </MenuItem>
+            <MenuItem>
+              <Button
+                onClick={() => {
                   setMenuOpen(false);
                   setChangePasswordModal({
                     ...changePasswordModal,
                     open: true,
                   });
                 }}
+                variant="text"
+                color="primary"
                 sx={{
                   color: primary,
                   textAlign: "center",
+                  fontWeight: "bold",
                   width: "100%",
+                  display: "flex",
+                  gap: 3,
                 }}
               >
+                <Edit/>
                 تغییر رمز عبور
               </Button>
             </MenuItem>
@@ -574,14 +593,21 @@ export default function MainLayout() {
               <Button
                 onClick={() => {
                   setMenuOpen(false);
+                  setLocation("/");
                   logout();
                 }}
+                variant="text"
+                color="error"
                 sx={{
-                  color: primary,
+                  color: red[500],
                   textAlign: "center",
+                  fontWeight: "bold",
                   width: "100%",
+                  display: "flex",
+                  gap: 3,
                 }}
               >
+                <ExitToApp />
                 خروج
               </Button>
             </MenuItem>
@@ -640,6 +666,8 @@ export default function MainLayout() {
             backgroundColor: secondary,
             // backgroundColor: primary,
             position: "relative",
+            width: drawerWidth,
+            minWidth: "max-content",
           }}
           PaperProps={{
             sx: {
@@ -718,13 +746,16 @@ export default function MainLayout() {
               justifyContent: "center",
               alignItems: "center",
               gap: "1rem",
+              minWidth: "max-content",
             }}
           >
             {SideBarMenu.map((item, index) =>
               user.userRoles &&
               user.userRoles.some((role) =>
                 item.accessNeeded?.includes(role.roleType)
-              ) && isMailRoom !=true && isJury!=true ? (
+              ) &&
+              isMailRoom != true &&
+              isJury != true ? (
                 <ListItemLink
                   key={index}
                   to={item.to}
@@ -735,33 +766,31 @@ export default function MainLayout() {
                   open={open}
                   display={"block"}
                 >
-                  {item.children?.map(
-                    (child: SideBarLinkType, index) => (
-                      <ListItemLink
-                        key={index}
-                        to={child.to && child.to}
-                        primary={child.primary}
-                        icon={child.icon}
-                        hasLink={child.hasLink}
-                        hasCollapse={child.hasCollapse}
-                        open={open}
-                      >
-                        {child.children?.map(
-                          (child: SideBarLinkType, index) => (
-                            <ListItemLink
-                              key={index}
-                              to={child.to && child.to}
-                              primary={child.primary}
-                              icon={child.icon}
-                              hasLink={child.hasLink}
-                              hasCollapse={child.hasCollapse}
-                              open={open}
-                            />
-                          )
-                        )}
-                      </ListItemLink>
-                    )
-                  )}
+                  {item.children?.map((child: SideBarLinkType, index) => (
+                    <ListItemLink
+                      key={index}
+                      to={child.to && child.to}
+                      primary={child.primary}
+                      icon={child.icon}
+                      hasLink={child.hasLink}
+                      hasCollapse={child.hasCollapse}
+                      open={open}
+                      accessNeeded={child.accessNeeded}
+                    >
+                      {child.children?.map((child: SideBarLinkType, index) => (
+                        <ListItemLink
+                          key={index}
+                          to={child.to && child.to}
+                          primary={child.primary}
+                          icon={child.icon}
+                          hasLink={child.hasLink}
+                          hasCollapse={child.hasCollapse}
+                          open={open}
+                          accessNeeded={child.accessNeeded}
+                        />
+                      ))}
+                    </ListItemLink>
+                  ))}
                 </ListItemLink>
               ) : item.mailRoom == true && isMailRoom == true ? (
                 <ListItemLink
@@ -774,35 +803,32 @@ export default function MainLayout() {
                   open={open}
                   display={"block"}
                 >
-                  {item.children?.map(
-                    (child: SideBarLinkType, index) => (
-                      <ListItemLink
-                        key={index}
-                        to={child.to && child.to}
-                        primary={child.primary}
-                        icon={child.icon}
-                        hasLink={child.hasLink}
-                        hasCollapse={child.hasCollapse}
-                        open={open}
-                      >
-                        {child.children?.map(
-                          (child: SideBarLinkType, index) => (
-                            <ListItemLink
-                              key={index}
-                              to={child.to && child.to}
-                              primary={child.primary}
-                              icon={child.icon}
-                              hasLink={child.hasLink}
-                              hasCollapse={child.hasCollapse}
-                              open={open}
-                            />
-                          )
-                        )}
-                      </ListItemLink>
-                    )
-                  )}
+                  {item.children?.map((child: SideBarLinkType, index) => (
+                    <ListItemLink
+                      key={index}
+                      to={child.to && child.to}
+                      primary={child.primary}
+                      icon={child.icon}
+                      hasLink={child.hasLink}
+                      hasCollapse={child.hasCollapse}
+                      open={open}
+                    >
+                      {child.children?.map((child: SideBarLinkType, index) => (
+                        <ListItemLink
+                          key={index}
+                          to={child.to && child.to}
+                          primary={child.primary}
+                          icon={child.icon}
+                          hasLink={child.hasLink}
+                          hasCollapse={child.hasCollapse}
+                          open={open}
+                        />
+                      ))}
+                    </ListItemLink>
+                  ))}
                 </ListItemLink>
-              ) : item.accessNeeded.includes("JURY_EXPERT") == true && isJury == true ? (
+              ) : item.accessNeeded.includes("JURY_EXPERT") == true &&
+                isJury == true ? (
                 <ListItemLink
                   key={index}
                   to={item.to}
@@ -813,35 +839,31 @@ export default function MainLayout() {
                   open={open}
                   display={"block"}
                 >
-                  {item.children?.map(
-                    (child: SideBarLinkType, index) => (
-                      <ListItemLink
-                        key={index}
-                        to={child.to && child.to}
-                        primary={child.primary}
-                        icon={child.icon}
-                        hasLink={child.hasLink}
-                        hasCollapse={child.hasCollapse}
-                        open={open}
-                      >
-                        {child.children?.map(
-                          (child: SideBarLinkType, index) => (
-                            <ListItemLink
-                              key={index}
-                              to={child.to && child.to}
-                              primary={child.primary}
-                              icon={child.icon}
-                              hasLink={child.hasLink}
-                              hasCollapse={child.hasCollapse}
-                              open={open}
-                            />
-                          )
-                        )}
-                      </ListItemLink>
-                    )
-                  )}
+                  {item.children?.map((child: SideBarLinkType, index) => (
+                    <ListItemLink
+                      key={index}
+                      to={child.to && child.to}
+                      primary={child.primary}
+                      icon={child.icon}
+                      hasLink={child.hasLink}
+                      hasCollapse={child.hasCollapse}
+                      open={open}
+                    >
+                      {child.children?.map((child: SideBarLinkType, index) => (
+                        <ListItemLink
+                          key={index}
+                          to={child.to && child.to}
+                          primary={child.primary}
+                          icon={child.icon}
+                          hasLink={child.hasLink}
+                          hasCollapse={child.hasCollapse}
+                          open={open}
+                        />
+                      ))}
+                    </ListItemLink>
+                  ))}
                 </ListItemLink>
-              ): null
+              ) : null
             )}
           </List>
         </Drawer>
@@ -865,12 +887,12 @@ export default function MainLayout() {
         >
           <DrawerHeader />
           <List>
-
-          {SideBarMenu.map((item, index) =>
+            {SideBarMenu.map((item, index) =>
               user.userRoles &&
               user.userRoles.some((role) =>
                 item.accessNeeded?.includes(role.roleType)
-              ) && isMailRoom !=true ? (
+              ) &&
+              isMailRoom != true ? (
                 <ListItemLink
                   key={index}
                   to={item.to}
@@ -881,33 +903,29 @@ export default function MainLayout() {
                   open={open}
                   display={"block"}
                 >
-                  {item.children?.map(
-                    (child: SideBarLinkType, index) => (
-                      <ListItemLink
-                        key={index}
-                        to={child.to && child.to}
-                        primary={child.primary}
-                        icon={child.icon}
-                        hasLink={child.hasLink}
-                        hasCollapse={child.hasCollapse}
-                        open={open}
-                      >
-                        {child.children?.map(
-                          (child: SideBarLinkType, index) => (
-                            <ListItemLink
-                              key={index}
-                              to={child.to && child.to}
-                              primary={child.primary}
-                              icon={child.icon}
-                              hasLink={child.hasLink}
-                              hasCollapse={child.hasCollapse}
-                              open={open}
-                            />
-                          )
-                        )}
-                      </ListItemLink>
-                    )
-                  )}
+                  {item.children?.map((child: SideBarLinkType, index) => (
+                    <ListItemLink
+                      key={index}
+                      to={child.to && child.to}
+                      primary={child.primary}
+                      icon={child.icon}
+                      hasLink={child.hasLink}
+                      hasCollapse={child.hasCollapse}
+                      open={open}
+                    >
+                      {child.children?.map((child: SideBarLinkType, index) => (
+                        <ListItemLink
+                          key={index}
+                          to={child.to && child.to}
+                          primary={child.primary}
+                          icon={child.icon}
+                          hasLink={child.hasLink}
+                          hasCollapse={child.hasCollapse}
+                          open={open}
+                        />
+                      ))}
+                    </ListItemLink>
+                  ))}
                 </ListItemLink>
               ) : item.mailRoom == true && isMailRoom == true ? (
                 <ListItemLink
@@ -920,33 +938,29 @@ export default function MainLayout() {
                   open={open}
                   display={"block"}
                 >
-                  {item.children?.map(
-                    (child: SideBarLinkType, index) => (
-                      <ListItemLink
-                        key={index}
-                        to={child.to && child.to}
-                        primary={child.primary}
-                        icon={child.icon}
-                        hasLink={child.hasLink}
-                        hasCollapse={child.hasCollapse}
-                        open={open}
-                      >
-                        {child.children?.map(
-                          (child: SideBarLinkType, index) => (
-                            <ListItemLink
-                              key={index}
-                              to={child.to && child.to}
-                              primary={child.primary}
-                              icon={child.icon}
-                              hasLink={child.hasLink}
-                              hasCollapse={child.hasCollapse}
-                              open={open}
-                            />
-                          )
-                        )}
-                      </ListItemLink>
-                    )
-                  )}
+                  {item.children?.map((child: SideBarLinkType, index) => (
+                    <ListItemLink
+                      key={index}
+                      to={child.to && child.to}
+                      primary={child.primary}
+                      icon={child.icon}
+                      hasLink={child.hasLink}
+                      hasCollapse={child.hasCollapse}
+                      open={open}
+                    >
+                      {child.children?.map((child: SideBarLinkType, index) => (
+                        <ListItemLink
+                          key={index}
+                          to={child.to && child.to}
+                          primary={child.primary}
+                          icon={child.icon}
+                          hasLink={child.hasLink}
+                          hasCollapse={child.hasCollapse}
+                          open={open}
+                        />
+                      ))}
+                    </ListItemLink>
+                  ))}
                 </ListItemLink>
               ) : null
             )}

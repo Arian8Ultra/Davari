@@ -2,7 +2,7 @@ export const Tags = [
     {
         name: "افزودن درخواست داوری",
         id: "createContractPage",
-        url: "/complaints/createContractPage"
+        url: "/create/contractPageToFill/"
     },
     {
         name: "درخواست های داوری",

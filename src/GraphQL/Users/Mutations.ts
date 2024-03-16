@@ -19,6 +19,7 @@ export const UserLogin = gql`
             id
           }
           userType
+          isJury
         }
         token
         expireDate
@@ -60,6 +61,7 @@ export const OTPMutation = gql`
             roleType
             id
           }
+          isJury
           userType
         }
         token
@@ -95,6 +97,7 @@ export const UserSignUp = gql`
     $birthDate: Date
     $userType: UserType!
     $parentId: String
+    $isJury: Boolean! = false
   ) {
     user_signUp(
       input: {
@@ -108,6 +111,7 @@ export const UserSignUp = gql`
         phoneNumber: $phoneNumber
         userName: $userName
         parentId: $parentId
+        isJury: $isJury
       }
     ) {
       result {
@@ -117,6 +121,7 @@ export const UserSignUp = gql`
         fullName
         phoneNumber
         nationalCode
+        isJury
         parentId
         userRoles {
           roleType
@@ -200,6 +205,7 @@ export const UserUpdate = gql`
         fullName
         phoneNumber
         nationalCode
+        isJury
       }
       status {
         code

@@ -12,6 +12,7 @@ export type User = {
   parent?: User | null;
   parentId?:string
   userType?:"INDIVIDUAL" | "ORGANIZATION" | "CONTRACTOR_OR_CONSULTANT";
+  isJury: boolean;
 };
 
 export type Argument = {

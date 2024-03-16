@@ -13,6 +13,8 @@ import {
 import { useUserStore } from "../../../Context/UserStore";
 import { Box, Card, Stack, Typography } from "@mui/material";
 import ComplaintCardNew from "../../Complaints/ComplaintCardNew";
+import { Get_Complaint_AssignedDocument, useGet_Complaint_AssignedQuery } from "../../../../generated-types";
+import { ComplaintState, Get_Accused_ComplaintsDocument, Get_Accuser_ComplaintsDocument } from "../../../gql/graphql";
 interface Props {
   columns?: string | object;
   rows?: string;
@@ -20,26 +22,26 @@ interface Props {
 const HomeComplaintsList = ({ columns, rows }: Props) => {
   const user = useUserStore((state) => state.user);
 
-  const { data: assignedData, refetch: assignedRefetch } = useQuery(
-    GET_COMPLAINT_ASSIGNED,
-    {
-      variables: {
-        id: user.id,
-      },
+
+
+  const {data:assignedData,refetch} = useGet_Complaint_AssignedQuery({
+    variables: {
+      id: user.id
     }
-  );
+  })
 
   const {
     data: accuserData,
     loading: accuserLoading,
     refetch: accuserRefetch,
-  } = useQuery(GET_ACCUSER_COMPLAINTS, {
+  } = useQuery(Get_Accuser_ComplaintsDocument, {
+    fetchPolicy: "network-only",
     variables: {
       departmentId:
         user.userType == "ORGANIZATION" ||
         user.userType == "CONTRACTOR_OR_CONSULTANT"
           ? user.id
-          : user.parentId,
+          : user.parentId || "",
     },
     onCompleted(data) {
       console.log("accuser data", data);
@@ -50,13 +52,14 @@ const HomeComplaintsList = ({ columns, rows }: Props) => {
     data: accusedData,
     loading: accusedLoading,
     refetch: accusedRefetch,
-  } = useQuery(GET_ACCUSED_COMPLAINTS, {
+  } = useQuery(Get_Accused_ComplaintsDocument, {
+    fetchPolicy: "network-only",
     variables: {
       departmentId:
         user.userType == "ORGANIZATION" ||
         user.userType == "CONTRACTOR_OR_CONSULTANT"
           ? user.id
-          : user.parentId,
+          : user.parentId || "",
     },
     onCompleted(data) {
       console.log("accused data", data);
@@ -92,25 +95,28 @@ const HomeComplaintsList = ({ columns, rows }: Props) => {
       >
         درخواست های داوری
       </Typography>
-      <Box sx={{
-        display:"grid",
-        flexDirection: "column",
-        width: "100%",
-        overflowY: "scroll",
-        gap: "0.5rem",
-        padding: "0.75rem",
-      }}>
-        {assignedData?.complaint_getComplaints?.result.items.map(
-          (complaint: Complaint) => (
+      <Box
+        sx={{
+          display: "grid",
+          flexDirection: "column",
+          width: "100%",
+          overflowY: "scroll",
+          gap: "0.5rem",
+          padding: "0.75rem",
+        }}
+      >
+        {assignedData?.complaint_getComplaints?.result?.items?.map(
+          (complaint) => (
             <ComplaintCardNew
               key={complaint.id}
               id={complaint.id}
-              acussedId={complaint?.contract?.accusedDepartmentUserId}
-              acusserId={complaint?.contract?.accuserDepartmentUserId}
+              acussedId={complaint?.contract?.accusedDepartmentUserId || ""}
+              acusserId={complaint?.contract?.accuserDepartmentUserId || ""}
               date={complaint?.createdDate}
               contractId={complaint?.contractId}
-              state={complaint?.complaintState}
+              state={complaint?.complaintState?.state}
               type="assigned"
+              complaintState={complaint?.complaintState as ComplaintState}
             />
           )
         )}
@@ -119,21 +125,22 @@ const HomeComplaintsList = ({ columns, rows }: Props) => {
         ) ||
           user.userType == "ORGANIZATION" ||
           user.userType == "CONTRACTOR_OR_CONSULTANT") &&
-          accusedData?.complaint_getComplaints?.result.items.map(
-            (complaint: Complaint) => (
+          accusedData?.complaint_getComplaints?.result?.items?.map(
+            (complaint) => (
               <ComplaintCardNew
                 key={complaint.id}
                 id={complaint.id}
                 acussedId={
-                  complaint?.contract?.accusedDepartmentUserId
+                  complaint?.contract?.accusedDepartmentUserId || ""
                 }
                 acusserId={
-                  complaint?.contract?.accuserDepartmentUserId
+                  complaint?.contract?.accuserDepartmentUserId || ""
                 }
                 date={complaint?.createdDate}
                 contractId={complaint?.contractId}
-                state={complaint?.complaintState}
+                state={complaint?.complaintState?.state}
                 type="accused"
+                complaintState={complaint?.complaintState as ComplaintState}
               />
             )
           )}
@@ -142,21 +149,22 @@ const HomeComplaintsList = ({ columns, rows }: Props) => {
         ) ||
           user.userType == "ORGANIZATION" ||
           user.userType == "CONTRACTOR_OR_CONSULTANT") &&
-          accuserData?.complaint_getComplaints?.result.items.map(
-            (complaint: Complaint) => (
+          accuserData?.complaint_getComplaints?.result?.items?.map(
+            (complaint) => (
               <ComplaintCardNew
                 key={complaint.id}
                 id={complaint.id}
                 acussedId={
-                  complaint?.contract?.accusedDepartmentUserId
+                  complaint?.contract?.accusedDepartmentUserId || ""
                 }
                 acusserId={
-                  complaint?.contract?.accuserDepartmentUserId
+                  complaint?.contract?.accuserDepartmentUserId || ""
                 }
                 date={complaint?.createdDate}
                 contractId={complaint?.contractId}
-                state={complaint?.complaintState}
+                state={complaint?.complaintState?.state}
                 type="accuser"
+                complaintState={complaint?.complaintState as ComplaintState}
               />
             )
           )}

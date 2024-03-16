@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
@@ -16,54 +17,50 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
+import { DatePicker } from "@mui/x-date-pickers";
 import React from "react";
 import { BsPlusCircle } from "react-icons/bs";
 import { useParams } from "react-router-dom";
+import {
+  useCreate_Work_Condition_Statement_TableMutation,
+  useGetWorkConditionStatementTableByIdQuery,
+  useGetWorkConditionStatementsFullLazyQuery,
+} from "../../../../generated-types";
 import { useUserStore } from "../../../Context/UserStore";
 import { MutationWrapper } from "../../../GraphQL/MutationWrapper";
-import { QueryWrapper } from "../../../GraphQL/QueryWrapper";
 import {
   CREATE_WORK_CONDITION_STATEMENT,
   CREATE_WORK_CONDITION_STATEMENT_PART,
-  CREATE_WORK_CONDITION_STATEMENT_TABLE,
   UPDATE_WORK_CONDITION_STATEMENT,
   WorkConditionStatement,
-  WorkConditionStatementPart
+  WorkConditionStatementPart,
 } from "../../../GraphQL/Tables/Mutations";
-import { GET_WORK_CONDITION_STATEMENT_TABLE_BY_CONTRACT_ID } from "../../../GraphQL/Tables/Queries";
+import { RegistrarType } from "../../../gql/graphql";
 import {
   Red,
   background,
   primary,
   primaryLight,
   secondary,
-  secondaryDark
+  secondaryDark,
 } from "../../../theme/color";
-import DateButton from "../../DateButton";
 import FaTextField from "../../FaComponents/FaTextField";
 import FaTypography from "../../FaComponents/FaTypography";
+import FileBox from "../../FileBox";
 import NewModal from "../../Modals";
 import WorkConditionStatementCard from "../WorkConditionStatement/WorkConditionStatementCard";
 
 interface Props extends TableContainerProps {
   WorkConditionStatementTableId?: number;
   type?: "ACCUSED" | "ACCUSER";
+  isConsultant?: boolean;
 }
 const WorkConditionStatementTable = (props: Props) => {
   const { contractId } = useParams<{ contractId: string }>();
   const user = useUserStore((state) => state.user);
   const [editMode, setEditMode] = React.useState<boolean>(false);
-  const [WorkConditionStatement, setWorkConditionStatements] =
-    React.useState<WorkConditionStatement[]>([
-      // {
-      //   amount: 100000,
-      //   filledBy: "ACCUSED",
-      //   id: 1,
-      //   date: new Date(),
-      //   title: "قسط اول",
-      //   WorkConditionStatementTableId: 1,
-      // },
-    ]);
+  const [DefiniteWorkConditionStatement, setDefiniteWorkConditionStatement] =
+    React.useState<WorkConditionStatement>({} as WorkConditionStatement);
   const [pageError, setPageError] = React.useState<string>();
   const [tableId, setTableId] = React.useState<number>();
   const [
@@ -81,219 +78,102 @@ const WorkConditionStatementTable = (props: Props) => {
   const [newWorkConditionStatement, setNewWorkConditionStatement] =
     React.useState<WorkConditionStatement>({} as WorkConditionStatement);
 
-  const {
-    handleMutation: addWorkConditionStatement,
-  } = MutationWrapper(
+  const { handleMutation: addWorkConditionStatement } = MutationWrapper(
     CREATE_WORK_CONDITION_STATEMENT,
     "workConditionStatement_addWorkConditionStatement"
   );
-  const {
-    handleMutation: addWorkConditionStatementTable,
-  } = MutationWrapper(
-    CREATE_WORK_CONDITION_STATEMENT_TABLE,
-    "workConditionStatementTable_addWorkConditionStatementTable"
-  );
+  const [addWorkConditionStatementTable] =
+    useCreate_Work_Condition_Statement_TableMutation();
 
-  const {
-    handleMutation: editWorkConditionStatement,
-  } = MutationWrapper(
+  const { handleMutation: editWorkConditionStatement } = MutationWrapper(
     UPDATE_WORK_CONDITION_STATEMENT,
     "workConditionStatement_updateWorkConditionStatement"
   );
 
-  const { data, loading, refetch } = QueryWrapper(
-    GET_WORK_CONDITION_STATEMENT_TABLE_BY_CONTRACT_ID,
-    "workConditionStatementTable_getWorkConditionStatementTables",
-    {
-      id: contractId && parseInt(contractId),
+  const [getStatements, { data: workStatements, refetch }] =
+    useGetWorkConditionStatementsFullLazyQuery();
+
+  const { data } = useGetWorkConditionStatementTableByIdQuery({
+    variables: {
+      id: (contractId && parseInt(contractId)) || 0,
     },
-    {
-      onCompleted(data) {
-        console.log("OnComplete", data);
-        setWorkConditionStatements(data.items[0].workConditionStatements);
-      },
-      onError(error) {
-        console.log("error", error);
-      },
-    }
-  );
+    onCompleted(data) {
+      console.log("OnComplete", data);
 
+      void getStatements({
+        variables: {
+          filter: {
+            workConditionStatementTableId: {
+              eq:
+                data.workConditionStatementTable_getWorkConditionStatementTables
+                  .result?.items?.[0]?.id || null,
+            },
+            filledBy: {
+              eq:
+                data.workConditionStatementTable_getWorkConditionStatementTables
+                  .result?.items?.[0]?.contract?.accuserDepartmentUserId ==
+                user.parentId
+                  ? RegistrarType.Accuser
+                  : RegistrarType.Accused,
+            },
+          },
+        },
+      });
+    },
+    onError(error) {
+      console.log("error", error);
+    },
+  });
 
-  const {
-    handleMutation: createWorkConditionStatementPart,
-  } = MutationWrapper(
+  const { handleMutation: createWorkConditionStatementPart } = MutationWrapper(
     CREATE_WORK_CONDITION_STATEMENT_PART,
     "workConditionStatementPart_addWorkConditionStatementPart"
   );
 
   React.useEffect(() => {
-    console.log("GET_WorkConditionStatement_TABLE_BY_CONTRACT_ID", data);
-    const userType = data?.items[0]?.accuserDepartmentUserId ==
-    user.parentId
-    ? "ACCUSER"
-    : "ACCUSED"
-    console.warn("userType",userType);
-
-    if (data?.items?.length >0) {
-      console.log("TestNew", data);
-      setWorkConditionStatements(data?.items[0]?.workConditionStatements.filter((workConditionStatement:WorkConditionStatement)=> workConditionStatement.filledBy == userType));
-
-      setTableId(data?.items[0]?.id);
-    } else {
-      console.log("else",data);
-      if (data instanceof Error) {
-        console.log("adding");
-        void addWorkConditionStatementTable({
-          variables: {
-            contractId: contractId && parseInt(contractId),
-            userId: user.id,
-          },
-          options: {
-            onCompleted(data) {
-              console.log("addWorkConditionStatementTable", data);
-              setTableId(data?.id);
-              void refetch();
-            },
-          },
-        });
-      } else {
-        if (data?.items?.length == 0 || (!data && !loading)) {
-          console.log("adding");
-          void addWorkConditionStatementTable({
-            variables: {
-              contractId: contractId && parseInt(contractId),
-              userId: user.id,
-            },
-            options: {
-              onCompleted(data) {
-                console.log("addWorkConditionStatementTable", data);
-                setTableId(data?.id);
-                void refetch();
+    const userType =
+      data?.workConditionStatementTable_getWorkConditionStatementTables.result
+        ?.items?.[0]?.contract?.accuserDepartmentUserId == user.id ||
+      data?.workConditionStatementTable_getWorkConditionStatementTables.result
+        ?.items?.[0]?.contract?.accuserDepartmentUserId == user.parentId
+        ? "ACCUSER"
+        : "ACCUSED";
+    if (
+      data?.workConditionStatementTable_getWorkConditionStatementTables?.result
+        ?.items?.length &&
+      data?.workConditionStatementTable_getWorkConditionStatementTables?.result
+        ?.items?.length > 0
+    ) {
+      void getStatements({
+        variables: {
+          filter: {
+            and: [
+              {
+                workConditionStatementTableId: {
+                  eq:
+                    data
+                      ?.workConditionStatementTable_getWorkConditionStatementTables
+                      ?.result?.items?.[0]?.id || null,
+                },
               },
-            },
-          });
-        }
-      }
+              {
+                filledBy: {
+                  eq:
+                    userType == "ACCUSER"
+                      ? RegistrarType.Accuser
+                      : RegistrarType.Accused,
+                },
+              },
+            ],
+          },
+        },
+      });
+      setTableId(
+        data?.workConditionStatementTable_getWorkConditionStatementTables
+          ?.result?.items?.[0]?.id
+      );
     }
-  }, [data]);
-  //   if (data?.items?.length > 0 && loading == false) {
-  //     console.log("GET_WorkConditionStatement_TABLE_BY_CONTRACT_ID", data);
-  //     setWorkConditionStatements(data?.items[0]?.WorkConditionStatements);
-  //     // setNewWorkConditionStatement({
-  //     //   ...newWorkConditionStatement,
-  //     //   WorkConditionStatementTableId: data?.items[0]?.id,
-  //     // })
-
-  //     setTableId(data?.items[0]?.id);
-  //   } else {
-  //     console.log("GET_WorkConditionStatement_TABLE_BY_CONTRACT_ID", data);
-
-  //     if (data instanceof Error) {
-  //       void addWorkConditionStatementTable({
-  //         variables: {
-  //           contractId: contractId && parseInt(contractId),
-  //           userId: user.id,
-  //           filledBy:
-  //             contractData?.items[0]?.accuserDepartmentUserId == user.id ||
-  //             contractData?.items[0]?.accuserDepartmentUserId == user.parentId
-  //               ? "ACCUSER"
-  //               : "ACCUSED",
-  //         },
-  //         options: {
-  //           onCompleted(data, clientOptions) {
-  //             console.log("addWorkConditionStatementTable", data);
-  //             void refetch();
-  //           },
-  //         },
-  //       });
-  //     } else {
-  //       if(!data) {
-  //         void addWorkConditionStatementTable({
-  //           variables: {
-  //             contractId: contractId && parseInt(contractId),
-  //             userId: user.id,
-  //             filledBy:
-  //             contractData?.items[0]?.accuserDepartmentUserId == user.id ||
-  //             contractData?.items[0]?.accuserDepartmentUserId == user.parentId
-  //               ? "ACCUSER"
-  //               : "ACCUSED",
-  //           },
-  //           options: {
-  //             onCompleted(data, clientOptions) {
-  //               console.log("addWorkConditionStatementTable", data);
-  //               void refetch();
-  //             },
-  //           },
-  //         });
-  //       }
-  //       if (data?.items?.length > 0) {
-  //         void addWorkConditionStatementTable({
-  //           variables: {
-  //             contractId: contractId && parseInt(contractId),
-  //             userId: user.id,
-  //             filledBy:
-  //             contractData?.items[0]?.accuserDepartmentUserId == user.id ||
-  //             contractData?.items[0]?.accuserDepartmentUserId == user.parentId
-  //               ? "ACCUSER"
-  //               : "ACCUSED",
-  //           },
-  //           options: {
-  //             onCompleted(data, clientOptions) {
-  //               console.log("addWorkConditionStatementTable", data);
-  //               void refetch();
-  //             },
-  //           },
-  //         });
-  //       }
-  //     }
-
-  //     // void addWorkConditionStatementTable({
-  //     //   variables: {
-  //     //     contractId: contractId && parseInt(contractId),
-  //     //     userId: user.id,
-  //     //   },
-  //     //   options: {
-  //     //     onCompleted(data, clientOptions) {
-  //     //       console.log("addWorkConditionStatementTable", data);
-  //     //       void refetch();
-  //     //     },
-  //     //   },
-  //     // });
-  //   }
-  // }, [data]);
-
-  // const handleEmptyFields = () => {
-  //   if (!newWorkConditionStatement.title) {
-  //     setPageError("عنوان را وارد کنید");
-  //     return true;
-  //   }
-  //   if (!newWorkConditionStatement.amountProvidedByContractor) {
-  //     setPageError("مبلغ ارائه شده توسط پیمانکار را وارد کنید");
-  //     return true;
-  //   }
-  //   if (!newWorkConditionStatement.dateProvidedByContractor) {
-  //     setPageError("تاریخ ارائه شده توسط پیمانکار را وارد کنید");
-  //     return true;
-  //   }
-  //   if (!newWorkConditionStatement.amountConfirmedByConsultant) {
-  //     setPageError("مبلغ تایید شده توسط مشاور را وارد کنید");
-  //     return true;
-  //   }
-  //   if (!newWorkConditionStatement.dateConfirmedByConsultant) {
-  //     setPageError("تاریخ تایید شده توسط مشاور را وارد کنید");
-  //     return true;
-  //   }
-  //   if (!newWorkConditionStatement.amountApprovedByEmployer) {
-  //     setPageError("مبلغ تایید شده توسط کارفرما را وارد کنید");
-  //     return true;
-  //   }
-  //   if (!newWorkConditionStatement.dateApprovedByEmployer) {
-  //     setPageError("تاریخ تایید شده توسط کارفرما را وارد کنید");
-  //     return true;
-  //   }
-
-  //   return false;
-  // };
+  }, [contractId, data, getStatements, refetch, user.id, user.parentId]);
 
   return (
     <TableContainer
@@ -315,7 +195,7 @@ const WorkConditionStatementTable = (props: Props) => {
 
         // change padding of cells
         "& td": {
-          padding: "0.75rem",
+          padding: "0.5rem 0.1rem",
         },
       }}
     >
@@ -341,7 +221,7 @@ const WorkConditionStatementTable = (props: Props) => {
               sx={{
                 textAlign: "center",
                 position: "relative",
-                height: "4rem",
+                height: "3.5rem",
               }}
             >
               <Box
@@ -359,9 +239,15 @@ const WorkConditionStatementTable = (props: Props) => {
                   transform: "translate(-50%,-50%)",
                 }}
               >
-                <FaTypography variant="h6" textAlign={"center"}>
-                  جدول صورت وضعیت کارکرد
-                </FaTypography>
+                {props.isConsultant ? (
+                  <FaTypography variant="h6" textAlign={"center"}>
+                    جدول صورت حساب کارکرد
+                  </FaTypography>
+                ) : (
+                  <FaTypography variant="h6" textAlign={"center"}>
+                    جدول صورت وضعیت کارکرد
+                  </FaTypography>
+                )}
               </Box>
             </TableCell>
           </TableRow>
@@ -382,17 +268,19 @@ const WorkConditionStatementTable = (props: Props) => {
               }}
               colSpan={2}
             >
-              ارائه شده توسط پیمانکار
+              ارائه شده توسط {props.isConsultant ? "مشاور" : "پیمانکار"}
             </TableCell>
-            <TableCell
-              sx={{
-                textAlign: "center",
-                borderRight: "1px solid white",
-              }}
-              colSpan={2}
-            >
-              تایید شده توسط مشاور
-            </TableCell>
+            {!props.isConsultant && (
+              <TableCell
+                sx={{
+                  textAlign: "center",
+                  borderRight: "1px solid white",
+                }}
+                colSpan={2}
+              >
+                تایید شده توسط مشاور
+              </TableCell>
+            )}
             <TableCell
               sx={{
                 textAlign: "center",
@@ -411,6 +299,7 @@ const WorkConditionStatementTable = (props: Props) => {
             >
               پرداخت
             </TableCell>
+            <TableCell></TableCell>
             <TableCell
               sx={{
                 textAlign: "center",
@@ -436,6 +325,26 @@ const WorkConditionStatementTable = (props: Props) => {
             >
               تاريخ
             </TableCell>
+            {!props.isConsultant && (
+              <TableCell
+                sx={{
+                  textAlign: "center",
+                  borderRight: "1px solid white",
+                }}
+              >
+                مبلغ
+              </TableCell>
+            )}
+            {!props.isConsultant && (
+              <TableCell
+                sx={{
+                  textAlign: "center",
+                  borderRight: "1px solid white",
+                }}
+              >
+                تاريخ
+              </TableCell>
+            )}
             <TableCell
               sx={{
                 textAlign: "center",
@@ -471,18 +380,9 @@ const WorkConditionStatementTable = (props: Props) => {
             <TableCell
               sx={{
                 textAlign: "center",
-                borderRight: "1px solid white",
               }}
             >
-              مبلغ
-            </TableCell>
-            <TableCell
-              sx={{
-                textAlign: "center",
-                borderRight: "1px solid white",
-              }}
-            >
-              تاريخ
+              روکش مالی
             </TableCell>
             <TableCell
               sx={{
@@ -498,12 +398,12 @@ const WorkConditionStatementTable = (props: Props) => {
             <TableCell>
               <FaTextField
                 label="عنوان"
-                onChange={(e) =>
-                  setNewWorkConditionStatement({
-                    ...newWorkConditionStatement,
-                    title: e.target.value,
-                  })
-                }
+                // onChange={(e) =>
+                //   setNewWorkConditionStatement({
+                //     ...newWorkConditionStatement,
+                //     title: e.target.value,
+                //   })
+                // }
                 InputLabelProps={{
                   sx: {
                     fontSize: "12px",
@@ -515,11 +415,14 @@ const WorkConditionStatementTable = (props: Props) => {
                   },
                 }}
                 value={
-                  newWorkConditionStatement.title
-                    ? newWorkConditionStatement.title
-                    : ""
+                  "صورت وضعیت" +
+                  " " +
+                  (workStatements
+                    ?.workConditionStatement_getWorkConditionStatements?.result
+                    ?.items?.length || 0 + 1)
                 }
-                focused={newWorkConditionStatement.title ? true : false}
+                disabled
+                focused={true}
                 fullWidth
               />
             </TableCell>
@@ -529,9 +432,7 @@ const WorkConditionStatementTable = (props: Props) => {
                 onChange={(e) =>
                   setNewWorkConditionStatement({
                     ...newWorkConditionStatement,
-                    amountProvidedByContractor: parseInt(
-                      e.target.value
-                    ),
+                    amountProvidedByContractor: parseInt(e.target.value),
                   })
                 }
                 value={
@@ -559,7 +460,20 @@ const WorkConditionStatementTable = (props: Props) => {
               />
             </TableCell>
             <TableCell>
-              <DateButton
+              <DatePicker
+                label="تاریخ"
+                onChange={(date) =>
+                  setNewWorkConditionStatement({
+                    ...newWorkConditionStatement,
+                    // @ts-ignore
+                    dateProvidedByContractor: date || new Date(),
+                  })
+                }
+                value={
+                    newWorkConditionStatement.dateProvidedByContractor
+                }
+              />
+              {/* <DateButton
                 label="تاریخ"
                 fontSize={"12px"}
                 setDate={(date) =>
@@ -571,69 +485,81 @@ const WorkConditionStatementTable = (props: Props) => {
                 }
                 direction="column"
                 date={newWorkConditionStatement.dateProvidedByContractor}
-              />
+              /> */}
             </TableCell>
+            {!props.isConsultant && (
+              <>
+                <TableCell>
+                  <FaTextField
+                    label="مبلغ"
+                    onChange={(e) =>
+                      setNewWorkConditionStatement({
+                        ...newWorkConditionStatement,
+                        amountConfirmedByConsultant: parseInt(e.target.value),
+                      })
+                    }
+                    InputLabelProps={{
+                      sx: {
+                        fontSize: "12px",
+                      },
+                    }}
+                    InputProps={{
+                      sx: {
+                        fontSize: "12px",
+                      },
+                    }}
+                    value={
+                      newWorkConditionStatement.amountConfirmedByConsultant
+                        ? newWorkConditionStatement.amountConfirmedByConsultant
+                        : ""
+                    }
+                    fullWidth
+                    focused={
+                      newWorkConditionStatement.amountConfirmedByConsultant
+                        ? true
+                        : false
+                    }
+                    type="number"
+                  />
+                </TableCell>
+                <TableCell>
+                  <DatePicker
+                    label="تاریخ"
+                    onChange={(date) =>
+                      setNewWorkConditionStatement({
+                        ...newWorkConditionStatement,
+                        // @ts-ignore
+                        dateConfirmedByConsultant: date || new Date(),
+                      })
+                    }
+                    value={
+                        newWorkConditionStatement.dateConfirmedByConsultant
+                    }
+                  />
+                  {/* <DateButton
+                    label="تاریخ"
+                    fontSize={"12px"}
+                    setDate={(date) =>
+                      setNewWorkConditionStatement({
+                        ...newWorkConditionStatement,
+                        // @ts-ignore
+                        dateConfirmedByConsultant: date || new Date(),
+                      })
+                    }
+                    direction="column"
+                    date={newWorkConditionStatement.dateConfirmedByConsultant}
+                  /> */}
+                </TableCell>
+              </>
+            )}
+
             <TableCell>
               <FaTextField
                 label="مبلغ"
                 onChange={(e) =>
                   setNewWorkConditionStatement({
                     ...newWorkConditionStatement,
-                    amountConfirmedByConsultant: parseInt(
-                      e.target.value
-                    ),
-                  })
-                }
-                InputLabelProps={{
-                  sx: {
-                    fontSize: "12px",
-                  },
-                }}
-                InputProps={{
-                  sx: {
-                    fontSize: "12px",
-                  },
-                }}
-                value={
-                  newWorkConditionStatement.amountConfirmedByConsultant
-                    ? newWorkConditionStatement.amountConfirmedByConsultant
-                    : ""
-                }
-                fullWidth
-                focused={
-                  newWorkConditionStatement.amountConfirmedByConsultant
-                    ? true
-                    : false
-                }
-                type="number"
-              />
-            </TableCell>
-            <TableCell>
-              <DateButton
-                label="تاریخ"
-                fontSize={"12px"}
-                setDate={(date) =>
-                  setNewWorkConditionStatement({
-                    ...newWorkConditionStatement,
-                    // @ts-ignore
-                    dateConfirmedByConsultant: date || new Date(),
-                  })
-                }
-                direction="column"
-                date={
-                  newWorkConditionStatement.dateConfirmedByConsultant
-                }
-              />
-            </TableCell>
-            <TableCell>
-              <FaTextField
-                label="مبلغ"
-                onChange={(e) =>
-                  setNewWorkConditionStatement({
-                    ...newWorkConditionStatement,
-                    amountApprovedByEmployer: parseInt(
-                      e.target.value
-                    ),
+                    amountApprovedByEmployer: parseInt(e.target.value),
                   })
                 }
                 value={
@@ -661,7 +587,20 @@ const WorkConditionStatementTable = (props: Props) => {
               />
             </TableCell>
             <TableCell>
-              <DateButton
+              <DatePicker
+                label="تاریخ"
+                onChange={(date) =>
+                  setNewWorkConditionStatement({
+                    ...newWorkConditionStatement,
+                    // @ts-ignore
+                    dateApprovedByEmployer: date || new Date(),
+                  })
+                }
+                value={
+                  newWorkConditionStatement.dateApprovedByEmployer
+                }
+              />
+              {/* <DateButton
                 label="تاریخ"
                 fontSize={"12px"}
                 setDate={(date) =>
@@ -673,7 +612,7 @@ const WorkConditionStatementTable = (props: Props) => {
                 }
                 direction="column"
                 date={newWorkConditionStatement.dateApprovedByEmployer}
-              />
+              /> */}
             </TableCell>
             <TableCell>
               <FaTextField
@@ -690,9 +629,7 @@ const WorkConditionStatementTable = (props: Props) => {
                     : ""
                 }
                 fullWidth
-                focused={
-                  newWorkConditionStatement.amountPaid ? true : false
-                }
+                focused={newWorkConditionStatement.amountPaid ? true : false}
                 InputLabelProps={{
                   sx: {
                     fontSize: "12px",
@@ -707,7 +644,20 @@ const WorkConditionStatementTable = (props: Props) => {
               />
             </TableCell>
             <TableCell>
-              <DateButton
+              <DatePicker
+                label="تاریخ"
+                onChange={(date) =>
+                  setNewWorkConditionStatement({
+                    ...newWorkConditionStatement,
+                    // @ts-ignore
+                    datePaid: date || new Date(),
+                  })
+                }
+                value={
+                  newWorkConditionStatement.datePaid
+                }
+              />
+              {/* <DateButton
                 label="تاریخ"
                 fontSize={"12px"}
                 setDate={(date) =>
@@ -719,7 +669,10 @@ const WorkConditionStatementTable = (props: Props) => {
                 }
                 direction="column"
                 date={newWorkConditionStatement.datePaid}
-              />
+              /> */}
+            </TableCell>
+            <TableCell>
+              <FileBox />
             </TableCell>
             <TableCell>
               <Box
@@ -734,8 +687,7 @@ const WorkConditionStatementTable = (props: Props) => {
                     onClick={() => {
                       void editWorkConditionStatement({
                         variables: {
-                          workConditionStatementTableId:
-                            tableId && tableId,
+                          workConditionStatementTableId: tableId && tableId,
                           amountApprovedByEmployer:
                             newWorkConditionStatement.amountApprovedByEmployer,
                           dateApprovedByEmployer:
@@ -744,8 +696,7 @@ const WorkConditionStatementTable = (props: Props) => {
                             newWorkConditionStatement.amountConfirmedByConsultant,
                           dateConfirmedByConsultant:
                             newWorkConditionStatement.dateConfirmedByConsultant,
-                          amountPaid:
-                            newWorkConditionStatement.amountPaid,
+                          amountPaid: newWorkConditionStatement.amountPaid,
                           datePaid: newWorkConditionStatement.datePaid,
                           amountProvidedByContractor:
                             newWorkConditionStatement.amountProvidedByContractor,
@@ -753,10 +704,14 @@ const WorkConditionStatementTable = (props: Props) => {
                             newWorkConditionStatement.dateProvidedByContractor,
                           title: newWorkConditionStatement.title,
                           filledBy:
-                            data?.items[0]?.accuserDepartmentUserId ==
-                              user.id ||
-                            data?.items[0]?.accuserDepartmentUserId ==
-                              user.parentId
+                            data
+                              ?.workConditionStatementTable_getWorkConditionStatementTables
+                              .result?.items?.[0]?.contract
+                              ?.accuserDepartmentUserId == user.id ||
+                            data
+                              ?.workConditionStatementTable_getWorkConditionStatementTables
+                              .result?.items?.[0]?.contract
+                              ?.accuserDepartmentUserId == user.parentId
                               ? "ACCUSER"
                               : "ACCUSED",
                           id: newWorkConditionStatement.id,
@@ -780,10 +735,7 @@ const WorkConditionStatementTable = (props: Props) => {
                       width: "100%",
                     }}
                   >
-                    <FaTypography
-                      variant="body2"
-                      textAlign={"center"}
-                    >
+                    <FaTypography variant="body2" textAlign={"center"}>
                       ویرایش
                     </FaTypography>
                     <EditOutlined />
@@ -794,8 +746,7 @@ const WorkConditionStatementTable = (props: Props) => {
                       // if(handleEmptyFields()) return;
                       void addWorkConditionStatement({
                         variables: {
-                          workConditionStatementTableId:
-                            tableId && tableId,
+                          workConditionStatementTableId: tableId && tableId,
                           amountApprovedByEmployer:
                             newWorkConditionStatement.amountApprovedByEmployer,
                           dateApprovedByEmployer:
@@ -804,19 +755,27 @@ const WorkConditionStatementTable = (props: Props) => {
                             newWorkConditionStatement.amountConfirmedByConsultant,
                           dateConfirmedByConsultant:
                             newWorkConditionStatement.dateConfirmedByConsultant,
-                          amountPaid:
-                            newWorkConditionStatement.amountPaid,
+                          amountPaid: newWorkConditionStatement.amountPaid,
                           datePaid: newWorkConditionStatement.datePaid,
                           amountProvidedByContractor:
                             newWorkConditionStatement.amountProvidedByContractor,
                           dateProvidedByContractor:
                             newWorkConditionStatement.dateProvidedByContractor,
-                          title: newWorkConditionStatement.title,
+                          title:
+                            "صورت وضعیت" +
+                            " " +
+                            (workStatements
+                              ?.workConditionStatement_getWorkConditionStatements
+                              ?.result?.items?.length || 0 + 1),
                           filledBy:
-                            data?.items[0]?.accuserDepartmentUserId ==
-                              user.id ||
-                            data?.items[0]?.accuserDepartmentUserId ==
-                              user.parentId
+                            data
+                              ?.workConditionStatementTable_getWorkConditionStatementTables
+                              .result?.items?.[0]?.contract
+                              ?.accuserDepartmentUserId == user.id ||
+                            data
+                              ?.workConditionStatementTable_getWorkConditionStatementTables
+                              .result?.items?.[0]?.contract
+                              ?.accuserDepartmentUserId == user.parentId
                               ? "ACCUSER"
                               : "ACCUSED",
                         },
@@ -829,7 +788,7 @@ const WorkConditionStatementTable = (props: Props) => {
                           setPageError("");
                         })
                         .catch(() => {
-                          alert("خطا در افزودن قسط");
+                          alert("خطا در افزودن پیش پرداخت");
                         });
                     }}
                     sx={{
@@ -844,10 +803,7 @@ const WorkConditionStatementTable = (props: Props) => {
                     }}
                   >
                     {/* {tableId} */}
-                    <FaTypography
-                      variant="body2"
-                      textAlign={"center"}
-                    >
+                    <FaTypography variant="body2" textAlign={"center"}>
                       ثبت
                     </FaTypography>
                     <BsPlusCircle />
@@ -856,24 +812,419 @@ const WorkConditionStatementTable = (props: Props) => {
               </Box>
             </TableCell>
           </TableRow>
-          {/* {tableId} */}
-          {pageError && (
-            <Typography color={Red}>{pageError}</Typography>
-          )}
-          {WorkConditionStatement &&
-            WorkConditionStatement.length > 0 &&
-            WorkConditionStatement.map((WorkConditionStatement) => (
+          {pageError && <Typography color={Red}>{pageError}</Typography>}
+          {workStatements?.workConditionStatement_getWorkConditionStatements.result?.items?.map(
+            (WorkConditionStatement) => (
               <WorkConditionStatementCard
-                WorkConditionStatement={WorkConditionStatement}
+                WorkConditionStatement={{
+                  amountApprovedByEmployer:
+                    WorkConditionStatement.amountApprovedByEmployer,
+                  amountConfirmedByConsultant:
+                    WorkConditionStatement.amountConfirmedByConsultant,
+                  amountPaid: WorkConditionStatement.amountPaid,
+                  amountProvidedByContractor:
+                    WorkConditionStatement.amountProvidedByContractor,
+                  dateApprovedByEmployer:
+                    WorkConditionStatement.dateApprovedByEmployer,
+                  dateConfirmedByConsultant:
+                    WorkConditionStatement.dateConfirmedByConsultant,
+                  datePaid: WorkConditionStatement.datePaid,
+                  dateProvidedByContractor:
+                    WorkConditionStatement.dateProvidedByContractor,
+                  filledBy: WorkConditionStatement.filledBy,
+                  operationPeriodEndDate:
+                    WorkConditionStatement.operationPeriodEndDate,
+                  operationPeriodStartDate:
+                    WorkConditionStatement.operationPeriodStartDate,
+                  title: WorkConditionStatement.title || "",
+                  id: WorkConditionStatement.id,
+                  workConditionStatementTableId:
+                    WorkConditionStatement.workConditionStatementTableId,
+                }}
                 refetch={refetch}
                 setEditMode={setEditMode}
                 setNewWorkConditionStatement={setNewWorkConditionStatement}
                 key={WorkConditionStatement.id}
+                isConsultant={props.isConsultant}
                 setAddWorkConditionStatementPartModal={
                   setAddWorkConditionStatementPartModal
                 }
               />
-            ))}
+            )
+          )}
+          <TableRow>
+            <TableCell>
+              <FaTypography textAlign={"center"}>صورت وضعیت قطعی</FaTypography>
+            </TableCell>
+            <TableCell>
+              <FaTextField
+                label="مبلغ"
+                onChange={(e) =>
+                  setDefiniteWorkConditionStatement({
+                    ...DefiniteWorkConditionStatement,
+                    amountProvidedByContractor: parseInt(e.target.value),
+                  })
+                }
+                value={
+                  DefiniteWorkConditionStatement.amountProvidedByContractor
+                    ? DefiniteWorkConditionStatement.amountProvidedByContractor
+                    : ""
+                }
+                fullWidth
+                focused={
+                  DefiniteWorkConditionStatement.amountProvidedByContractor
+                    ? true
+                    : false
+                }
+                InputLabelProps={{
+                  sx: {
+                    fontSize: "12px",
+                  },
+                }}
+                InputProps={{
+                  sx: {
+                    fontSize: "12px",
+                  },
+                }}
+                type="number"
+              />
+            </TableCell>
+            <TableCell>
+              <DatePicker
+                label="تاریخ"
+                onChange={(date) =>
+                  setDefiniteWorkConditionStatement({
+                    ...DefiniteWorkConditionStatement,
+                    // @ts-ignore
+                    dateProvidedByContractor: date || new Date(),
+                  })
+                }
+                value={
+                    DefiniteWorkConditionStatement.dateProvidedByContractor
+                }
+              />
+              {/* <DateButton
+                label="تاریخ"
+                fontSize={"12px"}
+                setDate={(date) =>
+                  setDefiniteWorkConditionStatement({
+                    ...DefiniteWorkConditionStatement,
+                    // @ts-ignore
+                    dateProvidedByContractor: date || new Date(),
+                  })
+                }
+                direction="column"
+                date={DefiniteWorkConditionStatement.dateProvidedByContractor}
+              /> */}
+            </TableCell>
+            {!props.isConsultant && (
+              <>
+                <TableCell>
+                  <FaTextField
+                    label="مبلغ"
+                    onChange={(e) =>
+                      setDefiniteWorkConditionStatement({
+                        ...DefiniteWorkConditionStatement,
+                        amountConfirmedByConsultant: parseInt(e.target.value),
+                      })
+                    }
+                    InputLabelProps={{
+                      sx: {
+                        fontSize: "12px",
+                      },
+                    }}
+                    InputProps={{
+                      sx: {
+                        fontSize: "12px",
+                      },
+                    }}
+                    value={
+                      DefiniteWorkConditionStatement.amountConfirmedByConsultant
+                        ? DefiniteWorkConditionStatement.amountConfirmedByConsultant
+                        : ""
+                    }
+                    fullWidth
+                    focused={
+                      DefiniteWorkConditionStatement.amountConfirmedByConsultant
+                        ? true
+                        : false
+                    }
+                    type="number"
+                  />
+                </TableCell>
+                <TableCell>
+                  <DatePicker
+                    label="تاریخ"
+                    onChange={(date) =>
+                      setDefiniteWorkConditionStatement({
+                        ...DefiniteWorkConditionStatement,
+                        // @ts-ignore
+                        dateConfirmedByConsultant: date || new Date(),
+                      })
+                    }
+                    value={
+                        DefiniteWorkConditionStatement.dateConfirmedByConsultant
+                    }
+                  />
+                  {/* <DateButton
+                    label="تاریخ"
+                    fontSize={"12px"}
+                    setDate={(date) =>
+                      setDefiniteWorkConditionStatement({
+                        ...DefiniteWorkConditionStatement,
+                        // @ts-ignore
+                        dateConfirmedByConsultant: date || new Date(),
+                      })
+                    }
+                    direction="column"
+                    date={DefiniteWorkConditionStatement.dateConfirmedByConsultant}
+                  /> */}
+                </TableCell>
+              </>
+            )}
+
+            <TableCell>
+              <FaTextField
+                label="مبلغ"
+                onChange={(e) =>
+                  setDefiniteWorkConditionStatement({
+                    ...DefiniteWorkConditionStatement,
+                    amountApprovedByEmployer: parseInt(e.target.value),
+                  })
+                }
+                value={
+                  DefiniteWorkConditionStatement.amountApprovedByEmployer
+                    ? DefiniteWorkConditionStatement.amountApprovedByEmployer
+                    : ""
+                }
+                fullWidth
+                focused={
+                  DefiniteWorkConditionStatement.amountApprovedByEmployer
+                    ? true
+                    : false
+                }
+                InputLabelProps={{
+                  sx: {
+                    fontSize: "12px",
+                  },
+                }}
+                InputProps={{
+                  sx: {
+                    fontSize: "12px",
+                  },
+                }}
+                type="number"
+              />
+            </TableCell>
+            <TableCell>
+              <DatePicker
+                label="تاریخ"
+                onChange={(date) =>
+                  setDefiniteWorkConditionStatement({
+                    ...DefiniteWorkConditionStatement,
+                    // @ts-ignore
+                    dateApprovedByEmployer: date || new Date(),
+                  })
+                }
+                value={
+                    DefiniteWorkConditionStatement.dateApprovedByEmployer
+                  
+                }
+              />
+              {/* <DateButton
+                label="تاریخ"
+                fontSize={"12px"}
+                setDate={(date) =>
+                  setDefiniteWorkConditionStatement({
+                    ...DefiniteWorkConditionStatement,
+                    // @ts-ignore
+                    dateApprovedByEmployer: date || new Date(),
+                  })
+                }
+                direction="column"
+                date={DefiniteWorkConditionStatement.dateApprovedByEmployer}
+              /> */}
+            </TableCell>
+            <TableCell>
+              <FaTextField
+                label="مبلغ"
+                onChange={(e) =>
+                  setDefiniteWorkConditionStatement({
+                    ...DefiniteWorkConditionStatement,
+                    amountPaid: parseInt(e.target.value),
+                  })
+                }
+                value={
+                  DefiniteWorkConditionStatement.amountPaid
+                    ? DefiniteWorkConditionStatement.amountPaid
+                    : ""
+                }
+                fullWidth
+                focused={
+                  DefiniteWorkConditionStatement.amountPaid ? true : false
+                }
+                InputLabelProps={{
+                  sx: {
+                    fontSize: "12px",
+                  },
+                }}
+                InputProps={{
+                  sx: {
+                    fontSize: "12px",
+                  },
+                }}
+                type="number"
+              />
+            </TableCell>
+            <TableCell>
+              <DatePicker
+                label="تاریخ"
+                onChange={(date) =>
+                  setDefiniteWorkConditionStatement({
+                    ...DefiniteWorkConditionStatement,
+                    // @ts-ignore
+                    datePaid: date || new Date(),
+                  })
+                }
+                value={DefiniteWorkConditionStatement.datePaid }
+              />
+            </TableCell>
+            <TableCell>
+              <FileBox  />
+            </TableCell>
+            <TableCell>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  gap: "1rem",
+                }}
+              >
+                {editMode ? (
+                  <IconButton
+                    onClick={() => {
+                      void editWorkConditionStatement({
+                        variables: {
+                          workConditionStatementTableId: tableId && tableId,
+                          amountApprovedByEmployer:
+                            DefiniteWorkConditionStatement.amountApprovedByEmployer,
+                          dateApprovedByEmployer:
+                            DefiniteWorkConditionStatement.dateApprovedByEmployer,
+                          amountConfirmedByConsultant:
+                            DefiniteWorkConditionStatement.amountConfirmedByConsultant,
+                          dateConfirmedByConsultant:
+                            DefiniteWorkConditionStatement.dateConfirmedByConsultant,
+                          amountPaid: DefiniteWorkConditionStatement.amountPaid,
+                          datePaid: DefiniteWorkConditionStatement.datePaid,
+                          amountProvidedByContractor:
+                            DefiniteWorkConditionStatement.amountProvidedByContractor,
+                          dateProvidedByContractor:
+                            DefiniteWorkConditionStatement.dateProvidedByContractor,
+                          title: "صورت وضعیت قطعی",
+                          filledBy:
+                            data
+                              ?.workConditionStatementTable_getWorkConditionStatementTables
+                              .result?.items?.[0]?.contract
+                              ?.accuserDepartmentUserId == user.id ||
+                            data
+                              ?.workConditionStatementTable_getWorkConditionStatementTables
+                              .result?.items?.[0]?.contract
+                              ?.accuserDepartmentUserId == user.parentId
+                              ? "ACCUSER"
+                              : "ACCUSED",
+                          id: newWorkConditionStatement.id,
+                        },
+                      }).then(() => {
+                        void refetch();
+                        setEditMode(false);
+                        setNewWorkConditionStatement(
+                          {} as WorkConditionStatement
+                        );
+                      });
+                    }}
+                    sx={{
+                      borderRadius: "10px",
+                      background: primary,
+                      color: secondaryDark,
+                      "&:hover": {
+                        background: primaryLight,
+                      },
+                      gap: "0.5rem",
+                      width: "100%",
+                    }}
+                  >
+                    <FaTypography variant="body2" textAlign={"center"}>
+                      ویرایش
+                    </FaTypography>
+                    <EditOutlined />
+                  </IconButton>
+                ) : (
+                  <IconButton
+                    onClick={() => {
+                      // if(handleEmptyFields()) return;
+                      void addWorkConditionStatement({
+                        variables: {
+                          workConditionStatementTableId: tableId && tableId,
+                          amountApprovedByEmployer:
+                            DefiniteWorkConditionStatement.amountApprovedByEmployer,
+                          dateApprovedByEmployer:
+                            DefiniteWorkConditionStatement.dateApprovedByEmployer,
+                          amountConfirmedByConsultant:
+                            DefiniteWorkConditionStatement.amountConfirmedByConsultant,
+                          dateConfirmedByConsultant:
+                            DefiniteWorkConditionStatement.dateConfirmedByConsultant,
+                          amountPaid: DefiniteWorkConditionStatement.amountPaid,
+                          datePaid: DefiniteWorkConditionStatement.datePaid,
+                          amountProvidedByContractor:
+                            DefiniteWorkConditionStatement.amountProvidedByContractor,
+                          dateProvidedByContractor:
+                            DefiniteWorkConditionStatement.dateProvidedByContractor,
+                          title: "صورت وضعیت قطعی",
+                          filledBy:
+                            data
+                              ?.workConditionStatementTable_getWorkConditionStatementTables
+                              .result?.items?.[0]?.contract
+                              ?.accuserDepartmentUserId == user.id ||
+                            data
+                              ?.workConditionStatementTable_getWorkConditionStatementTables
+                              .result?.items?.[0]?.contract
+                              ?.accuserDepartmentUserId == user.parentId
+                              ? "ACCUSER"
+                              : "ACCUSED",
+                        },
+                      })
+                        .then(() => {
+                          setDefiniteWorkConditionStatement(
+                            {} as WorkConditionStatement
+                          );
+                          void refetch();
+                          setPageError("");
+                        })
+                        .catch(() => {
+                          alert("خطا در افزودن پیش پرداخت");
+                        });
+                    }}
+                    sx={{
+                      borderRadius: "10px",
+                      background: primary,
+                      color: secondaryDark,
+                      "&:hover": {
+                        background: primaryLight,
+                      },
+                      gap: "0.5rem",
+                      width: "100%",
+                    }}
+                  >
+                    {/* {tableId} */}
+                    <FaTypography variant="body2" textAlign={"center"}>
+                      ثبت
+                    </FaTypography>
+                    <BsPlusCircle />
+                  </IconButton>
+                )}
+              </Box>
+            </TableCell>
+          </TableRow>
         </TableBody>
         <NewModal
           title="افزودن زیرمجموعه"
@@ -890,11 +1241,11 @@ const WorkConditionStatementTable = (props: Props) => {
         >
           <Box
             display={"grid"}
-            gridTemplateColumns={"1fr 1fr 1fr 1fr"}
+            gridTemplateColumns={"1fr"}
             gap={"1rem"}
             width={"100%"}
           >
-            <Box
+            {/* <Box
               display={"grid"}
               gridTemplateColumns={"1fr"}
               gap={"1rem"}
@@ -944,7 +1295,8 @@ const WorkConditionStatementTable = (props: Props) => {
                 }
                 date={
                   addWorkConditionStatementPartModal
-                    .WorkConditionStatementPart.dateProvidedByContractor
+                    .WorkConditionStatementPart
+                    .dateProvidedByContractor
                 }
               />
             </Box>
@@ -1001,7 +1353,8 @@ const WorkConditionStatementTable = (props: Props) => {
                 }
                 date={
                   addWorkConditionStatementPartModal
-                    .WorkConditionStatementPart.dateConfirmedByConsultant
+                    .WorkConditionStatementPart
+                    .dateConfirmedByConsultant
                 }
               />
             </Box>
@@ -1038,7 +1391,8 @@ const WorkConditionStatementTable = (props: Props) => {
                 }
                 value={
                   addWorkConditionStatementPartModal
-                    .WorkConditionStatementPart.amountApprovedByEmployer
+                    .WorkConditionStatementPart
+                    .amountApprovedByEmployer
                 }
                 fullWidth
                 type="number"
@@ -1060,10 +1414,10 @@ const WorkConditionStatementTable = (props: Props) => {
                     .WorkConditionStatementPart.dateApprovedByEmployer
                 }
               />
-            </Box>
+            </Box> */}
             <Box
               display={"grid"}
-              gridTemplateColumns={"1fr"}
+              gridTemplateColumns={"1fr 1fr"}
               gap={"1rem"}
               width={"100%"}
               gridColumn={"span 1"}
@@ -1074,7 +1428,7 @@ const WorkConditionStatementTable = (props: Props) => {
               }}
             >
               <FaTypography
-                gridColumn={"span 1"}
+                gridColumn={"span 2"}
                 textAlign={"center"}
                 sx={
                   {
@@ -1096,13 +1450,31 @@ const WorkConditionStatementTable = (props: Props) => {
                   })
                 }
                 value={
-                  addWorkConditionStatementPartModal
-                    .WorkConditionStatementPart.amountPaid
+                  addWorkConditionStatementPartModal.WorkConditionStatementPart
+                    .amountPaid
                 }
                 fullWidth
                 type="number"
               />
-              <DateButton
+              <DatePicker
+                label="تاریخ"
+                onChange={(date) =>
+                  setAddWorkConditionStatementPartModal({
+                    ...addWorkConditionStatementPartModal,
+                    WorkConditionStatementPart: {
+                      ...addWorkConditionStatementPartModal.WorkConditionStatementPart,
+                      // @ts-ignore
+                      datePaid: date || new Date(),
+                    },
+                  })
+                }
+                value={
+                  new Date(
+                    addWorkConditionStatementPartModal.WorkConditionStatementPart.datePaid
+                  ) || ""
+                }
+              />
+              {/* <DateButton
                 label="تاریخ پرداخت"
                 setDate={(date) =>
                   setAddWorkConditionStatementPartModal({
@@ -1115,10 +1487,10 @@ const WorkConditionStatementTable = (props: Props) => {
                   })
                 }
                 date={
-                  addWorkConditionStatementPartModal
-                    .WorkConditionStatementPart.datePaid
+                  addWorkConditionStatementPartModal.WorkConditionStatementPart
+                    .datePaid
                 }
-              />
+              /> */}
             </Box>
             <Box
               sx={{
@@ -1135,8 +1507,7 @@ const WorkConditionStatementTable = (props: Props) => {
                         addWorkConditionStatementPartModal.WorkConditionStatementId,
                       amountApprovedByEmployer:
                         addWorkConditionStatementPartModal
-                          .WorkConditionStatementPart
-                          .amountApprovedByEmployer,
+                          .WorkConditionStatementPart.amountApprovedByEmployer,
                       amountConfirmedByConsultant:
                         addWorkConditionStatementPartModal
                           .WorkConditionStatementPart
@@ -1150,38 +1521,37 @@ const WorkConditionStatementTable = (props: Props) => {
                           .amountProvidedByContractor,
                       dateApprovedByEmployer:
                         addWorkConditionStatementPartModal
-                          .WorkConditionStatementPart
-                          .dateApprovedByEmployer,
+                          .WorkConditionStatementPart.dateApprovedByEmployer,
                       dateConfirmedByConsultant:
                         addWorkConditionStatementPartModal
-                          .WorkConditionStatementPart
-                          .dateConfirmedByConsultant,
+                          .WorkConditionStatementPart.dateConfirmedByConsultant,
                       datePaid:
                         addWorkConditionStatementPartModal
                           .WorkConditionStatementPart.datePaid,
                       dateProvidedByContractor:
                         addWorkConditionStatementPartModal
-                          .WorkConditionStatementPart
-                          .dateProvidedByContractor,
+                          .WorkConditionStatementPart.dateProvidedByContractor,
                       operationPeriodEndDate:
                         addWorkConditionStatementPartModal
-                          .WorkConditionStatementPart
-                          .operationPeriodEndDate,
+                          .WorkConditionStatementPart.operationPeriodEndDate,
                       operationPeriodStartDate:
                         addWorkConditionStatementPartModal
-                          .WorkConditionStatementPart
-                          .operationPeriodStartDate,
+                          .WorkConditionStatementPart.operationPeriodStartDate,
                       filledBy:
-                        data?.items[0]?.accuserDepartmentUserId ==
-                          user.id ||
-                        data?.items[0]?.accuserDepartmentUserId ==
-                          user.parentId
+                        data
+                          ?.workConditionStatementTable_getWorkConditionStatementTables
+                          .result?.items?.[0]?.contract
+                          ?.accuserDepartmentUserId == user.id ||
+                        data
+                          ?.workConditionStatementTable_getWorkConditionStatementTables
+                          .result?.items?.[0]?.contract
+                          ?.accuserDepartmentUserId == user.parentId
                           ? "ACCUSER"
                           : "ACCUSED",
                     },
                   })
                     .then((res) => {
-                      console.log("RES",res);
+                      console.log("RES", res);
                       alert("زیرمجموعه با موفقیت افزوده شد");
                       setAddWorkConditionStatementPartModal({
                         ...addWorkConditionStatementPartModal,
@@ -1189,7 +1559,7 @@ const WorkConditionStatementTable = (props: Props) => {
                           {} as WorkConditionStatementPart,
                         open: false,
                       });
-                      window.location.reload()
+                      window.location.reload();
                       void refetch();
                     })
                     .catch(() => {

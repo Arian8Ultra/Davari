@@ -1,0 +1,178 @@
+{
+  "provinces": [
+    {
+      "name": "East Azerbaijan",
+      "persian_name": "آذربایجان شرقی",
+      "capital": "Tabriz",
+      "capital_persian_name": "تبریز"
+    },
+    {
+      "name": "West Azerbaijan",
+      "persian_name": "آذربایجان غربی",
+      "capital": "Urmia",
+      "capital_persian_name": "ارومیه"
+    },
+    {
+      "name": "Ardabil",
+      "persian_name": "اردبیل",
+      "capital": "Ardabil",
+      "capital_persian_name": "اردبیل"
+    },
+    {
+      "name": "Isfahan",
+      "persian_name": "اصفهان",
+      "capital": "Isfahan",
+      "capital_persian_name": "اصفهان"
+    },
+    {
+      "name": "Ilam",
+      "persian_name": "ایلام",
+      "capital": "Ilam",
+      "capital_persian_name": "ایلام"
+    },
+    {
+      "name": "Bushehr",
+      "persian_name": "بوشهر",
+      "capital": "Bushehr",
+      "capital_persian_name": "بوشهر"
+    },
+    {
+      "name": "Tehran",
+      "persian_name": "تهران",
+      "capital": "Tehran",
+      "capital_persian_name": "تهران"
+    },
+    {
+      "name": "Chaharmahal and Bakhtiari",
+      "persian_name": "چهارمحال و بختیاری",
+      "capital": "Shahrekord",
+      "capital_persian_name": "شهرکرد"
+    },
+    {
+      "name": "South Khorasan",
+      "persian_name": "خراسان جنوبی",
+      "capital": "Birjand",
+      "capital_persian_name": "بیرجند"
+    },
+    {
+      "name": "Razavi Khorasan",
+      "persian_name": "خراسان رضوی",
+      "capital": "Mashhad",
+      "capital_persian_name": "مشهد"
+    },
+    {
+      "name": "North Khorasan",
+      "persian_name": "خراسان شمالی",
+      "capital": "Bojnourd",
+      "capital_persian_name": "بجنورد"
+    },
+    {
+      "name": "Khuzestan",
+      "persian_name": "خوزستان",
+      "capital": "Ahvaz",
+      "capital_persian_name": "اهواز"
+    },
+    {
+      "name": "Zanjan",
+      "persian_name": "زنجان",
+      "capital": "Zanjan",
+      "capital_persian_name": "زنجان"
+    },
+    {
+      "name": "Semnan",
+      "persian_name": "سمنان",
+      "capital": "Semnan",
+      "capital_persian_name": "سمنان"
+    },
+    {
+      "name": "Sistan and Baluchestan",
+      "persian_name": "سیستان و بلوچستان",
+      "capital": "Zahedan",
+      "capital_persian_name": "زاهدان"
+    },
+    {
+      "name": "Fars",
+      "persian_name": "فارس",
+      "capital": "Shiraz",
+      "capital_persian_name": "شیراز"
+    },
+    {
+      "name": "Qazvin",
+      "persian_name": "قزوین",
+      "capital": "Qazvin",
+      "capital_persian_name": "قزوین"
+    },
+    {
+      "name": "Qom",
+      "persian_name": "قم",
+      "capital": "Qom",
+      "capital_persian_name": "قم"
+    },
+    {
+      "name": "Kurdistan",
+      "persian_name": "کردستان",
+      "capital": "Sanandaj",
+      "capital_persian_name": "سنندج"
+    },
+    {
+      "name": "Kerman",
+      "persian_name": "کرمان",
+      "capital": "Kerman",
+      "capital_persian_name": "کرمان"
+    },
+    {
+      "name": "Kermanshah",
+      "persian_name": "کرمانشاه",
+      "capital": "Kermanshah",
+      "capital_persian_name": "کرمانشاه"
+    },
+    {
+      "name": "Kohgiluyeh and Boyer-Ahmad",
+      "persian_name": "کهگیلویه و بویراحمد",
+      "capital": "Yasuj",
+      "capital_persian_name": "یاسوج"
+    },
+    {
+      "name": "Golestan",
+      "persian_name": "گلستان",
+      "capital": "Gorgan",
+      "capital_persian_name": "گرگان"
+    },
+    {
+      "name": "Gilan",
+      "persian_name": "گیلان",
+      "capital": "Rasht",
+      "capital_persian_name": "رشت"
+    },
+    {
+      "name": "Lorestan",
+      "persian_name": "لرستان",
+      "capital": "Khorramabad",
+      "capital_persian_name": "خرم‌آباد"
+    },
+    {
+      "name": "Mazandaran",
+      "persian_name": "مازندران",
+      "capital": "Sari",
+      "capital_persian_name": "ساری"
+    },
+    {
+      "name": "Markazi",
+      "persian_name": "مرکزی",
+      "capital": "Arak",
+      "capital_persian_name": "اراک"
+    },
+    {
+      "name": "Hormozgan",
+      "persian_name": "هرمزگان",
+      "capital": "Bandar Abbas",
+      "capital_persian_name": "بندرعباس"
+    },
+    {
+      "name": "Hamedan",
+      "persian_name": "همدان",
+      "capital": "Hamedan",
+      "capital_persian_name": "همدان"
+    }
+  ]
+}
