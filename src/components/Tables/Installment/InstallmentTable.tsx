@@ -60,7 +60,7 @@ const InstallmentTable = (props: Props) => {
     contractId: string;
     complaintId: string;
   }>();
-  const user = useUserStore((state) => state.user);
+  const {user} = useUserStore();
   const [editMode, setEditMode] = React.useState<boolean>(false);
   const [amountError, setAmountError] = React.useState<boolean>(false);
   const [installments, setInstallments] = React.useState<Installment[]>([]);

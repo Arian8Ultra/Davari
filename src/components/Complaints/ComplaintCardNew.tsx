@@ -1785,7 +1785,7 @@ const ComplaintCardNew = (props: Props) => {
           }
         }
       case ComplaintStateStatus.UploadingDocumentsByAccused:
-        if (props.type == "accuser" || props.type == "accused") {
+        if (props.type == "accused") {
           return (
             <Box
               display={"grid"}
@@ -1854,7 +1854,7 @@ const ComplaintCardNew = (props: Props) => {
           }
         }
       case ComplaintStateStatus.UploadingDocumentsByAccuser:
-        if (props.type == "accuser" || props.type == "accused") {
+        if (props.type == "accuser") {
           return (
             <Box
               display={"grid"}

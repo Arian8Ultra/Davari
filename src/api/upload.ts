@@ -15,7 +15,7 @@ export async function UPLOAD_FILE({
   const localToken = localStorage.getItem("token");
 
   const response = await fetch(
-    "http://172.16.23.50:7030/api/upload/upload-file/",
+    "http://172.16.21.147:7030/api/upload/upload-file/",
     {
       method: "POST",
       headers: {
@@ -50,7 +50,7 @@ export async function UPLOAD_FILES({
   const localToken = localStorage.getItem("token");
 
   const response = await fetch(
-    "http://172.16.23.50:7030/api/upload/upload-file/",
+    "http://172.16.21.147:7030/api/upload/upload-file/",
     {
       method: "POST",
       headers: {

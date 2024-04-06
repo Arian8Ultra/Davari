@@ -23,10 +23,7 @@ import {
 import { useUserStore } from "../../../Context/UserStore";
 import UploadDocCard from "../../../components/Docs/UploadDocCard";
 import { getComplaintStateWithEnum } from "../../../functions/ComplaintStatesFunc";
-import {
-  ComplaintStateStatus,
-  TargetType
-} from "../../../gql/graphql";
+import { ComplaintStateStatus, TargetType } from "../../../gql/graphql";
 import { primary, secondary } from "../../../theme/color";
 
 const UploadDocs = () => {
@@ -303,9 +300,20 @@ const UploadDocs = () => {
                   variables: {
                     input: {
                       id: parseInt(complaintId || "") || 0,
-                      complaintStateId: getComplaintStateWithEnum(
-                        ComplaintStateStatus.ReviewingCaseByCaseExpert
-                      ).id,
+                      complaintStateId:
+                        user.id ==
+                        AccuserData?.user_getUsers.result?.items?.[0].id
+                          ? getComplaintStateWithEnum(
+                              ComplaintStateStatus.UploadingDocumentsByAccused
+                            ).id
+                          : user.parentId ==
+                            AccuserData?.user_getUsers.result?.items?.[0].id
+                          ? getComplaintStateWithEnum(
+                              ComplaintStateStatus.UploadingDocumentsByAccused
+                            ).id
+                          : getComplaintStateWithEnum(
+                              ComplaintStateStatus.ReviewingCaseByCaseExpert
+                            ).id,
                     },
                   },
                   onCompleted(data) {

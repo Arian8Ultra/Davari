@@ -986,8 +986,12 @@ const ArgumentModal = (props: Props) => {
                     variables: {
                       input: {
                         id: props.argumentId,
-                        accuserAnswerToAccusedResponse:
-                          Argument?.accusedResponse,
+                        expertOpinion: Argument?.expertOpinion,
+                        expertVerdict: Argument?.expertVerdict,
+                        netMailRoomExpertApprovedAmount:
+                          Argument.netMailRoomExpertApprovedAmount,
+                        grossMailRoomExpertApprovedAmount:
+                          Argument.grossMailRoomExpertApprovedAmount,
                       },
                     },
                   });
