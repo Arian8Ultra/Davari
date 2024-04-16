@@ -513,6 +513,132 @@ export const DeleteCorrectionRequests = gql`
   }
 `;
 
+export const SendArbitrationRejectionSMS = gql`
+  mutation SendArbitrationRejectionSMS($complaintId: Int!) {
+    sms_sendArbitrationRejectionSMS(complaintId: $complaintId) {
+      code
+      value
+    }
+  }
+`;
+
+export const SendAssignToExpertSMS = gql`
+  mutation SendAssignToExpertSMS($complaintId: Int!) {
+    sms_sendAssignToExpertSMS(complaintId: $complaintId) {
+      code
+      value
+    }
+  }
+`;
+
+export const SendComplaintGotCancelledSMS = gql`
+  mutation SendComplaintGotCancelledSMS($complaintId: Int!) {
+    sms_sendComplaintGotCancelledSMS(complaintId: $complaintId) {
+      code
+      value
+    }
+  }
+`;
+
+export const SendDidNotMakeFirstPaymentSMS = gql`
+  mutation SendDidNotMakeFirstPaymentSMS($complaintId: Int!) {
+    sms_sendDidNotMakeFirstPaymentSMS(complaintId: $complaintId) {
+      code
+      value
+    }
+  }
+`;
+
+export const SendComplaintCorrectionRequestSMS = gql`
+  mutation SendComplaintCorrectionRequestSMS(
+    $complaintId: Int!
+    $receiverId: String!
+  ) {
+    sms_sendComplaintCorrectionRequestSMS(
+      complaintId: $complaintId
+      receiverId: $receiverId
+    ) {
+      code
+      value
+    }
+  }
+`;
+
+export const SendAccusedDidNotRespondSMS = gql`
+  mutation SendAccusedDidNotRespondSMS($complaintId: Int!) {
+    sms_sendAccusedDidNotRespondSMS(complaintId: $complaintId) {
+      code
+      value
+    }
+  }
+`;
+
+export const SendSecondPaymentAnnouncementSMS = gql`
+  mutation SendSecondPaymentAnnouncementSMS($complaintId: Int!) {
+    sms_sendSecondPaymentAnnouncementSMS(complaintId: $complaintId) {
+      code
+      value
+    }
+  }
+`;
+
+export const SendViewVerdictSMS = gql`
+  mutation SendViewVerdictSMS($complaintId: Int!) {
+    sms_sendViewVerdictSMS(complaintId: $complaintId) {
+      code
+      value
+    }
+  }
+`;
+
+export const SendLetterSentToMinistersCouncilSMS = gql`
+  mutation SendLetterSentToMinistersCouncilSMS($complaintId: Int!) {
+    sms_sendLetterSentToMinistersCouncilSMS(complaintId: $complaintId) {
+      code
+      value
+    }
+  }
+`;
+
+export const SendReceiveAnswerFromMinistersCouncilSMS = gql`
+  mutation SendReceiveAnswerFromMinistersCouncilSMS($complaintId: Int!) {
+    sms_sendReceiveAnswerFromMinistersCouncilSMS(complaintId: $complaintId) {
+      code
+      value
+    }
+  }
+`;
+
+export const SetFirstAndSecondPaymentCost = gql`
+  mutation SetFirstAndSecondPaymentCost($complaintId: Int!) {
+    complaint_setFirstAndSecondPaymentCost(complaintId: $complaintId) {
+      code
+      value
+    }
+  }
+`;
+
+export const GenerateComplaintReport = gql`
+  mutation GenerateComplaintReport($input: ComplaintReportDtoInput!) {
+    test_generateComplaintReport(input: $input) 
+  }
+`;
+
+export const GenerateFulfilledFirstPaymentComplaintsList = gql`
+  mutation GenerateFulfilledFirstPaymentComplaintsList($userId: String!) {
+    test_generateFulfilledFirstPaymentComplaintsList(userId: $userId) 
+  }
+`;
+
+
+export const SendComplaintAddedSMS = gql`
+  mutation SendComplaintAddedSMS($complaintId: Int!) {
+    sms_sendComplaintAddedSMS(complaintId: $complaintId) {
+      code
+      value
+    }
+  }
+`;
 // export const test = gql `
 // mutation {
 //   adjustmentStatement_addAdjustmentStatement(input: {

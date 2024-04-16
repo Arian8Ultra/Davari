@@ -19,6 +19,8 @@ const cacheRtl = createCache({
   stylisPlugins: [prefixer, rtlPlugin],
   prepend: true,
 });
+
+
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <StyledEngineProvider injectFirst>

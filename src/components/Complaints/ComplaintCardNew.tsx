@@ -8,7 +8,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { useMutation, useQuery } from "@apollo/client";
-import { FileOpenOutlined, Pinch, Star } from "@mui/icons-material";
+import { FileOpenOutlined } from "@mui/icons-material";
 import {
   Autocomplete,
   Box,
@@ -25,11 +25,7 @@ import {
 } from "@mui/material";
 import { grey, red } from "@mui/material/colors";
 import { useState } from "react";
-import {
-  BsCloudUploadFill,
-  BsExclamation,
-  BsExclamationCircle,
-} from "react-icons/bs";
+import { BsCloudUploadFill, BsExclamation } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import {
   ComplaintState,
@@ -37,6 +33,9 @@ import {
   ResponsibleUserType,
   useAddComplaintFileMutationMutation,
   useGetFileFullLazyQuery,
+  useSendAssignToExpertSmsMutation,
+  useSendComplaintGotCancelledSmsMutation,
+  useUpdateComplaintFullMutation,
 } from "../../../generated-types";
 import { useUserStore } from "../../Context/UserStore";
 import { DELETE_COMPLAINT } from "../../GraphQL/Complaints/Mutations";
@@ -48,7 +47,6 @@ import {
 import { UPLOAD_FILE } from "../../api/upload";
 import { getComplaintStateWithEnum } from "../../functions/ComplaintStatesFunc";
 import { convertToPersianDigits } from "../../functions/Functions";
-import { UpdateComplaintDocument } from "../../gql/graphql";
 import { User } from "../../static/Types";
 import {
   Green,
@@ -61,10 +59,11 @@ import {
   primaryLightTransparent,
   secondary,
   secondaryDark,
-  secondaryPurple,
 } from "../../theme/color";
 import FileBox from "../FileBox";
 import NewModal from "../Modals";
+import TextInput from "../TextInput";
+import router from "../../Routes/Router";
 interface Props {
   id: number;
   trackingCode?: string;
@@ -110,18 +109,27 @@ const ComplaintCardNew = (props: Props) => {
     borderRadius: "0.5rem",
   };
 
+  const [sendAssignToExpertSMS] = useSendAssignToExpertSmsMutation({
+    variables: {
+      complaintId: props.id,
+    },
+  });
+
   const [assignedUser, setAssignedUser] = useState<{
     fullName: string;
     id: string;
   }>();
   const [departmentsUsers, setDepartmentsUsers] = useState<User[]>([]);
-  const [updateComplaint] = useMutation(UpdateComplaintDocument);
+  const [expertsCouncilPaymentCost, setExpertsCouncilPaymentCost] =
+    useState<number>();
+  const [updateComplaint] = useUpdateComplaintFullMutation();
   const [deleteComplaint] = useMutation(DELETE_COMPLAINT, {
     variables: {
       id: props.id,
     },
     onCompleted() {
       props.refetch && props.refetch();
+      void sendComplaintGotCancelledSMS();
     },
   });
 
@@ -180,6 +188,12 @@ const ComplaintCardNew = (props: Props) => {
 
   const [addFile] = useAddComplaintFileMutationMutation();
   const [getFile] = useGetFileFullLazyQuery();
+  const [sendComplaintGotCancelledSMS] =
+    useSendComplaintGotCancelledSmsMutation({
+      variables: {
+        complaintId: props.id,
+      },
+    });
 
   const buttons = () => {
     switch (props.state) {
@@ -1405,10 +1419,12 @@ const ComplaintCardNew = (props: Props) => {
                   );
                   void updateComplaint({
                     variables: {
-                      complaintStateId: getComplaintStateWithEnum(
-                        ComplaintStateStatus.WaitingForExpertsCouncilPayment
-                      ).id,
-                      id: props.id,
+                      input: {
+                        complaintStateId: getComplaintStateWithEnum(
+                          ComplaintStateStatus.WaitingForExpertsCouncilPayment
+                        ).id,
+                        id: props.id,
+                      },
                     },
                   });
                 }}
@@ -1485,7 +1501,7 @@ const ComplaintCardNew = (props: Props) => {
               gap={"6rem"}
             >
               <div className=""></div>
-              {/* <Button
+              <Button
                 sx={{
                   borderRadius: "0.5rem",
                   backgroundColor: primaryDark,
@@ -1496,11 +1512,13 @@ const ComplaintCardNew = (props: Props) => {
                   },
                 }}
                 onClick={() => {
-                  navigate(`/determiningCaseExpert/${props.id}`);
+                  navigate(
+                    `/signUp/determiningCaseExpert/newUser/${props.id || ""}`
+                  );
                 }}
               >
                 تعیین کارشناس پرونده
-              </Button> */}
+              </Button>
             </Box>
           );
         } else {
@@ -1641,10 +1659,13 @@ const ComplaintCardNew = (props: Props) => {
                               ) {
                                 void updateComplaint({
                                   variables: {
-                                    id: props.id,
-                                    complaintStateId: getComplaintStateWithEnum(
-                                      ComplaintStateStatus.RequestingDocuments
-                                    ).id,
+                                    input: {
+                                      id: props.id,
+                                      complaintStateId:
+                                        getComplaintStateWithEnum(
+                                          ComplaintStateStatus.RequestingDocuments
+                                        ).id,
+                                    },
                                   },
                                   onCompleted(data, clientOptions) {
                                     props.refetch && props.refetch();
@@ -2403,6 +2424,208 @@ const ComplaintCardNew = (props: Props) => {
             break;
           }
         }
+      case ComplaintStateStatus.WaitingForDeterminingExpertsCouncilPayment:
+        if (props.type === "chief" || props.type === "mainRoomExpert") {
+          return (
+            <Box
+              display={"grid"}
+              gridTemplateColumns={"repeat(2,1fr)"}
+              mt={"1rem"}
+              gap={"6rem"}
+            >
+              <TextInput
+                variant="outlined"
+                label="مبلغ هزینه کارشناسی"
+                value={expertsCouncilPaymentCost}
+                onChange={(e) => {
+                  setExpertsCouncilPaymentCost(parseInt(e.target.value) || 0);
+                }}
+                InputProps={{
+                  endAdornment: "ریال",
+                }}
+              />
+
+              <Button
+                sx={{
+                  borderRadius: "0.5rem",
+                  backgroundColor: primaryDark,
+                  color: "white",
+                  "&:hover": {
+                    backgroundColor: primary,
+                    color: "white",
+                  },
+                }}
+                onClick={() => {
+                  void updateComplaint({
+                    variables: {
+                      input: {
+                        id: props.id,
+                        expertArbitrationCost: expertsCouncilPaymentCost,
+                        complaintStateId: getComplaintStateWithEnum(
+                          ComplaintStateStatus.WaitingForExpertsCouncilPayment
+                        ).id,
+                      },
+                    },
+                  });
+                }}
+              >
+                تایید مبلغ
+              </Button>
+            </Box>
+          );
+        } else {
+          if (
+            user.parentId == props.acusserId ||
+            user.parentId == props.acusser ||
+            user.id == props.acusserId ||
+            user.id == props.acusser
+          )
+            return (
+              <Box
+                display={"grid"}
+                gridTemplateColumns={"repeat(2,1fr)"}
+                mt={"1rem"}
+                gap={"6rem"}
+              >
+                <Button
+                  sx={{
+                    borderRadius: "0.5rem",
+                    backgroundColor: Red,
+                    color: "white",
+                    "&:hover": {
+                      backgroundColor: red[100],
+                      color: Red,
+                    },
+                  }}
+                  onClick={() => {
+                    const agree = confirm(
+                      "آیا از انصراف از این درخواست داوری مطمئن هستید؟"
+                    );
+                    if (agree) {
+                      void deleteComplaint();
+                    }
+                  }}
+                >
+                  انصراف از درخواست داوری
+                </Button>
+              </Box>
+            );
+          else {
+            break;
+          }
+        }
+
+      case ComplaintStateStatus.WaitingForExpertsCouncilPayment:
+        if (props.type === "accuser") {
+          return (
+            <Box
+              display={"grid"}
+              gridTemplateColumns={"repeat(2,1fr)"}
+              mt={"1rem"}
+              gap={"6rem"}
+            >
+              <div className=""></div>
+
+              <Button
+                sx={{
+                  borderRadius: "0.5rem",
+                  backgroundColor: primaryDark,
+                  color: "white",
+                  "&:hover": {
+                    backgroundColor: primary,
+                    color: "white",
+                  },
+                }}
+                onClick={() => {
+                  void updateComplaint({
+                    variables: {
+                      input: {
+                        id: props.id,
+                        // expertArbitrationCost: expertsCouncilPaymentCost,
+                        complaintStateId: getComplaintStateWithEnum(
+                          ComplaintStateStatus.DeterminingCaseExpert
+                        ).id,
+                      },
+                    },
+                  });
+                }}
+              >
+                پرداخت هزینه کارشناسی
+              </Button>
+            </Box>
+          );
+        } else {
+          if (
+            user.parentId == props.acusserId ||
+            user.parentId == props.acusser ||
+            user.id == props.acusserId ||
+            user.id == props.acusser
+          )
+            return (
+              <Box
+                display={"grid"}
+                gridTemplateColumns={"repeat(2,1fr)"}
+                mt={"1rem"}
+                gap={"6rem"}
+              >
+                <Button
+                  sx={{
+                    borderRadius: "0.5rem",
+                    backgroundColor: Red,
+                    color: "white",
+                    "&:hover": {
+                      backgroundColor: red[100],
+                      color: Red,
+                    },
+                  }}
+                  onClick={() => {
+                    const agree = confirm(
+                      "آیا از انصراف از این درخواست داوری مطمئن هستید؟"
+                    );
+                    if (agree) {
+                      void deleteComplaint();
+                    }
+                  }}
+                >
+                  انصراف از درخواست داوری
+                </Button>
+              </Box>
+            );
+          else {
+            break;
+          }
+        }
+
+        // case getComplaintStateWithEnum(ComplaintStateStatus.DeterminingCaseExpert):
+        return (
+          <Box
+            display={"grid"}
+            gridTemplateColumns={"repeat(2,1fr)"}
+            mt={"1rem"}
+            gap={"6rem"}
+          >
+            <div className=""></div>
+
+            <Button
+              sx={{
+                borderRadius: "0.5rem",
+                backgroundColor: primaryDark,
+                color: "white",
+                "&:hover": {
+                  backgroundColor: primary,
+                  color: "white",
+                },
+              }}
+              onClick={() => {
+                navigate(
+                  `/signUp/determiningCaseExpert/newUser/${props.id || ""}`
+                );
+              }}
+            >
+              افزودن کارشناس
+            </Button>
+          </Box>
+        );
       case ComplaintStateStatus.ComplaintDetermined:
         if (props.type == "accuser" || props.type == "accused") {
           return (
@@ -3470,11 +3693,13 @@ const ComplaintCardNew = (props: Props) => {
                   ) {
                     void updateComplaint({
                       variables: {
-                        id: props.id,
-                        assignedUserId: assignedUser?.id,
-                        complaintStateId: getComplaintStateWithEnum(
-                          ComplaintStateStatus.CheckingForBeingConstructive
-                        ).id,
+                        input: {
+                          id: props.id,
+                          assignedUserId: assignedUser?.id,
+                          complaintStateId: getComplaintStateWithEnum(
+                            ComplaintStateStatus.CheckingForBeingConstructive
+                          ).id,
+                        },
                       },
 
                       onCompleted(data) {
@@ -3485,8 +3710,10 @@ const ComplaintCardNew = (props: Props) => {
                   } else {
                     void updateComplaint({
                       variables: {
-                        id: props.id,
-                        assignedUserId: assignedUser?.id,
+                        input: {
+                          id: props.id,
+                          assignedUserId: assignedUser?.id,
+                        },
                       },
 
                       onCompleted(data) {
@@ -3495,6 +3722,7 @@ const ComplaintCardNew = (props: Props) => {
                       },
                     });
                   }
+                  void sendAssignToExpertSMS();
                   setAddModal({
                     open: false,
                   });

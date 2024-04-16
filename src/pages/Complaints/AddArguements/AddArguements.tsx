@@ -32,6 +32,8 @@ import {
   useGetArgumentsWithFilterQuery,
   useGetComplaintStatesQuery,
   useGetNonFeasibleArgumentsLazyQuery,
+  useSendAccusedRespondedSmsMutation,
+  useSetFirstAndSecondPaymentCostMutation,
   useSmsComplaintAddedMutation,
 } from "../../../../generated-types";
 import { useUserStore } from "../../../Context/UserStore";
@@ -55,6 +57,7 @@ import {
   RegistrarType,
   SendAccusedRespondedSmsDocument,
   UpdateComplaintDocument,
+  UpdateComplaintFullDocument,
 } from "../../../gql/graphql";
 import NoAccess from "../../../layout/NoAccess";
 import { Argument } from "../../../static/Types";
@@ -101,13 +104,15 @@ const AddArgument = () => {
     argument: {} as ComplaintArgument,
   });
 
-  const [updateCompaint] = useMutation(UpdateComplaintDocument, {
+  const [updateCompaint] = useMutation(UpdateComplaintFullDocument, {
     variables: {
-      id: complaintIdInt || 0,
-      // error for the next line with status
-      complaintStateId: getComplaintStateWithEnum(
-        ComplaintStateStatus.WaitingForAccuserToApproveAccusedAnswers
-      ).id,
+      input: {
+        id: complaintIdInt || 0,
+        // error for the next line with status
+        complaintStateId: getComplaintStateWithEnum(
+          ComplaintStateStatus.WaitingForAccuserToApproveAccusedAnswers
+        ).id,
+      },
     },
     onCompleted(data) {
       console.log("state", states.AccuserApprovedArguments.cap);
@@ -146,6 +151,13 @@ const AddArgument = () => {
       id: complaintId ? parseInt(complaintId) : 0,
     },
   });
+
+  const [SetFirstAndSecondPaymentCost] =
+    useSetFirstAndSecondPaymentCostMutation({
+      variables: {
+        complaintId: complaintId ? parseInt(complaintId) : 0,
+      },
+    });
 
   const { data, loading, refetch } = useGetArgumentsWithFilterQuery({
     variables: {
@@ -261,6 +273,11 @@ const AddArgument = () => {
   );
 
   const [sendSMS] = useMutation(SendAccusedRespondedSmsDocument);
+  const [SendAccusedRespondedSMS] = useSendAccusedRespondedSmsMutation({
+    variables:{
+      complaintId: complaintId ? parseInt(complaintId) : 0
+    }
+  })
 
   const [DeleteNonFeasibleArgument] = useDeleteNonFeasibleArgumentMutation();
 
@@ -334,10 +351,12 @@ const AddArgument = () => {
                       if (!agreed) return;
                       void updateCompaint({
                         variables: {
-                          id: complaintIdInt || 0,
-                          complaintStateId: getComplaintStateWithEnum(
-                            ComplaintStateStatus.MailRoomExpertReviewingTheFinalReport
-                          ).id,
+                          input: {
+                            id: complaintIdInt || 0,
+                            complaintStateId: getComplaintStateWithEnum(
+                              ComplaintStateStatus.MailRoomExpertReviewingTheFinalReport
+                            ).id,
+                          },
                         },
                         onCompleted() {
                           alert("ثبت شد");
@@ -349,10 +368,12 @@ const AddArgument = () => {
                       if (!agreed) return;
                       void updateCompaint({
                         variables: {
-                          id: complaintIdInt || 0,
-                          complaintStateId: getComplaintStateWithEnum(
-                            ComplaintStateStatus.RequestingDocuments
-                          ).id,
+                          input: {
+                            id: complaintIdInt || 0,
+                            complaintStateId: getComplaintStateWithEnum(
+                              ComplaintStateStatus.RequestingDocuments
+                            ).id,
+                          },
                         },
                         onCompleted() {
                           alert("ثبت شد");
@@ -362,11 +383,13 @@ const AddArgument = () => {
                     } else if (stateInt == 3) {
                       void updateCompaint({
                         variables: {
-                          id: complaintIdInt || 0,
-                          complaintStateId: getComplaintStateWithEnum(
-                            ComplaintStateStatus.CheckingForBeingConstructive
-                          ).id,
-                          isApprovedByChief: false,
+                          input: {
+                            id: complaintIdInt || 0,
+                            complaintStateId: getComplaintStateWithEnum(
+                              ComplaintStateStatus.CheckingForBeingConstructive
+                            ).id,
+                            isApprovedByChief: false,
+                          },
                         },
                         onCompleted() {
                           alert("ثبت شد");
@@ -560,10 +583,13 @@ const AddArgument = () => {
                     color: secondary,
                   }}
                 >
-                  جمع کل  مبلغ مورد تایید کارشناس:
+                  جمع کل مبلغ مورد تایید کارشناس:
                   {convertToPersianDigits(
                     data?.complaintArgument_getComplaintArguments?.result?.items
-                      ?.reduce((a, b) => a + (b?.netMailRoomExpertApprovedAmount ?? 0), 0)
+                      ?.reduce(
+                        (a, b) => a + (b?.netMailRoomExpertApprovedAmount ?? 0),
+                        0
+                      )
                       .toString()
                       .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                   ) + " ریال"}
@@ -703,7 +729,10 @@ const AddArgument = () => {
             </TableBody>
           </Table>
 
-          {parseInt(state || "0") == 0 && NonFeasibleArguments?.complaintNonFeasibleArgument_getComplaintNonFeasibleArguments.result?.items?.length ? (
+          {parseInt(state || "0") == 0 &&
+          NonFeasibleArguments
+            ?.complaintNonFeasibleArgument_getComplaintNonFeasibleArguments
+            .result?.items?.length ? (
             <Table
               sx={{
                 // backgroundColor: primaryGreyLightTransparent,
@@ -873,7 +902,9 @@ const AddArgument = () => {
                 )}
               </TableBody>
             </Table>
-          ) : ""}
+          ) : (
+            ""
+          )}
           <IconButton
             onClick={() => {
               setAddModal({
@@ -960,16 +991,24 @@ const AddArgument = () => {
                 if (!agreed) return;
                 void updateCompaint({
                   variables: {
-                    id: complaintIdInt || 0,
-                    complaintStateId: getComplaintStateWithEnum(
-                      ComplaintStateStatus.WaitingForAccusedToRegisterContract
-                    ).id,
+                    input: {
+                      id: complaintIdInt || 0,
+                      complaintStateId: getComplaintStateWithEnum(
+                        ComplaintStateStatus.WaitingForAccusedToRegisterContract
+                      ).id,
+                      arbitrationCost:
+                        (data?.complaintArgument_getComplaintArguments?.result?.items?.reduce(
+                          (a, b) => a + (b?.suggestedAmount ?? 0),
+                          0
+                        ) ?? 0) / 100,
+                    },
                   },
                   onCompleted() {
                     alert("ثبت شد");
                     navigate(
                       `/complaints/${complaintId || ""}/confirmComplaint`
                     );
+                    void SetFirstAndSecondPaymentCost();
                     void sendSms();
                   },
                 });
@@ -978,20 +1017,23 @@ const AddArgument = () => {
                 if (!agreed) return;
                 void updateCompaint({
                   variables: {
-                    id: complaintIdInt || 0,
-                    complaintStateId: getComplaintStateWithEnum(
-                      ComplaintStateStatus.WaitingForAccuserToViewArguments
-                    ).id,
+                    input: {
+                      id: complaintIdInt || 0,
+                      complaintStateId: getComplaintStateWithEnum(
+                        ComplaintStateStatus.WaitingForAccuserToViewArguments
+                      ).id,
+                    },
                   },
                   onCompleted() {
                     alert("ثبت شد");
                     navigate("/complaints");
                     // here we goooooooooooooooooo
-                    void sendSMS({
-                      variables: {
-                        complaintId: complaintIdInt || 0,
-                      },
-                    });
+                    void SendAccusedRespondedSMS()
+                    // void sendSMS({
+                    //   variables: {
+                    //     complaintId: complaintIdInt || 0,
+                    //   },
+                    // });
                   },
                 });
               } else if (stateInt == -1) {
@@ -999,10 +1041,12 @@ const AddArgument = () => {
                 if (!agreed) return;
                 void updateCompaint({
                   variables: {
-                    id: complaintIdInt || 0,
-                    complaintStateId: getComplaintStateWithEnum(
-                      ComplaintStateStatus.WaitingForChiefToAssign
-                    ).id,
+                    input: {
+                      id: complaintIdInt || 0,
+                      complaintStateId: getComplaintStateWithEnum(
+                        ComplaintStateStatus.WaitingForChiefToAssign
+                      ).id,
+                    },
                   },
                   onCompleted() {
                     alert("ثبت شد");
@@ -1014,10 +1058,12 @@ const AddArgument = () => {
                 if (!agreed) return;
                 void updateCompaint({
                   variables: {
-                    id: complaintIdInt || 0,
-                    complaintStateId: getComplaintStateWithEnum(
-                      ComplaintStateStatus.WaitingForChiefToApproveExpertsAnswersToArguments
-                    ).id,
+                    input: {
+                      id: complaintIdInt || 0,
+                      complaintStateId: getComplaintStateWithEnum(
+                        ComplaintStateStatus.WaitingForChiefToApproveExpertsAnswersToArguments
+                      ).id,
+                    },
                   },
                   onCompleted() {
                     alert("ثبت شد");
@@ -1029,11 +1075,13 @@ const AddArgument = () => {
                 if (!agreed) return;
                 void updateCompaint({
                   variables: {
-                    id: complaintIdInt || 0,
-                    complaintStateId: getComplaintStateWithEnum(
-                      ComplaintStateStatus.GivingTrackingCodeToComplaint
-                    ).id,
-                    isApprovedByChief: true,
+                    input: {
+                      id: complaintIdInt || 0,
+                      complaintStateId: getComplaintStateWithEnum(
+                        ComplaintStateStatus.GivingTrackingCodeToComplaint
+                      ).id,
+                      isApprovedByChief: true,
+                    },
                   },
                   onCompleted() {
                     alert("ثبت شد");
@@ -1045,10 +1093,12 @@ const AddArgument = () => {
                 if (!agreed) return;
                 void updateCompaint({
                   variables: {
-                    id: complaintIdInt || 0,
-                    complaintStateId: getComplaintStateWithEnum(
-                      ComplaintStateStatus.MailRoomChiefReviewingTheFinalReport
-                    ).id,
+                    input: {
+                      id: complaintIdInt || 0,
+                      complaintStateId: getComplaintStateWithEnum(
+                        ComplaintStateStatus.MailRoomChiefReviewingTheFinalReport
+                      ).id,
+                    },
                   },
                   onCompleted() {
                     alert("ثبت شد");
@@ -1060,10 +1110,12 @@ const AddArgument = () => {
                 if (!agreed) return;
                 void updateCompaint({
                   variables: {
-                    id: complaintIdInt || 0,
-                    complaintStateId: getComplaintStateWithEnum(
-                      ComplaintStateStatus.WaitingForCouncilResult
-                    ).id,
+                    input: {
+                      id: complaintIdInt || 0,
+                      complaintStateId: getComplaintStateWithEnum(
+                        ComplaintStateStatus.WaitingForCouncilResult
+                      ).id,
+                    },
                   },
                   onCompleted() {
                     alert("ثبت شد");
@@ -1075,10 +1127,12 @@ const AddArgument = () => {
                 if (!agreed) return;
                 void updateCompaint({
                   variables: {
-                    id: complaintIdInt || 0,
-                    complaintStateId: getComplaintStateWithEnum(
-                      ComplaintStateStatus.WaitingForFinalResultUpload
-                    ).id,
+                    input: {
+                      id: complaintIdInt || 0,
+                      complaintStateId: getComplaintStateWithEnum(
+                        ComplaintStateStatus.WaitingForFinalResultUpload
+                      ).id,
+                    },
                   },
                   onCompleted() {
                     alert("ثبت شد");

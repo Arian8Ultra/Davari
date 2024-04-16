@@ -6,6 +6,7 @@ import {
   useAddCorrectionRequestsMutation,
   useDeleteRequestedDocMutationMutation,
   useGetCorrectionRequestsFullQueryQuery,
+  useSendComplaintCorrectionRequestSmsMutation,
   useUpdateCorrectionRequestsMutation,
 } from "../../../../generated-types";
 import { useParams } from "react-router-dom";
@@ -60,6 +61,12 @@ const RequestCorrectionPage = () => {
       },
     },
   });
+
+  // const [sendComplaintCorrectionRequestSMS] = useSendComplaintCorrectionRequestSmsMutation({
+  //   variables:{
+
+  //   }
+  // })
 
   const {
     data: addRequestData,

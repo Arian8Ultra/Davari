@@ -1,14 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import React from "react";
-import {
-  useGetArgumentsWithFilterQuery,
-  useGetComplaintsWithFilterQuery,
-  useGetUserWithFilterLazyQuery,
-} from "../../../../generated-types";
-import { useNavigate, useParams } from "react-router-dom";
+import { Print } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -20,33 +15,41 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
+import { useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { API_FILE_DOWNLOAD } from "../../../../config";
+import {
+  useGenerateComplaintReportMutation,
+  useGetArgumentsWithFilterQuery,
+  useGetComplaintsWithFilterQuery,
+  useGetUserWithFilterLazyQuery,
+  useSendComplaintAddedSmsMutation,
+} from "../../../../generated-types";
+import TimeLine from "../../../components/TimeLine";
+import { useUserStore } from "../../../Context/UserStore";
 import {
   GreenLight,
   primary,
   secondary,
   secondaryDark,
 } from "../../../theme/color";
-import { useUserStore } from "../../../Context/UserStore";
-import { userInfo } from "os";
-import TimeLine from "../../../components/TimeLine";
 
 const ConfirmPage = () => {
   const { complaintId } = useParams<{ complaintId: string }>();
   const navigate = useNavigate();
   const user = useUserStore.getState().user;
-  const { data: ArgumentsData } =
-    useGetArgumentsWithFilterQuery({
-      variables: {
-        filter: {
-          complaintId: {
-            eq: parseInt(complaintId || "") || 0,
-          },
+  const { data: ArgumentsData } = useGetArgumentsWithFilterQuery({
+    variables: {
+      filter: {
+        complaintId: {
+          eq: parseInt(complaintId || "") || 0,
         },
       },
-      onCompleted(data) {
-        console.log(data);
-      },
-    });
+    },
+    onCompleted(data) {
+      console.log(data);
+    },
+  });
   const { data: complaint } = useGetComplaintsWithFilterQuery({
     variables: {
       filter: {
@@ -58,32 +61,53 @@ const ConfirmPage = () => {
       void GetAccused();
     },
   });
-  const [GetAccuser, { data: AccuserData }] =
-    useGetUserWithFilterLazyQuery({
-      variables: {
-        filter: {
-          id: {
-            eq: complaint?.complaint_getComplaints.result?.items?.[0]
-              ?.contract?.accuserDepartmentUserId,
-          },
+  const [GetAccuser, { data: AccuserData }] = useGetUserWithFilterLazyQuery({
+    variables: {
+      filter: {
+        id: {
+          eq: complaint?.complaint_getComplaints.result?.items?.[0]?.contract
+            ?.accuserDepartmentUserId,
         },
       },
-    });
+    },
+  });
 
-  const [GetAccused, { data: AccusedData }] =
-    useGetUserWithFilterLazyQuery({
-      variables: {
-        filter: {
-          id: {
-            eq: complaint?.complaint_getComplaints.result?.items?.[0]
-              ?.contract?.accusedDepartmentUserId,
-          },
+  const [GetAccused, { data: AccusedData }] = useGetUserWithFilterLazyQuery({
+    variables: {
+      filter: {
+        id: {
+          eq: complaint?.complaint_getComplaints.result?.items?.[0]?.contract
+            ?.accusedDepartmentUserId,
         },
       },
-    });
+    },
+  });
+
+  const [GenerateComplaintReport] = useGenerateComplaintReportMutation({
+    variables: {
+      input: {
+        complaintId: complaintId ? parseInt(complaintId) : 0,
+        userId: user.id,
+      },
+    },
+    onCompleted(data, clientOptions) {
+      console.log(data);
+    },
+  });
+
+  const [SendComplaintAddedSMS] = useSendComplaintAddedSmsMutation({
+    variables: {
+      complaintId: complaintId ? parseInt(complaintId) : 0,
+    },
+  });
+  useEffect(() => {
+    if (complaintId) {
+      void GenerateComplaintReport();
+    }
+  }, [GenerateComplaintReport, complaintId]);
   return (
     <>
-    <TimeLine stage={6} />
+      <TimeLine stage={6} />
       <Box
         display={"flex"}
         justifyContent={"center"}
@@ -116,6 +140,25 @@ const ConfirmPage = () => {
           }}
         />
       </Box>
+      <Button
+        onClick={() =>
+          void GenerateComplaintReport({
+            onCompleted(data, clientOptions) {
+              // download data
+              window.open(API_FILE_DOWNLOAD + data.test_generateComplaintReport, "_blank");
+            },
+          })
+        }
+        variant="outlined"
+        color="success"
+        sx={{
+          display: 'flex',
+          gap:2
+        }}
+      >
+        ایجاد گزارش درخواست
+        <Print />
+      </Button>
       <Box
         sx={{
           borderRadius: "0.5rem",
@@ -208,18 +251,16 @@ const ConfirmPage = () => {
                 sx={{
                   textAlign: "center",
                   display:
-                    complaint?.complaint_getComplaints?.result
-                      ?.items?.[0]?.contract
-                      ?.accuserDepartmentUserId == user?.id ||
-                    complaint?.complaint_getComplaints?.result
-                      ?.items?.[0]?.contract
-                      ?.accuserDepartmentUserId == user?.parentId
+                    complaint?.complaint_getComplaints?.result?.items?.[0]
+                      ?.contract?.accuserDepartmentUserId == user?.id ||
+                    complaint?.complaint_getComplaints?.result?.items?.[0]
+                      ?.contract?.accuserDepartmentUserId == user?.parentId
                       ? "table-cell"
                       : "none",
                 }}
               >
-                {complaint?.complaint_getComplaints.result?.items?.[0]
-                  .contract?.contractSubjectByAccuser || "-"}
+                {complaint?.complaint_getComplaints.result?.items?.[0].contract
+                  ?.contractSubjectByAccuser || "-"}
               </TableCell>
               {/* <TableCell
                 sx={{
@@ -251,18 +292,16 @@ const ConfirmPage = () => {
                 sx={{
                   textAlign: "center",
                   display:
-                    complaint?.complaint_getComplaints?.result
-                      ?.items?.[0]?.contract
-                      ?.accuserDepartmentUserId == user?.id ||
-                    complaint?.complaint_getComplaints?.result
-                      ?.items?.[0]?.contract
-                      ?.accuserDepartmentUserId == user?.parentId
+                    complaint?.complaint_getComplaints?.result?.items?.[0]
+                      ?.contract?.accuserDepartmentUserId == user?.id ||
+                    complaint?.complaint_getComplaints?.result?.items?.[0]
+                      ?.contract?.accuserDepartmentUserId == user?.parentId
                       ? "table-cell"
                       : "none",
                 }}
               >
-                {complaint?.complaint_getComplaints.result?.items?.[0]
-                  .contract?.contractNumberByAccuser || "-"}
+                {complaint?.complaint_getComplaints.result?.items?.[0].contract
+                  ?.contractNumberByAccuser || "-"}
               </TableCell>
               {/* <TableCell
                 sx={{
@@ -294,22 +333,19 @@ const ConfirmPage = () => {
                 sx={{
                   textAlign: "center",
                   display:
-                    complaint?.complaint_getComplaints?.result
-                      ?.items?.[0]?.contract
-                      ?.accuserDepartmentUserId == user?.id ||
-                    complaint?.complaint_getComplaints?.result
-                      ?.items?.[0]?.contract
-                      ?.accuserDepartmentUserId == user?.parentId
+                    complaint?.complaint_getComplaints?.result?.items?.[0]
+                      ?.contract?.accuserDepartmentUserId == user?.id ||
+                    complaint?.complaint_getComplaints?.result?.items?.[0]
+                      ?.contract?.accuserDepartmentUserId == user?.parentId
                       ? "table-cell"
                       : "none",
                 }}
               >
-                {complaint?.complaint_getComplaints.result?.items?.[0]
-                  .contract?.contractDateByAccuser
+                {complaint?.complaint_getComplaints.result?.items?.[0].contract
+                  ?.contractDateByAccuser
                   ? new Date(
-                      (complaint?.complaint_getComplaints.result
-                        ?.items?.[0].contract
-                        ?.contractDateByAccuser as string) || ""
+                      (complaint?.complaint_getComplaints.result?.items?.[0]
+                        .contract?.contractDateByAccuser as string) || ""
                     ).toLocaleDateString("fa-IR")
                   : "-"}
               </TableCell>
@@ -349,18 +385,16 @@ const ConfirmPage = () => {
                 sx={{
                   textAlign: "center",
                   display:
-                    complaint?.complaint_getComplaints?.result
-                      ?.items?.[0]?.contract
-                      ?.accuserDepartmentUserId == user?.id ||
-                    complaint?.complaint_getComplaints?.result
-                      ?.items?.[0]?.contract
-                      ?.accuserDepartmentUserId == user?.parentId
+                    complaint?.complaint_getComplaints?.result?.items?.[0]
+                      ?.contract?.accuserDepartmentUserId == user?.id ||
+                    complaint?.complaint_getComplaints?.result?.items?.[0]
+                      ?.contract?.accuserDepartmentUserId == user?.parentId
                       ? "table-cell"
                       : "none",
                 }}
               >
-                {complaint?.complaint_getComplaints.result?.items?.[0]
-                  .contract?.initialBudgetByAccuser || "-"}
+                {complaint?.complaint_getComplaints.result?.items?.[0].contract
+                  ?.initialBudgetByAccuser || "-"}
               </TableCell>
               {/* <TableCell
                 sx={{
@@ -392,18 +426,16 @@ const ConfirmPage = () => {
                 sx={{
                   textAlign: "center",
                   display:
-                    complaint?.complaint_getComplaints?.result
-                      ?.items?.[0]?.contract
-                      ?.accuserDepartmentUserId == user?.id ||
-                    complaint?.complaint_getComplaints?.result
-                      ?.items?.[0]?.contract
-                      ?.accuserDepartmentUserId == user?.parentId
+                    complaint?.complaint_getComplaints?.result?.items?.[0]
+                      ?.contract?.accuserDepartmentUserId == user?.id ||
+                    complaint?.complaint_getComplaints?.result?.items?.[0]
+                      ?.contract?.accuserDepartmentUserId == user?.parentId
                       ? "table-cell"
                       : "none",
                 }}
               >
-                {complaint?.complaint_getComplaints.result?.items?.[0]
-                  .contract?.initialTimePeriodByAccuser || "-"}
+                {complaint?.complaint_getComplaints.result?.items?.[0].contract
+                  ?.initialTimePeriodByAccuser || "-"}
               </TableCell>
               {/* <TableCell
                 sx={{
@@ -436,18 +468,16 @@ const ConfirmPage = () => {
                 sx={{
                   textAlign: "center",
                   display:
-                    complaint?.complaint_getComplaints?.result
-                      ?.items?.[0]?.contract
-                      ?.accuserDepartmentUserId == user?.id ||
-                    complaint?.complaint_getComplaints?.result
-                      ?.items?.[0]?.contract
-                      ?.accuserDepartmentUserId == user?.parentId
+                    complaint?.complaint_getComplaints?.result?.items?.[0]
+                      ?.contract?.accuserDepartmentUserId == user?.id ||
+                    complaint?.complaint_getComplaints?.result?.items?.[0]
+                      ?.contract?.accuserDepartmentUserId == user?.parentId
                       ? "table-cell"
                       : "none",
                 }}
               >
-                {complaint?.complaint_getComplaints.result?.items?.[0]
-                  .contract?.accuserNationality || "-"}
+                {complaint?.complaint_getComplaints.result?.items?.[0].contract
+                  ?.accuserNationality || "-"}
               </TableCell>
               {/* <TableCell
                 sx={{
@@ -479,18 +509,16 @@ const ConfirmPage = () => {
                 sx={{
                   textAlign: "center",
                   display:
-                    complaint?.complaint_getComplaints?.result
-                      ?.items?.[0]?.contract
-                      ?.accuserDepartmentUserId == user?.id ||
-                    complaint?.complaint_getComplaints?.result
-                      ?.items?.[0]?.contract
-                      ?.accuserDepartmentUserId == user?.parentId
+                    complaint?.complaint_getComplaints?.result?.items?.[0]
+                      ?.contract?.accuserDepartmentUserId == user?.id ||
+                    complaint?.complaint_getComplaints?.result?.items?.[0]
+                      ?.contract?.accuserDepartmentUserId == user?.parentId
                       ? "table-cell"
                       : "none",
                 }}
               >
-                {complaint?.complaint_getComplaints.result?.items?.[0]
-                  .contract?.recommendedCoefficientByAccuser || "-"}
+                {complaint?.complaint_getComplaints.result?.items?.[0].contract
+                  ?.recommendedCoefficientByAccuser || "-"}
               </TableCell>
               {/* <TableCell
                 sx={{
@@ -522,22 +550,19 @@ const ConfirmPage = () => {
                 sx={{
                   textAlign: "center",
                   display:
-                    complaint?.complaint_getComplaints?.result
-                      ?.items?.[0]?.contract
-                      ?.accuserDepartmentUserId == user?.id ||
-                    complaint?.complaint_getComplaints?.result
-                      ?.items?.[0]?.contract
-                      ?.accuserDepartmentUserId == user?.parentId
+                    complaint?.complaint_getComplaints?.result?.items?.[0]
+                      ?.contract?.accuserDepartmentUserId == user?.id ||
+                    complaint?.complaint_getComplaints?.result?.items?.[0]
+                      ?.contract?.accuserDepartmentUserId == user?.parentId
                       ? "table-cell"
                       : "none",
                 }}
               >
-                {complaint?.complaint_getComplaints.result?.items?.[0]
-                  .contract?.operationStartDateByAccuser
+                {complaint?.complaint_getComplaints.result?.items?.[0].contract
+                  ?.operationStartDateByAccuser
                   ? new Date(
-                      complaint?.complaint_getComplaints.result
-                        ?.items?.[0].contract
-                        .operationStartDateByAccuser as string
+                      complaint?.complaint_getComplaints.result?.items?.[0]
+                        .contract.operationStartDateByAccuser as string
                     ).toLocaleDateString("fa-IR")
                   : "-"}
               </TableCell>
@@ -577,18 +602,15 @@ const ConfirmPage = () => {
                 sx={{
                   textAlign: "center",
                   display:
-                    complaint?.complaint_getComplaints?.result
-                      ?.items?.[0]?.contract
-                      ?.accuserDepartmentUserId == user?.id ||
-                    complaint?.complaint_getComplaints?.result
-                      ?.items?.[0]?.contract
-                      ?.accuserDepartmentUserId == user?.parentId
+                    complaint?.complaint_getComplaints?.result?.items?.[0]
+                      ?.contract?.accuserDepartmentUserId == user?.id ||
+                    complaint?.complaint_getComplaints?.result?.items?.[0]
+                      ?.contract?.accuserDepartmentUserId == user?.parentId
                       ? "table-cell"
                       : "none",
                 }}
               >
-                {complaint?.complaint_getComplaints.result?.items?.[0]
-                  .contract
+                {complaint?.complaint_getComplaints.result?.items?.[0].contract
                   ?.physicalProgressInArbitrationDateByAccuser || "-"}
               </TableCell>
               {/* <TableCell
@@ -622,20 +644,16 @@ const ConfirmPage = () => {
                 sx={{
                   textAlign: "center",
                   display:
-                    complaint?.complaint_getComplaints?.result
-                      ?.items?.[0]?.contract
-                      ?.accuserDepartmentUserId == user?.id ||
-                    complaint?.complaint_getComplaints?.result
-                      ?.items?.[0]?.contract
-                      ?.accuserDepartmentUserId == user?.parentId
+                    complaint?.complaint_getComplaints?.result?.items?.[0]
+                      ?.contract?.accuserDepartmentUserId == user?.id ||
+                    complaint?.complaint_getComplaints?.result?.items?.[0]
+                      ?.contract?.accuserDepartmentUserId == user?.parentId
                       ? "table-cell"
                       : "none",
                 }}
               >
-                {complaint?.complaint_getComplaints.result?.items?.[0]
-                  .contract
-                  ?.financialProgressInArbitrationDateByAccuser ||
-                  "-"}
+                {complaint?.complaint_getComplaints.result?.items?.[0].contract
+                  ?.financialProgressInArbitrationDateByAccuser || "-"}
               </TableCell>
               {/* <TableCell
                 sx={{
@@ -669,12 +687,10 @@ const ConfirmPage = () => {
                 sx={{
                   textAlign: "center",
                   display:
-                    complaint?.complaint_getComplaints?.result
-                      ?.items?.[0]?.contract
-                      ?.accuserDepartmentUserId == user?.id ||
-                    complaint?.complaint_getComplaints?.result
-                      ?.items?.[0]?.contract
-                      ?.accuserDepartmentUserId == user?.parentId
+                    complaint?.complaint_getComplaints?.result?.items?.[0]
+                      ?.contract?.accuserDepartmentUserId == user?.id ||
+                    complaint?.complaint_getComplaints?.result?.items?.[0]
+                      ?.contract?.accuserDepartmentUserId == user?.parentId
                       ? "table-cell"
                       : "none",
                 }}
@@ -734,18 +750,16 @@ const ConfirmPage = () => {
                 sx={{
                   textAlign: "center",
                   display:
-                    complaint?.complaint_getComplaints?.result
-                      ?.items?.[0]?.contract
-                      ?.accuserDepartmentUserId == user?.id ||
-                    complaint?.complaint_getComplaints?.result
-                      ?.items?.[0]?.contract
-                      ?.accuserDepartmentUserId == user?.parentId
+                    complaint?.complaint_getComplaints?.result?.items?.[0]
+                      ?.contract?.accuserDepartmentUserId == user?.id ||
+                    complaint?.complaint_getComplaints?.result?.items?.[0]
+                      ?.contract?.accuserDepartmentUserId == user?.parentId
                       ? "table-cell"
                       : "none",
                 }}
               >
-                {complaint?.complaint_getComplaints.result?.items?.[0]
-                  .contract?.supervisionDepartmentByAccuser || "-"}
+                {complaint?.complaint_getComplaints.result?.items?.[0].contract
+                  ?.supervisionDepartmentByAccuser || "-"}
               </TableCell>
               {/* <TableCell
                 sx={{
@@ -777,18 +791,16 @@ const ConfirmPage = () => {
                 sx={{
                   textAlign: "center",
                   display:
-                    complaint?.complaint_getComplaints?.result
-                      ?.items?.[0]?.contract
-                      ?.accuserDepartmentUserId == user?.id ||
-                    complaint?.complaint_getComplaints?.result
-                      ?.items?.[0]?.contract
-                      ?.accuserDepartmentUserId == user?.parentId
+                    complaint?.complaint_getComplaints?.result?.items?.[0]
+                      ?.contract?.accuserDepartmentUserId == user?.id ||
+                    complaint?.complaint_getComplaints?.result?.items?.[0]
+                      ?.contract?.accuserDepartmentUserId == user?.parentId
                       ? "table-cell"
                       : "none",
                 }}
               >
-                {complaint?.complaint_getComplaints.result?.items?.[0]
-                  .contract?.authorizedDelaysByAccuser || "-"}
+                {complaint?.complaint_getComplaints.result?.items?.[0].contract
+                  ?.authorizedDelaysByAccuser || "-"}
               </TableCell>
               {/* <TableCell
                 sx={{
@@ -820,18 +832,16 @@ const ConfirmPage = () => {
                 sx={{
                   textAlign: "center",
                   display:
-                    complaint?.complaint_getComplaints?.result
-                      ?.items?.[0]?.contract
-                      ?.accuserDepartmentUserId == user?.id ||
-                    complaint?.complaint_getComplaints?.result
-                      ?.items?.[0]?.contract
-                      ?.accuserDepartmentUserId == user?.parentId
+                    complaint?.complaint_getComplaints?.result?.items?.[0]
+                      ?.contract?.accuserDepartmentUserId == user?.id ||
+                    complaint?.complaint_getComplaints?.result?.items?.[0]
+                      ?.contract?.accuserDepartmentUserId == user?.parentId
                       ? "table-cell"
                       : "none",
                 }}
               >
-                {complaint?.complaint_getComplaints.result?.items?.[0]
-                  .contract?.unauthorizedDelaysByAccuser || "-"}
+                {complaint?.complaint_getComplaints.result?.items?.[0].contract
+                  ?.unauthorizedDelaysByAccuser || "-"}
               </TableCell>
               {/* <TableCell
                 sx={{
@@ -998,13 +1008,12 @@ const ConfirmPage = () => {
                       (JSON.parse(item?.financialSituation)?.title ==
                       "withFinancialEffects"
                         ? "دارای بار مالی"
-                        : JSON.parse(item?.financialSituation)
-                            ?.title == "withoutFinancialEffects"
+                        : JSON.parse(item?.financialSituation)?.title ==
+                          "withoutFinancialEffects"
                         ? "بدون بار مالی"
                         : "") +
                         " " +
-                        JSON.parse(item?.financialSituation)
-                          ?.subtitle}
+                        JSON.parse(item?.financialSituation)?.subtitle}
                   </TableCell>
                   <TableCell
                     sx={{
@@ -1020,11 +1029,7 @@ const ConfirmPage = () => {
         </Table>
       </Box>
 
-      <Box
-        display={"flex"}
-        width={"100%"}
-        justifyContent={"flex-end"}
-      >
+      <Box display={"flex"} width={"100%"} justifyContent={"flex-end"}>
         <Button
           sx={{
             background: primary,
@@ -1039,6 +1044,7 @@ const ConfirmPage = () => {
             },
           }}
           onClick={() => {
+            void SendComplaintAddedSMS();
             navigate(`/complaints`);
           }}
         >

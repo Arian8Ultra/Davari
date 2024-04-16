@@ -476,6 +476,11 @@ export type CompanyProfile = {
   __typename?: 'CompanyProfile';
   activityEndDate?: Maybe<Scalars['Date']['output']>;
   addressDesc?: Maybe<Scalars['String']['output']>;
+  cEOFirstName?: Maybe<Scalars['String']['output']>;
+  cEOLastName?: Maybe<Scalars['String']['output']>;
+  cEOMobileNum?: Maybe<Scalars['String']['output']>;
+  cEONationalityCode?: Maybe<Scalars['String']['output']>;
+  companyTypeTitle?: Maybe<Scalars['String']['output']>;
   createdDate: Scalars['DateTime']['output'];
   emailAddress?: Maybe<Scalars['String']['output']>;
   fixPhoneNumber?: Maybe<Scalars['String']['output']>;
@@ -504,6 +509,11 @@ export type CompanyProfileFilterInput = {
   activityEndDate?: InputMaybe<ComparableNullableOfDateOnlyOperationFilterInput>;
   addressDesc?: InputMaybe<StringOperationFilterInput>;
   and?: InputMaybe<Array<CompanyProfileFilterInput>>;
+  cEOFirstName?: InputMaybe<StringOperationFilterInput>;
+  cEOLastName?: InputMaybe<StringOperationFilterInput>;
+  cEOMobileNum?: InputMaybe<StringOperationFilterInput>;
+  cEONationalityCode?: InputMaybe<StringOperationFilterInput>;
+  companyTypeTitle?: InputMaybe<StringOperationFilterInput>;
   createdDate?: InputMaybe<ComparableDateTimeOperationFilterInput>;
   emailAddress?: InputMaybe<StringOperationFilterInput>;
   fixPhoneNumber?: InputMaybe<StringOperationFilterInput>;
@@ -524,6 +534,11 @@ export type CompanyProfileFilterInput = {
 export type CompanyProfileInput = {
   activityEndDate?: InputMaybe<Scalars['Date']['input']>;
   addressDesc?: InputMaybe<Scalars['String']['input']>;
+  cEOFirstName?: InputMaybe<Scalars['String']['input']>;
+  cEOLastName?: InputMaybe<Scalars['String']['input']>;
+  cEOMobileNum?: InputMaybe<Scalars['String']['input']>;
+  cEONationalityCode?: InputMaybe<Scalars['String']['input']>;
+  companyTypeTitle?: InputMaybe<Scalars['String']['input']>;
   emailAddress?: InputMaybe<Scalars['String']['input']>;
   fixPhoneNumber?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
@@ -540,6 +555,11 @@ export type CompanyProfileInput = {
 export type CompanyProfileSortInput = {
   activityEndDate?: InputMaybe<SortEnumType>;
   addressDesc?: InputMaybe<SortEnumType>;
+  cEOFirstName?: InputMaybe<SortEnumType>;
+  cEOLastName?: InputMaybe<SortEnumType>;
+  cEOMobileNum?: InputMaybe<SortEnumType>;
+  cEONationalityCode?: InputMaybe<SortEnumType>;
+  companyTypeTitle?: InputMaybe<SortEnumType>;
   createdDate?: InputMaybe<SortEnumType>;
   emailAddress?: InputMaybe<SortEnumType>;
   fixPhoneNumber?: InputMaybe<SortEnumType>;
@@ -739,7 +759,7 @@ export type ComparableNullableOfInt64OperationFilterInput = {
 export type Complaint = {
   __typename?: 'Complaint';
   accusedFinalOpinion?: Maybe<Scalars['String']['output']>;
-  arbitrationCost: Scalars['Decimal']['output'];
+  arbitrationCost?: Maybe<Scalars['Decimal']['output']>;
   arbitrationTermsForms?: Maybe<Array<ArbitrationTermsForm>>;
   arguments?: Maybe<Array<ComplaintArgument>>;
   assignedUser?: Maybe<User>;
@@ -756,13 +776,17 @@ export type Complaint = {
   councilListStatus: CouncilListStatus;
   createdDate: Scalars['DateTime']['output'];
   eventHistories?: Maybe<Array<EventHistory>>;
+  expertArbitrationCost?: Maybe<Scalars['Decimal']['output']>;
+  firstPaymentCost?: Maybe<Scalars['Decimal']['output']>;
   handlingType?: Maybe<HandlingType>;
   id: Scalars['Int']['output'];
   isApprovedByChief: Scalars['Boolean']['output'];
   isDeleted: Scalars['Boolean']['output'];
+  isExpertArbitrationCostPaid: Scalars['Boolean']['output'];
   isFirstPaymentPaid: Scalars['Boolean']['output'];
   isSecondPaymentPaid: Scalars['Boolean']['output'];
   lastModifiedDate?: Maybe<Scalars['DateTime']['output']>;
+  secondPaymentCost?: Maybe<Scalars['Decimal']['output']>;
   user?: Maybe<User>;
   userId: Scalars['String']['output'];
   verdictFileName?: Maybe<Scalars['String']['output']>;
@@ -1019,7 +1043,7 @@ export type ComplaintFileSortInput = {
 export type ComplaintFilterInput = {
   accusedFinalOpinion?: InputMaybe<StringOperationFilterInput>;
   and?: InputMaybe<Array<ComplaintFilterInput>>;
-  arbitrationCost?: InputMaybe<ComparableDecimalOperationFilterInput>;
+  arbitrationCost?: InputMaybe<ComparableNullableOfDecimalOperationFilterInput>;
   arbitrationTermsForms?: InputMaybe<ListFilterInputTypeOfArbitrationTermsFormFilterInput>;
   arguments?: InputMaybe<ListFilterInputTypeOfComplaintArgumentFilterInput>;
   assignedUser?: InputMaybe<UserFilterInput>;
@@ -1036,14 +1060,18 @@ export type ComplaintFilterInput = {
   councilListStatus?: InputMaybe<CouncilListStatusOperationFilterInput>;
   createdDate?: InputMaybe<ComparableDateTimeOperationFilterInput>;
   eventHistories?: InputMaybe<ListFilterInputTypeOfEventHistoryFilterInput>;
+  expertArbitrationCost?: InputMaybe<ComparableNullableOfDecimalOperationFilterInput>;
+  firstPaymentCost?: InputMaybe<ComparableNullableOfDecimalOperationFilterInput>;
   handlingType?: InputMaybe<NullableOfHandlingTypeOperationFilterInput>;
   id?: InputMaybe<ComparableInt32OperationFilterInput>;
   isApprovedByChief?: InputMaybe<BooleanOperationFilterInput>;
   isDeleted?: InputMaybe<BooleanOperationFilterInput>;
+  isExpertArbitrationCostPaid?: InputMaybe<BooleanOperationFilterInput>;
   isFirstPaymentPaid?: InputMaybe<BooleanOperationFilterInput>;
   isSecondPaymentPaid?: InputMaybe<BooleanOperationFilterInput>;
   lastModifiedDate?: InputMaybe<ComparableNullableOfDateTimeOperationFilterInput>;
   or?: InputMaybe<Array<ComplaintFilterInput>>;
+  secondPaymentCost?: InputMaybe<ComparableNullableOfDecimalOperationFilterInput>;
   user?: InputMaybe<UserFilterInput>;
   userId?: InputMaybe<StringOperationFilterInput>;
   verdictFileName?: InputMaybe<StringOperationFilterInput>;
@@ -1064,11 +1092,15 @@ export type ComplaintInput = {
   contractId?: InputMaybe<Scalars['Int']['input']>;
   councilExpertIds?: InputMaybe<Array<Scalars['String']['input']>>;
   councilListStatus?: InputMaybe<CouncilListStatus>;
+  expertArbitrationCost?: InputMaybe<Scalars['Decimal']['input']>;
+  firstPaymentCost?: InputMaybe<Scalars['Decimal']['input']>;
   handlingType?: InputMaybe<HandlingType>;
   id?: InputMaybe<Scalars['Int']['input']>;
   isApprovedByChief?: InputMaybe<Scalars['Boolean']['input']>;
+  isExpertArbitrationCostPaid?: InputMaybe<Scalars['Boolean']['input']>;
   isFirstPaymentPaid?: InputMaybe<Scalars['Boolean']['input']>;
   isSecondPaymentPaid?: InputMaybe<Scalars['Boolean']['input']>;
+  secondPaymentCost?: InputMaybe<Scalars['Decimal']['input']>;
   userId?: InputMaybe<Scalars['String']['input']>;
   verdictFileName?: InputMaybe<Scalars['String']['input']>;
 };
@@ -1201,6 +1233,11 @@ export type ComplaintNoteSortInput = {
   userId?: InputMaybe<SortEnumType>;
 };
 
+export type ComplaintReportDtoInput = {
+  complaintId: Scalars['Int']['input'];
+  userId: Scalars['String']['input'];
+};
+
 export type ComplaintSortInput = {
   accusedFinalOpinion?: InputMaybe<SortEnumType>;
   arbitrationCost?: InputMaybe<SortEnumType>;
@@ -1213,13 +1250,17 @@ export type ComplaintSortInput = {
   contractId?: InputMaybe<SortEnumType>;
   councilListStatus?: InputMaybe<SortEnumType>;
   createdDate?: InputMaybe<SortEnumType>;
+  expertArbitrationCost?: InputMaybe<SortEnumType>;
+  firstPaymentCost?: InputMaybe<SortEnumType>;
   handlingType?: InputMaybe<SortEnumType>;
   id?: InputMaybe<SortEnumType>;
   isApprovedByChief?: InputMaybe<SortEnumType>;
   isDeleted?: InputMaybe<SortEnumType>;
+  isExpertArbitrationCostPaid?: InputMaybe<SortEnumType>;
   isFirstPaymentPaid?: InputMaybe<SortEnumType>;
   isSecondPaymentPaid?: InputMaybe<SortEnumType>;
   lastModifiedDate?: InputMaybe<SortEnumType>;
+  secondPaymentCost?: InputMaybe<SortEnumType>;
   user?: InputMaybe<UserSortInput>;
   userId?: InputMaybe<SortEnumType>;
   verdictFileName?: InputMaybe<SortEnumType>;
@@ -1458,6 +1499,7 @@ export type Contract = {
   recommendedCoefficientByAccuser?: Maybe<Scalars['Float']['output']>;
   schedulesFileNameByAccused?: Maybe<Scalars['String']['output']>;
   schedulesFileNameByAccuser?: Maybe<Scalars['String']['output']>;
+  sourceOfFundingTitle?: Maybe<Scalars['String']['output']>;
   supervisionDepartmentByAccused?: Maybe<Scalars['String']['output']>;
   supervisionDepartmentByAccuser?: Maybe<Scalars['String']['output']>;
   unauthorizedDelaysByAccused?: Maybe<Scalars['Int']['output']>;
@@ -1572,6 +1614,7 @@ export type ContractFilterInput = {
   recommendedCoefficientByAccuser?: InputMaybe<ComparableNullableOfDoubleOperationFilterInput>;
   schedulesFileNameByAccused?: InputMaybe<StringOperationFilterInput>;
   schedulesFileNameByAccuser?: InputMaybe<StringOperationFilterInput>;
+  sourceOfFundingTitle?: InputMaybe<StringOperationFilterInput>;
   supervisionDepartmentByAccused?: InputMaybe<StringOperationFilterInput>;
   supervisionDepartmentByAccuser?: InputMaybe<StringOperationFilterInput>;
   unauthorizedDelaysByAccused?: InputMaybe<ComparableNullableOfInt32OperationFilterInput>;
@@ -1675,6 +1718,7 @@ export type ContractInput = {
   recommendedCoefficientByAccuser?: InputMaybe<Scalars['Float']['input']>;
   schedulesFileNameByAccused?: InputMaybe<Scalars['String']['input']>;
   schedulesFileNameByAccuser?: InputMaybe<Scalars['String']['input']>;
+  sourceOfFundingTitle?: InputMaybe<Scalars['String']['input']>;
   supervisionDepartmentByAccused?: InputMaybe<Scalars['String']['input']>;
   supervisionDepartmentByAccuser?: InputMaybe<Scalars['String']['input']>;
   unauthorizedDelaysByAccused?: InputMaybe<Scalars['Int']['input']>;
@@ -1769,6 +1813,7 @@ export type ContractSortInput = {
   recommendedCoefficientByAccuser?: InputMaybe<SortEnumType>;
   schedulesFileNameByAccused?: InputMaybe<SortEnumType>;
   schedulesFileNameByAccuser?: InputMaybe<SortEnumType>;
+  sourceOfFundingTitle?: InputMaybe<SortEnumType>;
   supervisionDepartmentByAccused?: InputMaybe<SortEnumType>;
   supervisionDepartmentByAccuser?: InputMaybe<SortEnumType>;
   unauthorizedDelaysByAccused?: InputMaybe<SortEnumType>;
@@ -2828,6 +2873,7 @@ export type MainSetting = {
   disputeResolutionArticleCircularNum: Scalars['String']['output'];
   expertAndAmountAssignmentCanonDate: Scalars['Date']['output'];
   expertAndAmountAssignmentCanonNum: Scalars['String']['output'];
+  firstPaymentPercentage: Scalars['Int']['output'];
   firstPaymentPeriod: Scalars['Int']['output'];
   id: Scalars['Int']['output'];
   isDeleted: Scalars['Boolean']['output'];
@@ -2862,6 +2908,7 @@ export type MainSettingFilterInput = {
   disputeResolutionArticleCircularNum?: InputMaybe<StringOperationFilterInput>;
   expertAndAmountAssignmentCanonDate?: InputMaybe<ComparableDateOnlyOperationFilterInput>;
   expertAndAmountAssignmentCanonNum?: InputMaybe<StringOperationFilterInput>;
+  firstPaymentPercentage?: InputMaybe<ComparableInt32OperationFilterInput>;
   firstPaymentPeriod?: InputMaybe<ComparableInt32OperationFilterInput>;
   id?: InputMaybe<ComparableInt32OperationFilterInput>;
   isDeleted?: InputMaybe<BooleanOperationFilterInput>;
@@ -2887,6 +2934,7 @@ export type MainSettingInput = {
   disputeResolutionArticleCircularNum: Scalars['String']['input'];
   expertAndAmountAssignmentCanonDate: Scalars['Date']['input'];
   expertAndAmountAssignmentCanonNum: Scalars['String']['input'];
+  firstPaymentPercentage: Scalars['Int']['input'];
   firstPaymentPeriod: Scalars['Int']['input'];
   id?: InputMaybe<Scalars['Int']['input']>;
   ministersCouncilCanonDate: Scalars['Date']['input'];
@@ -2910,6 +2958,7 @@ export type MainSettingSortInput = {
   disputeResolutionArticleCircularNum?: InputMaybe<SortEnumType>;
   expertAndAmountAssignmentCanonDate?: InputMaybe<SortEnumType>;
   expertAndAmountAssignmentCanonNum?: InputMaybe<SortEnumType>;
+  firstPaymentPercentage?: InputMaybe<SortEnumType>;
   firstPaymentPeriod?: InputMaybe<SortEnumType>;
   id?: InputMaybe<SortEnumType>;
   isDeleted?: InputMaybe<SortEnumType>;
@@ -2956,6 +3005,8 @@ export type Mutation = {
   complaintState_updateComplaintState: ResponseBaseOfComplaintState;
   complaint_addComplaint: ResponseBaseOfComplaint;
   complaint_deleteComplaint: ResponseBaseOfComplaint;
+  complaint_setArbitrationCost: ResponseStatus;
+  complaint_setFirstAndSecondPaymentCost: ResponseStatus;
   complaint_setInCouncilList: ResponseBaseOfSetInCouncilListResponseDto;
   complaint_updateComplaint: ResponseBaseOfComplaint;
   complaintnonfeasibleargument_addComplaintNonFeasibleArgument: ResponseBaseOfComplaintNonFeasibleArgument;
@@ -3010,12 +3061,15 @@ export type Mutation = {
   test_generateAssignToExpertLetter: ResponseStatus;
   test_generateCallToMeetingLetter: ResponseStatus;
   test_generateComplaintGotCancelledLetter: ResponseStatus;
+  test_generateComplaintReport: Scalars['String']['output'];
   test_generateComplaintVerdictLetter: Array<Scalars['String']['output']>;
   test_generateCouncilListLetter: ResponseStatus;
   test_generateDecree: Scalars['String']['output'];
+  test_generateFulfilledFirstPaymentComplaintsList: Scalars['String']['output'];
   test_generatePassword: Scalars['String']['output'];
   test_generateProjectNotConstructiveLetter: ResponseStatus;
   test_generateReferToExpertLetter: ResponseStatus;
+  test_getCompany: ListResponseBaseOfPublicContract;
   test_getCompanyInfo: ResponseBaseOfCompanyProfile;
   test_getPublicContracts: ResponseStatus;
   test_sendLetter: ResponseBaseOfString;
@@ -3211,6 +3265,17 @@ export type MutationComplaint_AddComplaintArgs = {
 
 export type MutationComplaint_DeleteComplaintArgs = {
   entityId: Scalars['Int']['input'];
+};
+
+
+export type MutationComplaint_SetArbitrationCostArgs = {
+  amount: Scalars['Decimal']['input'];
+  complaintId: Scalars['Int']['input'];
+};
+
+
+export type MutationComplaint_SetFirstAndSecondPaymentCostArgs = {
+  complaintId: Scalars['Int']['input'];
 };
 
 
@@ -3485,6 +3550,11 @@ export type MutationTest_GenerateComplaintGotCancelledLetterArgs = {
 };
 
 
+export type MutationTest_GenerateComplaintReportArgs = {
+  input: ComplaintReportDtoInput;
+};
+
+
 export type MutationTest_GenerateComplaintVerdictLetterArgs = {
   input: ComplaintVerdictLetterDtoInput;
 };
@@ -3500,6 +3570,11 @@ export type MutationTest_GenerateDecreeArgs = {
 };
 
 
+export type MutationTest_GenerateFulfilledFirstPaymentComplaintsListArgs = {
+  userId: Scalars['String']['input'];
+};
+
+
 export type MutationTest_GenerateProjectNotConstructiveLetterArgs = {
   input: ProjectNotConstructiveLetterDtoInput;
 };
@@ -3507,6 +3582,11 @@ export type MutationTest_GenerateProjectNotConstructiveLetterArgs = {
 
 export type MutationTest_GenerateReferToExpertLetterArgs = {
   input: ReferToExpertLetterDtoInput;
+};
+
+
+export type MutationTest_GetCompanyArgs = {
+  name: Scalars['String']['input'];
 };
 
 
@@ -3884,6 +3964,7 @@ export type Query = {
   complaint_getComplaint: ResponseBaseOfComplaint;
   complaint_getComplaints: ListResponseBaseOfComplaint;
   complaint_getExpertComplaints: ListResponseBaseOfComplaint;
+  complaint_getFulfilledFirstPaymentComplaints: ListResponseBaseOfComplaint;
   contract_getContract: ResponseBaseOfContract;
   contract_getContracts: ListResponseBaseOfContract;
   correctionRequest_getCorrectionRequest: ResponseBaseOfCorrectionRequest;
@@ -5144,6 +5225,105 @@ export type DeleteCorrectionRequestsMutationVariables = Exact<{
 
 export type DeleteCorrectionRequestsMutation = { __typename?: 'Mutation', correctionRequest_deleteCorrectionRequest: { __typename?: 'ResponseBaseOfCorrectionRequest', result?: { __typename?: 'CorrectionRequest', id: number } | null, status: { __typename?: 'ResponseStatus', code: number, value: string } } };
 
+export type SendArbitrationRejectionSmsMutationVariables = Exact<{
+  complaintId: Scalars['Int']['input'];
+}>;
+
+
+export type SendArbitrationRejectionSmsMutation = { __typename?: 'Mutation', sms_sendArbitrationRejectionSMS: { __typename?: 'ResponseStatus', code: number, value: string } };
+
+export type SendAssignToExpertSmsMutationVariables = Exact<{
+  complaintId: Scalars['Int']['input'];
+}>;
+
+
+export type SendAssignToExpertSmsMutation = { __typename?: 'Mutation', sms_sendAssignToExpertSMS: { __typename?: 'ResponseStatus', code: number, value: string } };
+
+export type SendComplaintGotCancelledSmsMutationVariables = Exact<{
+  complaintId: Scalars['Int']['input'];
+}>;
+
+
+export type SendComplaintGotCancelledSmsMutation = { __typename?: 'Mutation', sms_sendComplaintGotCancelledSMS: { __typename?: 'ResponseStatus', code: number, value: string } };
+
+export type SendDidNotMakeFirstPaymentSmsMutationVariables = Exact<{
+  complaintId: Scalars['Int']['input'];
+}>;
+
+
+export type SendDidNotMakeFirstPaymentSmsMutation = { __typename?: 'Mutation', sms_sendDidNotMakeFirstPaymentSMS: { __typename?: 'ResponseStatus', code: number, value: string } };
+
+export type SendComplaintCorrectionRequestSmsMutationVariables = Exact<{
+  complaintId: Scalars['Int']['input'];
+  receiverId: Scalars['String']['input'];
+}>;
+
+
+export type SendComplaintCorrectionRequestSmsMutation = { __typename?: 'Mutation', sms_sendComplaintCorrectionRequestSMS: { __typename?: 'ResponseStatus', code: number, value: string } };
+
+export type SendAccusedDidNotRespondSmsMutationVariables = Exact<{
+  complaintId: Scalars['Int']['input'];
+}>;
+
+
+export type SendAccusedDidNotRespondSmsMutation = { __typename?: 'Mutation', sms_sendAccusedDidNotRespondSMS: { __typename?: 'ResponseStatus', code: number, value: string } };
+
+export type SendSecondPaymentAnnouncementSmsMutationVariables = Exact<{
+  complaintId: Scalars['Int']['input'];
+}>;
+
+
+export type SendSecondPaymentAnnouncementSmsMutation = { __typename?: 'Mutation', sms_sendSecondPaymentAnnouncementSMS: { __typename?: 'ResponseStatus', code: number, value: string } };
+
+export type SendViewVerdictSmsMutationVariables = Exact<{
+  complaintId: Scalars['Int']['input'];
+}>;
+
+
+export type SendViewVerdictSmsMutation = { __typename?: 'Mutation', sms_sendViewVerdictSMS: { __typename?: 'ResponseStatus', code: number, value: string } };
+
+export type SendLetterSentToMinistersCouncilSmsMutationVariables = Exact<{
+  complaintId: Scalars['Int']['input'];
+}>;
+
+
+export type SendLetterSentToMinistersCouncilSmsMutation = { __typename?: 'Mutation', sms_sendLetterSentToMinistersCouncilSMS: { __typename?: 'ResponseStatus', code: number, value: string } };
+
+export type SendReceiveAnswerFromMinistersCouncilSmsMutationVariables = Exact<{
+  complaintId: Scalars['Int']['input'];
+}>;
+
+
+export type SendReceiveAnswerFromMinistersCouncilSmsMutation = { __typename?: 'Mutation', sms_sendReceiveAnswerFromMinistersCouncilSMS: { __typename?: 'ResponseStatus', code: number, value: string } };
+
+export type SetFirstAndSecondPaymentCostMutationVariables = Exact<{
+  complaintId: Scalars['Int']['input'];
+}>;
+
+
+export type SetFirstAndSecondPaymentCostMutation = { __typename?: 'Mutation', complaint_setFirstAndSecondPaymentCost: { __typename?: 'ResponseStatus', code: number, value: string } };
+
+export type GenerateComplaintReportMutationVariables = Exact<{
+  input: ComplaintReportDtoInput;
+}>;
+
+
+export type GenerateComplaintReportMutation = { __typename?: 'Mutation', test_generateComplaintReport: string };
+
+export type GenerateFulfilledFirstPaymentComplaintsListMutationVariables = Exact<{
+  userId: Scalars['String']['input'];
+}>;
+
+
+export type GenerateFulfilledFirstPaymentComplaintsListMutation = { __typename?: 'Mutation', test_generateFulfilledFirstPaymentComplaintsList: string };
+
+export type SendComplaintAddedSmsMutationVariables = Exact<{
+  complaintId: Scalars['Int']['input'];
+}>;
+
+
+export type SendComplaintAddedSmsMutation = { __typename?: 'Mutation', sms_sendComplaintAddedSMS: { __typename?: 'ResponseStatus', code: number, value: string } };
+
 export type Get_ComplaintsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -5397,7 +5577,7 @@ export type GetContractQueryVariables = Exact<{
 }>;
 
 
-export type GetContractQuery = { __typename?: 'Query', contract_getContracts: { __typename?: 'ListResponseBaseOfContract', status?: any | null, result?: { __typename?: 'ContractCollectionSegment', items?: Array<{ __typename?: 'Contract', id: number, accuserDepartmentUserId?: string | null, accusedDepartmentUserId?: string | null, accuserNationality?: string | null, accusedNationality?: string | null, accuserRelatedPeopleByAccuser?: string | null, accuserRelatedPeopleByAccused?: string | null, accusedRelatedPeopleByAccuser?: string | null, accusedRelatedPeopleByAccused?: string | null, contractTypeByAccused?: Array<string> | null, contractTypeByAccuser?: Array<string> | null, otherContractTypeByAccused?: string | null, otherContractTypeByAccuser?: string | null, circularNumberByAccused?: string | null, circularNumberByAccuser?: string | null, circularDateByAccused?: any | null, circularDateByAccuser?: any | null, contractSubjectByAccused?: string | null, contractSubjectByAccuser?: string | null, contractNumberByAccused?: string | null, contractNumberByAccuser?: string | null, contractDateByAccused?: any | null, contractDateByAccuser?: any | null, initialBudgetByAccused?: any | null, initialBudgetByAccuser?: any | null, initialTimePeriodByAccused?: number | null, initialTimePeriodByAccuser?: number | null, priceListOfBasicUnitOfFieldByAccused?: string | null, priceListOfBasicUnitOfFieldByAccuser?: string | null, isSpecialPriceListAttachedToContractByAccused?: string | null, isSpecialPriceListAttachedToContractByAccuser?: string | null, recommendedCoefficientByAccused?: number | null, recommendedCoefficientByAccuser?: number | null, coefficientTypeByAccused?: string | null, coefficientTypeByAccuser?: string | null, assigningTypeByAccused?: string | null, assigningTypeByAccuser?: string | null, doesContainAdjustmentByAccused?: string | null, doesContainAdjustmentByAccuser?: string | null, baseIndexPeriodByAccused?: string | null, baseIndexPeriodByAccuser?: string | null, operationStartDateByAccused?: any | null, operationStartDateByAccuser?: any | null, physicalProgressInArbitrationDateByAccused?: number | null, physicalProgressInArbitrationDateByAccuser?: number | null, financialProgressInArbitrationDateByAccused?: number | null, financialProgressInArbitrationDateByAccuser?: number | null, contractStatusAndDateInArbitrationByAccused?: string | null, contractStatusAndDateInArbitrationByAccuser?: string | null, supervisionDepartmentByAccused?: string | null, supervisionDepartmentByAccuser?: string | null, authorizedDelaysByAccused?: number | null, authorizedDelaysByAccuser?: number | null, unauthorizedDelaysByAccused?: number | null, unauthorizedDelaysByAccuser?: number | null, isExecutiveByAccused?: boolean | null, isExecutiveByAccuser?: boolean | null, isExecutiveByExpert?: boolean | null, fileNamesByAccused?: Array<string> | null, fileNamesByAccuser?: Array<string> | null, currencyByAccused?: string | null, currencyByAccuser?: string | null, generalConditionsFileNameByAccuser?: string | null, generalConditionsFileNameByAccused?: string | null, contractGeneralTypeByAccused?: ContractGeneralType | null, contractGeneralTypeByAccuser?: ContractGeneralType | null }> | null } | null } };
+export type GetContractQuery = { __typename?: 'Query', contract_getContracts: { __typename?: 'ListResponseBaseOfContract', status?: any | null, result?: { __typename?: 'ContractCollectionSegment', items?: Array<{ __typename?: 'Contract', id: number, accuserDepartmentUserId?: string | null, accusedDepartmentUserId?: string | null, accuserNationality?: string | null, accusedNationality?: string | null, accuserRelatedPeopleByAccuser?: string | null, accuserRelatedPeopleByAccused?: string | null, accusedRelatedPeopleByAccuser?: string | null, accusedRelatedPeopleByAccused?: string | null, contractTypeByAccused?: Array<string> | null, contractTypeByAccuser?: Array<string> | null, otherContractTypeByAccused?: string | null, otherContractTypeByAccuser?: string | null, circularNumberByAccused?: string | null, circularNumberByAccuser?: string | null, circularDateByAccused?: any | null, circularDateByAccuser?: any | null, contractSubjectByAccused?: string | null, contractSubjectByAccuser?: string | null, contractNumberByAccused?: string | null, contractNumberByAccuser?: string | null, contractDateByAccused?: any | null, contractDateByAccuser?: any | null, initialBudgetByAccused?: any | null, initialBudgetByAccuser?: any | null, initialTimePeriodByAccused?: number | null, initialTimePeriodByAccuser?: number | null, priceListOfBasicUnitOfFieldByAccused?: string | null, priceListOfBasicUnitOfFieldByAccuser?: string | null, isSpecialPriceListAttachedToContractByAccused?: string | null, isSpecialPriceListAttachedToContractByAccuser?: string | null, recommendedCoefficientByAccused?: number | null, recommendedCoefficientByAccuser?: number | null, coefficientTypeByAccused?: string | null, coefficientTypeByAccuser?: string | null, assigningTypeByAccused?: string | null, assigningTypeByAccuser?: string | null, doesContainAdjustmentByAccused?: string | null, doesContainAdjustmentByAccuser?: string | null, baseIndexPeriodByAccused?: string | null, baseIndexPeriodByAccuser?: string | null, operationStartDateByAccused?: any | null, operationStartDateByAccuser?: any | null, physicalProgressInArbitrationDateByAccused?: number | null, physicalProgressInArbitrationDateByAccuser?: number | null, financialProgressInArbitrationDateByAccused?: number | null, financialProgressInArbitrationDateByAccuser?: number | null, contractStatusAndDateInArbitrationByAccused?: string | null, contractStatusAndDateInArbitrationByAccuser?: string | null, supervisionDepartmentByAccused?: string | null, supervisionDepartmentByAccuser?: string | null, authorizedDelaysByAccused?: number | null, authorizedDelaysByAccuser?: number | null, unauthorizedDelaysByAccused?: number | null, unauthorizedDelaysByAccuser?: number | null, isExecutiveByAccused?: boolean | null, isExecutiveByAccuser?: boolean | null, isExecutiveByExpert?: boolean | null, fileNamesByAccused?: Array<string> | null, fileNamesByAccuser?: Array<string> | null, currencyByAccused?: string | null, currencyByAccuser?: string | null, generalConditionsFileNameByAccuser?: string | null, generalConditionsFileNameByAccused?: string | null, contractGeneralTypeByAccused?: ContractGeneralType | null, contractGeneralTypeByAccuser?: ContractGeneralType | null, sourceOfFundingTitle?: string | null }> | null } | null } };
 
 export type GetPublicContractsQueryVariables = Exact<{
   filter?: InputMaybe<PublicContractFilterInput>;
@@ -5407,7 +5587,7 @@ export type GetPublicContractsQueryVariables = Exact<{
 }>;
 
 
-export type GetPublicContractsQuery = { __typename?: 'Query', publicContract_getPublicContracts: { __typename?: 'ListResponseBaseOfPublicContract', status?: any | null, result?: { __typename?: 'PublicContractCollectionSegment', items?: Array<{ __typename?: 'PublicContract', guid?: any | null, fullName?: string | null, executiveTitle?: string | null, nationalCode?: string | null, id: number, isDeleted: boolean, createdDate: any, lastModifiedDate?: any | null, contractID?: string | null, contractSubject?: string | null, generalConditionTitle?: string | null, sourceOfFundingTitle?: string | null, city?: string | null, agreeAmountRial?: any | null, agreeDate: any, jobReferenceTitle?: string | null, contractCategoryTitle?: string | null }> | null } | null } };
+export type GetPublicContractsQuery = { __typename?: 'Query', publicContract_getPublicContracts: { __typename?: 'ListResponseBaseOfPublicContract', status?: any | null, result?: { __typename?: 'PublicContractCollectionSegment', totalCount: number, pageInfo: { __typename?: 'CollectionSegmentInfo', hasNextPage: boolean, hasPreviousPage: boolean }, items?: Array<{ __typename?: 'PublicContract', guid?: any | null, fullName?: string | null, executiveTitle?: string | null, nationalCode?: string | null, id: number, isDeleted: boolean, createdDate: any, lastModifiedDate?: any | null, contractID?: string | null, contractSubject?: string | null, generalConditionTitle?: string | null, sourceOfFundingTitle?: string | null, city?: string | null, agreeAmountRial?: any | null, agreeDate: any, jobReferenceTitle?: string | null, contractCategoryTitle?: string | null }> | null } | null } };
 
 export type SetCouncilListMutationMutationVariables = Exact<{
   ids: Array<Scalars['Int']['input']> | Scalars['Int']['input'];
@@ -5470,6 +5650,13 @@ export type GetFileFullQueryVariables = Exact<{
 
 
 export type GetFileFullQuery = { __typename?: 'Query', fileGallery_getFiles: { __typename?: 'ListResponseBaseOfFileGallery', result?: { __typename?: 'FileGalleryCollectionSegment', items?: Array<{ __typename?: 'FileGallery', id: number, userId: string, name: string, user?: { __typename?: 'User', fullName: string, id?: string | null } | null }> | null } | null } };
+
+export type GetUserProileQueryVariables = Exact<{
+  nationalCode: Scalars['String']['input'];
+}>;
+
+
+export type GetUserProileQuery = { __typename?: 'Query', companyProfile_getCompanyProfiles: { __typename?: 'ListResponseBaseOfCompanyProfile', status?: any | null, result?: { __typename?: 'CompanyProfileCollectionSegment', items?: Array<{ __typename?: 'CompanyProfile', webAddress?: string | null, smsNumber?: string | null, activityEndDate?: any | null, id: number, isDeleted: boolean, createdDate: any, registerNumber?: string | null, registerDate?: any | null, postCode?: string | null, nationalCode?: string | null, name?: string | null, issuanceDate?: any | null, emailAddress?: string | null, addressDesc?: string | null }> | null } | null } };
 
 export type Create_Installment_TableMutationVariables = Exact<{
   contractId?: InputMaybe<Scalars['Int']['input']>;
@@ -7311,6 +7498,480 @@ export function useDeleteCorrectionRequestsMutation(baseOptions?: Apollo.Mutatio
 export type DeleteCorrectionRequestsMutationHookResult = ReturnType<typeof useDeleteCorrectionRequestsMutation>;
 export type DeleteCorrectionRequestsMutationResult = Apollo.MutationResult<DeleteCorrectionRequestsMutation>;
 export type DeleteCorrectionRequestsMutationOptions = Apollo.BaseMutationOptions<DeleteCorrectionRequestsMutation, DeleteCorrectionRequestsMutationVariables>;
+export const SendArbitrationRejectionSmsDocument = gql`
+    mutation SendArbitrationRejectionSMS($complaintId: Int!) {
+  sms_sendArbitrationRejectionSMS(complaintId: $complaintId) {
+    code
+    value
+  }
+}
+    `;
+export type SendArbitrationRejectionSmsMutationFn = Apollo.MutationFunction<SendArbitrationRejectionSmsMutation, SendArbitrationRejectionSmsMutationVariables>;
+
+/**
+ * __useSendArbitrationRejectionSmsMutation__
+ *
+ * To run a mutation, you first call `useSendArbitrationRejectionSmsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSendArbitrationRejectionSmsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [sendArbitrationRejectionSmsMutation, { data, loading, error }] = useSendArbitrationRejectionSmsMutation({
+ *   variables: {
+ *      complaintId: // value for 'complaintId'
+ *   },
+ * });
+ */
+export function useSendArbitrationRejectionSmsMutation(baseOptions?: Apollo.MutationHookOptions<SendArbitrationRejectionSmsMutation, SendArbitrationRejectionSmsMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SendArbitrationRejectionSmsMutation, SendArbitrationRejectionSmsMutationVariables>(SendArbitrationRejectionSmsDocument, options);
+      }
+export type SendArbitrationRejectionSmsMutationHookResult = ReturnType<typeof useSendArbitrationRejectionSmsMutation>;
+export type SendArbitrationRejectionSmsMutationResult = Apollo.MutationResult<SendArbitrationRejectionSmsMutation>;
+export type SendArbitrationRejectionSmsMutationOptions = Apollo.BaseMutationOptions<SendArbitrationRejectionSmsMutation, SendArbitrationRejectionSmsMutationVariables>;
+export const SendAssignToExpertSmsDocument = gql`
+    mutation SendAssignToExpertSMS($complaintId: Int!) {
+  sms_sendAssignToExpertSMS(complaintId: $complaintId) {
+    code
+    value
+  }
+}
+    `;
+export type SendAssignToExpertSmsMutationFn = Apollo.MutationFunction<SendAssignToExpertSmsMutation, SendAssignToExpertSmsMutationVariables>;
+
+/**
+ * __useSendAssignToExpertSmsMutation__
+ *
+ * To run a mutation, you first call `useSendAssignToExpertSmsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSendAssignToExpertSmsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [sendAssignToExpertSmsMutation, { data, loading, error }] = useSendAssignToExpertSmsMutation({
+ *   variables: {
+ *      complaintId: // value for 'complaintId'
+ *   },
+ * });
+ */
+export function useSendAssignToExpertSmsMutation(baseOptions?: Apollo.MutationHookOptions<SendAssignToExpertSmsMutation, SendAssignToExpertSmsMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SendAssignToExpertSmsMutation, SendAssignToExpertSmsMutationVariables>(SendAssignToExpertSmsDocument, options);
+      }
+export type SendAssignToExpertSmsMutationHookResult = ReturnType<typeof useSendAssignToExpertSmsMutation>;
+export type SendAssignToExpertSmsMutationResult = Apollo.MutationResult<SendAssignToExpertSmsMutation>;
+export type SendAssignToExpertSmsMutationOptions = Apollo.BaseMutationOptions<SendAssignToExpertSmsMutation, SendAssignToExpertSmsMutationVariables>;
+export const SendComplaintGotCancelledSmsDocument = gql`
+    mutation SendComplaintGotCancelledSMS($complaintId: Int!) {
+  sms_sendComplaintGotCancelledSMS(complaintId: $complaintId) {
+    code
+    value
+  }
+}
+    `;
+export type SendComplaintGotCancelledSmsMutationFn = Apollo.MutationFunction<SendComplaintGotCancelledSmsMutation, SendComplaintGotCancelledSmsMutationVariables>;
+
+/**
+ * __useSendComplaintGotCancelledSmsMutation__
+ *
+ * To run a mutation, you first call `useSendComplaintGotCancelledSmsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSendComplaintGotCancelledSmsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [sendComplaintGotCancelledSmsMutation, { data, loading, error }] = useSendComplaintGotCancelledSmsMutation({
+ *   variables: {
+ *      complaintId: // value for 'complaintId'
+ *   },
+ * });
+ */
+export function useSendComplaintGotCancelledSmsMutation(baseOptions?: Apollo.MutationHookOptions<SendComplaintGotCancelledSmsMutation, SendComplaintGotCancelledSmsMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SendComplaintGotCancelledSmsMutation, SendComplaintGotCancelledSmsMutationVariables>(SendComplaintGotCancelledSmsDocument, options);
+      }
+export type SendComplaintGotCancelledSmsMutationHookResult = ReturnType<typeof useSendComplaintGotCancelledSmsMutation>;
+export type SendComplaintGotCancelledSmsMutationResult = Apollo.MutationResult<SendComplaintGotCancelledSmsMutation>;
+export type SendComplaintGotCancelledSmsMutationOptions = Apollo.BaseMutationOptions<SendComplaintGotCancelledSmsMutation, SendComplaintGotCancelledSmsMutationVariables>;
+export const SendDidNotMakeFirstPaymentSmsDocument = gql`
+    mutation SendDidNotMakeFirstPaymentSMS($complaintId: Int!) {
+  sms_sendDidNotMakeFirstPaymentSMS(complaintId: $complaintId) {
+    code
+    value
+  }
+}
+    `;
+export type SendDidNotMakeFirstPaymentSmsMutationFn = Apollo.MutationFunction<SendDidNotMakeFirstPaymentSmsMutation, SendDidNotMakeFirstPaymentSmsMutationVariables>;
+
+/**
+ * __useSendDidNotMakeFirstPaymentSmsMutation__
+ *
+ * To run a mutation, you first call `useSendDidNotMakeFirstPaymentSmsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSendDidNotMakeFirstPaymentSmsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [sendDidNotMakeFirstPaymentSmsMutation, { data, loading, error }] = useSendDidNotMakeFirstPaymentSmsMutation({
+ *   variables: {
+ *      complaintId: // value for 'complaintId'
+ *   },
+ * });
+ */
+export function useSendDidNotMakeFirstPaymentSmsMutation(baseOptions?: Apollo.MutationHookOptions<SendDidNotMakeFirstPaymentSmsMutation, SendDidNotMakeFirstPaymentSmsMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SendDidNotMakeFirstPaymentSmsMutation, SendDidNotMakeFirstPaymentSmsMutationVariables>(SendDidNotMakeFirstPaymentSmsDocument, options);
+      }
+export type SendDidNotMakeFirstPaymentSmsMutationHookResult = ReturnType<typeof useSendDidNotMakeFirstPaymentSmsMutation>;
+export type SendDidNotMakeFirstPaymentSmsMutationResult = Apollo.MutationResult<SendDidNotMakeFirstPaymentSmsMutation>;
+export type SendDidNotMakeFirstPaymentSmsMutationOptions = Apollo.BaseMutationOptions<SendDidNotMakeFirstPaymentSmsMutation, SendDidNotMakeFirstPaymentSmsMutationVariables>;
+export const SendComplaintCorrectionRequestSmsDocument = gql`
+    mutation SendComplaintCorrectionRequestSMS($complaintId: Int!, $receiverId: String!) {
+  sms_sendComplaintCorrectionRequestSMS(
+    complaintId: $complaintId
+    receiverId: $receiverId
+  ) {
+    code
+    value
+  }
+}
+    `;
+export type SendComplaintCorrectionRequestSmsMutationFn = Apollo.MutationFunction<SendComplaintCorrectionRequestSmsMutation, SendComplaintCorrectionRequestSmsMutationVariables>;
+
+/**
+ * __useSendComplaintCorrectionRequestSmsMutation__
+ *
+ * To run a mutation, you first call `useSendComplaintCorrectionRequestSmsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSendComplaintCorrectionRequestSmsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [sendComplaintCorrectionRequestSmsMutation, { data, loading, error }] = useSendComplaintCorrectionRequestSmsMutation({
+ *   variables: {
+ *      complaintId: // value for 'complaintId'
+ *      receiverId: // value for 'receiverId'
+ *   },
+ * });
+ */
+export function useSendComplaintCorrectionRequestSmsMutation(baseOptions?: Apollo.MutationHookOptions<SendComplaintCorrectionRequestSmsMutation, SendComplaintCorrectionRequestSmsMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SendComplaintCorrectionRequestSmsMutation, SendComplaintCorrectionRequestSmsMutationVariables>(SendComplaintCorrectionRequestSmsDocument, options);
+      }
+export type SendComplaintCorrectionRequestSmsMutationHookResult = ReturnType<typeof useSendComplaintCorrectionRequestSmsMutation>;
+export type SendComplaintCorrectionRequestSmsMutationResult = Apollo.MutationResult<SendComplaintCorrectionRequestSmsMutation>;
+export type SendComplaintCorrectionRequestSmsMutationOptions = Apollo.BaseMutationOptions<SendComplaintCorrectionRequestSmsMutation, SendComplaintCorrectionRequestSmsMutationVariables>;
+export const SendAccusedDidNotRespondSmsDocument = gql`
+    mutation SendAccusedDidNotRespondSMS($complaintId: Int!) {
+  sms_sendAccusedDidNotRespondSMS(complaintId: $complaintId) {
+    code
+    value
+  }
+}
+    `;
+export type SendAccusedDidNotRespondSmsMutationFn = Apollo.MutationFunction<SendAccusedDidNotRespondSmsMutation, SendAccusedDidNotRespondSmsMutationVariables>;
+
+/**
+ * __useSendAccusedDidNotRespondSmsMutation__
+ *
+ * To run a mutation, you first call `useSendAccusedDidNotRespondSmsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSendAccusedDidNotRespondSmsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [sendAccusedDidNotRespondSmsMutation, { data, loading, error }] = useSendAccusedDidNotRespondSmsMutation({
+ *   variables: {
+ *      complaintId: // value for 'complaintId'
+ *   },
+ * });
+ */
+export function useSendAccusedDidNotRespondSmsMutation(baseOptions?: Apollo.MutationHookOptions<SendAccusedDidNotRespondSmsMutation, SendAccusedDidNotRespondSmsMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SendAccusedDidNotRespondSmsMutation, SendAccusedDidNotRespondSmsMutationVariables>(SendAccusedDidNotRespondSmsDocument, options);
+      }
+export type SendAccusedDidNotRespondSmsMutationHookResult = ReturnType<typeof useSendAccusedDidNotRespondSmsMutation>;
+export type SendAccusedDidNotRespondSmsMutationResult = Apollo.MutationResult<SendAccusedDidNotRespondSmsMutation>;
+export type SendAccusedDidNotRespondSmsMutationOptions = Apollo.BaseMutationOptions<SendAccusedDidNotRespondSmsMutation, SendAccusedDidNotRespondSmsMutationVariables>;
+export const SendSecondPaymentAnnouncementSmsDocument = gql`
+    mutation SendSecondPaymentAnnouncementSMS($complaintId: Int!) {
+  sms_sendSecondPaymentAnnouncementSMS(complaintId: $complaintId) {
+    code
+    value
+  }
+}
+    `;
+export type SendSecondPaymentAnnouncementSmsMutationFn = Apollo.MutationFunction<SendSecondPaymentAnnouncementSmsMutation, SendSecondPaymentAnnouncementSmsMutationVariables>;
+
+/**
+ * __useSendSecondPaymentAnnouncementSmsMutation__
+ *
+ * To run a mutation, you first call `useSendSecondPaymentAnnouncementSmsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSendSecondPaymentAnnouncementSmsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [sendSecondPaymentAnnouncementSmsMutation, { data, loading, error }] = useSendSecondPaymentAnnouncementSmsMutation({
+ *   variables: {
+ *      complaintId: // value for 'complaintId'
+ *   },
+ * });
+ */
+export function useSendSecondPaymentAnnouncementSmsMutation(baseOptions?: Apollo.MutationHookOptions<SendSecondPaymentAnnouncementSmsMutation, SendSecondPaymentAnnouncementSmsMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SendSecondPaymentAnnouncementSmsMutation, SendSecondPaymentAnnouncementSmsMutationVariables>(SendSecondPaymentAnnouncementSmsDocument, options);
+      }
+export type SendSecondPaymentAnnouncementSmsMutationHookResult = ReturnType<typeof useSendSecondPaymentAnnouncementSmsMutation>;
+export type SendSecondPaymentAnnouncementSmsMutationResult = Apollo.MutationResult<SendSecondPaymentAnnouncementSmsMutation>;
+export type SendSecondPaymentAnnouncementSmsMutationOptions = Apollo.BaseMutationOptions<SendSecondPaymentAnnouncementSmsMutation, SendSecondPaymentAnnouncementSmsMutationVariables>;
+export const SendViewVerdictSmsDocument = gql`
+    mutation SendViewVerdictSMS($complaintId: Int!) {
+  sms_sendViewVerdictSMS(complaintId: $complaintId) {
+    code
+    value
+  }
+}
+    `;
+export type SendViewVerdictSmsMutationFn = Apollo.MutationFunction<SendViewVerdictSmsMutation, SendViewVerdictSmsMutationVariables>;
+
+/**
+ * __useSendViewVerdictSmsMutation__
+ *
+ * To run a mutation, you first call `useSendViewVerdictSmsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSendViewVerdictSmsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [sendViewVerdictSmsMutation, { data, loading, error }] = useSendViewVerdictSmsMutation({
+ *   variables: {
+ *      complaintId: // value for 'complaintId'
+ *   },
+ * });
+ */
+export function useSendViewVerdictSmsMutation(baseOptions?: Apollo.MutationHookOptions<SendViewVerdictSmsMutation, SendViewVerdictSmsMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SendViewVerdictSmsMutation, SendViewVerdictSmsMutationVariables>(SendViewVerdictSmsDocument, options);
+      }
+export type SendViewVerdictSmsMutationHookResult = ReturnType<typeof useSendViewVerdictSmsMutation>;
+export type SendViewVerdictSmsMutationResult = Apollo.MutationResult<SendViewVerdictSmsMutation>;
+export type SendViewVerdictSmsMutationOptions = Apollo.BaseMutationOptions<SendViewVerdictSmsMutation, SendViewVerdictSmsMutationVariables>;
+export const SendLetterSentToMinistersCouncilSmsDocument = gql`
+    mutation SendLetterSentToMinistersCouncilSMS($complaintId: Int!) {
+  sms_sendLetterSentToMinistersCouncilSMS(complaintId: $complaintId) {
+    code
+    value
+  }
+}
+    `;
+export type SendLetterSentToMinistersCouncilSmsMutationFn = Apollo.MutationFunction<SendLetterSentToMinistersCouncilSmsMutation, SendLetterSentToMinistersCouncilSmsMutationVariables>;
+
+/**
+ * __useSendLetterSentToMinistersCouncilSmsMutation__
+ *
+ * To run a mutation, you first call `useSendLetterSentToMinistersCouncilSmsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSendLetterSentToMinistersCouncilSmsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [sendLetterSentToMinistersCouncilSmsMutation, { data, loading, error }] = useSendLetterSentToMinistersCouncilSmsMutation({
+ *   variables: {
+ *      complaintId: // value for 'complaintId'
+ *   },
+ * });
+ */
+export function useSendLetterSentToMinistersCouncilSmsMutation(baseOptions?: Apollo.MutationHookOptions<SendLetterSentToMinistersCouncilSmsMutation, SendLetterSentToMinistersCouncilSmsMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SendLetterSentToMinistersCouncilSmsMutation, SendLetterSentToMinistersCouncilSmsMutationVariables>(SendLetterSentToMinistersCouncilSmsDocument, options);
+      }
+export type SendLetterSentToMinistersCouncilSmsMutationHookResult = ReturnType<typeof useSendLetterSentToMinistersCouncilSmsMutation>;
+export type SendLetterSentToMinistersCouncilSmsMutationResult = Apollo.MutationResult<SendLetterSentToMinistersCouncilSmsMutation>;
+export type SendLetterSentToMinistersCouncilSmsMutationOptions = Apollo.BaseMutationOptions<SendLetterSentToMinistersCouncilSmsMutation, SendLetterSentToMinistersCouncilSmsMutationVariables>;
+export const SendReceiveAnswerFromMinistersCouncilSmsDocument = gql`
+    mutation SendReceiveAnswerFromMinistersCouncilSMS($complaintId: Int!) {
+  sms_sendReceiveAnswerFromMinistersCouncilSMS(complaintId: $complaintId) {
+    code
+    value
+  }
+}
+    `;
+export type SendReceiveAnswerFromMinistersCouncilSmsMutationFn = Apollo.MutationFunction<SendReceiveAnswerFromMinistersCouncilSmsMutation, SendReceiveAnswerFromMinistersCouncilSmsMutationVariables>;
+
+/**
+ * __useSendReceiveAnswerFromMinistersCouncilSmsMutation__
+ *
+ * To run a mutation, you first call `useSendReceiveAnswerFromMinistersCouncilSmsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSendReceiveAnswerFromMinistersCouncilSmsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [sendReceiveAnswerFromMinistersCouncilSmsMutation, { data, loading, error }] = useSendReceiveAnswerFromMinistersCouncilSmsMutation({
+ *   variables: {
+ *      complaintId: // value for 'complaintId'
+ *   },
+ * });
+ */
+export function useSendReceiveAnswerFromMinistersCouncilSmsMutation(baseOptions?: Apollo.MutationHookOptions<SendReceiveAnswerFromMinistersCouncilSmsMutation, SendReceiveAnswerFromMinistersCouncilSmsMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SendReceiveAnswerFromMinistersCouncilSmsMutation, SendReceiveAnswerFromMinistersCouncilSmsMutationVariables>(SendReceiveAnswerFromMinistersCouncilSmsDocument, options);
+      }
+export type SendReceiveAnswerFromMinistersCouncilSmsMutationHookResult = ReturnType<typeof useSendReceiveAnswerFromMinistersCouncilSmsMutation>;
+export type SendReceiveAnswerFromMinistersCouncilSmsMutationResult = Apollo.MutationResult<SendReceiveAnswerFromMinistersCouncilSmsMutation>;
+export type SendReceiveAnswerFromMinistersCouncilSmsMutationOptions = Apollo.BaseMutationOptions<SendReceiveAnswerFromMinistersCouncilSmsMutation, SendReceiveAnswerFromMinistersCouncilSmsMutationVariables>;
+export const SetFirstAndSecondPaymentCostDocument = gql`
+    mutation SetFirstAndSecondPaymentCost($complaintId: Int!) {
+  complaint_setFirstAndSecondPaymentCost(complaintId: $complaintId) {
+    code
+    value
+  }
+}
+    `;
+export type SetFirstAndSecondPaymentCostMutationFn = Apollo.MutationFunction<SetFirstAndSecondPaymentCostMutation, SetFirstAndSecondPaymentCostMutationVariables>;
+
+/**
+ * __useSetFirstAndSecondPaymentCostMutation__
+ *
+ * To run a mutation, you first call `useSetFirstAndSecondPaymentCostMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetFirstAndSecondPaymentCostMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [setFirstAndSecondPaymentCostMutation, { data, loading, error }] = useSetFirstAndSecondPaymentCostMutation({
+ *   variables: {
+ *      complaintId: // value for 'complaintId'
+ *   },
+ * });
+ */
+export function useSetFirstAndSecondPaymentCostMutation(baseOptions?: Apollo.MutationHookOptions<SetFirstAndSecondPaymentCostMutation, SetFirstAndSecondPaymentCostMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SetFirstAndSecondPaymentCostMutation, SetFirstAndSecondPaymentCostMutationVariables>(SetFirstAndSecondPaymentCostDocument, options);
+      }
+export type SetFirstAndSecondPaymentCostMutationHookResult = ReturnType<typeof useSetFirstAndSecondPaymentCostMutation>;
+export type SetFirstAndSecondPaymentCostMutationResult = Apollo.MutationResult<SetFirstAndSecondPaymentCostMutation>;
+export type SetFirstAndSecondPaymentCostMutationOptions = Apollo.BaseMutationOptions<SetFirstAndSecondPaymentCostMutation, SetFirstAndSecondPaymentCostMutationVariables>;
+export const GenerateComplaintReportDocument = gql`
+    mutation GenerateComplaintReport($input: ComplaintReportDtoInput!) {
+  test_generateComplaintReport(input: $input)
+}
+    `;
+export type GenerateComplaintReportMutationFn = Apollo.MutationFunction<GenerateComplaintReportMutation, GenerateComplaintReportMutationVariables>;
+
+/**
+ * __useGenerateComplaintReportMutation__
+ *
+ * To run a mutation, you first call `useGenerateComplaintReportMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useGenerateComplaintReportMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [generateComplaintReportMutation, { data, loading, error }] = useGenerateComplaintReportMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useGenerateComplaintReportMutation(baseOptions?: Apollo.MutationHookOptions<GenerateComplaintReportMutation, GenerateComplaintReportMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<GenerateComplaintReportMutation, GenerateComplaintReportMutationVariables>(GenerateComplaintReportDocument, options);
+      }
+export type GenerateComplaintReportMutationHookResult = ReturnType<typeof useGenerateComplaintReportMutation>;
+export type GenerateComplaintReportMutationResult = Apollo.MutationResult<GenerateComplaintReportMutation>;
+export type GenerateComplaintReportMutationOptions = Apollo.BaseMutationOptions<GenerateComplaintReportMutation, GenerateComplaintReportMutationVariables>;
+export const GenerateFulfilledFirstPaymentComplaintsListDocument = gql`
+    mutation GenerateFulfilledFirstPaymentComplaintsList($userId: String!) {
+  test_generateFulfilledFirstPaymentComplaintsList(userId: $userId)
+}
+    `;
+export type GenerateFulfilledFirstPaymentComplaintsListMutationFn = Apollo.MutationFunction<GenerateFulfilledFirstPaymentComplaintsListMutation, GenerateFulfilledFirstPaymentComplaintsListMutationVariables>;
+
+/**
+ * __useGenerateFulfilledFirstPaymentComplaintsListMutation__
+ *
+ * To run a mutation, you first call `useGenerateFulfilledFirstPaymentComplaintsListMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useGenerateFulfilledFirstPaymentComplaintsListMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [generateFulfilledFirstPaymentComplaintsListMutation, { data, loading, error }] = useGenerateFulfilledFirstPaymentComplaintsListMutation({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useGenerateFulfilledFirstPaymentComplaintsListMutation(baseOptions?: Apollo.MutationHookOptions<GenerateFulfilledFirstPaymentComplaintsListMutation, GenerateFulfilledFirstPaymentComplaintsListMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<GenerateFulfilledFirstPaymentComplaintsListMutation, GenerateFulfilledFirstPaymentComplaintsListMutationVariables>(GenerateFulfilledFirstPaymentComplaintsListDocument, options);
+      }
+export type GenerateFulfilledFirstPaymentComplaintsListMutationHookResult = ReturnType<typeof useGenerateFulfilledFirstPaymentComplaintsListMutation>;
+export type GenerateFulfilledFirstPaymentComplaintsListMutationResult = Apollo.MutationResult<GenerateFulfilledFirstPaymentComplaintsListMutation>;
+export type GenerateFulfilledFirstPaymentComplaintsListMutationOptions = Apollo.BaseMutationOptions<GenerateFulfilledFirstPaymentComplaintsListMutation, GenerateFulfilledFirstPaymentComplaintsListMutationVariables>;
+export const SendComplaintAddedSmsDocument = gql`
+    mutation SendComplaintAddedSMS($complaintId: Int!) {
+  sms_sendComplaintAddedSMS(complaintId: $complaintId) {
+    code
+    value
+  }
+}
+    `;
+export type SendComplaintAddedSmsMutationFn = Apollo.MutationFunction<SendComplaintAddedSmsMutation, SendComplaintAddedSmsMutationVariables>;
+
+/**
+ * __useSendComplaintAddedSmsMutation__
+ *
+ * To run a mutation, you first call `useSendComplaintAddedSmsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSendComplaintAddedSmsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [sendComplaintAddedSmsMutation, { data, loading, error }] = useSendComplaintAddedSmsMutation({
+ *   variables: {
+ *      complaintId: // value for 'complaintId'
+ *   },
+ * });
+ */
+export function useSendComplaintAddedSmsMutation(baseOptions?: Apollo.MutationHookOptions<SendComplaintAddedSmsMutation, SendComplaintAddedSmsMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SendComplaintAddedSmsMutation, SendComplaintAddedSmsMutationVariables>(SendComplaintAddedSmsDocument, options);
+      }
+export type SendComplaintAddedSmsMutationHookResult = ReturnType<typeof useSendComplaintAddedSmsMutation>;
+export type SendComplaintAddedSmsMutationResult = Apollo.MutationResult<SendComplaintAddedSmsMutation>;
+export type SendComplaintAddedSmsMutationOptions = Apollo.BaseMutationOptions<SendComplaintAddedSmsMutation, SendComplaintAddedSmsMutationVariables>;
 export const Get_ComplaintsDocument = gql`
     query GET_COMPLAINTS {
   complaint_getComplaints {
@@ -8865,6 +9526,7 @@ export const GetContractDocument = gql`
         generalConditionsFileNameByAccused
         contractGeneralTypeByAccused
         contractGeneralTypeByAccuser
+        sourceOfFundingTitle
       }
     }
     status
@@ -8903,6 +9565,11 @@ export const GetPublicContractsDocument = gql`
     query GetPublicContracts($filter: PublicContractFilterInput, $order: [PublicContractSortInput!], $skip: Int, $take: Int) {
   publicContract_getPublicContracts {
     result(where: $filter, order: $order, skip: $skip, take: $take) {
+      totalCount
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+      }
       items {
         guid
         fullName
@@ -9320,6 +9987,59 @@ export function useGetFileFullLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type GetFileFullQueryHookResult = ReturnType<typeof useGetFileFullQuery>;
 export type GetFileFullLazyQueryHookResult = ReturnType<typeof useGetFileFullLazyQuery>;
 export type GetFileFullQueryResult = Apollo.QueryResult<GetFileFullQuery, GetFileFullQueryVariables>;
+export const GetUserProileDocument = gql`
+    query GetUserProile($nationalCode: String!) {
+  companyProfile_getCompanyProfiles {
+    status
+    result(where: {nationalCode: {eq: $nationalCode}}) {
+      items {
+        webAddress
+        smsNumber
+        activityEndDate
+        id
+        isDeleted
+        createdDate
+        registerNumber
+        registerDate
+        postCode
+        nationalCode
+        name
+        issuanceDate
+        emailAddress
+        addressDesc
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetUserProileQuery__
+ *
+ * To run a query within a React component, call `useGetUserProileQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserProileQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserProileQuery({
+ *   variables: {
+ *      nationalCode: // value for 'nationalCode'
+ *   },
+ * });
+ */
+export function useGetUserProileQuery(baseOptions: Apollo.QueryHookOptions<GetUserProileQuery, GetUserProileQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetUserProileQuery, GetUserProileQueryVariables>(GetUserProileDocument, options);
+      }
+export function useGetUserProileLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserProileQuery, GetUserProileQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetUserProileQuery, GetUserProileQueryVariables>(GetUserProileDocument, options);
+        }
+export type GetUserProileQueryHookResult = ReturnType<typeof useGetUserProileQuery>;
+export type GetUserProileLazyQueryHookResult = ReturnType<typeof useGetUserProileLazyQuery>;
+export type GetUserProileQueryResult = Apollo.QueryResult<GetUserProileQuery, GetUserProileQueryVariables>;
 export const Create_Installment_TableDocument = gql`
     mutation CREATE_INSTALLMENT_TABLE($contractId: Int, $paymentTotal: Decimal, $registrarType: RegistrarType, $remainingPayment: Decimal, $userId: String) {
   installmentTable_addInstallmentTable(

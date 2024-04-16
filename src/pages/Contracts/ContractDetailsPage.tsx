@@ -14,9 +14,12 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useSmsComplaintCodeMutation } from "../../../generated-types";
+import {
+  useGetContractQuery,
+  useSmsComplaintCodeMutation,
+} from "../../../generated-types";
 import { GET_ARBITRATION_TERMS_FORM_BY_COMPLAINT_ID } from "../../GraphQL/Complaints/Queries";
 import {
   ContractSmall,
@@ -45,7 +48,7 @@ const ContractDetailsPage = () => {
     contractId: string;
     complaintId: string;
   }>();
-  const [contract, setContract] = useState<ContractSmall>();
+  // const [contract, setContract] = useState<ContractSmall>();
   const [arbitrationTermsFormAccuser, setArbitrationTermsFormAccuser] =
     useState<{
       firstCondition: string;
@@ -72,18 +75,22 @@ const ContractDetailsPage = () => {
     }>();
   const navigate = useNavigate();
   const [isApproved, setIsApproved] = useState<boolean>(false);
-  useQuery(GET_CONTRACT, {
+  const { data } = useGetContractQuery({
     variables: {
-      id: contractId ? parseInt(contractId) : undefined,
+      id: contractId ? parseInt(contractId) : 0,
     },
     onCompleted(data) {
-      console.log("Contract", data.contract_getContracts.result.items[0]);
+      console.log("Contract", data.contract_getContracts.result?.items?.[0]);
 
       const contract = data.contract_getContracts.result
-        .items[0] as ContractSmall;
-      setContract(contract);
+        ?.items?.[0] as ContractSmall;
+      // setContract(contract);
     },
   });
+
+  const contract = useMemo(() => {
+    return data?.contract_getContracts.result?.items?.[0];
+  }, [data]);
   const { data: arbitrationTermsData } = QueryWrapper(
     GET_ARBITRATION_TERMS_FORM_BY_COMPLAINT_ID,
     "arbitrationTermsForm_getArbitrationTermsForms",
@@ -576,10 +583,10 @@ const ContractDetailsPage = () => {
                   sx={{
                     textAlign: "center",
                     backgroundColor:
-                    contract?.operationStartDateByAccused !=
-                    contract?.operationStartDateByAccuser
-                      ? RedLight
-                      : "transparent",
+                      contract?.operationStartDateByAccused !=
+                      contract?.operationStartDateByAccuser
+                        ? RedLight
+                        : "transparent",
                   }}
                 >
                   تاريخ شروع كار
@@ -588,10 +595,10 @@ const ContractDetailsPage = () => {
                   sx={{
                     textAlign: "center",
                     backgroundColor:
-                    contract?.operationStartDateByAccused !=
-                    contract?.operationStartDateByAccuser
-                      ? RedLight
-                      : "transparent",
+                      contract?.operationStartDateByAccused !=
+                      contract?.operationStartDateByAccuser
+                        ? RedLight
+                        : "transparent",
                   }}
                 >
                   {contract?.operationStartDateByAccuser
@@ -1016,6 +1023,109 @@ const ContractDetailsPage = () => {
                   }}
                 >
                   {arbitrationTermsFormAccused?.fourthCondition}
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell
+                  sx={{
+                    textAlign: "center",
+                    backgroundColor: secondary,
+                    color: primary,
+                  }}
+                  colSpan={3}
+                >
+                  سامانه قرارداد ها
+                </TableCell>
+              </TableRow>
+
+              <TableRow>
+                <TableCell
+                  sx={{
+                    textAlign: "center",
+                    backgroundColor:
+                      arbitrationTermsFormAccuser?.fourthCondition !=
+                      arbitrationTermsFormAccused?.fourthCondition
+                        ? RedLight
+                        : "transparent",
+                  }}
+                >
+                  محل تامین اعتبار
+                </TableCell>
+                <TableCell
+                  colSpan={2}
+                  sx={{
+                    textAlign: "center",
+                    backgroundColor:
+                      arbitrationTermsFormAccuser?.fourthCondition !=
+                      arbitrationTermsFormAccused?.fourthCondition
+                        ? RedLight
+                        : "transparent",
+                  }}
+                >
+                  {contract?.sourceOfFundingTitle}
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell
+                  sx={{
+                    textAlign: "center",
+                    backgroundColor: secondary,
+                    color: primary,
+                  }}
+                  colSpan={3}
+                >
+                  نامه امور
+                </TableCell>
+              </TableRow>
+
+              <TableRow>
+                <TableCell
+                  sx={{
+                    textAlign: "center",
+                    backgroundColor:
+                      arbitrationTermsFormAccuser?.fourthCondition !=
+                      arbitrationTermsFormAccused?.fourthCondition
+                        ? RedLight
+                        : "transparent",
+                  }}
+                >
+                  فایل پاسخ نامه امور
+                </TableCell>
+                <TableCell
+                  colSpan={2}
+                  sx={{
+                    textAlign: "center",
+                    backgroundColor:
+                      arbitrationTermsFormAccuser?.fourthCondition !=
+                      arbitrationTermsFormAccused?.fourthCondition
+                        ? RedLight
+                        : "transparent",
+                  }}
+                >
+                  <Button
+                    // variant=""
+                    color="primary"
+                    fullWidth
+                    sx={{
+                      backgroundColor: Green,
+                      color: 'white',
+                      // width: "max-content",
+                      justifySelf: "end",
+                      "&:hover": {
+                        backgroundColor: primary,
+                        color: secondary,
+                      },
+                    }}
+                    endIcon={<CheckBox />}
+                    // onClick={() => {
+                    //   window.open(
+                    //     `https://api.iran.liara.run/api/v1/files/${contract?.sourceOfFundingTitle}`,
+                    //     "_blank"
+                    //   );
+                    // }}
+                  >
+                    دانلود
+                  </Button>
                 </TableCell>
               </TableRow>
             </TableBody>

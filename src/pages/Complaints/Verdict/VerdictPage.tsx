@@ -2,20 +2,21 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
-import { Box, Button, Divider, TextField, Typography } from "@mui/material";
-import { useState } from "react";
-import { background, primary, secondary } from "../../../theme/color";
+import { Box, Button, TextField } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
+import { useState } from "react";
+import { useParams } from "react-router-dom";
 import {
   ComplaintStateStatus,
   useGenerateComplaintVerdictMutation,
+  useSendSecondPaymentAnnouncementSmsMutation,
+  useSendViewVerdictSmsMutation,
   useUpdateComplaintFullMutation,
 } from "../../../../generated-types";
-import { useParams } from "react-router-dom";
-import { useUserStore } from "../../../Context/UserStore";
-import { ComplaintState } from "../../../gql/graphql";
-import { getComplaintStateWithEnum } from "../../../functions/ComplaintStatesFunc";
 import FileBox from "../../../components/FileBox";
+import { useUserStore } from "../../../Context/UserStore";
+import { getComplaintStateWithEnum } from "../../../functions/ComplaintStatesFunc";
+import { background, primary, secondary } from "../../../theme/color";
 
 const VerdictPage = () => {
   const { complaintId } = useParams();
@@ -76,6 +77,17 @@ const VerdictPage = () => {
     },
   });
 
+  const [sendViewVerdictSMS] = useSendViewVerdictSmsMutation({
+    variables: {
+      complaintId: parseInt(complaintId || "") || 0,
+    },
+  });
+  const [sendSecondPaymentAnnouncementSMS] = useSendSecondPaymentAnnouncementSmsMutation({
+    variables:{
+      complaintId: parseInt(complaintId || "") || 0,
+    }
+  })
+
   return (
     <>
       <Box
@@ -135,9 +147,7 @@ const VerdictPage = () => {
             setSignByPreviousMembersDate(newValue || new Date());
           }}
         />
-        <FileBox
-          title="اسکن رای شورا"
-        />
+        <FileBox title="اسکن رای شورا" />
 
         <Box
           display={"flex"}
@@ -184,8 +194,14 @@ const VerdictPage = () => {
                         ).id,
                       },
                     },
+                    onCompleted(data, clientOptions) {
+                      if (data.complaint_updateComplaint?.status?.code == 1) {
+                        void sendViewVerdictSMS();
+                        void sendSecondPaymentAnnouncementSMS();
+                        window.location.href = "/";
+                      }
+                    },
                   });
-                  window.location.href = "/";
                 },
                 onError(error) {
                   console.log("🚀 ~ onError ~ error", error);

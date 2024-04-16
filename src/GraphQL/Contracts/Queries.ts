@@ -85,6 +85,7 @@ export const GET_CONTRACT = gql`
           generalConditionsFileNameByAccused
           contractGeneralTypeByAccused
           contractGeneralTypeByAccuser
+          sourceOfFundingTitle
         }
       }
       status
@@ -106,6 +107,11 @@ export const GetPublicContracts = gql`
         skip: $skip
         take: $take
       ) {
+        totalCount
+        pageInfo{
+          hasNextPage
+          hasPreviousPage
+        }
         items {
           guid
           fullName

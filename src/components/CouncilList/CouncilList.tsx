@@ -30,6 +30,7 @@ import {
   UpdateComplaintDocument,
 } from "../../gql/graphql";
 import { primary, secondary } from "../../theme/color";
+import { useSendLetterSentToMinistersCouncilSmsMutation } from "../../../generated-types";
 
 const CouncilList = () => {
   const [selectedList, setSelectedList] = React.useState<number[]>([]);
@@ -85,9 +86,7 @@ const CouncilList = () => {
     },
   });
 
-  const [updateComplaint] = useMutation(
-    UpdateComplaintDocument
-  );
+  const [updateComplaint] = useMutation(UpdateComplaintDocument);
 
   const [departments, setDepartments] = React.useState<
     {
@@ -129,6 +128,9 @@ const CouncilList = () => {
       },
     }
   );
+
+  const [sendLetterSentToMinistersCouncilSMS] =
+    useSendLetterSentToMinistersCouncilSmsMutation({});
   return (
     <>
       <TableContainer
@@ -295,10 +297,17 @@ const CouncilList = () => {
                   setFiles(data.complaint_setInCouncilList.result?.fileNames!);
                   data.complaint_setInCouncilList.result?.result?.map(
                     (complaint) => {
+                      void sendLetterSentToMinistersCouncilSMS({
+                        variables: {
+                          complaintId: complaint.key,
+                        },
+                      });
                       void updateComplaint({
                         variables: {
                           id: complaint.key,
-                          complaintStateId: getComplaintStateWithEnum(ComplaintStateStatus.WaitingForFirstPayment).id,
+                          complaintStateId: getComplaintStateWithEnum(
+                            ComplaintStateStatus.WaitingForFirstPayment
+                          ).id,
                         },
                       });
                     }

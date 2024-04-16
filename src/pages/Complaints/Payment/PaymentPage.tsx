@@ -54,7 +54,7 @@ const PaymentPage = () => {
           turn === "1"
             ? getComplaintStateWithEnum(ComplaintStateStatus.WaitingForRegisteringHandlingType).id
             : turn === "2"
-            ? getComplaintStateWithEnum(ComplaintStateStatus.WaitingForMailRoomExpertToDownloadDecree).id
+            ? getComplaintStateWithEnum(ComplaintStateStatus.DeterminingCaseExpert).id
             : getComplaintStateWithEnum(ComplaintStateStatus.ComplaintDetermined).id,
         id: parseInt(complaintId || "0"),
         isFirstPaymentPaid: turn === "1" ? true : false,

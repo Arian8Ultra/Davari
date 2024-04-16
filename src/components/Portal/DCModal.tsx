@@ -129,7 +129,7 @@ const DCModal = ({ open, onClose, complaintId }: Props) => {
                     input: {
                       id: complaintId,
                       complaintStateId: getComplaintStateWithEnum(
-                        ComplaintStateStatus.WaitingForRegisteringHandlingType
+                        ComplaintStateStatus.WaitingForDeterminingExpertsCouncilPayment
                       ).id,
                       handlingType: HandlingType.CouncilOfOfficialJusticeExperts,
                     },
@@ -169,7 +169,7 @@ const DCModal = ({ open, onClose, complaintId }: Props) => {
                     input: {
                       id: complaintId,
                       complaintStateId: getComplaintStateWithEnum(
-                        ComplaintStateStatus.WaitingForRegisteringHandlingType
+                        ComplaintStateStatus.WaitingForDeterminingExpertsCouncilPayment
                       ).id,
                       handlingType: HandlingType.JudiciaryExpertsCenter,
                     },
@@ -228,6 +228,7 @@ const DCModal = ({ open, onClose, complaintId }: Props) => {
                   complaintId || ""
                 }`}
               >
+                
                 <BsPersonAdd />
                 افزودن کارشناس جدید
               </Button>

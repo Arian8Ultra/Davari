@@ -108,6 +108,9 @@ const SignIn = () => {
     },
   });
 
+  console.log(import.meta.env.VITE_GRAPHQL_URL);
+  
+
   useEffect(() => {
     if (token && token !== "") {
       void TokenCheck({
